@@ -16,10 +16,8 @@
     <property name="test.integration.dir" value="${test.dir}/integration" />
 
     <property name="build.home" value="build/sandbox" />
-    <property name="web.dir" value="web" />
     <property name="build.dist.dir" value="${build.home}/dist" />
-    <property name="build.web-inf.dir" value="${build.dist.dir}/WEB-INF" />
-    <property name="build.classes.dir" value="${build.web-inf.dir}/classes" />
+    <property name="build.classes.dir" value="${build.dist.dir}/classes" />
 
     <property name="reports.dir" value="${build.home}/reports" />
     <property name="reports.unittests.dir" value="${reports.dir}/unit-tests" />
@@ -41,7 +39,6 @@
     <!--  ===================START Basic Targets ====================================== -->
     <target name="init">
         <mkdir dir="${build.home}" />
-        <mkdir dir="${build.web-inf.dir}" />
         <mkdir dir="${build.classes.dir}" />
         <mkdir dir="${reports.unittests.dir}" />
         <mkdir dir="${reports.integrationtests.dir}" />
@@ -271,7 +268,7 @@
     <!-- ================START Distribution Targets ========================= -->
     <target name="dist" depends="nirvana">
         <jar jarfile="${build.home}/${app.name}-${app.version}.jar"
-             basedir="${build.dist.dir}"
+             basedir="${build.classes.dir}"
         />
     </target>
     <!-- ================END Distribution Targets ========================= -->
