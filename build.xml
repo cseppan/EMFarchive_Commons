@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Commons" default="nirvana" basedir=".">
+<project name="Emissions-Commons" default="nirvana" basedir=".">
 
     <!--  =================== Properties ====================================== -->
     <property file="build.properties" />
@@ -267,6 +267,14 @@
             description="Compile, instrument ourself, run the tests and generate JUnit and coverage reports."
     />
     <!--  ===============END Coverage Targets =============================== -->
+
+    <!-- ================START Distribution Targets ========================= -->
+    <target name="dist" depends="nirvana">
+        <jar jarfile="${build.home}/${app.name}-${app.version}.jar"
+             basedir="${build.dist.dir}"
+        />
+    </target>
+    <!-- ================END Distribution Targets ========================= -->
 
 </project>
 
