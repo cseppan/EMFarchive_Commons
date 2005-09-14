@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.ORLDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
 import gov.epa.emissions.commons.io.importer.DatasetTypes;
@@ -20,7 +20,7 @@ public abstract class ORLImporterTestCase extends CommonsTestCase {
     private void run(String filename, String datasetType, TableType tableType) throws Exception {
         String table = filename.substring(0, filename.length() - 4).replace('.', '_');
 
-        Dataset dataset = new EmfDataset();
+        Dataset dataset = new ORLDataset();
         dataset.setDatasetType(datasetType);
         // only one base type
         dataset.addTable(new Table(tableType.baseTypes()[0], table));

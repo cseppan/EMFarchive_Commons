@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.ORLDataset;
 import gov.epa.emissions.commons.io.Table;
 
 import java.io.BufferedReader;
@@ -163,7 +163,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         };
         final File[] files = file.listFiles(textFileFilter);
         
-        Dataset dataset = new EmfDataset();
+        Dataset dataset = new ORLDataset();
         final String datasetType = DatasetTypes.REFERENCE;
         dataset.addTable(ReferenceTable.REF_CONTROL_DEVICE_CODES);
         dataset.addTable(ReferenceTable.REF_CONVERSION_FACTORS);

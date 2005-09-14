@@ -266,7 +266,12 @@
     <!--  ===============END Coverage Targets =============================== -->
 
     <!-- ================START Distribution Targets ========================= -->
-    <target name="dist" depends="nirvana">
+    <target name="dist" depends="nirvana, do-dist" />
+    
+    <target name="do-dist" depends="compile">
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}" includes="**/*" />
+        </copy>
         <jar jarfile="${build.home}/${app.name}-${app.version}.jar"
              basedir="${build.classes.dir}"
         />

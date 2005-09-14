@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.Dataset;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ public class NoOverwriteStrategy implements WriteStrategy {
     }
 
     // FIXME: use ImportExport Exception instead
-    public void write(EmfDataset dataset, File file) throws Exception {
+    public void write(Dataset dataset, File file) throws Exception {
         if (file.exists())
             throw new Exception("Cannot export as file - " + file.getAbsolutePath() + " exists");
 

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.ORLDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
 import gov.epa.emissions.commons.io.importer.DatasetTypes;
@@ -19,7 +19,7 @@ public class ORLExporterTest extends CommonsTestCase {
 
         String datasetType = DatasetTypes.ORL_POINT_TOXICS;
         String tableName = "ptinv_nti99_NC";
-        File file = createFile(datasetType, tableName);        
+        File file = createFile(datasetType, tableName);
 
         doExport(datasetType, ORLTableTypes.ORL_POINT_TOXICS, tableName, file);
     }
@@ -100,14 +100,14 @@ public class ORLExporterTest extends CommonsTestCase {
     private void doExportWithoutOverwrite(String datasetType, TableType tableType, String tableName, File file)
             throws Exception {
         ORLExporter exporter = ORLExporter.createWithoutOverwrite(dbSetup.getDbServer());
-        EmfDataset dataset = createDataset(datasetType, tableType, tableName);
+        Dataset dataset = createDataset(datasetType, tableType, tableName);
 
         exporter.run(dataset, file);
     }
 
     private void doExport(String datasetType, TableType tableType, String tableName, File file) throws Exception {
         ORLExporter exporter = ORLExporter.create(dbSetup.getDbServer());
-        EmfDataset dataset = createDataset(datasetType, tableType, tableName);
+        Dataset dataset = createDataset(datasetType, tableType, tableName);
 
         exporter.run(dataset, file);
     }
@@ -118,12 +118,12 @@ public class ORLExporterTest extends CommonsTestCase {
 
         File file = new File(exportFileName);
         file.deleteOnExit();
-        
+
         return file;
     }
 
-    private EmfDataset createDataset(String datasetType, TableType tableType, String tableName) {
-        EmfDataset dataset = new EmfDataset();
+    private Dataset createDataset(String datasetType, TableType tableType, String tableName) {
+        Dataset dataset = new ORLDataset();
         dataset.setDatasetType(datasetType);
         // only one base type
         dataset.addTable(new Table(tableType.baseTypes()[0], tableName));
@@ -138,7 +138,7 @@ public class ORLExporterTest extends CommonsTestCase {
     private void doImport(final String filename, String datasetType, TableType tableType) throws Exception {
         String tableName = filename.substring(0, filename.length() - 4).replace('.', '_');
 
-        Dataset dataset = new EmfDataset();
+        Dataset dataset = new ORLDataset();
         dataset.setDatasetType(datasetType);
         // only one base type
         dataset.addTable(new Table(tableType.baseTypes()[0], tableName));

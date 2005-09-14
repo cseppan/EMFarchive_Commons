@@ -10,6 +10,7 @@
 
 package gov.epa.emissions.commons.io;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.Map;
  * @author Conrad F. D'Cruz
  * 
  */
-public class EmfDataset implements Dataset {
+public class ORLDataset implements Dataset {
     // TODO: how are these unused variables accessed ?
 
     // unique id needed for hibernate persistence
@@ -37,7 +38,7 @@ public class EmfDataset implements Dataset {
 
     private String region;
 
-    private String country="US";
+    private String country = "US";
 
     private String units;
 
@@ -53,7 +54,7 @@ public class EmfDataset implements Dataset {
 
     private List tables;
 
-    public EmfDataset() {
+    public ORLDataset() {
         tables = new ArrayList();
     }
 

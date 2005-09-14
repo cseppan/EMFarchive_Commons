@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.exporter.FixedFormatExporter;
 
 import java.io.File;
@@ -40,7 +40,7 @@ public class ORLExporter extends FixedFormatExporter {
     // For Annual Emisions and Average Day Emissions, use an exponential
     // format as these data values can be very small
 
-    public void run(EmfDataset dataset, File file) throws Exception {
+    public void run(Dataset dataset, File file) throws Exception {
         writeStrategy.write(dataset, file);
     }
 }

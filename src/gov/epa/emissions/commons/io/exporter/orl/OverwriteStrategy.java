@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.Dataset;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ public class OverwriteStrategy implements WriteStrategy {
         writer = new ORLWriter(dbServer);
     }
 
-    public void write(EmfDataset dataset, File file) throws Exception {
+    public void write(Dataset dataset, File file) throws Exception {
         writer.write(dataset, file);
     }
 

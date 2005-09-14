@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.exporter.orl;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.Query;
-import gov.epa.emissions.commons.io.EmfDataset;
+import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
 
 import java.io.BufferedWriter;
@@ -27,7 +27,7 @@ public class ORLWriter {
         this.bodyFactory = new ORLBodyFactory();
     }
 
-    public void write(EmfDataset dataset, File file) throws Exception {
+    public void write(Dataset dataset, File file) throws Exception {
         PrintWriter writer = null;
 
         try {
@@ -43,7 +43,7 @@ public class ORLWriter {
         }
     }
 
-    private void writeBody(EmfDataset dataset, PrintWriter writer) throws SQLException {
+    private void writeBody(Dataset dataset, PrintWriter writer) throws SQLException {
         Datasource datasource = dbServer.getEmissionsDatasource();
 
         // TODO: we know ORL only has a single base table, but cleaner
@@ -60,7 +60,7 @@ public class ORLWriter {
         body.write(data, writer);
     }
 
-    private void writeHeader(EmfDataset dataset, PrintWriter writer) {
+    private void writeHeader(Dataset dataset, PrintWriter writer) {
         headerWriter.writeHeader(dataset, writer);
     }
 }
