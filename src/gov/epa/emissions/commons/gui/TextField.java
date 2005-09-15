@@ -9,4 +9,8 @@ public class TextField extends JTextField {
         super.setName(name);
     }
 
+    public TextField(String name, String value, int size) {
+        this(name, size);
+        super.setText(value);
+    }
 }
