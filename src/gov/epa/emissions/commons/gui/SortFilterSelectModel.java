@@ -18,7 +18,7 @@ import org.apache.commons.collections.primitives.IntList;
  * @author Craig Mattocks
  * @version $Id: SortFilterSelectModel.java,v 1.6 2005/06/28 14:30:24 parthee
  *          Exp $
- *  
+ * 
  */
 public class SortFilterSelectModel extends MultiRowHeaderTableModel {
 
@@ -67,7 +67,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel {
         if (col == 0)
             return SELECT_COL_NAME;
 
-        return delegate.getColumnName(col - 1);//minus the Select col
+        return delegate.getColumnName(col - 1);// minus the Select col
     }
 
     public int getRowCount() {
@@ -87,7 +87,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel {
     }
 
     public boolean isCellEditable(int row, int col) {
-        return (col == findColumn(SELECT_COL_NAME));//only 'Select' is editable
+        return (col == findColumn(SELECT_COL_NAME));// only 'Select' is editable
     }
 
     public void setValueAt(Object value, int row, int col) {
@@ -112,15 +112,17 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel {
 
     public int[] getSelectedIndexes() {
         IntList indexes = new ArrayIntList();
+
         for (int i = 0; i < selects.length; i++) {
-            if(selects[i] == Boolean.TRUE) indexes.add(i);
+            if (selects[i].equals(Boolean.TRUE))
+                indexes.add(i);
         }
-        
+
         return indexes.toArray();
     }
 
     public void refresh() {
         delegate.refresh();
-        resetSelections();        
+        resetSelections();
     }
 }
