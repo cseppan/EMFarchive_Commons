@@ -54,6 +54,11 @@ public class ORLDataset implements Dataset {
 
     private List tables;
 
+	/**
+	 * No argument constructor needed for hibernate
+	 * bean mapping
+	 * 
+	 */
     public ORLDataset() {
         tables = new ArrayList();
     }

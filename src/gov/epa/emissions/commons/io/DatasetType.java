@@ -27,6 +27,12 @@ public class DatasetType implements Serializable{
     public void setUid(String uid) {
         this.uid = uid;
     }
+    
+	/**
+	 * No argument constructor needed for hibernate
+	 * bean mapping
+	 * 
+	 */
     public DatasetType(){
     	super();
     }
