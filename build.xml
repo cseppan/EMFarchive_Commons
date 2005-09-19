@@ -58,9 +58,7 @@
                debug="on"
         />
         <copy todir="${build.classes.dir}">
-            <fileset dir="${src.dir}" includes="**/*.properties" />
-            <fileset dir="${src.dir}" includes="**/*.xml" />
-            <fileset dir="${src.dir}" includes="**/*.dtd" />
+            <fileset dir="${src.dir}" includes="**/*.*" />
         </copy>
     </target>
 
