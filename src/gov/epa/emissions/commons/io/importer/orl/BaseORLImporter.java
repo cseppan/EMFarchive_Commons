@@ -645,4 +645,9 @@ public class BaseORLImporter extends ListFormatImporter {
     public List getComments() {
         return comments;
     }
+
+	public void preCondition() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

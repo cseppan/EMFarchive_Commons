@@ -264,4 +264,9 @@ public class ReferenceImporter extends FixedFormatImporter {
         run(files, dataset, true);
     }
 
+	public void preCondition() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
