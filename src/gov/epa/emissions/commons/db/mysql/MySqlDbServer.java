@@ -3,8 +3,8 @@ package gov.epa.emissions.commons.db.mysql;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlTypeMapper;
-import gov.epa.emissions.commons.io.importer.ReferenceImporter;
-import gov.epa.emissions.commons.io.importer.ReferenceTablesCreator;
+import gov.epa.emissions.commons.io.importer.ref.ReferenceImporter;
+import gov.epa.emissions.commons.io.importer.ref.ReferenceTablesCreator;
 
 import java.io.File;
 import java.sql.Connection;
@@ -53,7 +53,7 @@ public class MySqlDbServer implements DbServer {
     private void createReferenceTables(File fieldDefsFile, File referenceFilesDir) throws SQLException {
         try {
             ReferenceImporter importer = new ReferenceImporter(this, fieldDefsFile, referenceFilesDir, false);
-            importer.createReferenceTables();
+            importer.run();
             
             ReferenceTablesCreator tables = new ReferenceTablesCreator(null, getTypeMapper());
             tables.createAdditionalRefTables(referenceDatasource);

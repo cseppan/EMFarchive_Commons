@@ -1,4 +1,7 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io.importer.ref;
+
+import gov.epa.emissions.commons.io.importer.TableType;
+import gov.epa.emissions.commons.io.importer.TableTypes;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,7 +11,7 @@ public class ReferenceTableTypes implements TableTypes {
 
     private List list() {
         List list = new ArrayList();
-        list.add(new TableType(DatasetTypes.REFERENCE, ReferenceTable.types(), null));
+        list.add(new TableType(ReferenceImporter.REFERENCE, ReferenceTable.types(), null));
 
         return list;
     }

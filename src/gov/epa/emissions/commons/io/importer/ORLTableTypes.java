@@ -6,16 +6,16 @@ import java.util.List;
 
 public class ORLTableTypes implements TableTypes {
 
-    public static final TableType ORL_AREA_NONPOINT_TOXICS = new TableType(DatasetTypes.ORL_AREA_NONPOINT_TOXICS,
+    public static final TableType ORL_AREA_NONPOINT_TOXICS = new TableType(ORLDatasetTypes.NONPOINT.getName(),
             new String[] { "ORL Nonpoint Source Toxics" }, "ORL Nonpoint Toxics Summary");
 
-    public static final TableType ORL_AREA_NONROAD_TOXICS = new TableType(DatasetTypes.ORL_AREA_NONROAD_TOXICS,
+    public static final TableType ORL_AREA_NONROAD_TOXICS = new TableType(ORLDatasetTypes.NONROAD.getName(),
             new String[] { "ORL Nonroad Source Toxics" }, "ORL Nonroad Toxics Summary");
 
-    public static final TableType ORL_ONROAD_MOBILE_TOXICS = new TableType(DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS,
+    public static final TableType ORL_ONROAD_MOBILE_TOXICS = new TableType(ORLDatasetTypes.ON_ROAD.getName(),
             new String[] { "ORL Mobile Source Toxics" }, "ORL Mobile Toxics Summary");
 
-    public static final TableType ORL_POINT_TOXICS = new TableType(DatasetTypes.ORL_POINT_TOXICS,
+    public static final TableType ORL_POINT_TOXICS = new TableType(ORLDatasetTypes.POINT.getName(),
             new String[] { "ORL Point Source Toxics" }, "ORL Point Toxics Summary");
 
     private List list() {

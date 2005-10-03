@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io.importer.ref;
 
 import gov.epa.emissions.commons.io.Table;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-final class ReferenceTable extends Table {
+public class ReferenceTable extends Table {
 
     private ReferenceTable(String tableType, String tablename) {
         super(tablename, tableType);
@@ -73,12 +73,12 @@ final class ReferenceTable extends Table {
     // from TableType ?
     public static final String getTableType(String datasetType, String filename) {
         // FIXME: dataset type ??
-        if (!DatasetTypes.REFERENCE.equals(datasetType))
+        if (!ReferenceImporter.REFERENCE.equals(datasetType))
             return null;
 
         for (Iterator iter = list().iterator(); iter.hasNext();) {
             ReferenceTable table = (ReferenceTable) iter.next();
-            if (filename.indexOf(table.getName()) != -1) //i.e. contains
+            if (filename.indexOf(table.getName()) != -1) // i.e. contains
                 return table.getType();
         }
 

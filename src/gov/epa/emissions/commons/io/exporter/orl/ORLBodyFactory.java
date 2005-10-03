@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
-import gov.epa.emissions.commons.io.importer.DatasetTypes;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +12,10 @@ public class ORLBodyFactory {
     ORLBodyFactory() {
         bodyMap = new HashMap();
 
-        bodyMap.put(DatasetTypes.NONPOINT.getName(), new ORLBody(new NonPointFormatterSequence()));
-        bodyMap.put(DatasetTypes.ORL_AREA_NONROAD_TOXICS, new ORLBody(new NonRoadFormatterSequence()));
-        bodyMap.put(DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS, new ORLBody(new OnRoadMobileFormatterSequence()));
-        bodyMap.put(DatasetTypes.ORL_POINT_TOXICS, new ORLBody(new PointFormatterSequence()));
+        bodyMap.put(ORLDatasetTypes.NONPOINT.getName(), new ORLBody(new NonPointFormatterSequence()));
+        bodyMap.put(ORLDatasetTypes.NONROAD.getName(), new ORLBody(new NonRoadFormatterSequence()));
+        bodyMap.put(ORLDatasetTypes.ON_ROAD.getName(), new ORLBody(new OnRoadMobileFormatterSequence()));
+        bodyMap.put(ORLDatasetTypes.POINT.getName(), new ORLBody(new PointFormatterSequence()));
     }
 
     ORLBody getBody(String datasetType) {

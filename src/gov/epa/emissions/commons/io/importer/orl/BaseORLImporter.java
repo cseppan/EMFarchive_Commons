@@ -7,9 +7,9 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
-import gov.epa.emissions.commons.io.importer.DatasetTypes;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ListFormatImporter;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 import gov.epa.emissions.commons.io.importer.SummaryTableCreator;
 import gov.epa.emissions.commons.io.importer.TableType;
@@ -110,8 +110,8 @@ public class BaseORLImporter extends ListFormatImporter {
             throw new Exception("Can only import one valid orl file at a time: " + files);
         }
 
-        if (!type.equals(DatasetTypes.NONPOINT.getName()) && !type.equals(DatasetTypes.ORL_AREA_NONROAD_TOXICS)
-                && !type.equals(DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS) && !type.equals(DatasetTypes.ORL_POINT_TOXICS)) {
+        if (!type.equals(ORLDatasetTypes.NONPOINT.getName()) && !type.equals(ORLDatasetTypes.NONROAD.getName())
+                && !type.equals(ORLDatasetTypes.ON_ROAD.getName()) && !type.equals(ORLDatasetTypes.POINT.getName())) {
             throw new Exception("Unknown/unhandled ORL type: " + type);
         }
 
@@ -330,7 +330,7 @@ public class BaseORLImporter extends ListFormatImporter {
         // #ORL NONPOINT
         if ((command.equals(TOXICS_COMMAND) || command.equals(ORL_COMMAND)) && tokens.length <= 2 && !toxicsCommandRead) {
             if (tokens.length == 2) {
-                if (!dataset.getDatasetType().equals(DatasetTypes.NONPOINT.getName())) {
+                if (!dataset.getDatasetType().equals(ORLDatasetTypes.NONPOINT.getName())) {
                     throw new Exception("\"" + command + " " + TOXICS_NONPOINT
                             + "\" is an invalid header command for dataset type \"" + dataset.getDatasetType() + "\"");
                 }
@@ -410,16 +410,15 @@ public class BaseORLImporter extends ListFormatImporter {
     private void checkDatasetType(String datasetType, String fileType) throws Exception {
         String keyword = null;
         String fileTypeLowerCase = fileType.toLowerCase();
-        if (datasetType.equals(DatasetTypes.ORL_AREA_NONROAD_TOXICS) && fileTypeLowerCase.indexOf("nonroad") == -1) {
+        if (datasetType.equals(ORLDatasetTypes.NONROAD.getName()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
             keyword = "Nonroad";
-        } else if (datasetType.equals(DatasetTypes.NONPOINT.getName()) && (fileTypeLowerCase.indexOf("nonpoint") == -1)
-                && fileTypeLowerCase.indexOf("non-point") == -1) {
+        } else if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())
+                && (fileTypeLowerCase.indexOf("nonpoint") == -1) && fileTypeLowerCase.indexOf("non-point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Nonpoint";
-        } else if (datasetType.equals(DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS)
-                && fileTypeLowerCase.indexOf("mobile") == -1) {
+        } else if (datasetType.equals(ORLDatasetTypes.ON_ROAD.getName()) && fileTypeLowerCase.indexOf("mobile") == -1) {
             keyword = "Mobile";
-        } else if (datasetType.equals(DatasetTypes.ORL_POINT_TOXICS) && fileTypeLowerCase.indexOf("point") == -1) {
+        } else if (datasetType.equals(ORLDatasetTypes.POINT.getName()) && fileTypeLowerCase.indexOf("point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Point";
         }
@@ -430,14 +429,15 @@ public class BaseORLImporter extends ListFormatImporter {
         }
     }
 
+    // TODO: pull this out into a factory
     private FileColumnsMetadata getFileColumnsMetadata(String datasetType) throws Exception {
-        if (datasetType.equals(DatasetTypes.NONPOINT.getName())) {
+        if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())) {
             orlDataFormat = new ORLAreaNonpointDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(DatasetTypes.ORL_AREA_NONROAD_TOXICS)) {
+        } else if (datasetType.equals(ORLDatasetTypes.NONROAD.getName())) {
             orlDataFormat = new ORLAreaNonroadDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS)) {
+        } else if (datasetType.equals(ORLDatasetTypes.ON_ROAD.getName())) {
             orlDataFormat = new ORLMobileDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(DatasetTypes.ORL_POINT_TOXICS)) {
+        } else if (datasetType.equals(ORLDatasetTypes.POINT.getName())) {
             orlDataFormat = new ORLPointDataFormat(dbServer.getTypeMapper(), extendedFormat);
         } else {
             orlDataFormat = null;

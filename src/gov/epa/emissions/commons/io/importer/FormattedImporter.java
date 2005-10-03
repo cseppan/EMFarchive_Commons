@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.ref.ReferenceTable;
 
 import java.io.File;
 import java.util.ArrayList;

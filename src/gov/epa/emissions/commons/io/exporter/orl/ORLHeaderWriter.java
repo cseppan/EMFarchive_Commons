@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.DatasetTypes;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -27,10 +27,10 @@ public class ORLHeaderWriter {
     private static final Map typeHackMap;
     static {
         typeHackMap = new HashMap();
-        typeHackMap.put(DatasetTypes.ORL_AREA_NONPOINT_TOXICS, "Non-point Source Inventory");
-        typeHackMap.put(DatasetTypes.ORL_AREA_NONROAD_TOXICS, "Non-road Vehicle Emission Inventory");
-        typeHackMap.put(DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS, "On-road Vehicle Emission Inventory");
-        typeHackMap.put(DatasetTypes.ORL_POINT_TOXICS, "Point Source Inventory");
+        typeHackMap.put(ORLDatasetTypes.NONPOINT.getName(), "Non-point Source Inventory");
+        typeHackMap.put(ORLDatasetTypes.NONROAD.getName(), "Non-road Vehicle Emission Inventory");
+        typeHackMap.put(ORLDatasetTypes.ON_ROAD.getName(), "On-road Vehicle Emission Inventory");
+        typeHackMap.put(ORLDatasetTypes.POINT.getName(), "Point Source Inventory");
     }
 
     void writeHeader(Dataset dataset, PrintWriter writer) {

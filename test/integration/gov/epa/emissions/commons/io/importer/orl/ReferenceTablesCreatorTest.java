@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
-import gov.epa.emissions.commons.io.importer.ReferenceTablesCreator;
+import gov.epa.emissions.commons.io.importer.ref.ReferenceTablesCreator;
 
 public class ReferenceTablesCreatorTest extends CommonsTestCase {
 
