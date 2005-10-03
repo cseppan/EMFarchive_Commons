@@ -35,7 +35,7 @@ public final class ORLMobileDataFormat extends ORLDataFormat {
         super(sqlTypeMapper, extendedFormat);
     }
 
-    public FileColumnsMetadata getFileImportDetails() {
+    public FileColumnsMetadata getFileColumnsMetadata() {
         FileColumnsMetadata details = new FileColumnsMetadata("", super.sqlTypeMapper);
 
         // once per line

@@ -56,7 +56,7 @@ public class MySqlDbServer implements DbServer {
             importer.createReferenceTables();
             
             ReferenceTablesCreator tables = new ReferenceTablesCreator(null, getTypeMapper());
-            tables.createAdditionRefTables(referenceDatasource);
+            tables.createAdditionalRefTables(referenceDatasource);
         } catch (Exception e) {
             throw new SQLException("could not create reference tables. Reason: " + e.getMessage());
         }

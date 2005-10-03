@@ -51,5 +51,5 @@ public abstract class ORLDataFormat {
         }
     }
 
-    public abstract FileColumnsMetadata getFileImportDetails();
+    public abstract FileColumnsMetadata getFileColumnsMetadata();
 }

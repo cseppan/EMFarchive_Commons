@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
  * ORL Nonpoint Source Toxics Inventory (list-format)
  * 
  * @author Keith Lee, CEP UNC
- * @version $Id: ORLAreaNonpointDataFormat.java,v 1.1 2005/09/13 20:46:50 rhavaldar Exp $
+ * @version $Id: ORLAreaNonpointDataFormat.java,v 1.2 2005/10/03 17:04:54 rhavaldar Exp $
  */
 public final class ORLAreaNonpointDataFormat extends ORLAreaDataFormat
 {
@@ -40,7 +40,7 @@ public final class ORLAreaNonpointDataFormat extends ORLAreaDataFormat
         super(sqlTypeMapper, extendedFormat);
     }
 
-    public FileColumnsMetadata getFileImportDetails()
+    public FileColumnsMetadata getFileColumnsMetadata()
     {
         FileColumnsMetadata details = new FileColumnsMetadata("", super.sqlTypeMapper);
 

@@ -7,7 +7,7 @@ public class ReferenceTablesCreatorTest extends CommonsTestCase {
 
     public void testCreateAddtionalTablesUsingMysql() throws Exception {
         ReferenceTablesCreator tables = new ReferenceTablesCreator(referenceFilesDir, dbSetup.getDbServer().getTypeMapper());
-        tables.createAdditionRefTables(dbSetup.getDbServer().getReferenceDatasource());
+        tables.createAdditionalRefTables(dbSetup.getDbServer().getReferenceDatasource());
     }
 
 }

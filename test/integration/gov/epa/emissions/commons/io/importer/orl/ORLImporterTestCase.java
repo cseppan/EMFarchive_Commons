@@ -23,8 +23,8 @@ public abstract class ORLImporterTestCase extends CommonsTestCase {
         Dataset dataset = new ORLDataset();
         dataset.setDatasetType(datasetType);
         // only one base type
-        dataset.addTable(new Table(tableType.baseTypes()[0], table));
-        dataset.addTable(new Table(tableType.summaryType(), table + "_summary"));
+        dataset.addTable(new Table(table, tableType.baseTypes()[0]));
+        dataset.addTable(new Table(table + "_summary", tableType.summaryType()));
 
         doImport(filename, dataset);
     }

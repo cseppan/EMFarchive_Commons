@@ -190,7 +190,7 @@ public class ReferenceTablesCreator {
         }
     }
 
-    public void createAdditionRefTables(Datasource referenceDatasource) throws Exception {
+    public void createAdditionalRefTables(Datasource referenceDatasource) throws Exception {
         createPollutantsTable(referenceDatasource);
         createCountriesTable(referenceDatasource);
         createStatesTable(referenceDatasource);

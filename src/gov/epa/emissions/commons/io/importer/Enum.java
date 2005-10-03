@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * @version $Id: Enum.java,v 1.1 2005/09/13 20:46:51 rhavaldar Exp $
+ * @version $Id: Enum.java,v 1.2 2005/10/03 17:04:54 rhavaldar Exp $
  */
 
 package gov.epa.emissions.commons.io.importer;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -462,8 +463,8 @@ public abstract class Enum implements Comparable, Serializable {
      * 
      * @return A List of all names of the enumerated items.
      */
-    public static java.util.List getAllNames(final Class clazz) {
-        java.util.List names = new ArrayList();
+    public static List getAllNames(final Class clazz) {
+        List names = new ArrayList();
         for (Iterator it = getInstances(clazz).iterator(); it.hasNext();) {
             names.add(((Enum) it.next()).getName());
         }

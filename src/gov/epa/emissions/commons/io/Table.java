@@ -7,27 +7,27 @@ public class Table implements Serializable {
 
     private String tableType;
 
-    public Table(String tableType, String tablename) {
-        this.tableName = tablename;
-        this.tableType = tableType;
+    public Table(String name, String type) {
+        this.tableName = name;
+        this.tableType = type;
     }
 
     public Table() {// Needed for Axis serialization i.e. transport-over-wire
     }
 
-    public String getTableName() {
+    public String getName() {
         return tableName;
     }
 
-    public String getTableType() {
+    public String getType() {
         return tableType;
     }
 
-    public void setTableName(String tableName) {
+    public void setName(String tableName) {
         this.tableName = tableName;
     }
 
-    public void setTableType(String tableType) {
+    public void setType(String tableType) {
         this.tableType = tableType;
     }
 

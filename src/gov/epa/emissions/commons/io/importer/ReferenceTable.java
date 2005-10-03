@@ -9,7 +9,7 @@ import java.util.List;
 final class ReferenceTable extends Table {
 
     private ReferenceTable(String tableType, String tablename) {
-        super(tableType, tablename);
+        super(tablename, tableType);
     }
 
     public static final ReferenceTable REF_CONTROL_DEVICE_CODES = new ReferenceTable("Reference Control Device Codes",
@@ -78,8 +78,8 @@ final class ReferenceTable extends Table {
 
         for (Iterator iter = list().iterator(); iter.hasNext();) {
             ReferenceTable table = (ReferenceTable) iter.next();
-            if (filename.indexOf(table.getTableName()) != -1) //i.e. contains
-                return table.getTableType();
+            if (filename.indexOf(table.getName()) != -1) //i.e. contains
+                return table.getType();
         }
 
         return null;
@@ -90,7 +90,7 @@ final class ReferenceTable extends Table {
 
         for (Iterator iter = list().iterator(); iter.hasNext();) {
             ReferenceTable element = (ReferenceTable) iter.next();
-            types.add(element.getTableType());
+            types.add(element.getType());
         }
 
         return (String[]) types.toArray(new String[0]);

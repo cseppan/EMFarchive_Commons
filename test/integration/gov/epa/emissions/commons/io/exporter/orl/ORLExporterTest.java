@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.ORLDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
@@ -15,9 +16,9 @@ import java.io.File;
 public class ORLExporterTest extends CommonsTestCase {
 
     public void testPoint() throws Exception {
-        doImport("ptinv.nti99_NC.txt", DatasetTypes.ORL_POINT_TOXICS, ORLTableTypes.ORL_POINT_TOXICS);
+        doImport("ptinv.nti99_NC.txt", DatasetTypes.POINT, ORLTableTypes.ORL_POINT_TOXICS);
 
-        String datasetType = DatasetTypes.ORL_POINT_TOXICS;
+        DatasetType datasetType = DatasetTypes.POINT;
         String tableName = "ptinv_nti99_NC";
         File file = createFile(datasetType, tableName);
 
@@ -25,9 +26,9 @@ public class ORLExporterTest extends CommonsTestCase {
     }
 
     public void testExportSucceedsUsingDefaultSettingsEvenIfFileExists() throws Exception {
-        doImport("ptinv.nti99_NC.txt", DatasetTypes.ORL_POINT_TOXICS, ORLTableTypes.ORL_POINT_TOXICS);
+        doImport("ptinv.nti99_NC.txt", DatasetTypes.POINT, ORLTableTypes.ORL_POINT_TOXICS);
 
-        String datasetType = DatasetTypes.ORL_POINT_TOXICS;
+        DatasetType datasetType = DatasetTypes.POINT;
         String tableName = "ptinv_nti99_NC";
         File file = createFile(datasetType, tableName);
         file.delete();
@@ -37,7 +38,7 @@ public class ORLExporterTest extends CommonsTestCase {
     }
 
     public void testExportSucceedsWhenOverwriteIsDisabledAndOutputFileDoesNotExist() throws Exception {
-        String datasetType = DatasetTypes.ORL_POINT_TOXICS;
+        DatasetType datasetType = DatasetTypes.POINT;
         String tableName = "ptinv_nti99_NC";
         File file = createFile(datasetType, tableName);
 
@@ -48,7 +49,7 @@ public class ORLExporterTest extends CommonsTestCase {
     }
 
     public void testExportFailsWhenOverwriteIsDisabledAndOutputFileExists() throws Exception {
-        String datasetType = DatasetTypes.ORL_POINT_TOXICS;
+        DatasetType datasetType = DatasetTypes.POINT;
         String tableName = "ptinv_nti99_NC";
         File file = createFile(datasetType, tableName);
 
@@ -65,10 +66,9 @@ public class ORLExporterTest extends CommonsTestCase {
     }
 
     public void testNonPoint() throws Exception {
-        doImport("arinv.nonpoint.nti99_NC.txt", DatasetTypes.ORL_AREA_NONPOINT_TOXICS,
-                ORLTableTypes.ORL_AREA_NONPOINT_TOXICS);
+        doImport("arinv.nonpoint.nti99_NC.txt", DatasetTypes.NONPOINT, ORLTableTypes.ORL_AREA_NONPOINT_TOXICS);
 
-        String datasetType = DatasetTypes.ORL_AREA_NONPOINT_TOXICS;
+        DatasetType datasetType = DatasetTypes.NONPOINT;
         String tableName = "arinv_nonpoint_nti99_NC";
         File file = createFile(datasetType, tableName);
 
@@ -76,10 +76,9 @@ public class ORLExporterTest extends CommonsTestCase {
     }
 
     public void testOnRoadMobile() throws Exception {
-        doImport("nti99.NC.onroad.SMOKE.txt", DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS,
-                ORLTableTypes.ORL_ONROAD_MOBILE_TOXICS);
+        doImport("nti99.NC.onroad.SMOKE.txt", DatasetTypes.ON_ROAD, ORLTableTypes.ORL_ONROAD_MOBILE_TOXICS);
 
-        String datasetType = DatasetTypes.ORL_ON_ROAD_MOBILE_TOXICS;
+        DatasetType datasetType = DatasetTypes.ON_ROAD;
         String tableName = "nti99_NC_onroad_SMOKE";
         File file = createFile(datasetType, tableName);
 
@@ -87,17 +86,17 @@ public class ORLExporterTest extends CommonsTestCase {
     }
 
     public void testNonRoad() throws Exception {
-        doImport("arinv.nonroad.nti99d_NC.new.txt", DatasetTypes.ORL_AREA_NONROAD_TOXICS,
+        doImport("arinv.nonroad.nti99d_NC.new.txt", DatasetTypes.NONROAD,
                 ORLTableTypes.ORL_AREA_NONROAD_TOXICS);
 
-        String datasetType = DatasetTypes.ORL_AREA_NONROAD_TOXICS;
+        DatasetType datasetType = DatasetTypes.NONROAD;
         String tableName = "arinv_nonroad_nti99d_NC_new";
         File file = createFile(datasetType, tableName);
 
         doExport(datasetType, ORLTableTypes.ORL_AREA_NONROAD_TOXICS, tableName, file);
     }
 
-    private void doExportWithoutOverwrite(String datasetType, TableType tableType, String tableName, File file)
+    private void doExportWithoutOverwrite(DatasetType datasetType, TableType tableType, String tableName, File file)
             throws Exception {
         ORLExporter exporter = ORLExporter.createWithoutOverwrite(dbSetup.getDbServer());
         Dataset dataset = createDataset(datasetType, tableType, tableName);
@@ -105,16 +104,16 @@ public class ORLExporterTest extends CommonsTestCase {
         exporter.run(dataset, file);
     }
 
-    private void doExport(String datasetType, TableType tableType, String tableName, File file) throws Exception {
+    private void doExport(DatasetType datasetType, TableType tableType, String tableName, File file) throws Exception {
         ORLExporter exporter = ORLExporter.create(dbSetup.getDbServer());
         Dataset dataset = createDataset(datasetType, tableType, tableName);
 
         exporter.run(dataset, file);
     }
 
-    private File createFile(String datasetType, String tableName) {
+    private File createFile(DatasetType datasetType, String tableName) {
         String tempDir = System.getProperty("java.io.tmpdir");
-        String exportFileName = tempDir + "/" + datasetType + "." + tableName + ".EXPORTED_";
+        String exportFileName = tempDir + "/" + datasetType.getName() + "." + tableName + ".EXPORTED_";
 
         File file = new File(exportFileName);
         file.deleteOnExit();
@@ -122,11 +121,11 @@ public class ORLExporterTest extends CommonsTestCase {
         return file;
     }
 
-    private Dataset createDataset(String datasetType, TableType tableType, String tableName) {
+    private Dataset createDataset(DatasetType datasetType, TableType tableType, String tableName) {
         Dataset dataset = new ORLDataset();
-        dataset.setDatasetType(datasetType);
+        dataset.setDatasetType(datasetType.getName());
         // only one base type
-        dataset.addTable(new Table(tableType.baseTypes()[0], tableName));
+        dataset.addTable(new Table(tableName, tableType.baseTypes()[0]));
         dataset.setRegion("US");
         dataset.setCountry("US");
         dataset.setYear(1234);
@@ -135,14 +134,14 @@ public class ORLExporterTest extends CommonsTestCase {
         return dataset;
     }
 
-    private void doImport(final String filename, String datasetType, TableType tableType) throws Exception {
+    private void doImport(final String filename, DatasetType type, TableType tableType) throws Exception {
         String tableName = filename.substring(0, filename.length() - 4).replace('.', '_');
 
         Dataset dataset = new ORLDataset();
-        dataset.setDatasetType(datasetType);
+        dataset.setDatasetType(type.getName());
         // only one base type
-        dataset.addTable(new Table(tableType.baseTypes()[0], tableName));
-        dataset.addTable(new Table(tableType.summaryType(), tableName + "_summary"));
+        dataset.addTable(new Table(tableName, tableType.baseTypes()[0]));
+        dataset.addTable(new Table(tableName + "_summary", tableType.summaryType()));
 
         Importer importer = new BaseORLImporter(dbSetup.getDbServer(), false, true);
         importer.run(new File[] { new File("test/data/orl/nc", filename) }, dataset, true);

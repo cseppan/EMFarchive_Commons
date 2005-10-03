@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
  * ORL Nonroad Source Toxics Inventory (list-format)
  * 
  * @author Keith Lee, CEP UNC
- * @version $Id: ORLAreaNonroadDataFormat.java,v 1.1 2005/09/13 20:46:50 rhavaldar Exp $
+ * @version $Id: ORLAreaNonroadDataFormat.java,v 1.2 2005/10/03 17:04:54 rhavaldar Exp $
  */
 public final class ORLAreaNonroadDataFormat extends ORLAreaDataFormat
 {
@@ -34,7 +34,7 @@ public final class ORLAreaNonroadDataFormat extends ORLAreaDataFormat
         super(sqlTypeMapper, extendedFormat);
     }
 
-    public FileColumnsMetadata getFileImportDetails()
+    public FileColumnsMetadata getFileColumnsMetadata()
     {
         FileColumnsMetadata details = new FileColumnsMetadata("", super.sqlTypeMapper);
 

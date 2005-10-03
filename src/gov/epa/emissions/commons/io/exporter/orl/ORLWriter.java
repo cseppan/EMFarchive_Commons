@@ -49,7 +49,7 @@ public class ORLWriter {
         // TODO: we know ORL only has a single base table, but cleaner
         // interface needed
         Table baseTable = dataset.getTables()[0];
-        String qualifiedTableName = datasource.getName() + "." + baseTable.getTableName();
+        String qualifiedTableName = datasource.getName() + "." + baseTable.getName();
 
         Query query = datasource.query();
         ResultSet data = query.selectAll(qualifiedTableName);

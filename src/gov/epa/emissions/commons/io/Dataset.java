@@ -31,6 +31,7 @@ public interface Dataset extends Serializable {
 
     String getDatasetType();
 
+    //TODO: use DatasetType instead
     void setDatasetType(String datasetType);
 
     void setUnits(String units);

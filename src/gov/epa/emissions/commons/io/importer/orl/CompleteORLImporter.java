@@ -29,7 +29,7 @@ public class CompleteORLImporter extends BaseORLImporter {
         // only one base type.
         // FIXME: why not have a ORLTableType that only has one base table ?
         Table table = dataset.getTable(tableType.baseTypes()[0]);
-        String qualifiedTableName = emissionsDatasource.getName() + "." + table.getTableName();
+        String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
 
         String summaryTableSuffix = (String) dataset.getTablesMap().get(tableType.summaryType());
         String summaryTable = emissionsDatasource.getName() + "." + summaryTableSuffix;
