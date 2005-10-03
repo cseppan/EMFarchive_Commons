@@ -3,17 +3,24 @@ package gov.epa.emissions.commons.io.importer.ref;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FieldDefinitionsFileReader;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.FixedFormatImporter;
+import gov.epa.emissions.commons.io.importer.TableType;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents the ReferenceImporter for the reference database. TODO:
@@ -43,12 +50,12 @@ public class ReferenceImporter extends FixedFormatImporter {
      * corresponding tables specified in dataset based on overwrite flag.
      */
     public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {
-        this.dataset = dataset;
+        super.dataset = dataset;
 
-        files = checkFiles(dataset.getDatasetType(), files);
+        files = verifyExpectedFiles(dataset.getDatasetType(), files);
 
         // set the data source for the dataset
-        setDataSources(files);
+        setDataSources2(super.dataset, files);
 
         fieldDefsReader = new FieldDefinitionsFileReader(fieldDefsFile, dbServer.getTypeMapper());
 
@@ -59,6 +66,87 @@ public class ReferenceImporter extends FixedFormatImporter {
         }
     }
 
+    private void setDataSources2(Dataset dataset, File[] files) {
+        String datasetType = dataset.getDatasetType();
+        // get all the table types for the dataset type
+        TableType tableType = tableTypes.type(datasetType);
+        Map dataSources = new HashMap();/* <TableType, String> */
+        String[] tableTypes = tableType.baseTypes();
+        String[] absolutePaths = new String[tableTypes.length];
+        // table types must be sorted in order for binary search to work.
+        Arrays.sort(tableTypes);
+        // initially absolute paths set to null
+        Arrays.fill(absolutePaths, null);
+        // for(File file : files)
+        for (int i = 0; i < files.length; i++) {
+            String referenceTableType = ReferenceTable.getTableType(files[i].getName());
+            int searchIndex = Arrays.binarySearch(tableTypes, referenceTableType);
+            absolutePaths[searchIndex] = files[i].getAbsolutePath();
+        }
+
+        // map data sources from table type to absolute path
+        for (int i = 0; i < tableTypes.length; i++) {
+            dataSources.put(tableTypes[i], absolutePaths[i]);
+        }
+        dataset.setDataSources(dataSources);
+    }// setDataSources(File[])
+
+    private File[] verifyExpectedFiles(String datasetType, File[] files) throws Exception {
+        TableType tableType = tableTypes.type(datasetType);
+
+        // flags for when we find a file for the table type
+        String[] baseTableTypes = tableType.baseTypes();
+        boolean[] tableTypeFound = new boolean[baseTableTypes.length];
+        // initially flags set to false
+        Arrays.fill(tableTypeFound, false);
+        // List of files to actually import
+        List foundFiles = new ArrayList();
+
+        // if there is only one file, we have the file we want for this type
+        // table types must be sorted in order for binary search to work.
+        Arrays.sort(baseTableTypes);
+        // Not all File objects in the files array need to be read in.
+        // Make sure there is one and only one file for each necessary type.
+        // Throw exception if there are multiple files for a necessary type.
+        // Ignore (do not import) unnecessary files.
+        for (int i = 0; i < files.length; i++) {
+            String referenceTableType = ReferenceTable.getTableType(files[i].getName());
+            // if it is a valid file in the first place (binary search
+            // doesn't work for null)
+            if (referenceTableType != null) {
+                int searchIndex = Arrays.binarySearch(baseTableTypes, referenceTableType);
+                // Valid table type. Check for duplicate file names for
+                // table type
+                // and make sure file name ends with ".txt".
+                if (searchIndex >= 0 && files[i].getName().toLowerCase().endsWith(".txt")) {
+                    // if no file yet for this table type
+                    if (!tableTypeFound[searchIndex]) {
+                        // flag that we found a file
+                        tableTypeFound[searchIndex] = true;
+                        // add to list of files to actually import
+                        foundFiles.add(files[i]);
+                    }
+                    // else
+                    else {
+                        // already have a file for this table type
+                        throw new Exception("Multiple files for table type \"" + referenceTableType
+                                + "\" are not allowed in the same directory");
+                    }
+                }
+            }
+        }
+
+        // check that a file was found for all table types
+        boolean[] tableTypeChecker = new boolean[tableTypeFound.length];
+        Arrays.fill(tableTypeChecker, true);
+        if (!Arrays.equals(tableTypeFound, tableTypeChecker)) {
+            // missing a file for or more table types
+            throw new Exception("Missing a file for one or more table types for dataset type \"" + datasetType + "\"");
+        }
+
+        return (File[]) foundFiles.toArray(new File[0]);
+    }
+
     /**
      * import a single file into the specified database
      */
@@ -67,8 +155,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String[] columnTypes = details.getColumnTypes();
         String fileName = file.getName();
-        String datasetType = dataset.getDatasetType();
-        String tableType = ReferenceTable.getTableType(datasetType, fileName);
+        String tableType = ReferenceTable.getTableType(fileName);
         if (tableType == null) {
             throw new Exception("Could not determine table type for file name: " + fileName);
         }
@@ -157,7 +244,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         };
         File[] files = file.listFiles(textFileFilter);
 
-        Dataset dataset = new BasicDataset();
+        Dataset dataset = new SimpleDataset();
         dataset.setDatasetType(ReferenceImporter.REFERENCE);
 
         dataset.addTable(ReferenceTable.REF_CONTROL_DEVICE_CODES);

@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ref.ReferenceTable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ public abstract class FormattedImporter implements Importer {
         this.dbServer = dbServer;
     }
 
+    //ORL - specific i.e. one file - type
     protected final File[] checkFiles(String datasetType, File[] files) throws Exception {
-        // FIXME: why is ORL referenced in this base class ?
         TableType tableType = tableTypes.type(datasetType);
 
         // flags for when we find a file for the table type
@@ -47,39 +46,6 @@ public abstract class FormattedImporter implements Importer {
         if (baseTableTypes.length == 1 && files.length == 1) {
             foundFiles.add(files[0]);
             tableTypeFound[0] = true;
-        } else {
-            // table types must be sorted in order for binary search to work.
-            Arrays.sort(baseTableTypes);
-            // Not all File objects in the files array need to be read in.
-            // Make sure there is one and only one file for each necessary type.
-            // Throw exception if there are multiple files for a necessary type.
-            // Ignore (do not import) unnecessary files.
-            for (int i = 0; i < files.length; i++) {
-                String referenceTableType = ReferenceTable.getTableType(datasetType, files[i].getName());
-                // if it is a valid file in the first place (binary search
-                // doesn't work for null)
-                if (referenceTableType != null) {
-                    int searchIndex = Arrays.binarySearch(baseTableTypes, referenceTableType);
-                    // Valid table type. Check for duplicate file names for
-                    // table type
-                    // and make sure file name ends with ".txt".
-                    if (searchIndex >= 0 && files[i].getName().toLowerCase().endsWith(".txt")) {
-                        // if no file yet for this table type
-                        if (!tableTypeFound[searchIndex]) {
-                            // flag that we found a file
-                            tableTypeFound[searchIndex] = true;
-                            // add to list of files to actually import
-                            foundFiles.add(files[i]);
-                        }
-                        // else
-                        else {
-                            // already have a file for this table type
-                            throw new Exception("Multiple files for table type \"" + referenceTableType
-                                    + "\" are not allowed in the same directory");
-                        }
-                    }
-                }
-            }
         }
 
         // check that a file was found for all table types
@@ -109,6 +75,7 @@ public abstract class FormattedImporter implements Importer {
 
     protected abstract String[] breakUpLine(String line, int[] widths) throws Exception;
 
+    //ORL - specific i.e. one file - type
     protected final void setDataSources(File[] files) {
         String datasetType = dataset.getDatasetType();
         // get all the table types for the dataset type
@@ -119,19 +86,6 @@ public abstract class FormattedImporter implements Importer {
         // if there is only one file, we have the file we want for this type
         if (tableTypes.length == 1 && files.length == 1) {
             absolutePaths = new String[] { files[0].getAbsolutePath() };
-        }
-        // else, search through the files to match the table type with its file
-        else {
-            // table types must be sorted in order for binary search to work.
-            Arrays.sort(tableTypes);
-            // initially absolute paths set to null
-            Arrays.fill(absolutePaths, null);
-            // for(File file : files)
-            for (int i = 0; i < files.length; i++) {
-                String referenceTableType = ReferenceTable.getTableType(datasetType, files[i].getName());
-                int searchIndex = Arrays.binarySearch(tableTypes, referenceTableType);
-                absolutePaths[searchIndex] = files[i].getAbsolutePath();
-            }
         }
 
         // map data sources from table type to absolute path

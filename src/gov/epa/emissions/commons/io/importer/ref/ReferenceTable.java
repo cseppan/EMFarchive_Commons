@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ReferenceTable extends Table {
+class ReferenceTable extends Table {
 
     private ReferenceTable(String tableType, String tablename) {
         super(tablename, tableType);
@@ -71,11 +71,7 @@ public class ReferenceTable extends Table {
 
     // FIXME: why not use the TableType object ?. Is this table type different
     // from TableType ?
-    public static final String getTableType(String datasetType, String filename) {
-        // FIXME: dataset type ??
-        if (!ReferenceImporter.REFERENCE.equals(datasetType))
-            return null;
-
+    public static final String getTableType(String filename) {
         for (Iterator iter = list().iterator(); iter.hasNext();) {
             ReferenceTable table = (ReferenceTable) iter.next();
             if (filename.indexOf(table.getName()) != -1) // i.e. contains
@@ -89,8 +85,8 @@ public class ReferenceTable extends Table {
         List types = new ArrayList();
 
         for (Iterator iter = list().iterator(); iter.hasNext();) {
-            ReferenceTable element = (ReferenceTable) iter.next();
-            types.add(element.getType());
+            ReferenceTable table = (ReferenceTable) iter.next();
+            types.add(table.getType());
         }
 
         return (String[]) types.toArray(new String[0]);

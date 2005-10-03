@@ -8,10 +8,7 @@
  * 
  */
 
-package gov.epa.emissions.commons.io.importer.ref;
-
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.Table;
+package gov.epa.emissions.commons.io;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,10 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BasicDataset implements Dataset {
+public class SimpleDataset implements Dataset {
     // TODO: how are these unused variables accessed ?
 
-    // unique id needed for hibernate persistence
     private long datasetid;
 
     private String name;
@@ -56,7 +52,7 @@ public class BasicDataset implements Dataset {
      * No argument constructor needed for hibernate bean mapping
      * 
      */
-    public BasicDataset() {
+    public SimpleDataset() {
         tables = new ArrayList();
     }
 
