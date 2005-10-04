@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.ListFormatImporter;
+import gov.epa.emissions.commons.io.importer.FormattedImporter;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 import gov.epa.emissions.commons.io.importer.SummaryTableCreator;
@@ -18,7 +18,7 @@ import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * The importer for ORL (One Record per Line) format text files.
  */
-public class BaseORLImporter extends ListFormatImporter {
+public class BaseORLImporter extends FormattedImporter {
     private static Log log = LogFactory.getLog(BaseORLImporter.class);
 
     /* ORL header record command fields */
@@ -78,8 +78,48 @@ public class BaseORLImporter extends ListFormatImporter {
     /* read ahead limit ~ 100 MB */
     public static final long READ_AHEAD_LIMIT = 105000000L;
 
-    public BaseORLImporter(DbServer dbServer, boolean useTransactions, boolean annualNotAverageDaily) {
-        super(new ORLTableTypes(), dbServer, ListFormatImporter.WHITESPACE_REGEX, useTransactions, true);
+    private char delimiter;
+
+    private static char[] expectedDelimitersInORLFile = { ',', ';', '\t', ' ' };
+
+    private static HashMap noOfMinColumnsInORLFileMap;
+
+    private static HashMap noOfMaxColumnsInORLFileMap;
+
+    private String emptyValue = "-9";
+
+    static {
+        noOfMinColumnsInORLFileMap = new HashMap();
+        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.NONPOINT.getName(), new Integer(8));
+        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.NONROAD.getName(), new Integer(4));
+        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.ON_ROAD.getName(), new Integer(4));
+        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.POINT.getName(), new Integer(23));
+
+        noOfMaxColumnsInORLFileMap = new HashMap();
+        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.NONPOINT.getName(), new Integer(12));
+        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.NONROAD.getName(), new Integer(8));
+        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.ON_ROAD.getName(), new Integer(5));
+        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.POINT.getName(), new Integer(28));
+    }
+
+    public static int getMinNoOfColumns(String orlDatasetType) {
+        Object number = noOfMinColumnsInORLFileMap.get(orlDatasetType);
+        if (number == null) {
+            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
+        }
+        return ((Integer) number).intValue();
+    }
+
+    public static int getMaxNoOfColumns(String orlDatasetType) {
+        Object number = noOfMaxColumnsInORLFileMap.get(orlDatasetType);
+        if (number == null) {
+            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
+        }
+        return ((Integer) number).intValue();
+    }
+
+    public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
+        super(new ORLTableTypes(), dbServer);
         this.annualNotAverageDaily = annualNotAverageDaily;
     }
 
@@ -171,6 +211,9 @@ public class BaseORLImporter extends ListFormatImporter {
             }
         }
 
+        int minNoColumns = getMinNoOfColumns(datasetType);
+        delimiter = findDelimiter(file, minNoColumns);
+
         FileColumnsMetadata metadata = getFileColumnsMetadata(datasetType);
         String[] columnNames = metadata.getColumnNames();
         String[] columnTypes = metadata.getColumnTypes();
@@ -189,6 +232,164 @@ public class BaseORLImporter extends ListFormatImporter {
             dataset.setUnits(averageDailyUnits);
             dataset.setTemporalResolution(TemporalResolution.DAILY.getName());
         }
+    }
+
+    public char findDelimiter(File file, int minNoOfColumns) throws Exception {
+        String line = getFirstDataLine(file);
+        if (line != null) {
+            for (int i = 0; i < expectedDelimitersInORLFile.length; i++) {
+                int numberOfDelim = getNoOfDelimiters(expectedDelimitersInORLFile[i], line);
+                // delims+1=column in the file
+                if (numberOfDelim >= minNoOfColumns - 1) {
+                    return expectedDelimitersInORLFile[i];
+                }
+            }
+            throw new Exception("Could not find the delimiter '" + file.getAbsolutePath() + "'");
+        }
+        throw new Exception("There is no data lines in the file '" + file.getAbsolutePath() + "'");
+    }
+
+    private String getFirstDataLine(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = reader.readLine();
+        while (line == null || line.trim().length() == 0 || line.trim().charAt(0) == '#') {
+            line = reader.readLine();
+        }
+        reader.close();
+        return line;
+    }
+
+    private int getNoOfDelimiters(char delimiter, String line) {
+        int number = 0;
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == delimiter) {
+                number++;
+            }
+        }
+        return number;
+    }
+
+    public String[] breakUpLine(String line, int[] widths) throws Exception {
+        if (line == null || line.length() == 0) {
+            throw new IllegalArgumentException("the line should not be null or lenght of the line > 0");
+        }
+        line = line.trim();
+        List tokens = new ArrayList();
+        for (int i = 0; i < line.length();) {
+            char ch = line.charAt(i);
+            if (ch == delimiter) {
+                if ((i + 1 < line.length()) && line.charAt(i + 1) == '!')// comments
+                                                                            // starts
+                    break;// ignore comments
+
+                i = delimiterState(line, i, tokens);
+            } else {
+                i = tokenState(line, i, tokens);
+            }
+        }
+
+        // check whether we have atleast noOfColumns tokens if else add empty
+        // tokens
+        addEmptyTokens(tokens, dataset.getDatasetType());
+        return (String[]) tokens.toArray(new String[0]);
+    }
+
+    private void addEmptyTokens(List tokens, String datasetType) {
+        int maxNoOfColumns = getMaxNoOfColumns(datasetType);
+        int count = maxNoOfColumns - tokens.size();
+        for (int i = 0; i < count; i++) {
+            tokens.add("");
+        }
+    }
+
+    private int delimiterState(String line, int trackIndex, List tokens) {
+        int index = trackIndex;
+        // if delimiter appears at the start and end of line eg: ,5,3,2,=>
+        // "",5,3,3,""
+        if (index == 0 || index == line.length() - 1) {
+            tokens.add("");
+        }
+        // we are sure line.charAt(trackIndex)==delimiter
+        for (int i = index + 1; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (ch != delimiter) {
+                index = i;
+                break;
+            }
+            // 5,,3,2=> 5,"",3,2
+            // 5 3 2=> 5,3,3 //sucessive spaces is not treated as separate
+            // delims
+            else if (ch == delimiter && ch != ' ') {
+                tokens.add("");
+            }
+        }
+        return index;
+    }
+
+    private int tokenState(String line, int trackIndex, List tokens) throws Exception {
+        int index = trackIndex;
+
+        boolean quoteFound = false;
+        char quote = line.charAt(trackIndex);
+        if (quote == '\"' || quote == '\'') {
+            quoteFound = true;
+            index++;
+        }
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = index; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (quoteFound) {
+                if (ch == quote) {
+                    String emptyValueCheck = emptyValueCheck(sb.toString());
+                    tokens.add(emptyValueCheck);
+                    index = moveToNextDelimiter(line, i);
+                    break;
+                }
+
+                if (i == line.length() - 1) {
+                    throw new Exception("No end quote found in the file in line:\n" + line);
+                }
+                sb.append(ch);
+            } else {
+                if (ch == delimiter) {
+                    String emptyValueCheck = emptyValueCheck(sb.toString().trim());
+                    tokens.add(emptyValueCheck);
+                    index = i;
+                    break;
+                }
+                sb.append(ch);
+                index = i;
+            }
+        }
+        if (index == line.length() - 1) {
+            String emptyValueCheck = emptyValueCheck(sb.toString());
+            tokens.add(emptyValueCheck);
+            index++;
+        }
+        return index;
+    }
+
+    private String emptyValueCheck(String value) {
+        if (value.equals(emptyValue)) {
+            return "";
+        }
+        return value;
+    }
+
+    private int moveToNextDelimiter(String line, int index) throws Exception {
+        for (int i = index + 1; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (ch == delimiter) {
+                return i;
+            }
+
+            if (ch == ' ') {
+                continue;
+            }
+            throw new Exception("Expected delimiter at line:" + index + "\n" + line);
+        }
+        return index;
     }
 
     private String doImport(File file, Datasource datasource, BufferedReader reader, String[] columnNames,
@@ -229,21 +430,6 @@ public class BaseORLImporter extends ListFormatImporter {
         String[] data = null;
         int numRows = 0;
 
-        // kick out invalid data lines
-        int kickOutRows = 0;
-        PrintWriter writer = null;
-        String canonicalFileName = file.getCanonicalPath();
-        int txtIndex = canonicalFileName.indexOf(".txt");
-        String writerFileName = "";
-        File writerFile = null;
-        // find unique file name
-        for (int i = 0; writerFile == null || writerFile.exists(); i++) {
-            writerFileName = canonicalFileName.substring(0, txtIndex) + ".reimport." + i
-                    + canonicalFileName.substring(txtIndex);
-            writerFile = new File(writerFileName);
-        }
-
-        // read lines in one at a time and put the data into database.. this
         // will avoid huge memory consumption
         while ((line = reader.readLine()) != null) {
             // skip over non data lines as needed
@@ -261,11 +447,6 @@ public class BaseORLImporter extends ListFormatImporter {
         // close the database connections by calling acceptor.finish..
         // and close the reader & writer as well..
         reader.close();
-        if (writer != null)
-            writer.close();
-
-        if (kickOutRows > 0)
-            System.out.println("Kicked out " + kickOutRows + " rows to file " + writerFileName);
 
         return tableName;
     }
@@ -646,8 +827,12 @@ public class BaseORLImporter extends ListFormatImporter {
         return comments;
     }
 
-	public void preCondition() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    public void preCondition() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setDelimiter(char delimiter) {
+        this.delimiter = delimiter;
+    }
 }

@@ -14,7 +14,7 @@ import java.io.File;
  */
 public class CompleteORLImporter extends BaseORLImporter {
     public CompleteORLImporter(DbServer dbServer, boolean useTransactions, boolean annualNotAverageDaily) {
-        super(dbServer, useTransactions, annualNotAverageDaily);
+        super(dbServer, annualNotAverageDaily);
     }
 
     public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {

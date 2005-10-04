@@ -30,12 +30,19 @@ public abstract class ORLImporterTestCase extends CommonsTestCase {
     }
 
     public void testNonRoad() throws Exception {
-        run("arinv.nonroad.nti99d_NC.new.txt", ORLDatasetTypes.NONROAD,
-                ORLTableTypes.ORL_AREA_NONROAD_TOXICS);
+        run("arinv.nonroad.nti99d_NC.new.txt", ORLDatasetTypes.NONROAD, ORLTableTypes.ORL_AREA_NONROAD_TOXICS);
+    }
+
+    public void testNonRoadWithFewerColumns() throws Exception {
+        run("Nonroad_withFewerColumns.txt", ORLDatasetTypes.NONROAD, ORLTableTypes.ORL_AREA_NONROAD_TOXICS);
     }
 
     public void testPoint() throws Exception {
         run("ptinv.nti99_NC.txt", ORLDatasetTypes.POINT, ORLTableTypes.ORL_POINT_TOXICS);
+    }
+
+    public void testPointWithApostrophe() throws Exception {
+        run("point_withApostrophe.orl", ORLDatasetTypes.POINT, ORLTableTypes.ORL_POINT_TOXICS);
     }
 
     public void testOnRoadMobile() throws Exception {
