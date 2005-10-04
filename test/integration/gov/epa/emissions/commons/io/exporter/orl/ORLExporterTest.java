@@ -6,7 +6,8 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
-import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
+import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 import gov.epa.emissions.commons.io.importer.TableType;
 import gov.epa.emissions.commons.io.importer.orl.BaseORLImporter;
@@ -17,12 +18,12 @@ import java.util.regex.Pattern;
 
 public class ORLExporterTest extends CommonsTestCase {
 
-    private ORLDatasetTypes types;
+    private ORLDatasetTypesFactory types;
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        this.types = new ORLDatasetTypes();
+        this.types = new DefaultORLDatasetTypesFactory();
     }
 
     public void testPoint() throws Exception {

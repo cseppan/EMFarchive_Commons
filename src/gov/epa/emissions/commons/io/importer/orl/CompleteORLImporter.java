@@ -13,7 +13,7 @@ import java.io.File;
  * The importer for ORL (One Record per Line) format text files.
  */
 public class CompleteORLImporter extends BaseORLImporter {
-    public CompleteORLImporter(DbServer dbServer, boolean useTransactions, boolean annualNotAverageDaily) {
+    public CompleteORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
         super(dbServer, annualNotAverageDaily);
     }
 

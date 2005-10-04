@@ -5,18 +5,19 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
-import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
+import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 import gov.epa.emissions.commons.io.importer.TableType;
 
 public abstract class ORLImporterTestCase extends CommonsTestCase {
 
-    private ORLDatasetTypes types;
+    private ORLDatasetTypesFactory types;
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        this.types = new ORLDatasetTypes();
+        this.types = new DefaultORLDatasetTypesFactory();
     }
 
     abstract protected void doImport(String filename, Dataset dataset) throws Exception;

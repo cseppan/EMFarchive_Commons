@@ -21,6 +21,10 @@ public class DatasetType implements Serializable {
 
     private String uid = null;
 
+    private int minCols;
+
+    private int maxCols;
+
     /**
      * @return Returns the uid.
      */
@@ -95,8 +99,25 @@ public class DatasetType implements Serializable {
     public int hashCode() {
         return name.hashCode();
     }
-    
+
     public boolean equals(Object other) {
         return (other instanceof DatasetType && ((DatasetType) other).name.equals(name));
+    }
+
+    // TODO: do the min/max cols apply to all Dataset Types ? or just ORL ?
+    public void setMinColumns(int minCols) {
+        this.minCols = minCols;
+    }
+
+    public void setMaxColumns(int maxCols) {
+        this.maxCols = maxCols;
+    }
+
+    public int getMinCols() {
+        return minCols;
+    }
+
+    public int getMaxCols() {
+        return maxCols;
     }
 }

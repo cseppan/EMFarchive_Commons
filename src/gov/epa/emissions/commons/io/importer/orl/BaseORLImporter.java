@@ -9,7 +9,8 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.FormattedImporter;
-import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
+import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 import gov.epa.emissions.commons.io.importer.SummaryTableCreator;
 import gov.epa.emissions.commons.io.importer.TableType;
@@ -35,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * The importer for ORL (One Record per Line) format text files.
  */
+// FIXME: fix this ugly mess
 public class BaseORLImporter extends FormattedImporter {
     private static Log log = LogFactory.getLog(BaseORLImporter.class);
 
@@ -82,33 +84,19 @@ public class BaseORLImporter extends FormattedImporter {
 
     private static char[] expectedDelimitersInORLFile = { ',', ';', '\t', ' ' };
 
-    private Map noOfMinColumnsInORLFileMap;
-
-    private Map noOfMaxColumnsInORLFileMap;
-
     private String emptyValue = "-9";
 
-    private ORLDatasetTypes types;
+    private ORLDatasetTypesFactory types;
 
-    // FIXME: fix this ugly mess
+    public BaseORLImporter(DbServer dbServer) {
+        this(dbServer, true);
+    }
+
     public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
         super(new ORLTableTypes(), dbServer);
         this.annualNotAverageDaily = annualNotAverageDaily;
 
-        types = new ORLDatasetTypes();
-
-        // FIXME: move this into the DatasetType
-        noOfMinColumnsInORLFileMap = new HashMap();
-        noOfMinColumnsInORLFileMap.put(types.nonPoint().getName(), new Integer(8));
-        noOfMinColumnsInORLFileMap.put(types.nonRoad().getName(), new Integer(4));
-        noOfMinColumnsInORLFileMap.put(types.onRoad().getName(), new Integer(4));
-        noOfMinColumnsInORLFileMap.put(types.point().getName(), new Integer(23));
-
-        noOfMaxColumnsInORLFileMap = new HashMap();
-        noOfMaxColumnsInORLFileMap.put(types.nonPoint().getName(), new Integer(12));
-        noOfMaxColumnsInORLFileMap.put(types.nonRoad().getName(), new Integer(8));
-        noOfMaxColumnsInORLFileMap.put(types.onRoad().getName(), new Integer(5));
-        noOfMaxColumnsInORLFileMap.put(types.point().getName(), new Integer(28));
+        types = new DefaultORLDatasetTypesFactory();
     }
 
     /**
@@ -825,19 +813,11 @@ public class BaseORLImporter extends FormattedImporter {
     }
 
     public int getMinNoOfColumns(String orlDatasetType) {
-        Object number = noOfMinColumnsInORLFileMap.get(orlDatasetType);
-        if (number == null) {
-            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
-        }
-        return ((Integer) number).intValue();
+        return types.get(orlDatasetType).getMinCols();
     }
 
     public int getMaxNoOfColumns(String orlDatasetType) {
-        Object number = noOfMaxColumnsInORLFileMap.get(orlDatasetType);
-        if (number == null) {
-            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
-        }
-        return ((Integer) number).intValue();
+        return types.get(orlDatasetType).getMaxCols();
     }
 
     public void preCondition(String fileName) throws Exception {

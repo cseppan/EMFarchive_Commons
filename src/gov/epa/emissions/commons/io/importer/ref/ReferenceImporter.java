@@ -34,8 +34,6 @@ public class ReferenceImporter extends FixedFormatImporter {
     /** the field definitions file reader * */
     private FieldDefinitionsFileReader fieldDefsReader = null;
 
-    public static final String REFERENCE = "Reference";
-
     private static final String REF_DIR_NAME = "refFiles";
 
     public ReferenceImporter(DbServer dbServer, File fieldDefsFileName, File referenceFilesDir, boolean useTransactions) {
@@ -245,7 +243,8 @@ public class ReferenceImporter extends FixedFormatImporter {
         File[] files = file.listFiles(textFileFilter);
 
         Dataset dataset = new SimpleDataset();
-        dataset.setDatasetType(ReferenceImporter.REFERENCE);
+        ReferenceTableTypes refTableTypes = new ReferenceTableTypes();
+        dataset.setDatasetType(refTableTypes.reference().getName());
 
         dataset.addTable(ReferenceTable.REF_CONTROL_DEVICE_CODES);
         dataset.addTable(ReferenceTable.REF_CONVERSION_FACTORS);
@@ -264,14 +263,13 @@ public class ReferenceImporter extends FixedFormatImporter {
         run(files, dataset, true);
     }
 
-	public void preCondition(File file) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    public void preCondition(File file) throws Exception {
+        // TODO No Op
 
-	public void preCondition(String fileName) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    public void preCondition(String fileName) throws Exception {
+        // TODO No Op
+    }
 
 }

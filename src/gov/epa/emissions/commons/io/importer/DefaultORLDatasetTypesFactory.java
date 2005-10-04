@@ -8,11 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public final class ORLDatasetTypes {
+public final class DefaultORLDatasetTypesFactory implements ORLDatasetTypesFactory {
 
     private Map map;
 
-    public ORLDatasetTypes() {
+    public DefaultORLDatasetTypesFactory() {
         map = new HashMap();
 
         List types = list();
@@ -33,19 +33,27 @@ public final class ORLDatasetTypes {
     }
 
     public DatasetType nonPoint() {
-        return new DatasetType("ORL Nonpoint Inventory");
+        return create("ORL Nonpoint Inventory", 8, 12);
+    }
+
+    private DatasetType create(String name, int minCols, int maxCols) {
+        DatasetType type = new DatasetType(name);
+        type.setMinColumns(minCols);
+        type.setMaxColumns(maxCols);
+
+        return type;
     }
 
     public DatasetType point() {
-        return new DatasetType("ORL Point Inventory");
+        return create("ORL Point Inventory", 23, 28);
     }
 
     public DatasetType onRoad() {
-        return new DatasetType("ORL Onroad Inventory");
+        return create("ORL Onroad Inventory", 4, 5);
     }
 
     public DatasetType nonRoad() {
-        return new DatasetType("ORL Nonroad Inventory");
+        return create("ORL Nonroad Inventory", 4, 8);
     }
 
     public DatasetType get(String name) {

@@ -182,13 +182,13 @@ public class SummaryTableCreator {
 
     private Datasource referenceDatasource;
 
-    private ORLDatasetTypes types;
+    private ORLDatasetTypesFactory types;
 
     public SummaryTableCreator(Datasource emissions, Datasource reference) {
         this.emissionsDatasource = emissions;
         this.referenceDatasource = reference;
 
-        this.types = new ORLDatasetTypes();
+        this.types = new DefaultORLDatasetTypesFactory();
     }
 
     public void createAreaSummaryTable(String emTable, String epTable, String summaryTable, boolean overwrite)
@@ -387,7 +387,7 @@ public class SummaryTableCreator {
         String summaryFromSelectDistinct = " FROM " + referenceDatasource.getName() + ".fips as f, ";
         String tempSelectDistinct = null;
         String tempFromSelectDistinct = null;
-        ORLDatasetTypes orlTypes = new ORLDatasetTypes();
+        ORLDatasetTypesFactory orlTypes = new DefaultORLDatasetTypesFactory();
         if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
                 || datasetType.equals(types.onRoad().getName())) {
             // String createIndex = " (INDEX orl_key (" + FIPS + ", " + SCC +
