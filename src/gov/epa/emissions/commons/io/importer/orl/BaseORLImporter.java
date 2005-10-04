@@ -118,7 +118,7 @@ public class BaseORLImporter extends FormattedImporter {
         this.dataset = dataset;
 
         Datasource datasource = dbServer.getEmissionsDatasource();
-        String type = dataset.getDatasetType();
+        String type = dataset.getDatasetTypeName();
 
         if (files.length != 1) {
             throw new Exception("Can only import one valid orl file at a time: " + files);
@@ -258,7 +258,7 @@ public class BaseORLImporter extends FormattedImporter {
 
         // check whether we have atleast noOfColumns tokens if else add empty
         // tokens
-        addEmptyTokens(tokens, dataset.getDatasetType());
+        addEmptyTokens(tokens, dataset.getDatasetTypeName());
         return (String[]) tokens.toArray(new String[0]);
     }
 
@@ -363,7 +363,7 @@ public class BaseORLImporter extends FormattedImporter {
     private String doImport(File file, Datasource datasource, BufferedReader reader, String[] columnNames,
             String[] columnTypes, int[] columnWidths, boolean overwrite) throws Exception {
         String fileName = file.getName();
-        String datasetType = dataset.getDatasetType();
+        String datasetType = dataset.getDatasetTypeName();
         ORLTableType tableType = tableTypes.type(datasetType);
         if (tableType == null) {
             throw new Exception("Could not determine table type for file name: " + fileName);
@@ -478,9 +478,9 @@ public class BaseORLImporter extends FormattedImporter {
         // #ORL NONPOINT
         if ((command.equals(TOXICS_COMMAND) || command.equals(ORL_COMMAND)) && tokens.length <= 2 && !toxicsCommandRead) {
             if (tokens.length == 2) {
-                if (!dataset.getDatasetType().equals(types.nonPoint().getName())) {
+                if (!dataset.getDatasetTypeName().equals(types.nonPoint().getName())) {
                     throw new Exception("\"" + command + " " + TOXICS_NONPOINT
-                            + "\" is an invalid header command for dataset type \"" + dataset.getDatasetType() + "\"");
+                            + "\" is an invalid header command for dataset type \"" + dataset.getDatasetTypeName() + "\"");
                 }
 
                 String nonPoint = tokens[1].intern();
@@ -503,7 +503,7 @@ public class BaseORLImporter extends FormattedImporter {
         else if (command.equals(TYPE_COMMAND) && tokens.length > 1 && fileType == null) {
             // final char SPACE = '\u0020';
             fileType = line.substring(TYPE_COMMAND.length()).trim();
-            checkDatasetType(dataset.getDatasetType(), fileType);
+            checkDatasetType(dataset.getDatasetTypeName(), fileType);
         }// #TYPE fileType
 
         // #COUNTRY countryName
@@ -573,7 +573,7 @@ public class BaseORLImporter extends FormattedImporter {
 
         if (keyword != null) {
             throw new Exception("File type \"" + fileType + "\" must contain the word \"" + keyword
-                    + "\" to be valid for dataset type \"" + dataset.getDatasetType() + "\"");
+                    + "\" to be valid for dataset type \"" + dataset.getDatasetTypeName() + "\"");
         }
     }
 
@@ -647,7 +647,7 @@ public class BaseORLImporter extends FormattedImporter {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
         DataAcceptor emissionsAcceptor = emissionsDatasource.getDataAcceptor();
         // ORL table types
-        String datasetType = dataset.getDatasetType();
+        String datasetType = dataset.getDatasetTypeName();
         ORLTableType tableType = tableTypes.type(datasetType);
         Table table = dataset.getTable(tableType.baseType());
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();

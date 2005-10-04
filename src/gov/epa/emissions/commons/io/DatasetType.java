@@ -21,6 +21,7 @@ public class DatasetType implements Serializable {
 
     private String uid = null;
 
+    // FIXME: add the min/max cols as cols in table
     private int minCols;
 
     private int maxCols;

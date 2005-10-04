@@ -30,7 +30,7 @@ public abstract class ORLImporterTestCase extends CommonsTestCase {
         String table = filename.substring(0, filename.length() - 4).replace('.', '_');
 
         Dataset dataset = new SimpleDataset();
-        dataset.setDatasetType(datasetType.getName());
+        dataset.setDatasetTypeName(datasetType.getName());
         // only one base type
         dataset.addTable(new Table(table, tableType.baseType()));
         dataset.addTable(new Table(table + "_summary", tableType.summaryType()));

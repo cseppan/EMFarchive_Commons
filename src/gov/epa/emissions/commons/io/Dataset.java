@@ -30,10 +30,13 @@ public interface Dataset extends Serializable {
 
     String getCreator();
 
-    String getDatasetType();
+    String getDatasetTypeName();
 
-    // TODO: use DatasetType instead
-    void setDatasetType(String datasetType);
+    void setDatasetTypeName(String datasetType);
+
+    void setDatasetType(DatasetType datasetType);
+
+    DatasetType getDatasetType();
 
     void setUnits(String units);
 

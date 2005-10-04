@@ -51,7 +51,7 @@ public class ReferenceImporter extends FixedFormatImporter {
     public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {
         super.dataset = dataset;
 
-        files = verifyExpectedFiles(dataset.getDatasetType(), files);
+        files = verifyExpectedFiles(dataset.getDatasetTypeName(), files);
 
         fieldDefsReader = new FieldDefinitionsFileReader(fieldDefsFile, dbServer.getTypeMapper());
 
@@ -217,7 +217,7 @@ public class ReferenceImporter extends FixedFormatImporter {
 
         Dataset dataset = new SimpleDataset();
         ReferenceTableTypes refTableTypes = new ReferenceTableTypes();
-        dataset.setDatasetType(refTableTypes.reference().getName());
+        dataset.setDatasetTypeName(refTableTypes.reference().getName());
 
         dataset.addTable(ReferenceTable.REF_CONTROL_DEVICE_CODES);
         dataset.addTable(ReferenceTable.REF_CONVERSION_FACTORS);

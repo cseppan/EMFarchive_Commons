@@ -139,7 +139,7 @@ public class ORLExporterTest extends CommonsTestCase {
 
     private Dataset createDataset(DatasetType datasetType, ORLTableType tableType, String tableName) {
         Dataset dataset = new SimpleDataset();
-        dataset.setDatasetType(datasetType.getName());
+        dataset.setDatasetTypeName(datasetType.getName());
         // only one base type
         dataset.addTable(new Table(tableName, tableType.baseType()));
         dataset.setRegion("US");
@@ -154,7 +154,7 @@ public class ORLExporterTest extends CommonsTestCase {
         String tableName = filename.substring(0, filename.length() - 4).replace('.', '_');
 
         Dataset dataset = new SimpleDataset();
-        dataset.setDatasetType(type.getName());
+        dataset.setDatasetTypeName(type.getName());
         // only one base type
         dataset.addTable(new Table(tableName, tableType.baseType()));
         dataset.addTable(new Table(tableName + "_summary", tableType.summaryType()));

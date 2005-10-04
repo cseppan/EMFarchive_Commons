@@ -28,7 +28,7 @@ public class SimpleDataset implements Dataset {
 
     private String description;
 
-    private String datasetType;
+    private String datasetTypeName;
 
     private String region;
 
@@ -48,6 +48,8 @@ public class SimpleDataset implements Dataset {
 
     private List tables;
 
+    private DatasetType datasetType;
+
     /**
      * No argument constructor needed for hibernate bean mapping
      * 
@@ -56,8 +58,8 @@ public class SimpleDataset implements Dataset {
         tables = new ArrayList();
     }
 
-    public String getDatasetType() {
-        return datasetType;
+    public String getDatasetTypeName() {
+        return datasetTypeName;
     }
 
     public void setUnits(String units) {
@@ -122,14 +124,13 @@ public class SimpleDataset implements Dataset {
         return tablesMap;
     }
 
-    public void setDatasetType(String datasetType) {
-        this.datasetType = datasetType;
+    public void setDatasetTypeName(String datasetType) {
+        this.datasetTypeName = datasetType;
     }
 
     public void addTable(Table table) {
         tables.add(table);
     }
-
 
     public String getCountry() {
         return country;
@@ -173,14 +174,14 @@ public class SimpleDataset implements Dataset {
     }
 
     public List getDataSources() {
-		return datasources;
-	}
+        return datasources;
+    }
 
-	public void setDataSources(List datasources) {
-		this.datasources = datasources;
-	}
+    public void setDataSources(List datasources) {
+        this.datasources = datasources;
+    }
 
-	public long getDatasetid() {
+    public long getDatasetid() {
         return datasetid;
     }
 
@@ -210,5 +211,12 @@ public class SimpleDataset implements Dataset {
         return (name.equals(otherDataset.getName()));
     }
 
+    public void setDatasetType(DatasetType datasetType) {
+        this.datasetType = datasetType;
+    }
+
+    public DatasetType getDatasetType() {
+        return datasetType;
+    }
 
 }

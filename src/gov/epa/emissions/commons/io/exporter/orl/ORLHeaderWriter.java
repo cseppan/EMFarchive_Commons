@@ -24,7 +24,7 @@ public class ORLHeaderWriter {
 
     void writeHeader(Dataset dataset, PrintWriter writer) {
         String OUT_COMMAND = ORL_COMMAND;
-        if (dataset.getDatasetType().equals("ORL Nonpoint Inventory")) {
+        if (dataset.getDatasetTypeName().equals("ORL Nonpoint Inventory")) {
             OUT_COMMAND = ORL_COMMAND + " NONPOINT";
         }
         writer.println(OUT_COMMAND);
@@ -38,7 +38,7 @@ public class ORLHeaderWriter {
         writer.println(YEAR_COMMAND
                 + ((dataset.getYear() != 0) ? "" + dataset.getYear() : " Year not found in database"));
 
-        String type = (dataset.getDatasetType() != null) ? dataset.getDatasetType()
+        String type = (dataset.getDatasetTypeName() != null) ? dataset.getDatasetTypeName()
                 : " Dataset Type not found in database";
         writer.println(TYPE_COMMAND + type);
 

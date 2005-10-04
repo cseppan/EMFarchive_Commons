@@ -55,7 +55,7 @@ public class ORLWriter {
         Query query = datasource.query();
         ResultSet data = query.selectAll(qualifiedTableName);
 
-        String datasetType = dataset.getDatasetType();
+        String datasetType = dataset.getDatasetTypeName();
 
         ORLBody body = bodyFactory.getBody(datasetType);
         body.write(data, writer);

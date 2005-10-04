@@ -9,17 +9,13 @@ public class ORLTableTypes {
 
     private static final ORLDatasetTypesFactory datasetTypes = new DefaultORLDatasetTypesFactory();
 
-    public static final ORLTableType ORL_AREA_NONPOINT_TOXICS = new ORLTableType(datasetTypes.nonPoint(),
-            "ORL Nonpoint Inventory", "ORL Nonpoint Inventory Summary");
+    public static final ORLTableType ORL_AREA_NONPOINT_TOXICS = new ORLTableType(datasetTypes.nonPoint());
 
-    public static final ORLTableType ORL_AREA_NONROAD_TOXICS = new ORLTableType(datasetTypes.nonRoad(),
-            "ORL Nonroad Inventory", "ORL Nonroad Inventory Summary");
+    public static final ORLTableType ORL_AREA_NONROAD_TOXICS = new ORLTableType(datasetTypes.nonRoad());
 
-    public static final ORLTableType ORL_ONROAD_MOBILE_TOXICS = new ORLTableType(datasetTypes.onRoad(),
-            "ORL Onroad Inventory", "ORL Onroad Inventory Summary");
+    public static final ORLTableType ORL_ONROAD_MOBILE_TOXICS = new ORLTableType(datasetTypes.onRoad());
 
-    public static final ORLTableType ORL_POINT_TOXICS = new ORLTableType(datasetTypes.point(), "ORL Point Inventory",
-            "ORL Point Inventory Summary");
+    public static final ORLTableType ORL_POINT_TOXICS = new ORLTableType(datasetTypes.point());
 
     private List list() {
         List list = new ArrayList();

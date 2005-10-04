@@ -6,14 +6,11 @@ public class ORLTableType {
 
     private DatasetType datasetType;
 
-    private String summaryType;
-
     private String baseType;
 
-    public ORLTableType(DatasetType datasetType, String baseType, String summaryType) {
+    public ORLTableType(DatasetType datasetType) {
         this.datasetType = datasetType;
-        this.baseType = baseType;
-        this.summaryType = summaryType;
+        this.baseType = datasetType.getName();
     }
 
     public DatasetType datasetType() {
@@ -21,7 +18,7 @@ public class ORLTableType {
     }
 
     public String summaryType() {
-        return summaryType;
+        return baseType + " Summary";
     }
 
     public String baseType() {
