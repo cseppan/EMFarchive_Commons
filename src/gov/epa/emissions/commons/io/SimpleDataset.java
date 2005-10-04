@@ -44,7 +44,8 @@ public class SimpleDataset implements Dataset {
 
     private Date endDateTime;
 
-    private Map datasources;
+    private Map datasourcesNames;
+    private List datasources;
 
     private List tables;
 
@@ -130,9 +131,6 @@ public class SimpleDataset implements Dataset {
         tables.add(table);
     }
 
-    public void setDataSources(Map dataSources) {
-        this.datasources = dataSources;// table type -> filepath mapping
-    }
 
     public String getCountry() {
         return country;
@@ -175,11 +173,23 @@ public class SimpleDataset implements Dataset {
         return endDateTime;
     }
 
-    public Map getDataSources() {
-        return datasources;
-    }
+    public List getDataSources() {
+		return datasources;
+	}
 
-    public long getDatasetid() {
+	public void setDataSources(List datasources) {
+		this.datasources = datasources;
+	}
+
+	public Map getDataSourcesNames() {
+		return datasourcesNames;
+	}
+
+	public void setDataSourcesNames(Map datasourcesNames) {
+		this.datasourcesNames = datasourcesNames;
+	}
+
+	public long getDatasetid() {
         return datasetid;
     }
 
@@ -208,4 +218,6 @@ public class SimpleDataset implements Dataset {
 
         return (name.equals(otherDataset.getName()));
     }
+
+
 }

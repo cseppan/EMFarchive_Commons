@@ -88,7 +88,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         for (int i = 0; i < tableTypes.length; i++) {
             dataSources.put(tableTypes[i], absolutePaths[i]);
         }
-        dataset.setDataSources(dataSources);
+        dataset.setDataSourcesNames(dataSources);
     }// setDataSources(File[])
 
     private File[] verifyExpectedFiles(String datasetType, File[] files) throws Exception {
@@ -264,7 +264,12 @@ public class ReferenceImporter extends FixedFormatImporter {
         run(files, dataset, true);
     }
 
-	public void preCondition() throws Exception {
+	public void preCondition(File file) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void preCondition(String fileName) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

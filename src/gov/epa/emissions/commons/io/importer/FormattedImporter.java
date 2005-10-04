@@ -92,7 +92,7 @@ public abstract class FormattedImporter implements Importer {
         for (int i = 0; i < tableTypes.length; i++) {
             dataSources.put(tableTypes[i], absolutePaths[i]);
         }
-        dataset.setDataSources(dataSources);
+        dataset.setDataSourcesNames(dataSources);
     }// setDataSources(File[])
 
     public final Dataset getDataset() {

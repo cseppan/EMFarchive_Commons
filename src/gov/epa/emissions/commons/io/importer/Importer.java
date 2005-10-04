@@ -20,7 +20,7 @@ public interface Importer {
 	 * 
 	 * @throws Exception
 	 */
-	public void preCondition() throws Exception;
+	public void preCondition(String fileName) throws Exception;
 	
     /**
      * This method will put the files into the dataset and database, overwriting

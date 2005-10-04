@@ -835,4 +835,9 @@ public class BaseORLImporter extends FormattedImporter {
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
     }
+
+	public void preCondition(String fileName) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -12,6 +12,7 @@ package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public interface Dataset extends Serializable {
@@ -70,10 +71,13 @@ public interface Dataset extends Serializable {
 
     void setTablesMap(Map datatables);
 
-    void setDataSources(Map dataSources);
+    void setDataSourcesNames(Map datasourcesNames);
 
-    Map getDataSources();
+    Map getDataSourcesNames();
 
+    void setDataSources(List datasources);
+    List getDataSources();
+    
     // convenience methods
     Table getTable(String tableType);
 
