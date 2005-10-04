@@ -1,14 +1,14 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.CommonsTestCase;
 import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
+import gov.epa.emissions.commons.io.importer.ORLTableType;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
-import gov.epa.emissions.commons.io.importer.TableType;
 
 public abstract class ORLImporterTestCase extends CommonsTestCase {
 
@@ -26,13 +26,13 @@ public abstract class ORLImporterTestCase extends CommonsTestCase {
         run("arinv.nonpoint.nti99_NC.txt", types.nonPoint(), ORLTableTypes.ORL_AREA_NONPOINT_TOXICS);
     }
 
-    private void run(String filename, DatasetType datasetType, TableType tableType) throws Exception {
+    private void run(String filename, DatasetType datasetType, ORLTableType tableType) throws Exception {
         String table = filename.substring(0, filename.length() - 4).replace('.', '_');
 
         Dataset dataset = new SimpleDataset();
         dataset.setDatasetType(datasetType.getName());
         // only one base type
-        dataset.addTable(new Table(table, tableType.baseTypes()[0]));
+        dataset.addTable(new Table(table, tableType.baseType()));
         dataset.addTable(new Table(table + "_summary", tableType.summaryType()));
 
         doImport(filename, dataset);

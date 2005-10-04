@@ -26,13 +26,13 @@ public interface Dataset extends Serializable {
     public void setName(String name);
 
     // bean-style properties
-    void setCreator(String creator);//TODO: use User instead
+    void setCreator(String creator);// TODO: use User instead
 
     String getCreator();
 
     String getDatasetType();
 
-    //TODO: use DatasetType instead
+    // TODO: use DatasetType instead
     void setDatasetType(String datasetType);
 
     void setUnits(String units);
@@ -71,13 +71,10 @@ public interface Dataset extends Serializable {
 
     void setTablesMap(Map datatables);
 
-    void setDataSourcesNames(Map datasourcesNames);
-
-    Map getDataSourcesNames();
-
     void setDataSources(List datasources);
+
     List getDataSources();
-    
+
     // convenience methods
     Table getTable(String tableType);
 

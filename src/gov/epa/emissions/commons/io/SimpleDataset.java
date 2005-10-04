@@ -44,7 +44,6 @@ public class SimpleDataset implements Dataset {
 
     private Date endDateTime;
 
-    private Map datasourcesNames;
     private List datasources;
 
     private List tables;
@@ -179,14 +178,6 @@ public class SimpleDataset implements Dataset {
 
 	public void setDataSources(List datasources) {
 		this.datasources = datasources;
-	}
-
-	public Map getDataSourcesNames() {
-		return datasourcesNames;
-	}
-
-	public void setDataSourcesNames(Map datasourcesNames) {
-		this.datasourcesNames = datasourcesNames;
 	}
 
 	public long getDatasetid() {

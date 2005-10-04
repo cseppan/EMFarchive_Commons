@@ -4,13 +4,6 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * This class contains all the common features for importing formatted files.
  * FIXME: split the larger methods, and reorganize
@@ -23,40 +16,8 @@ public abstract class FormattedImporter implements Importer {
 
     protected DbServer dbServer;
 
-    protected TableTypes tableTypes;
-
-    protected FormattedImporter(TableTypes tableTypes, DbServer dbServer) {
-        this.tableTypes = tableTypes;
+    protected FormattedImporter(DbServer dbServer) {
         this.dbServer = dbServer;
-    }
-
-    //ORL - specific i.e. one file - type
-    protected final File[] checkFiles(String datasetType, File[] files) throws Exception {
-        TableType tableType = tableTypes.type(datasetType);
-
-        // flags for when we find a file for the table type
-        String[] baseTableTypes = tableType.baseTypes();
-        boolean[] tableTypeFound = new boolean[baseTableTypes.length];
-        // initially flags set to false
-        Arrays.fill(tableTypeFound, false);
-        // List of files to actually import
-        List foundFiles = new ArrayList();
-
-        // if there is only one file, we have the file we want for this type
-        if (baseTableTypes.length == 1 && files.length == 1) {
-            foundFiles.add(files[0]);
-            tableTypeFound[0] = true;
-        }
-
-        // check that a file was found for all table types
-        boolean[] tableTypeChecker = new boolean[tableTypeFound.length];
-        Arrays.fill(tableTypeChecker, true);
-        if (!Arrays.equals(tableTypeFound, tableTypeChecker)) {
-            // missing a file for or more table types
-            throw new Exception("Missing a file for one or more table types for dataset type \"" + datasetType + "\"");
-        }
-
-        return (File[]) foundFiles.toArray(new File[0]);
     }
 
     /**
@@ -74,26 +35,6 @@ public abstract class FormattedImporter implements Importer {
     }
 
     protected abstract String[] breakUpLine(String line, int[] widths) throws Exception;
-
-    //ORL - specific i.e. one file - type
-    protected final void setDataSources(File[] files) {
-        String datasetType = dataset.getDatasetType();
-        // get all the table types for the dataset type
-        TableType tableType = tableTypes.type(datasetType);
-        Map dataSources = new HashMap();/* <TableType, String> */
-        String[] tableTypes = tableType.baseTypes();
-        String[] absolutePaths = new String[tableTypes.length];
-        // if there is only one file, we have the file we want for this type
-        if (tableTypes.length == 1 && files.length == 1) {
-            absolutePaths = new String[] { files[0].getAbsolutePath() };
-        }
-
-        // map data sources from table type to absolute path
-        for (int i = 0; i < tableTypes.length; i++) {
-            dataSources.put(tableTypes[i], absolutePaths[i]);
-        }
-        dataset.setDataSourcesNames(dataSources);
-    }// setDataSources(File[])
 
     public final Dataset getDataset() {
         return dataset;

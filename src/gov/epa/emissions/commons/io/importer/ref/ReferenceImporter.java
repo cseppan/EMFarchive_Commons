@@ -3,8 +3,8 @@ package gov.epa.emissions.commons.io.importer.ref;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
-import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FieldDefinitionsFileReader;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
@@ -18,9 +18,7 @@ import java.io.FilenameFilter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class represents the ReferenceImporter for the reference database. TODO:
@@ -34,10 +32,13 @@ public class ReferenceImporter extends FixedFormatImporter {
     /** the field definitions file reader * */
     private FieldDefinitionsFileReader fieldDefsReader = null;
 
+    private ReferenceTableTypes tableTypes;
+
     private static final String REF_DIR_NAME = "refFiles";
 
     public ReferenceImporter(DbServer dbServer, File fieldDefsFileName, File referenceFilesDir, boolean useTransactions) {
-        super(new ReferenceTableTypes(), dbServer);
+        super(dbServer);
+        this.tableTypes = new ReferenceTableTypes();
         this.fieldDefsFile = fieldDefsFileName;
         this.referenceFilesDir = referenceFilesDir;
         this.useTransactions = useTransactions;
@@ -52,9 +53,6 @@ public class ReferenceImporter extends FixedFormatImporter {
 
         files = verifyExpectedFiles(dataset.getDatasetType(), files);
 
-        // set the data source for the dataset
-        setDataSources2(super.dataset, files);
-
         fieldDefsReader = new FieldDefinitionsFileReader(fieldDefsFile, dbServer.getTypeMapper());
 
         // import each file (--> database table) one by one..
@@ -63,31 +61,6 @@ public class ReferenceImporter extends FixedFormatImporter {
             importFile(files[i], datasource, getDetails(files[i]), overwrite);
         }
     }
-
-    private void setDataSources2(Dataset dataset, File[] files) {
-        String datasetType = dataset.getDatasetType();
-        // get all the table types for the dataset type
-        TableType tableType = tableTypes.type(datasetType);
-        Map dataSources = new HashMap();/* <TableType, String> */
-        String[] tableTypes = tableType.baseTypes();
-        String[] absolutePaths = new String[tableTypes.length];
-        // table types must be sorted in order for binary search to work.
-        Arrays.sort(tableTypes);
-        // initially absolute paths set to null
-        Arrays.fill(absolutePaths, null);
-        // for(File file : files)
-        for (int i = 0; i < files.length; i++) {
-            String referenceTableType = ReferenceTable.getTableType(files[i].getName());
-            int searchIndex = Arrays.binarySearch(tableTypes, referenceTableType);
-            absolutePaths[searchIndex] = files[i].getAbsolutePath();
-        }
-
-        // map data sources from table type to absolute path
-        for (int i = 0; i < tableTypes.length; i++) {
-            dataSources.put(tableTypes[i], absolutePaths[i]);
-        }
-        dataset.setDataSourcesNames(dataSources);
-    }// setDataSources(File[])
 
     private File[] verifyExpectedFiles(String datasetType, File[] files) throws Exception {
         TableType tableType = tableTypes.type(datasetType);

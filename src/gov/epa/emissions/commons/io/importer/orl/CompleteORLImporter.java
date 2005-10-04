@@ -4,8 +4,8 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
+import gov.epa.emissions.commons.io.importer.ORLTableType;
 import gov.epa.emissions.commons.io.importer.SummaryTableCreator;
-import gov.epa.emissions.commons.io.importer.TableType;
 
 import java.io.File;
 
@@ -13,6 +13,7 @@ import java.io.File;
  * The importer for ORL (One Record per Line) format text files.
  */
 public class CompleteORLImporter extends BaseORLImporter {
+    
     public CompleteORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
         super(dbServer, annualNotAverageDaily);
     }
@@ -25,10 +26,10 @@ public class CompleteORLImporter extends BaseORLImporter {
     private void createSummaryTable(Dataset dataset, boolean overwrite) throws Exception {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
 
-        TableType tableType = tableTypes.type(dataset.getDatasetType());
+        ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
         // only one base type.
         // FIXME: why not have a ORLTableType that only has one base table ?
-        Table table = dataset.getTable(tableType.baseTypes()[0]);
+        Table table = dataset.getTable(tableType.baseType());
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
 
         String summaryTableSuffix = (String) dataset.getTablesMap().get(tableType.summaryType());

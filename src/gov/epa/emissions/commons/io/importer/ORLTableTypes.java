@@ -5,21 +5,21 @@ import java.util.Iterator;
 import java.util.List;
 
 //FIXME: what's this mess ?
-public class ORLTableTypes implements TableTypes {
+public class ORLTableTypes {
 
     private static final ORLDatasetTypesFactory datasetTypes = new DefaultORLDatasetTypesFactory();
 
-    public static final TableType ORL_AREA_NONPOINT_TOXICS = new TableType(datasetTypes.nonPoint(),
-            new String[] { "ORL Nonpoint Inventory" }, "ORL Nonpoint Inventory Summary");
+    public static final ORLTableType ORL_AREA_NONPOINT_TOXICS = new ORLTableType(datasetTypes.nonPoint(),
+            "ORL Nonpoint Inventory", "ORL Nonpoint Inventory Summary");
 
-    public static final TableType ORL_AREA_NONROAD_TOXICS = new TableType(datasetTypes.nonRoad(),
-            new String[] { "ORL Nonroad Inventory" }, "ORL Nonroad Inventory Summary");
+    public static final ORLTableType ORL_AREA_NONROAD_TOXICS = new ORLTableType(datasetTypes.nonRoad(),
+            "ORL Nonroad Inventory", "ORL Nonroad Inventory Summary");
 
-    public static final TableType ORL_ONROAD_MOBILE_TOXICS = new TableType(datasetTypes.onRoad(),
-            new String[] { "ORL Onroad Inventory" }, "ORL Onroad Inventory Summary");
+    public static final ORLTableType ORL_ONROAD_MOBILE_TOXICS = new ORLTableType(datasetTypes.onRoad(),
+            "ORL Onroad Inventory", "ORL Onroad Inventory Summary");
 
-    public static final TableType ORL_POINT_TOXICS = new TableType(datasetTypes.point(),
-            new String[] { "ORL Point Inventory" }, "ORL Point Inventory Summary");
+    public static final ORLTableType ORL_POINT_TOXICS = new ORLTableType(datasetTypes.point(), "ORL Point Inventory",
+            "ORL Point Inventory Summary");
 
     private List list() {
         List list = new ArrayList();
@@ -32,9 +32,9 @@ public class ORLTableTypes implements TableTypes {
         return list;
     }
 
-    public TableType type(String datasetType) {
+    public ORLTableType type(String datasetType) {
         for (Iterator iter = list().iterator(); iter.hasNext();) {
-            TableType type = (TableType) iter.next();
+            ORLTableType type = (ORLTableType) iter.next();
             if (type.datasetType().getName().equals(datasetType))
                 return type;
         }

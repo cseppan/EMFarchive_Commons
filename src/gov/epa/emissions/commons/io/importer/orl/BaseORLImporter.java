@@ -7,13 +7,13 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
+import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.FormattedImporter;
-import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
+import gov.epa.emissions.commons.io.importer.ORLTableType;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 import gov.epa.emissions.commons.io.importer.SummaryTableCreator;
-import gov.epa.emissions.commons.io.importer.TableType;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.BufferedReader;
@@ -88,12 +88,15 @@ public class BaseORLImporter extends FormattedImporter {
 
     private ORLDatasetTypesFactory types;
 
+    protected ORLTableTypes tableTypes;
+
     public BaseORLImporter(DbServer dbServer) {
         this(dbServer, true);
     }
 
     public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
-        super(new ORLTableTypes(), dbServer);
+        super(dbServer);
+        this.tableTypes = new ORLTableTypes();
         this.annualNotAverageDaily = annualNotAverageDaily;
 
         types = new DefaultORLDatasetTypesFactory();
@@ -117,11 +120,6 @@ public class BaseORLImporter extends FormattedImporter {
         Datasource datasource = dbServer.getEmissionsDatasource();
         String type = dataset.getDatasetType();
 
-        // remove extra files, then check for and return files necessary for
-        // import
-        files = checkFiles(type, files);
-        // checkFiles() implicitly returns a File array of length one for ORL
-        // explicitly make sure only one valid file is returned
         if (files.length != 1) {
             throw new Exception("Can only import one valid orl file at a time: " + files);
         }
@@ -131,13 +129,7 @@ public class BaseORLImporter extends FormattedImporter {
             throw new Exception("Unknown/unhandled ORL type: " + type);
         }
 
-        // set the data source for the dataset
-        setDataSources(files);
-
-        // import the file
         importFile(files[0], datasource, type, overwrite);
-
-        // perform post import changes
         postImport();
     }
 
@@ -372,14 +364,13 @@ public class BaseORLImporter extends FormattedImporter {
             String[] columnTypes, int[] columnWidths, boolean overwrite) throws Exception {
         String fileName = file.getName();
         String datasetType = dataset.getDatasetType();
-        TableType tableType = tableTypes.type(datasetType);
+        ORLTableType tableType = tableTypes.type(datasetType);
         if (tableType == null) {
             throw new Exception("Could not determine table type for file name: " + fileName);
         }
 
         // use the table type to get the table name
-        String baseTableType = tableType.baseTypes()[0];
-        Table table = dataset.getTable(baseTableType);
+        Table table = dataset.getTable(tableType.baseType());
         String tableName = table.getName().trim();
         String qualifiedTableName = datasource.getName() + "." + tableName;
 
@@ -417,7 +408,7 @@ public class BaseORLImporter extends FormattedImporter {
         }// while file is not empty
 
         // perform capable table type specific processing
-        postProcess(datasource, qualifiedTableName, baseTableType);
+        postProcess(datasource, qualifiedTableName, tableType.baseType());
 
         // when all the data is done ingesting..
         // close the database connections by calling acceptor.finish..
@@ -611,26 +602,26 @@ public class BaseORLImporter extends FormattedImporter {
         // Use ORLTableType object
 
         // point
-        if (tableType.equals(ORLTableTypes.ORL_POINT_TOXICS.baseTypes()[0])) {
+        if (tableType.equals(ORLTableTypes.ORL_POINT_TOXICS.baseType())) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME, ORLPointDataFormat.PLANT_ID_CODE_NAME,
                     ORLPointDataFormat.POINT_ID_CODE_NAME, ORLPointDataFormat.STACK_ID_CODE_NAME,
                     ORLPointDataFormat.DOE_PLANT_ID_NAME, ORLPointDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_point_key", indexColumnNames);
         }
         // nonpoint
-        if (tableType.equals(ORLTableTypes.ORL_AREA_NONPOINT_TOXICS.baseTypes()[0])) {
+        if (tableType.equals(ORLTableTypes.ORL_AREA_NONPOINT_TOXICS.baseType())) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME,
                     ORLAreaNonpointDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_nonpoint_key", indexColumnNames);
         }
         // nonroad
-        if (tableType.equals(ORLTableTypes.ORL_AREA_NONROAD_TOXICS.baseTypes()[0])) {
+        if (tableType.equals(ORLTableTypes.ORL_AREA_NONROAD_TOXICS.baseType())) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME,
                     ORLAreaNonroadDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_nonroad_key", indexColumnNames);
         }
         // mobile/onroad
-        if (tableType.equals(ORLTableTypes.ORL_ONROAD_MOBILE_TOXICS.baseTypes()[0])) {
+        if (tableType.equals(ORLTableTypes.ORL_ONROAD_MOBILE_TOXICS.baseType())) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME, ORLMobileDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_mobile_key", indexColumnNames);
         }
@@ -657,10 +648,8 @@ public class BaseORLImporter extends FormattedImporter {
         DataAcceptor emissionsAcceptor = emissionsDatasource.getDataAcceptor();
         // ORL table types
         String datasetType = dataset.getDatasetType();
-        TableType tableType = tableTypes.type(datasetType);
-        // only one base type.
-        // FIXME: why not have a ORLTableType that only has one base table ?
-        Table table = dataset.getTable(tableType.baseTypes()[0]);
+        ORLTableType tableType = tableTypes.type(datasetType);
+        Table table = dataset.getTable(tableType.baseType());
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
 
         final String FIPS_NAME = modifyFipsColumn(emissionsDatasource, emissionsAcceptor, tableType, qualifiedTableName);
@@ -747,7 +736,7 @@ public class BaseORLImporter extends FormattedImporter {
     }
 
     private String modifyFipsColumn(Datasource emissionsDatasource, DataAcceptor emissionsAcceptor,
-            TableType tableType, String qualifiedTableName) throws Exception {
+            ORLTableType tableType, String qualifiedTableName) throws Exception {
         // artificially insert the FIPS data column, a five
         // character String concatenating the state and county codes
         final String FIPS_NAME = ORLDataFormat.FIPS_NAME;
