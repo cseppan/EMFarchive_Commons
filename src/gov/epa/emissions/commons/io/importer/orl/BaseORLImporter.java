@@ -82,45 +82,33 @@ public class BaseORLImporter extends FormattedImporter {
 
     private static char[] expectedDelimitersInORLFile = { ',', ';', '\t', ' ' };
 
-    private static HashMap noOfMinColumnsInORLFileMap;
+    private Map noOfMinColumnsInORLFileMap;
 
-    private static HashMap noOfMaxColumnsInORLFileMap;
+    private Map noOfMaxColumnsInORLFileMap;
 
     private String emptyValue = "-9";
 
-    static {
-        noOfMinColumnsInORLFileMap = new HashMap();
-        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.NONPOINT.getName(), new Integer(8));
-        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.NONROAD.getName(), new Integer(4));
-        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.ON_ROAD.getName(), new Integer(4));
-        noOfMinColumnsInORLFileMap.put(ORLDatasetTypes.POINT.getName(), new Integer(23));
+    private ORLDatasetTypes types;
 
-        noOfMaxColumnsInORLFileMap = new HashMap();
-        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.NONPOINT.getName(), new Integer(12));
-        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.NONROAD.getName(), new Integer(8));
-        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.ON_ROAD.getName(), new Integer(5));
-        noOfMaxColumnsInORLFileMap.put(ORLDatasetTypes.POINT.getName(), new Integer(28));
-    }
-
-    public static int getMinNoOfColumns(String orlDatasetType) {
-        Object number = noOfMinColumnsInORLFileMap.get(orlDatasetType);
-        if (number == null) {
-            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
-        }
-        return ((Integer) number).intValue();
-    }
-
-    public static int getMaxNoOfColumns(String orlDatasetType) {
-        Object number = noOfMaxColumnsInORLFileMap.get(orlDatasetType);
-        if (number == null) {
-            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
-        }
-        return ((Integer) number).intValue();
-    }
-
+    // FIXME: fix this ugly mess
     public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
         super(new ORLTableTypes(), dbServer);
         this.annualNotAverageDaily = annualNotAverageDaily;
+
+        types = new ORLDatasetTypes();
+
+        // FIXME: move this into the DatasetType
+        noOfMinColumnsInORLFileMap = new HashMap();
+        noOfMinColumnsInORLFileMap.put(types.nonPoint().getName(), new Integer(8));
+        noOfMinColumnsInORLFileMap.put(types.nonRoad().getName(), new Integer(4));
+        noOfMinColumnsInORLFileMap.put(types.onRoad().getName(), new Integer(4));
+        noOfMinColumnsInORLFileMap.put(types.point().getName(), new Integer(23));
+
+        noOfMaxColumnsInORLFileMap = new HashMap();
+        noOfMaxColumnsInORLFileMap.put(types.nonPoint().getName(), new Integer(12));
+        noOfMaxColumnsInORLFileMap.put(types.nonRoad().getName(), new Integer(8));
+        noOfMaxColumnsInORLFileMap.put(types.onRoad().getName(), new Integer(5));
+        noOfMaxColumnsInORLFileMap.put(types.point().getName(), new Integer(28));
     }
 
     /**
@@ -150,8 +138,8 @@ public class BaseORLImporter extends FormattedImporter {
             throw new Exception("Can only import one valid orl file at a time: " + files);
         }
 
-        if (!type.equals(ORLDatasetTypes.NONPOINT.getName()) && !type.equals(ORLDatasetTypes.NONROAD.getName())
-                && !type.equals(ORLDatasetTypes.ON_ROAD.getName()) && !type.equals(ORLDatasetTypes.POINT.getName())) {
+        if (!type.equals(types.nonPoint().getName()) && !type.equals(types.nonRoad().getName())
+                && !type.equals(types.onRoad().getName()) && !type.equals(types.point().getName())) {
             throw new Exception("Unknown/unhandled ORL type: " + type);
         }
 
@@ -279,7 +267,7 @@ public class BaseORLImporter extends FormattedImporter {
             char ch = line.charAt(i);
             if (ch == delimiter) {
                 if ((i + 1 < line.length()) && line.charAt(i + 1) == '!')// comments
-                                                                            // starts
+                    // starts
                     break;// ignore comments
 
                 i = delimiterState(line, i, tokens);
@@ -511,7 +499,7 @@ public class BaseORLImporter extends FormattedImporter {
         // #ORL NONPOINT
         if ((command.equals(TOXICS_COMMAND) || command.equals(ORL_COMMAND)) && tokens.length <= 2 && !toxicsCommandRead) {
             if (tokens.length == 2) {
-                if (!dataset.getDatasetType().equals(ORLDatasetTypes.NONPOINT.getName())) {
+                if (!dataset.getDatasetType().equals(types.nonPoint().getName())) {
                     throw new Exception("\"" + command + " " + TOXICS_NONPOINT
                             + "\" is an invalid header command for dataset type \"" + dataset.getDatasetType() + "\"");
                 }
@@ -591,15 +579,15 @@ public class BaseORLImporter extends FormattedImporter {
     private void checkDatasetType(String datasetType, String fileType) throws Exception {
         String keyword = null;
         String fileTypeLowerCase = fileType.toLowerCase();
-        if (datasetType.equals(ORLDatasetTypes.NONROAD.getName()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
+        if (datasetType.equals(types.nonRoad().getName()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
             keyword = "Nonroad";
-        } else if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())
-                && (fileTypeLowerCase.indexOf("nonpoint") == -1) && fileTypeLowerCase.indexOf("non-point") == -1) {
+        } else if (datasetType.equals(types.nonPoint().getName()) && (fileTypeLowerCase.indexOf("nonpoint") == -1)
+                && fileTypeLowerCase.indexOf("non-point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Nonpoint";
-        } else if (datasetType.equals(ORLDatasetTypes.ON_ROAD.getName()) && fileTypeLowerCase.indexOf("mobile") == -1) {
+        } else if (datasetType.equals(types.onRoad().getName()) && fileTypeLowerCase.indexOf("mobile") == -1) {
             keyword = "Mobile";
-        } else if (datasetType.equals(ORLDatasetTypes.POINT.getName()) && fileTypeLowerCase.indexOf("point") == -1) {
+        } else if (datasetType.equals(types.point().getName()) && fileTypeLowerCase.indexOf("point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Point";
         }
@@ -610,15 +598,15 @@ public class BaseORLImporter extends FormattedImporter {
         }
     }
 
-    // TODO: pull this out into a factory
+    // FIXME: pull this out into a factory
     private FileColumnsMetadata getFileColumnsMetadata(String datasetType) throws Exception {
-        if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())) {
+        if (datasetType.equals(types.nonPoint().getName())) {
             orlDataFormat = new ORLAreaNonpointDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(ORLDatasetTypes.NONROAD.getName())) {
+        } else if (datasetType.equals(types.nonRoad().getName())) {
             orlDataFormat = new ORLAreaNonroadDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(ORLDatasetTypes.ON_ROAD.getName())) {
+        } else if (datasetType.equals(types.onRoad().getName())) {
             orlDataFormat = new ORLMobileDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(ORLDatasetTypes.POINT.getName())) {
+        } else if (datasetType.equals(types.point().getName())) {
             orlDataFormat = new ORLPointDataFormat(dbServer.getTypeMapper(), extendedFormat);
         } else {
             orlDataFormat = null;
@@ -836,8 +824,23 @@ public class BaseORLImporter extends FormattedImporter {
         this.delimiter = delimiter;
     }
 
-	public void preCondition(String fileName) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    public int getMinNoOfColumns(String orlDatasetType) {
+        Object number = noOfMinColumnsInORLFileMap.get(orlDatasetType);
+        if (number == null) {
+            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
+        }
+        return ((Integer) number).intValue();
+    }
+
+    public int getMaxNoOfColumns(String orlDatasetType) {
+        Object number = noOfMaxColumnsInORLFileMap.get(orlDatasetType);
+        if (number == null) {
+            throw new IllegalArgumentException("The type '" + orlDatasetType + "' is not supporter");
+        }
+        return ((Integer) number).intValue();
+    }
+
+    public void preCondition(String fileName) throws Exception {
+        // No Op
+    }
 }

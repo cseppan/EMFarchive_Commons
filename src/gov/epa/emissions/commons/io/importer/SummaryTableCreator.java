@@ -11,10 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @version $Id: SummaryTableCreator.java,v 1.3 2005/08/16 19:49:33 rhavaldar
- *          Exp $
- */
 public class SummaryTableCreator {
     public static final String AREA_SUMMARY = "nei_area_summary";
 
@@ -186,9 +182,13 @@ public class SummaryTableCreator {
 
     private Datasource referenceDatasource;
 
+    private ORLDatasetTypes types;
+
     public SummaryTableCreator(Datasource emissions, Datasource reference) {
         this.emissionsDatasource = emissions;
         this.referenceDatasource = reference;
+
+        this.types = new ORLDatasetTypes();
     }
 
     public void createAreaSummaryTable(String emTable, String epTable, String summaryTable, boolean overwrite)
@@ -387,9 +387,9 @@ public class SummaryTableCreator {
         String summaryFromSelectDistinct = " FROM " + referenceDatasource.getName() + ".fips as f, ";
         String tempSelectDistinct = null;
         String tempFromSelectDistinct = null;
-        if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())
-                || datasetType.equals(ORLDatasetTypes.NONROAD.getName())
-                || datasetType.equals(ORLDatasetTypes.ON_ROAD.getName())) {
+        ORLDatasetTypes orlTypes = new ORLDatasetTypes();
+        if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
+                || datasetType.equals(types.onRoad().getName())) {
             // String createIndex = " (INDEX orl_key (" + FIPS + ", " + SCC +
             // "))";
             tempSelectDistinct = " SELECT DISTINCT e." + FIPS_COL_ORL + " as " + FIPS + ", e." + SCC_COL_ORL + " as "
@@ -397,7 +397,7 @@ public class SummaryTableCreator {
             tempFromSelectDistinct = " FROM (SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + " FROM "
                     + orlTable + " ) e ";
 
-            if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())) {
+            if (datasetType.equals(orlTypes.nonPoint().getName())) {
                 summarySelectDistinct = " SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", " + "e." + FIPS_COL_ORL
                         + " as " + FIPS + ", e." + SCC_COL_ORL + " as " + SCC + ", e." + SIC_COL_ORL + " as " + SIC
                         + ", e." + MACT_COL_ORL + " as " + MACT + ", e." + SRCTYPE_COL + " as " + SRCTYPE + ", e."
@@ -411,7 +411,7 @@ public class SummaryTableCreator {
                 summaryFromSelectDistinct += "(SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + " FROM "
                         + orlTable + " ) e ";
             }
-        } else if (datasetType.equals(ORLDatasetTypes.POINT.getName())) {
+        } else if (datasetType.equals(types.point().getName())) {
             // String createIndex = " (INDEX orl_key (" + FIPS + ", " + PLANTID
             // + ", " + POINTID + ", "
             // + STACKID + ", " + SEGMENT + ", " + SCC + "))";
@@ -482,9 +482,8 @@ public class SummaryTableCreator {
                 summaryTableSelectPart += "t" + i + "." + cleanPoll + " as " + cleanPoll + ", ";
 
                 // get FIPS, SCC and CAS for pollutant
-                if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())
-                        || datasetType.equals(ORLDatasetTypes.NONROAD.getName())
-                        || datasetType.equals(ORLDatasetTypes.ON_ROAD.getName())) {
+                if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
+                        || datasetType.equals(types.onRoad().getName())) {
                     tempTableJoinParts[i] += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
                             + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[index]
                             + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL
@@ -494,7 +493,7 @@ public class SummaryTableCreator {
                 }
                 // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS for
                 // pollutant
-                else if (datasetType.equals(ORLDatasetTypes.POINT.getName())) {
+                else if (datasetType.equals(types.point().getName())) {
                     tempTableJoinParts[i] = tempTableJoinParts[i] + "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", "
                             + PLANTID_COL + ", " + POINTID_COL + ", " + STACKID_COL + ", " + SEGMENT_COL + ", "
                             + SCC_COL_ORL + ", " + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '"
@@ -535,15 +534,14 @@ public class SummaryTableCreator {
                 String cleanPoll = "_" + clean(pollutants[i]);
                 summaryTableSelectPart += cleanPoll + "." + emissionCol + " as " + cleanPoll + ", ";
 
-                if (datasetType.equals(ORLDatasetTypes.NONPOINT.getName())
-                        || datasetType.equals(ORLDatasetTypes.NONROAD.getName())
-                        || datasetType.equals(ORLDatasetTypes.ON_ROAD.getName())) {
+                if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
+                        || datasetType.equals(types.onRoad().getName())) {
                     // get FIPS, SCC and CAS for pollutant
                     summaryTableJoinPart += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
                             + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[i] + "') "
                             + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL + " AND e."
                             + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
-                } else if (datasetType.equals(ORLDatasetTypes.POINT.getName())) {
+                } else if (datasetType.equals(types.point().getName())) {
                     // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS
                     // for pollutant
                     summaryTableJoinPart += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + PLANTID_COL + ", "

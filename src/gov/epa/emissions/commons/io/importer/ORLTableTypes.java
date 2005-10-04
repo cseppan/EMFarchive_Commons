@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//FIXME: what's this mess ?
 public class ORLTableTypes implements TableTypes {
 
-    public static final TableType ORL_AREA_NONPOINT_TOXICS = new TableType(ORLDatasetTypes.NONPOINT.getName(),
-            new String[] { "ORL Nonpoint Source Toxics" }, "ORL Nonpoint Toxics Summary");
+    private static final ORLDatasetTypes datasetTypes = new ORLDatasetTypes();
 
-    public static final TableType ORL_AREA_NONROAD_TOXICS = new TableType(ORLDatasetTypes.NONROAD.getName(),
+    public static final TableType ORL_AREA_NONPOINT_TOXICS = new TableType(datasetTypes.nonPoint().getName(),
+            new String[] { "ORL Nonpoint Inventory" }, "ORL Nonpoint Toxics Summary");
+
+    public static final TableType ORL_AREA_NONROAD_TOXICS = new TableType(datasetTypes.nonRoad().getName(),
             new String[] { "ORL Nonroad Source Toxics" }, "ORL Nonroad Toxics Summary");
 
-    public static final TableType ORL_ONROAD_MOBILE_TOXICS = new TableType(ORLDatasetTypes.ON_ROAD.getName(),
+    public static final TableType ORL_ONROAD_MOBILE_TOXICS = new TableType(datasetTypes.onRoad().getName(),
             new String[] { "ORL Mobile Source Toxics" }, "ORL Mobile Toxics Summary");
 
-    public static final TableType ORL_POINT_TOXICS = new TableType(ORLDatasetTypes.POINT.getName(),
-            new String[] { "ORL Point Source Toxics" }, "ORL Point Toxics Summary");
+    public static final TableType ORL_POINT_TOXICS = new TableType(datasetTypes.point().getName(),
+            new String[] { "ORL Point Inventory" }, "ORL Point Toxics Summary");
 
     private List list() {
         List list = new ArrayList();

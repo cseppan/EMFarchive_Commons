@@ -9,16 +9,19 @@ public class ORLBodyFactory {
 
     private Map bodyMap;
 
+    private ORLDatasetTypes types;
+
     ORLBodyFactory() {
         bodyMap = new HashMap();
 
-        bodyMap.put(ORLDatasetTypes.NONPOINT.getName(), new ORLBody(new NonPointFormatterSequence()));
-        bodyMap.put(ORLDatasetTypes.NONROAD.getName(), new ORLBody(new NonRoadFormatterSequence()));
-        bodyMap.put(ORLDatasetTypes.ON_ROAD.getName(), new ORLBody(new OnRoadMobileFormatterSequence()));
-        bodyMap.put(ORLDatasetTypes.POINT.getName(), new ORLBody(new PointFormatterSequence()));
+        types = new ORLDatasetTypes();
+        bodyMap.put(types.nonPoint(), new ORLBody(new NonPointFormatterSequence()));
+        bodyMap.put(types.nonRoad(), new ORLBody(new NonRoadFormatterSequence()));
+        bodyMap.put(types.onRoad(), new ORLBody(new OnRoadMobileFormatterSequence()));
+        bodyMap.put(types.point(), new ORLBody(new PointFormatterSequence()));
     }
 
     ORLBody getBody(String datasetType) {
-        return (ORLBody) bodyMap.get(datasetType);
+        return (ORLBody) bodyMap.get(types.get(datasetType));
     }
 }

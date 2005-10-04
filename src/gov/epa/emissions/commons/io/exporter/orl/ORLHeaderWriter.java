@@ -1,12 +1,10 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ORLDatasetTypes;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
+//FIXME: fix this mess
 public class ORLHeaderWriter {
 
     /* Header record command fields */
@@ -24,21 +22,11 @@ public class ORLHeaderWriter {
 
     private static final String DESCRIPTION_COMMAND = COMMAND + "DESC    ";
 
-    private static final Map typeHackMap;
-    static {
-        typeHackMap = new HashMap();
-        typeHackMap.put(ORLDatasetTypes.NONPOINT.getName(), "Non-point Source Inventory");
-        typeHackMap.put(ORLDatasetTypes.NONROAD.getName(), "Non-road Vehicle Emission Inventory");
-        typeHackMap.put(ORLDatasetTypes.ON_ROAD.getName(), "On-road Vehicle Emission Inventory");
-        typeHackMap.put(ORLDatasetTypes.POINT.getName(), "Point Source Inventory");
-    }
-
     void writeHeader(Dataset dataset, PrintWriter writer) {
-    	
-    	String OUT_COMMAND = ORL_COMMAND;
-    	if (dataset.getDatasetType().equals("ORL Nonpoint Inventory")){
-    		OUT_COMMAND = ORL_COMMAND + " NONPOINT";
-    	}
+        String OUT_COMMAND = ORL_COMMAND;
+        if (dataset.getDatasetType().equals("ORL Nonpoint Inventory")) {
+            OUT_COMMAND = ORL_COMMAND + " NONPOINT";
+        }
         writer.println(OUT_COMMAND);
         String regionMessage = (dataset.getRegion() != null) ? dataset.getRegion() : " Region not found in database";
         writer.println(REGION_COMMAND + regionMessage);
@@ -50,7 +38,7 @@ public class ORLHeaderWriter {
         writer.println(YEAR_COMMAND
                 + ((dataset.getYear() != 0) ? "" + dataset.getYear() : " Year not found in database"));
 
-        String type = (dataset.getDatasetType() != null) ? (String) typeHackMap.get(dataset.getDatasetType())
+        String type = (dataset.getDatasetType() != null) ? dataset.getDatasetType()
                 : " Dataset Type not found in database";
         writer.println(TYPE_COMMAND + type);
 

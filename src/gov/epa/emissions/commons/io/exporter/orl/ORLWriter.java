@@ -35,6 +35,7 @@ public class ORLWriter {
             writeHeader(dataset, writer);
             writeBody(dataset, writer);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("could not export file - " + file, e);
         } finally {
             if (writer != null) {
