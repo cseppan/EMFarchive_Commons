@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 
@@ -22,7 +23,7 @@ public class ORLBodyFactory {
         bodyMap.put(types.point(), new ORLBody(new PointFormatterSequence()));
     }
 
-    ORLBody getBody(String datasetType) {
-        return (ORLBody) bodyMap.get(types.get(datasetType));
+    ORLBody getBody(DatasetType type) {
+        return (ORLBody) bodyMap.get(type);
     }
 }

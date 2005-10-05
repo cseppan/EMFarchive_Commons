@@ -26,7 +26,7 @@ public class CompleteORLImporter extends BaseORLImporter {
     private void createSummaryTable(Dataset dataset, boolean overwrite) throws Exception {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
 
-        ORLTableType tableType = tableTypes.type(dataset.getDatasetTypeName());
+        ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
         // only one base type.
         // FIXME: why not have a ORLTableType that only has one base table ?
         Table table = dataset.getTable(tableType.baseType());
@@ -37,7 +37,7 @@ public class CompleteORLImporter extends BaseORLImporter {
 
         SummaryTableCreator modifier = new SummaryTableCreator(dbServer.getEmissionsDatasource(), dbServer
                 .getReferenceDatasource());
-        modifier.createORLSummaryTable(dataset.getDatasetTypeName(), qualifiedTableName, summaryTable, overwrite,
+        modifier.createORLSummaryTable(dataset.getDatasetType(), qualifiedTableName, summaryTable, overwrite,
                 annualNotAverageDaily);
     }
 

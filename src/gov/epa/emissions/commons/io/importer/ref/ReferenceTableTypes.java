@@ -2,13 +2,12 @@ package gov.epa.emissions.commons.io.importer.ref;
 
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.TableType;
-import gov.epa.emissions.commons.io.importer.TableTypes;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ReferenceTableTypes implements TableTypes {
+public class ReferenceTableTypes {
 
     public DatasetType reference() {
         return new DatasetType("Reference");
@@ -21,10 +20,10 @@ public class ReferenceTableTypes implements TableTypes {
         return list;
     }
 
-    public TableType type(String datasetType) {
+    public TableType type(DatasetType datasetType) {
         for (Iterator iter = list().iterator(); iter.hasNext();) {
             TableType type = (TableType) iter.next();
-            if (type.datasetType().getName().equals(datasetType))
+            if (type.datasetType().equals(datasetType))
                 return type;
         }
 

@@ -22,9 +22,9 @@ public class DatasetType implements Serializable {
     private String uid = null;
 
     // FIXME: add the min/max cols as cols in table
-    private int minCols;
+    private int minColumns;
 
-    private int maxCols;
+    private int maxColumns;
 
     /**
      * @return Returns the uid.
@@ -107,18 +107,18 @@ public class DatasetType implements Serializable {
 
     // TODO: do the min/max cols apply to all Dataset Types ? or just ORL ?
     public void setMinColumns(int minCols) {
-        this.minCols = minCols;
+        this.minColumns = minCols;
     }
 
     public void setMaxColumns(int maxCols) {
-        this.maxCols = maxCols;
+        this.maxColumns = maxCols;
     }
 
-    public int getMinCols() {
-        return minCols;
+    public int getMinColumns() {
+        return minColumns;
     }
 
-    public int getMaxCols() {
-        return maxCols;
+    public int getMaxColumns() {
+        return maxColumns;
     }
 }

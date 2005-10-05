@@ -14,4 +14,5 @@ public interface ORLDatasetTypesFactory {
 
     DatasetType get(String name);
 
+    //FIXME: add  isNonPoint ?, isPoint ? and other similar methods
 }

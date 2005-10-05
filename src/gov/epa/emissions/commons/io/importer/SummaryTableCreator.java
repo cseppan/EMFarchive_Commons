@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.Query;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.orl.ORLDataFormat;
 import gov.epa.emissions.commons.io.importer.orl.ORLPointDataFormat;
 
@@ -356,7 +357,7 @@ public class SummaryTableCreator {
         emissionsQuery.execute(query);
     }// createMobileEmissionsSummaryTable(String, String, boolean)
 
-    public void createORLSummaryTable(String datasetType, String orlTable, String summaryTable, boolean overwrite,
+    public void createORLSummaryTable(DatasetType datasetType, String orlTable, String summaryTable, boolean overwrite,
             boolean annualNotAverageDaily) throws Exception {
         // connect to emissions database
         // get the pollutant CAS codes
@@ -388,8 +389,8 @@ public class SummaryTableCreator {
         String tempSelectDistinct = null;
         String tempFromSelectDistinct = null;
         ORLDatasetTypesFactory orlTypes = new DefaultORLDatasetTypesFactory();
-        if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
-                || datasetType.equals(types.onRoad().getName())) {
+        if (datasetType.equals(orlTypes.nonPoint()) || datasetType.equals(types.nonRoad())
+                || datasetType.equals(types.onRoad())) {
             // String createIndex = " (INDEX orl_key (" + FIPS + ", " + SCC +
             // "))";
             tempSelectDistinct = " SELECT DISTINCT e." + FIPS_COL_ORL + " as " + FIPS + ", e." + SCC_COL_ORL + " as "
@@ -397,7 +398,7 @@ public class SummaryTableCreator {
             tempFromSelectDistinct = " FROM (SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + " FROM "
                     + orlTable + " ) e ";
 
-            if (datasetType.equals(orlTypes.nonPoint().getName())) {
+            if (datasetType.equals(orlTypes.nonPoint())) {
                 summarySelectDistinct = " SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", " + "e." + FIPS_COL_ORL
                         + " as " + FIPS + ", e." + SCC_COL_ORL + " as " + SCC + ", e." + SIC_COL_ORL + " as " + SIC
                         + ", e." + MACT_COL_ORL + " as " + MACT + ", e." + SRCTYPE_COL + " as " + SRCTYPE + ", e."
@@ -411,7 +412,7 @@ public class SummaryTableCreator {
                 summaryFromSelectDistinct += "(SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + " FROM "
                         + orlTable + " ) e ";
             }
-        } else if (datasetType.equals(types.point().getName())) {
+        } else if (datasetType.equals(types.point())) {
             // String createIndex = " (INDEX orl_key (" + FIPS + ", " + PLANTID
             // + ", " + POINTID + ", "
             // + STACKID + ", " + SEGMENT + ", " + SCC + "))";
@@ -482,8 +483,8 @@ public class SummaryTableCreator {
                 summaryTableSelectPart += "t" + i + "." + cleanPoll + " as " + cleanPoll + ", ";
 
                 // get FIPS, SCC and CAS for pollutant
-                if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
-                        || datasetType.equals(types.onRoad().getName())) {
+                if (datasetType.equals(orlTypes.nonPoint()) || datasetType.equals(types.nonRoad())
+                        || datasetType.equals(types.onRoad())) {
                     tempTableJoinParts[i] += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
                             + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[index]
                             + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL
@@ -493,7 +494,7 @@ public class SummaryTableCreator {
                 }
                 // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS for
                 // pollutant
-                else if (datasetType.equals(types.point().getName())) {
+                else if (datasetType.equals(types.point())) {
                     tempTableJoinParts[i] = tempTableJoinParts[i] + "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", "
                             + PLANTID_COL + ", " + POINTID_COL + ", " + STACKID_COL + ", " + SEGMENT_COL + ", "
                             + SCC_COL_ORL + ", " + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '"
@@ -534,14 +535,14 @@ public class SummaryTableCreator {
                 String cleanPoll = "_" + clean(pollutants[i]);
                 summaryTableSelectPart += cleanPoll + "." + emissionCol + " as " + cleanPoll + ", ";
 
-                if (datasetType.equals(orlTypes.nonPoint().getName()) || datasetType.equals(types.nonRoad().getName())
-                        || datasetType.equals(types.onRoad().getName())) {
+                if (datasetType.equals(orlTypes.nonPoint()) || datasetType.equals(types.nonRoad())
+                        || datasetType.equals(types.onRoad())) {
                     // get FIPS, SCC and CAS for pollutant
                     summaryTableJoinPart += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
                             + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[i] + "') "
                             + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL + " AND e."
                             + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
-                } else if (datasetType.equals(types.point().getName())) {
+                } else if (datasetType.equals(types.point())) {
                     // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS
                     // for pollutant
                     summaryTableJoinPart += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + PLANTID_COL + ", "

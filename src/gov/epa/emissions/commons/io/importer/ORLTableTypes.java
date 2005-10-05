@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.io.DatasetType;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,10 +30,10 @@ public class ORLTableTypes {
         return list;
     }
 
-    public ORLTableType type(String datasetType) {
+    public ORLTableType type(DatasetType datasetType) {
         for (Iterator iter = list().iterator(); iter.hasNext();) {
             ORLTableType type = (ORLTableType) iter.next();
-            if (type.datasetType().getName().equals(datasetType))
+            if (type.datasetType().equals(datasetType))
                 return type;
         }
 

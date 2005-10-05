@@ -32,8 +32,6 @@ public interface Dataset extends Serializable {
 
     String getDatasetTypeName();
 
-    void setDatasetTypeName(String datasetType);
-
     void setDatasetType(DatasetType datasetType);
 
     DatasetType getDatasetType();

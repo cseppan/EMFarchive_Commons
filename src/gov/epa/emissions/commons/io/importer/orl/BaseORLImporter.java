@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
@@ -118,15 +119,14 @@ public class BaseORLImporter extends FormattedImporter {
         this.dataset = dataset;
 
         Datasource datasource = dbServer.getEmissionsDatasource();
-        String type = dataset.getDatasetTypeName();
-
         if (files.length != 1) {
             throw new Exception("Can only import one valid orl file at a time: " + files);
         }
 
-        if (!type.equals(types.nonPoint().getName()) && !type.equals(types.nonRoad().getName())
-                && !type.equals(types.onRoad().getName()) && !type.equals(types.point().getName())) {
-            throw new Exception("Unknown/unhandled ORL type: " + type);
+        DatasetType type = dataset.getDatasetType();
+        if (!type.equals(types.nonPoint()) && !type.equals(types.nonRoad()) && !type.equals(types.onRoad())
+                && !type.equals(types.point())) {
+            throw new Exception("Unknown/unhandled ORL type: " + type.getName());
         }
 
         importFile(files[0], datasource, type, overwrite);
@@ -143,7 +143,7 @@ public class BaseORLImporter extends FormattedImporter {
      * @param details -
      *            the details with which to import the file
      */
-    public void importFile(File file, Datasource datasource, String datasetType, boolean overwrite) throws Exception {
+    public void importFile(File file, Datasource datasource, DatasetType type, boolean overwrite) throws Exception {
         // get a bufferedreader for the file to be imported in
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -179,10 +179,10 @@ public class BaseORLImporter extends FormattedImporter {
             }
         }
 
-        int minNoColumns = getMinNoOfColumns(datasetType);
+        int minNoColumns = type.getMinColumns();
         delimiter = findDelimiter(file, minNoColumns);
 
-        FileColumnsMetadata metadata = getFileColumnsMetadata(datasetType);
+        FileColumnsMetadata metadata = getFileColumnsMetadata(type);
         String[] columnNames = metadata.getColumnNames();
         String[] columnTypes = metadata.getColumnTypes();
         int[] columnWidths = metadata.getColumnWidths();
@@ -258,12 +258,12 @@ public class BaseORLImporter extends FormattedImporter {
 
         // check whether we have atleast noOfColumns tokens if else add empty
         // tokens
-        addEmptyTokens(tokens, dataset.getDatasetTypeName());
+        addEmptyTokens(tokens, dataset.getDatasetType());
         return (String[]) tokens.toArray(new String[0]);
     }
 
-    private void addEmptyTokens(List tokens, String datasetType) {
-        int maxNoOfColumns = getMaxNoOfColumns(datasetType);
+    private void addEmptyTokens(List tokens, DatasetType type) {
+        int maxNoOfColumns = type.getMaxColumns();
         int count = maxNoOfColumns - tokens.size();
         for (int i = 0; i < count; i++) {
             tokens.add("");
@@ -363,7 +363,7 @@ public class BaseORLImporter extends FormattedImporter {
     private String doImport(File file, Datasource datasource, BufferedReader reader, String[] columnNames,
             String[] columnTypes, int[] columnWidths, boolean overwrite) throws Exception {
         String fileName = file.getName();
-        String datasetType = dataset.getDatasetTypeName();
+        DatasetType datasetType = dataset.getDatasetType();
         ORLTableType tableType = tableTypes.type(datasetType);
         if (tableType == null) {
             throw new Exception("Could not determine table type for file name: " + fileName);
@@ -478,9 +478,10 @@ public class BaseORLImporter extends FormattedImporter {
         // #ORL NONPOINT
         if ((command.equals(TOXICS_COMMAND) || command.equals(ORL_COMMAND)) && tokens.length <= 2 && !toxicsCommandRead) {
             if (tokens.length == 2) {
-                if (!dataset.getDatasetTypeName().equals(types.nonPoint().getName())) {
+                if (!dataset.getDatasetType().equals(types.nonPoint())) {
                     throw new Exception("\"" + command + " " + TOXICS_NONPOINT
-                            + "\" is an invalid header command for dataset type \"" + dataset.getDatasetTypeName() + "\"");
+                            + "\" is an invalid header command for dataset type \"" + dataset.getDatasetTypeName()
+                            + "\"");
                 }
 
                 String nonPoint = tokens[1].intern();
@@ -503,7 +504,7 @@ public class BaseORLImporter extends FormattedImporter {
         else if (command.equals(TYPE_COMMAND) && tokens.length > 1 && fileType == null) {
             // final char SPACE = '\u0020';
             fileType = line.substring(TYPE_COMMAND.length()).trim();
-            checkDatasetType(dataset.getDatasetTypeName(), fileType);
+            checkDatasetType(dataset.getDatasetType(), fileType);
         }// #TYPE fileType
 
         // #COUNTRY countryName
@@ -555,41 +556,41 @@ public class BaseORLImporter extends FormattedImporter {
         }
     }// readHeaderLine(String, FileImportDetails)
 
-    private void checkDatasetType(String datasetType, String fileType) throws Exception {
+    private void checkDatasetType(DatasetType type, String fileType) throws Exception {
         String keyword = null;
         String fileTypeLowerCase = fileType.toLowerCase();
-        if (datasetType.equals(types.nonRoad().getName()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
+        if (type.equals(types.nonRoad()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
             keyword = "Nonroad";
-        } else if (datasetType.equals(types.nonPoint().getName()) && (fileTypeLowerCase.indexOf("nonpoint") == -1)
+        } else if (type.equals(types.nonPoint()) && (fileTypeLowerCase.indexOf("nonpoint") == -1)
                 && fileTypeLowerCase.indexOf("non-point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Nonpoint";
-        } else if (datasetType.equals(types.onRoad().getName()) && fileTypeLowerCase.indexOf("mobile") == -1) {
+        } else if (type.equals(types.onRoad()) && fileTypeLowerCase.indexOf("mobile") == -1) {
             keyword = "Mobile";
-        } else if (datasetType.equals(types.point().getName()) && fileTypeLowerCase.indexOf("point") == -1) {
+        } else if (type.equals(types.point()) && fileTypeLowerCase.indexOf("point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Point";
         }
 
         if (keyword != null) {
             throw new Exception("File type \"" + fileType + "\" must contain the word \"" + keyword
-                    + "\" to be valid for dataset type \"" + dataset.getDatasetTypeName() + "\"");
+                    + "\" to be valid for dataset type \"" + type.getName() + "\"");
         }
     }
 
     // FIXME: pull this out into a factory
-    private FileColumnsMetadata getFileColumnsMetadata(String datasetType) throws Exception {
-        if (datasetType.equals(types.nonPoint().getName())) {
+    private FileColumnsMetadata getFileColumnsMetadata(DatasetType type) throws Exception {
+        if (type.equals(types.nonPoint())) {
             orlDataFormat = new ORLAreaNonpointDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(types.nonRoad().getName())) {
+        } else if (type.equals(types.nonRoad())) {
             orlDataFormat = new ORLAreaNonroadDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(types.onRoad().getName())) {
+        } else if (type.equals(types.onRoad())) {
             orlDataFormat = new ORLMobileDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (datasetType.equals(types.point().getName())) {
+        } else if (type.equals(types.point())) {
             orlDataFormat = new ORLPointDataFormat(dbServer.getTypeMapper(), extendedFormat);
         } else {
             orlDataFormat = null;
-            throw new Exception("Unknown ORL file type: " + datasetType);
+            throw new Exception("Unknown ORL file type: " + type.getName());
         }
 
         return orlDataFormat.getFileColumnsMetadata();
@@ -647,7 +648,7 @@ public class BaseORLImporter extends FormattedImporter {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
         DataAcceptor emissionsAcceptor = emissionsDatasource.getDataAcceptor();
         // ORL table types
-        String datasetType = dataset.getDatasetTypeName();
+        DatasetType datasetType = dataset.getDatasetType();
         ORLTableType tableType = tableTypes.type(datasetType);
         Table table = dataset.getTable(tableType.baseType());
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
@@ -799,14 +800,6 @@ public class BaseORLImporter extends FormattedImporter {
 
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
-    }
-
-    public int getMinNoOfColumns(String orlDatasetType) {
-        return types.get(orlDatasetType).getMinCols();
-    }
-
-    public int getMaxNoOfColumns(String orlDatasetType) {
-        return types.get(orlDatasetType).getMaxCols();
     }
 
     public void preCondition(String fileName) throws Exception {

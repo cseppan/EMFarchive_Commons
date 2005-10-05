@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FieldDefinitionsFileReader;
@@ -51,7 +52,7 @@ public class ReferenceImporter extends FixedFormatImporter {
     public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {
         super.dataset = dataset;
 
-        files = verifyExpectedFiles(dataset.getDatasetTypeName(), files);
+        files = verifyExpectedFiles(dataset.getDatasetType(), files);
 
         fieldDefsReader = new FieldDefinitionsFileReader(fieldDefsFile, dbServer.getTypeMapper());
 
@@ -62,8 +63,8 @@ public class ReferenceImporter extends FixedFormatImporter {
         }
     }
 
-    private File[] verifyExpectedFiles(String datasetType, File[] files) throws Exception {
-        TableType tableType = tableTypes.type(datasetType);
+    private File[] verifyExpectedFiles(DatasetType type, File[] files) throws Exception {
+        TableType tableType = tableTypes.type(type);
 
         // flags for when we find a file for the table type
         String[] baseTableTypes = tableType.baseTypes();
@@ -112,7 +113,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         Arrays.fill(tableTypeChecker, true);
         if (!Arrays.equals(tableTypeFound, tableTypeChecker)) {
             // missing a file for or more table types
-            throw new Exception("Missing a file for one or more table types for dataset type \"" + datasetType + "\"");
+            throw new Exception("Missing a file for one or more table types for dataset type \"" + type + "\"");
         }
 
         return (File[]) foundFiles.toArray(new File[0]);
@@ -217,7 +218,7 @@ public class ReferenceImporter extends FixedFormatImporter {
 
         Dataset dataset = new SimpleDataset();
         ReferenceTableTypes refTableTypes = new ReferenceTableTypes();
-        dataset.setDatasetTypeName(refTableTypes.reference().getName());
+        dataset.setDatasetType(refTableTypes.reference());
 
         dataset.addTable(ReferenceTable.REF_CONTROL_DEVICE_CODES);
         dataset.addTable(ReferenceTable.REF_CONVERSION_FACTORS);
