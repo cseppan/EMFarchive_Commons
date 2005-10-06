@@ -237,13 +237,4 @@ public class ReferenceImporter extends FixedFormatImporter {
         run(files, dataset, true);
     }
 
-    public void preCondition(File file) throws Exception {
-        // TODO No Op
-
-    }
-
-    public void preCondition(String fileName) throws Exception {
-        // TODO No Op
-    }
-
 }

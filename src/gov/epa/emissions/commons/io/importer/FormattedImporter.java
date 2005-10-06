@@ -4,11 +4,18 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
 
+import java.io.File;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This class contains all the common features for importing formatted files.
  * FIXME: split the larger methods, and reorganize
  */
 public abstract class FormattedImporter implements Importer {
+    private static Log log = LogFactory.getLog(FormattedImporter.class);
+
     /** Dataset in which imported data is stored */
     protected Dataset dataset = null;
 
@@ -46,4 +53,40 @@ public abstract class FormattedImporter implements Importer {
             throw new Exception("There are more tokens than expected for the following line:\n" + line);
         }
     }
+    
+	public File[] preCondition(String folderPath, String fileName) throws Exception {
+        File path = validatePath(folderPath);
+        File file = validateFile(path, fileName);
+        File[] allFiles = null;
+        
+        
+        
+        return allFiles;
+	}
+
+	public File validatePath(String folderPath) throws Exception {
+        log.debug("check if folder exists " + folderPath);
+        File file = new File(folderPath);
+
+        if (!file.exists() || !file.isDirectory()) {
+            log.error("Folder " + folderPath + " does not exist");
+            throw new Exception("Folder does not exist");
+        }
+        log.debug("check if folder exists " + folderPath);
+        return file;
+	}
+
+	public File validateFile(File path, String fileName) throws Exception {
+        log.debug("check if file exists " + fileName);
+        File file = new File(path, fileName);
+
+        if (!file.exists() || !file.isFile()) {
+            log.error("File " + file.getAbsolutePath() + " not found");
+            throw new Exception("File not found");
+        }
+        log.debug("check if file exists " + fileName);
+
+        return file;
+	}
+    
 }

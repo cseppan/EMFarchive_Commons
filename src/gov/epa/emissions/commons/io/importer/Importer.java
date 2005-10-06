@@ -20,13 +20,16 @@ public interface Importer {
 	 * 
 	 * @throws Exception
 	 */
-	public void preCondition(String fileName) throws Exception;
+	File[] preCondition(String folderPath, String fileName) throws Exception;
 	
+	File validatePath(String folderPath) throws Exception;
+    File validateFile(File path, String fileName) throws Exception;
+
     /**
      * This method will put the files into the dataset and database, overwriting
      * existing tables if authorized.
      */
     // TODO: have a separate method for overwrite & non-overwrite
-    public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception;
+    void run(File[] files, Dataset dataset, boolean overwrite) throws Exception;
 
 }
