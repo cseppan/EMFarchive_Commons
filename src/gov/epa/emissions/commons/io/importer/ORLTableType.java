@@ -8,7 +8,7 @@ public class ORLTableType {
 
     private String baseType;
 
-    public ORLTableType(DatasetType datasetType) {
+    ORLTableType(DatasetType datasetType) {
         this.datasetType = datasetType;
         this.baseType = datasetType.getName();
     }
@@ -17,12 +17,18 @@ public class ORLTableType {
         return datasetType;
     }
 
-    public String summaryType() {
+    public String summary() {
         return baseType + " Summary";
     }
 
-    public String baseType() {
+    public String base() {
         return baseType;
     }
 
+    public boolean equals(Object other) {
+        if(!(other instanceof ORLTableType))
+            return false;
+        
+        return datasetType.equals(((ORLTableType) other).datasetType);
+    }
 }

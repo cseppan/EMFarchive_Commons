@@ -8,7 +8,7 @@ import java.io.File;
 public class BaseORLImporterTest extends ORLImporterTestCase {
 
     protected void doImport(String filename, Dataset dataset) throws Exception {
-        Importer importer = new BaseORLImporter(dbSetup.getDbServer(), true);
+        Importer importer = new BaseORLImporter(dbSetup.getDbServer(), true, super.types);
         importer.run(new File[] { new File("test/data/orl/nc", filename) }, dataset, true);
     }
 

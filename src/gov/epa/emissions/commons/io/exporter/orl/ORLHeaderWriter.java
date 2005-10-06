@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 
 import java.io.PrintWriter;
 
@@ -23,16 +23,16 @@ public class ORLHeaderWriter {
 
     private static final String DESCRIPTION_COMMAND = COMMAND + "DESC    ";
 
-    private DefaultORLDatasetTypesFactory types;
+    private ORLDatasetTypesFactory typesFactory;
 
-    public ORLHeaderWriter() {
-        types = new DefaultORLDatasetTypesFactory();
+    public ORLHeaderWriter(ORLDatasetTypesFactory typesFactory) {
+        this.typesFactory = typesFactory;
     }
 
     void writeHeader(Dataset dataset, PrintWriter writer) {
         String OUT_COMMAND = ORL_COMMAND;
         // FIXME: why is name hard coded ?
-        if (dataset.getDatasetType().equals(types.nonPoint())) {
+        if (dataset.getDatasetType().equals(typesFactory.nonPoint())) {
             OUT_COMMAND = ORL_COMMAND + " NONPOINT";
         }
         writer.println(OUT_COMMAND);

@@ -8,7 +8,6 @@ import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.Table;
-import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.FormattedImporter;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
@@ -87,20 +86,16 @@ public class BaseORLImporter extends FormattedImporter {
 
     private String emptyValue = "-9";
 
-    private ORLDatasetTypesFactory types;
+    protected ORLDatasetTypesFactory typesFactory;
 
     protected ORLTableTypes tableTypes;
 
-    public BaseORLImporter(DbServer dbServer) {
-        this(dbServer, true);
-    }
-
-    public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily) {
+    public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily, ORLDatasetTypesFactory typesFactory) {
         super(dbServer);
-        this.tableTypes = new ORLTableTypes();
+        this.tableTypes = new ORLTableTypes(typesFactory);
         this.annualNotAverageDaily = annualNotAverageDaily;
 
-        types = new DefaultORLDatasetTypesFactory();
+        this.typesFactory = typesFactory;
     }
 
     /**
@@ -124,8 +119,8 @@ public class BaseORLImporter extends FormattedImporter {
         }
 
         DatasetType type = dataset.getDatasetType();
-        if (!type.equals(types.nonPoint()) && !type.equals(types.nonRoad()) && !type.equals(types.onRoad())
-                && !type.equals(types.point())) {
+        if (!type.equals(typesFactory.nonPoint()) && !type.equals(typesFactory.nonRoad())
+                && !type.equals(typesFactory.onRoad()) && !type.equals(typesFactory.point())) {
             throw new Exception("Unknown/unhandled ORL type: " + type.getName());
         }
 
@@ -370,7 +365,7 @@ public class BaseORLImporter extends FormattedImporter {
         }
 
         // use the table type to get the table name
-        Table table = dataset.getTable(tableType.baseType());
+        Table table = dataset.getTable(tableType.base());
         String tableName = table.getName().trim();
         String qualifiedTableName = datasource.getName() + "." + tableName;
 
@@ -408,7 +403,7 @@ public class BaseORLImporter extends FormattedImporter {
         }// while file is not empty
 
         // perform capable table type specific processing
-        postProcess(datasource, qualifiedTableName, tableType.baseType());
+        postProcess(datasource, qualifiedTableName, tableType.base());
 
         // when all the data is done ingesting..
         // close the database connections by calling acceptor.finish..
@@ -478,7 +473,7 @@ public class BaseORLImporter extends FormattedImporter {
         // #ORL NONPOINT
         if ((command.equals(TOXICS_COMMAND) || command.equals(ORL_COMMAND)) && tokens.length <= 2 && !toxicsCommandRead) {
             if (tokens.length == 2) {
-                if (!dataset.getDatasetType().equals(types.nonPoint())) {
+                if (!dataset.getDatasetType().equals(typesFactory.nonPoint())) {
                     throw new Exception("\"" + command + " " + TOXICS_NONPOINT
                             + "\" is an invalid header command for dataset type \"" + dataset.getDatasetTypeName()
                             + "\"");
@@ -559,15 +554,15 @@ public class BaseORLImporter extends FormattedImporter {
     private void checkDatasetType(DatasetType type, String fileType) throws Exception {
         String keyword = null;
         String fileTypeLowerCase = fileType.toLowerCase();
-        if (type.equals(types.nonRoad()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
+        if (type.equals(typesFactory.nonRoad()) && fileTypeLowerCase.indexOf("nonroad") == -1) {
             keyword = "Nonroad";
-        } else if (type.equals(types.nonPoint()) && (fileTypeLowerCase.indexOf("nonpoint") == -1)
+        } else if (type.equals(typesFactory.nonPoint()) && (fileTypeLowerCase.indexOf("nonpoint") == -1)
                 && fileTypeLowerCase.indexOf("non-point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Nonpoint";
-        } else if (type.equals(types.onRoad()) && fileTypeLowerCase.indexOf("mobile") == -1) {
+        } else if (type.equals(typesFactory.onRoad()) && fileTypeLowerCase.indexOf("mobile") == -1) {
             keyword = "Mobile";
-        } else if (type.equals(types.point()) && fileTypeLowerCase.indexOf("point") == -1) {
+        } else if (type.equals(typesFactory.point()) && fileTypeLowerCase.indexOf("point") == -1) {
             // must check for "Nonpoint" before check for "Point"
             keyword = "Point";
         }
@@ -580,13 +575,13 @@ public class BaseORLImporter extends FormattedImporter {
 
     // FIXME: pull this out into a factory
     private FileColumnsMetadata getFileColumnsMetadata(DatasetType type) throws Exception {
-        if (type.equals(types.nonPoint())) {
+        if (type.equals(typesFactory.nonPoint())) {
             orlDataFormat = new ORLAreaNonpointDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (type.equals(types.nonRoad())) {
+        } else if (type.equals(typesFactory.nonRoad())) {
             orlDataFormat = new ORLAreaNonroadDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (type.equals(types.onRoad())) {
+        } else if (type.equals(typesFactory.onRoad())) {
             orlDataFormat = new ORLMobileDataFormat(dbServer.getTypeMapper(), extendedFormat);
-        } else if (type.equals(types.point())) {
+        } else if (type.equals(typesFactory.point())) {
             orlDataFormat = new ORLPointDataFormat(dbServer.getTypeMapper(), extendedFormat);
         } else {
             orlDataFormat = null;
@@ -603,26 +598,26 @@ public class BaseORLImporter extends FormattedImporter {
         // Use ORLTableType object
 
         // point
-        if (tableType.equals(ORLTableTypes.ORL_POINT_TOXICS.baseType())) {
+        if (tableTypes.isPoint(tableType)) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME, ORLPointDataFormat.PLANT_ID_CODE_NAME,
                     ORLPointDataFormat.POINT_ID_CODE_NAME, ORLPointDataFormat.STACK_ID_CODE_NAME,
                     ORLPointDataFormat.DOE_PLANT_ID_NAME, ORLPointDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_point_key", indexColumnNames);
         }
         // nonpoint
-        if (tableType.equals(ORLTableTypes.ORL_AREA_NONPOINT_TOXICS.baseType())) {
+        if (tableTypes.isNonPoint(tableType)) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME,
                     ORLAreaNonpointDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_nonpoint_key", indexColumnNames);
         }
         // nonroad
-        if (tableType.equals(ORLTableTypes.ORL_AREA_NONROAD_TOXICS.baseType())) {
+        if (tableTypes.isNonRoad(tableType)) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME,
                     ORLAreaNonroadDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_nonroad_key", indexColumnNames);
         }
         // mobile/onroad
-        if (tableType.equals(ORLTableTypes.ORL_ONROAD_MOBILE_TOXICS.baseType())) {
+        if (tableTypes.isOnRoad(tableType)) {
             String[] indexColumnNames = { ORLDataFormat.FIPS_NAME, ORLMobileDataFormat.SOURCE_CLASSIFICATION_CODE_NAME };
             tableDefinition.addIndex(table, "orl_mobile_key", indexColumnNames);
         }
@@ -647,14 +642,14 @@ public class BaseORLImporter extends FormattedImporter {
     private void postImport() throws Exception {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
         DataAcceptor emissionsAcceptor = emissionsDatasource.getDataAcceptor();
-        // ORL table types
-        DatasetType datasetType = dataset.getDatasetType();
-        ORLTableType tableType = tableTypes.type(datasetType);
-        Table table = dataset.getTable(tableType.baseType());
+        ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
+        Table table = dataset.getTable(tableType.base());
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
 
-        final String FIPS_NAME = modifyFipsColumn(emissionsDatasource, emissionsAcceptor, tableType, qualifiedTableName);
-        modifyStateColumn(emissionsDatasource, emissionsAcceptor, qualifiedTableName, FIPS_NAME);
+        // FIXME: what kind of modifications do we apply to Fips & State columns
+        // ?
+        String fipsName = modifyFipsColumn(emissionsDatasource, emissionsAcceptor, tableType, qualifiedTableName);
+        modifyStateColumn(emissionsDatasource, emissionsAcceptor, qualifiedTableName, fipsName);
     }
 
     private void modifyStateColumn(Datasource emissionsDatasource, DataAcceptor emissionsAcceptor,
@@ -742,9 +737,7 @@ public class BaseORLImporter extends FormattedImporter {
         // character String concatenating the state and county codes
         final String FIPS_NAME = ORLDataFormat.FIPS_NAME;
         // FIPS column
-        if (!extendedFormat
-                && (tableType.equals(ORLTableTypes.ORL_AREA_NONROAD_TOXICS) || tableType
-                        .equals(ORLTableTypes.ORL_ONROAD_MOBILE_TOXICS))) {
+        if (!extendedFormat && (tableTypes.isNonRoad(tableType) || tableTypes.isOnRoad(tableType))) {
             final int FIPS_WIDTH = 5;
             final ColumnType FIPS_TYPE = ColumnType.CHAR;
             FileColumnsMetadata fips = new FileColumnsMetadata(FIPS_NAME, dbServer.getTypeMapper());

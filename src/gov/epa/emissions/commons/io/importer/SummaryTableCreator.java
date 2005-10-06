@@ -185,11 +185,11 @@ public class SummaryTableCreator {
 
     private ORLDatasetTypesFactory types;
 
-    public SummaryTableCreator(Datasource emissions, Datasource reference) {
+    public SummaryTableCreator(Datasource emissions, Datasource reference, ORLDatasetTypesFactory typesFactory) {
         this.emissionsDatasource = emissions;
         this.referenceDatasource = reference;
 
-        this.types = new DefaultORLDatasetTypesFactory();
+        this.types = typesFactory;
     }
 
     public void createAreaSummaryTable(String emTable, String epTable, String summaryTable, boolean overwrite)

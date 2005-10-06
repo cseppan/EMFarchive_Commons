@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.Query;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,10 +22,10 @@ public class ORLWriter {
 
     private DbServer dbServer;
 
-    public ORLWriter(DbServer dbServer) {
+    public ORLWriter(DbServer dbServer, ORLDatasetTypesFactory typesFactory) {
         this.dbServer = dbServer;
-        this.headerWriter = new ORLHeaderWriter();
-        this.bodyFactory = new ORLBodyFactory();
+        this.headerWriter = new ORLHeaderWriter(typesFactory);
+        this.bodyFactory = new ORLBodyFactory(typesFactory);
     }
 
     public void write(Dataset dataset, File file) throws Exception {

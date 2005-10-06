@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.exporter.orl;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.exporter.FixedFormatExporter;
+import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 
 import java.io.File;
 
@@ -21,12 +22,12 @@ public class ORLExporter extends FixedFormatExporter {
         this.writeStrategy = strategy;
     }
 
-    public static ORLExporter create(DbServer dbServer) {
-        return new ORLExporter(dbServer, new OverwriteStrategy(dbServer));
+    public static ORLExporter create(DbServer dbServer, ORLDatasetTypesFactory typesFactory) {
+        return new ORLExporter(dbServer, new OverwriteStrategy(dbServer, typesFactory));
     }
 
-    public static ORLExporter createWithoutOverwrite(DbServer dbServer) {
-        return new ORLExporter(dbServer, new NoOverwriteStrategy(dbServer));
+    public static ORLExporter createWithoutOverwrite(DbServer dbServer, ORLDatasetTypesFactory typesFactory) {
+        return new ORLExporter(dbServer, new NoOverwriteStrategy(dbServer, typesFactory));
     }
 
     // FIXME: what's this gibberish ?

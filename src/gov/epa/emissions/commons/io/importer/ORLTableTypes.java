@@ -6,26 +6,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-//FIXME: what's this mess ?
 public class ORLTableTypes {
 
-    private static final ORLDatasetTypesFactory datasetTypes = new DefaultORLDatasetTypesFactory();
+    private ORLTableType nonPoint;
 
-    public static final ORLTableType ORL_AREA_NONPOINT_TOXICS = new ORLTableType(datasetTypes.nonPoint());
+    private ORLTableType nonRoad;
 
-    public static final ORLTableType ORL_AREA_NONROAD_TOXICS = new ORLTableType(datasetTypes.nonRoad());
+    private ORLTableType onRoad;
 
-    public static final ORLTableType ORL_ONROAD_MOBILE_TOXICS = new ORLTableType(datasetTypes.onRoad());
+    private ORLTableType point;
 
-    public static final ORLTableType ORL_POINT_TOXICS = new ORLTableType(datasetTypes.point());
+    public ORLTableTypes(ORLDatasetTypesFactory typesFactory) {
+        nonPoint = new ORLTableType(typesFactory.nonPoint());
+        nonRoad = new ORLTableType(typesFactory.nonRoad());
+        onRoad = new ORLTableType(typesFactory.onRoad());
+        point = new ORLTableType(typesFactory.point());
+    }
 
     private List list() {
         List list = new ArrayList();
 
-        list.add(ORL_AREA_NONPOINT_TOXICS);
-        list.add(ORL_AREA_NONROAD_TOXICS);
-        list.add(ORL_ONROAD_MOBILE_TOXICS);
-        list.add(ORL_POINT_TOXICS);
+        list.add(nonPoint);
+        list.add(nonRoad);
+        list.add(onRoad);
+        list.add(point);
 
         return list;
     }
@@ -38,6 +42,46 @@ public class ORLTableTypes {
         }
 
         return null;
+    }
+
+    public boolean isNonPoint(String tableType) {
+        return nonPoint.base().equals(tableType);
+    }
+
+    public boolean isNonRoad(String tableType) {
+        return nonRoad.base().equals(tableType);
+    }
+
+    public boolean isOnRoad(String tableType) {
+        return onRoad.base().equals(tableType);
+    }
+
+    public boolean isNonRoad(ORLTableType tableType) {
+        return nonRoad.equals(tableType);
+    }
+
+    public boolean isOnRoad(ORLTableType tableType) {
+        return onRoad.equals(tableType);
+    }
+
+    public ORLTableType nonPoint() {
+        return nonPoint;
+    }
+
+    public ORLTableType onRoad() {
+        return onRoad;
+    }
+
+    public ORLTableType nonRoad() {
+        return nonRoad;
+    }
+
+    public ORLTableType point() {
+        return point;
+    }
+
+    public boolean isPoint(String tableType) {
+        return point.base().equals(tableType);
     }
 
 }
