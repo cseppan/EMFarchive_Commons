@@ -122,8 +122,8 @@ public class DataModifier {
         for (int i = 0; i < data.length; i++) {
             if (colTypes[i].startsWith("VARCHAR")) {
                 String cleanedCell = data[i].replace('-', '_');
-                String cellWithSinglQuotesEscaped = cleanedCell.replace('\'', ' ');
-                insert.append("'" + cellWithSinglQuotesEscaped + "'");
+                String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
+                insert.append("'" + cellWithSingleQuotesEscaped + "'");
             } else {
                 if (data[i].trim().length() == 0)
                     data[i] = "NULL";
