@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 
@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
  * ORL Nonroad Source Toxics Inventory (list-format)
  * 
  * @author Keith Lee, CEP UNC
- * @version $Id: ORLAreaNonroadDataFormat.java,v 1.2 2005/10/03 17:04:54 rhavaldar Exp $
+ * @version $Id: ORLAreaNonroadDataFormat.java,v 1.3 2005/10/07 19:32:10 rhavaldar Exp $
  */
 public final class ORLAreaNonroadDataFormat extends ORLAreaDataFormat
 {
@@ -29,7 +29,7 @@ public final class ORLAreaNonroadDataFormat extends ORLAreaDataFormat
     //RULE_EFFECTIVENESS -> REFF
     //RULE_PENETRATION -> RPEN
 
-    public ORLAreaNonroadDataFormat(SqlTypeMapper sqlTypeMapper, boolean extendedFormat)
+    public ORLAreaNonroadDataFormat(SqlDataType sqlTypeMapper, boolean extendedFormat)
     {
         super(sqlTypeMapper, extendedFormat);
     }

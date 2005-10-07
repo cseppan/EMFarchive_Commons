@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 
 public class WeeklyColumnsMetadata implements ColumnsMetadata {
 
@@ -10,7 +10,7 @@ public class WeeklyColumnsMetadata implements ColumnsMetadata {
 
     private String[] colNames;
 
-    public WeeklyColumnsMetadata(SqlTypeMapper typeMapper) {
+    public WeeklyColumnsMetadata(SqlDataType typeMapper) {
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 5 };
 
         String intType = typeMapper.getInt();

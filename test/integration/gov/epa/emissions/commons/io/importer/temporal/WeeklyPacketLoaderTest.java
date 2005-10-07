@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
@@ -19,7 +19,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     private Datasource datasource;
 
-    private SqlTypeMapper typeMapper;
+    private SqlDataType typeMapper;
 
     private ColumnsMetadata colsMetadata;
 

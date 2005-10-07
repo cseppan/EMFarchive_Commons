@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 
 public class DiurnalColumnsMetadata implements ColumnsMetadata {
 
@@ -10,7 +10,7 @@ public class DiurnalColumnsMetadata implements ColumnsMetadata {
 
     private String[] colNames;
 
-    public DiurnalColumnsMetadata(SqlTypeMapper typeMapper) {
+    public DiurnalColumnsMetadata(SqlDataType typeMapper) {
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5 };
 
         String intType = typeMapper.getInt();

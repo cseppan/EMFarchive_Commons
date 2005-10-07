@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +15,11 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
     protected void setUp() throws Exception {
         File file = new File("test/data/temporal-profiles/monthly.txt");
 
-        Mock typeMapper = mock(SqlTypeMapper.class);
+        Mock typeMapper = mock(SqlDataType.class);
         typeMapper.stubs().method("getInt").will(returnValue("int"));
         typeMapper.stubs().method("getLong").will(returnValue("long"));
 
-        ColumnsMetadata cols = new MonthlyColumnsMetadata((SqlTypeMapper) typeMapper.proxy());
+        ColumnsMetadata cols = new MonthlyColumnsMetadata((SqlDataType) typeMapper.proxy());
         reader = new PacketReader(file, cols);
     }
 

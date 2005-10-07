@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +15,11 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
     protected void setUp() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
 
-        Mock typeMapper = mock(SqlTypeMapper.class);
+        Mock typeMapper = mock(SqlDataType.class);
         typeMapper.stubs().method("getInt").will(returnValue("int"));
         typeMapper.stubs().method("getLong").will(returnValue("long"));
 
-        ColumnsMetadata cols = new WeeklyColumnsMetadata((SqlTypeMapper) typeMapper.proxy());
+        ColumnsMetadata cols = new WeeklyColumnsMetadata((SqlDataType) typeMapper.proxy());
         reader = new PacketReader(file, cols);
     }
 
@@ -31,7 +31,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals("WEEKLY", reader.identify());
     }
 
-    public void testShouldReadTenRecordsOfTheWeeklyPacket() throws IOException {
+    public void testShouldReadThirteenRecordsOfTheWeeklyPacket() throws IOException {
         for (int i = 0; i < 13; i++) {
             Record record = reader.read();
             assertNotNull(record);

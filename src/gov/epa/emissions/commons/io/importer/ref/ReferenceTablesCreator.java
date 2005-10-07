@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.ref;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.io.BufferedReader;
@@ -37,9 +37,9 @@ public class ReferenceTablesCreator {
 
     private File referenceFilesDir;
 
-    private SqlTypeMapper sqlTypeMapper;
+    private SqlDataType sqlTypeMapper;
 
-    public ReferenceTablesCreator(File referenceFilesDir, SqlTypeMapper sqlTypeMapper) {
+    public ReferenceTablesCreator(File referenceFilesDir, SqlDataType sqlTypeMapper) {
         this.referenceFilesDir = referenceFilesDir;
         this.sqlTypeMapper = sqlTypeMapper;
     }
@@ -161,10 +161,10 @@ public class ReferenceTablesCreator {
         String line = null;
 
         String[] colTypes = { "VARCHAR(8)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)",
-                sqlTypeMapper.getSqlType("", "N", 0), sqlTypeMapper.getSqlType("", "N", 0),
-                sqlTypeMapper.getSqlType("", "N", 0), sqlTypeMapper.getSqlType("", "N", 0),
-                sqlTypeMapper.getSqlType("", "N", 0), sqlTypeMapper.getSqlType("", "N", 0),
-                sqlTypeMapper.getSqlType("", "N", 0), "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(128)",
+                sqlTypeMapper.getType("", "N", 0), sqlTypeMapper.getType("", "N", 0),
+                sqlTypeMapper.getType("", "N", 0), sqlTypeMapper.getType("", "N", 0),
+                sqlTypeMapper.getType("", "N", 0), sqlTypeMapper.getType("", "N", 0),
+                sqlTypeMapper.getType("", "N", 0), "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(128)",
                 "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", };
 
         String[] colNames;

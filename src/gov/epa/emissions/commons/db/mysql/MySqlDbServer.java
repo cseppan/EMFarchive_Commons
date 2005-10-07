@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.db.mysql;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.io.importer.ref.ReferenceImporter;
 import gov.epa.emissions.commons.io.importer.ref.ReferenceTablesCreator;
 
@@ -19,7 +19,7 @@ import java.sql.Statement;
  */
 public class MySqlDbServer implements DbServer {
 
-    private SqlTypeMapper typeMapper;
+    private SqlDataType typeMapper;
 
     private Datasource emissionsDatasource;
 
@@ -27,7 +27,7 @@ public class MySqlDbServer implements DbServer {
 
     public MySqlDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName,
             File fieldDefsFile, File referenceFilesDir) throws SQLException {
-        this.typeMapper = new MySqlTypeMapper();
+        this.typeMapper = new MySqlDataType();
 
         createEmissionsDatasource(connection, emissionsDatasourceName);
         createReferenceDatasource(connection, referenceDatasourceName, fieldDefsFile, referenceFilesDir);
@@ -99,7 +99,7 @@ public class MySqlDbServer implements DbServer {
         return false;
     }
 
-    public SqlTypeMapper getTypeMapper() {
+    public SqlDataType getTypeMapper() {
         return typeMapper;
     }
 

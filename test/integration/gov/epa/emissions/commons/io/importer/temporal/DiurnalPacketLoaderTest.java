@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
@@ -19,9 +19,11 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
     private Datasource datasource;
 
-    private SqlTypeMapper typeMapper;
+    private SqlDataType typeMapper;
 
     private ColumnsMetadata colsMetadata;
+
+    private PacketLoader loader;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -35,6 +37,8 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
         reader = new PacketReader(file, colsMetadata);
 
         createTable("Diurnal_Weekday");
+
+        loader = new PacketLoader(datasource, colsMetadata);
     }
 
     protected void tearDown() throws Exception {
@@ -48,8 +52,6 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
     }
 
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
-        PacketLoader loader = new PacketLoader(datasource, colsMetadata);
-
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
 

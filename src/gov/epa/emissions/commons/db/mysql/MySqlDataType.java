@@ -1,10 +1,10 @@
-package gov.epa.emissions.commons.db.postgres;
+package gov.epa.emissions.commons.db.mysql;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 
-public class PostgresSqlTypeMapper implements SqlTypeMapper {
+public class MySqlDataType implements SqlDataType {
 
-    public String getSqlType(String name, String genericType, int width) {
+    public String getType(String name, String genericType, int width) {
         if (genericType.equals("C"))
             return "VARCHAR(" + width + ")";
         if (genericType.equals("I"))
@@ -20,8 +20,7 @@ public class PostgresSqlTypeMapper implements SqlTypeMapper {
             if (name.indexOf("time") > -1) {
                 return "INT";
             }
-            return "float(15)";// TODO: what's the appropriate size for double
-            // ?
+            return "DOUBLE";
         }
         return null;
     }
@@ -31,11 +30,11 @@ public class PostgresSqlTypeMapper implements SqlTypeMapper {
     }
 
     public String getInt() {
-        return "INTEGER";
+        return "INT";
     }
 
     public String getLong() {
-        return "BIGINT";
+        return "INT";// FIXME: verify
     }
 
 }

@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 
@@ -31,7 +31,7 @@ public final class ORLMobileDataFormat extends ORLDataFormat {
     // ANNUAL_EMISSIONS -> ANN_EMIS
     // AVERAGE_DAY_EMISSIONS -> AVD_EMIS
 
-    public ORLMobileDataFormat(SqlTypeMapper sqlTypeMapper, boolean extendedFormat) {
+    public ORLMobileDataFormat(SqlDataType sqlTypeMapper, boolean extendedFormat) {
         super(sqlTypeMapper, extendedFormat);
     }
 

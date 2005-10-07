@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.db;
 
-public interface SqlTypeMapper {
+public interface SqlDataType {
 
-    String getSqlType(String name, String genericType, int width);
+    String getType(String name, String genericType, int width);
 
     String getString(int size);
 

@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.SqlDataType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,7 +28,7 @@ public class FieldDefinitionsFileReader {
     /**
      * @TODO fill out this constructor later
      */
-    public FieldDefinitionsFileReader(File file, SqlTypeMapper sqlTypeMapper) throws IOException {
+    public FieldDefinitionsFileReader(File file, SqlDataType sqlTypeMapper) throws IOException {
         try {
             reader = new BufferedReader(new FileReader(file));
             detailsMap = new HashMap();
@@ -53,7 +53,7 @@ public class FieldDefinitionsFileReader {
      *            the string buffer containing the details
      * 
      */
-    private FileColumnsMetadata readTableDetails(String[] buffer, SqlTypeMapper sqlTypeMapper) {
+    private FileColumnsMetadata readTableDetails(String[] buffer, SqlDataType sqlTypeMapper) {
         String importFileType = buffer[0].substring(0, buffer[0].indexOf("_names"));
         // initialize the details object
         FileColumnsMetadata details = new FileColumnsMetadata(importFileType, sqlTypeMapper);
