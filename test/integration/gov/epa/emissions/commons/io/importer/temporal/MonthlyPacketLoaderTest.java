@@ -1,15 +1,17 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import java.io.File;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlTypeMapper;
+import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
+
+import java.io.File;
+import java.sql.SQLException;
 
 public class MonthlyPacketLoaderTest extends DbTestCase {
 
@@ -19,15 +21,20 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
 
     private SqlTypeMapper typeMapper;
 
+    private ColumnsMetadata colsMetadata;
+
     protected void setUp() throws Exception {
         super.setUp();
-
-        File file = new File("test/data/temporal-profiles/monthly.txt");
-        reader = new PacketReader(file);
 
         DbServer dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getTypeMapper();
         datasource = dbServer.getEmissionsDatasource();
+
+        File file = new File("test/data/temporal-profiles/monthly.txt");
+        colsMetadata = new MonthlyTableColumnsMetadata(typeMapper);
+        reader = new PacketReader(file, colsMetadata);
+
+        createTable("Monthly");
     }
 
     protected void tearDown() throws Exception {
@@ -35,8 +42,13 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), "monthly");
     }
 
+    private void createTable(String table) throws SQLException {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(datasource.getName(), table, colsMetadata.colNames(), colsMetadata.colTypes());
+    }
+
     public void testShouldLoadRecordsIntoMonthlyTable() throws Exception {
-        MonthlyPacketLoader loader = new MonthlyPacketLoader(datasource, typeMapper);
+        PacketLoader loader = new PacketLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
@@ -47,7 +59,8 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
         TableReader tableReader = new TableReader(datasource.getConnection());
         String tableName = "monthly";
 
-        assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(), tableName));
+        assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
+                tableName));
         assertEquals(10, tableReader.count(datasource.getName(), tableName));
     }
 }

@@ -13,11 +13,14 @@ public class PacketReader {
 
     private String identifier;
 
-    public PacketReader(File file) throws IOException {
+    private ColumnsMetadata cols;
+
+    public PacketReader(File file, ColumnsMetadata cols) throws IOException {
         fileReader = new BufferedReader(new FileReader(file));
 
         String header = fileReader.readLine().trim();
         identifier = header.replaceAll("/", "");
+        this.cols = cols;
     }
 
     public String identify() {
@@ -34,25 +37,16 @@ public class PacketReader {
 
     private Record doRead(String line) {
         Record record = new Record();
-
-        // TODO: Monthly-specific
-        record.add(line.substring(0, 5));// code
-        List tokens = parse(line.substring(5, (line.length() - 5)), 4);// months
-        record.add(tokens);
-        String last = line.substring(line.length() - 5, line.length());
-        record.add(last);// total weights
-
+        addTokens(line, record, cols.widths());
         return record;
     }
 
-    private List parse(String line, int size) {
-        List list = new ArrayList();
-        for (int i = 0; i < (line.length() / size); i++) {
-            int current = i * size;
-            list.add(line.substring(current, current + size));
+    private void addTokens(String line, Record record, int[] widths) {
+        int offset = 0;
+        for (int i = 0; i < widths.length; i++) {
+            record.add(line.substring(offset, offset + widths[i]));
+            offset += widths[i];
         }
-
-        return list;
     }
 
     public void close() throws IOException {

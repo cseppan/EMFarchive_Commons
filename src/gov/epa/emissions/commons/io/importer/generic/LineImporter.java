@@ -154,7 +154,7 @@ public class LineImporter extends FormattedImporter {
         
         String[] data = new String[v.size()];
         v.copyInto(data);
-        datasource.query().insertRow(qualifiedTableName, data, columnTypes);
+        datasource.getDataModifier().insertRow(qualifiedTableName, data, columnTypes);
 
         // perform capable table type specific processing
         postProcess(datasource, qualifiedTableName, baseTableType);

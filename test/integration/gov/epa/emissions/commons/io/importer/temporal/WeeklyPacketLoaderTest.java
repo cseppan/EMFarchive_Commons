@@ -47,7 +47,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         tableDefinition.createTable(datasource.getName(), table, colsMetadata.colNames(), colsMetadata.colTypes());
     }
 
-    public void testShouldLoadRecordsIntoMonthlyTable() throws Exception {
+    public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         PacketLoader loader = new PacketLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();

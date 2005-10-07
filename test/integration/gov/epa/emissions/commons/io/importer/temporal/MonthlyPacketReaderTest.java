@@ -1,17 +1,26 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
+import gov.epa.emissions.commons.db.SqlTypeMapper;
+
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import org.jmock.Mock;
+import org.jmock.MockObjectTestCase;
 
-public class MonthlyPacketReaderTest extends TestCase {
+public class MonthlyPacketReaderTest extends MockObjectTestCase {
 
     private PacketReader reader;
 
     protected void setUp() throws Exception {
         File file = new File("test/data/temporal-profiles/monthly.txt");
-        reader = new PacketReader(file);
+
+        Mock typeMapper = mock(SqlTypeMapper.class);
+        typeMapper.stubs().method("getInt").will(returnValue("int"));
+        typeMapper.stubs().method("getLong").will(returnValue("long"));
+
+        ColumnsMetadata cols = new MonthlyColumnsMetadata((SqlTypeMapper) typeMapper.proxy());
+        reader = new PacketReader(file, cols);
     }
 
     protected void tearDown() throws IOException {
@@ -91,7 +100,7 @@ public class MonthlyPacketReaderTest extends TestCase {
 
         Record end = reader.read();
         assertEquals(0, end.size());
-        assertTrue("Should be the Packet Terminator", end instanceof PacketTerminator);
+        assertTrue("Should be the Packet Terminator", end.isEnd());
 
     }
 }
