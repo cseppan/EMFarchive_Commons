@@ -18,13 +18,11 @@ public class MonthlyPacketReaderTest extends TestCase {
         reader.close();
     }
 
-    public void testShouldIdentifyPacketHeaderAsMonthly() throws IOException {
+    public void testShouldIdentifyPacketHeaderAsMonthly() {
         assertEquals("MONTHLY", reader.identify());
     }
 
     public void testShouldReadTenRecordsOfTheMonthlyPacket() throws IOException {
-        reader.identify();
-
         for (int i = 0; i < 10; i++) {
             Record record = reader.read();
             assertNotNull(record);
@@ -32,8 +30,6 @@ public class MonthlyPacketReaderTest extends TestCase {
     }
 
     public void testShouldReadFirstRecordCorrectly() throws IOException {
-        reader.identify();
-
         Record record = reader.read();
 
         assertEquals(14, record.size());
@@ -53,15 +49,14 @@ public class MonthlyPacketReaderTest extends TestCase {
         assertEquals("   0", record.token(12));
         assertEquals("  999", record.token(13));
     }
-    
+
     public void testShouldReadSecondRecordCorrectly() throws IOException {
-        reader.identify();
-        reader.read(); //ignore
-        
+        reader.read(); // ignore
+
         Record record = reader.read();
-        
+
         assertEquals(14, record.size());
-        
+
         assertEquals("    2", record.token(0));
         assertEquals("   0", record.token(1));
         assertEquals("   0", record.token(2));
@@ -76,5 +71,27 @@ public class MonthlyPacketReaderTest extends TestCase {
         assertEquals("  43", record.token(11));
         assertEquals("   0", record.token(12));
         assertEquals("  999", record.token(13));
+    }
+
+    public void testShouldReturnAllRecords() throws IOException {
+        assertEquals(10, reader.allRecords().size());
+    }
+
+    public void testShouldIdentifyEndOfPacket() throws IOException {
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+        reader.read();
+
+        Record end = reader.read();
+        assertEquals(0, end.size());
+        assertTrue("Should be the Packet Terminator", end instanceof PacketTerminator);
+
     }
 }
