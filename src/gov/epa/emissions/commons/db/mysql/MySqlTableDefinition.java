@@ -138,6 +138,7 @@ public class MySqlTableDefinition implements TableDefinition {
         Statement statement = null;
         try {
             statement = connection.createStatement();
+            System.out.println("query-"+query);
             statement.execute(query);
         } finally {
             if (statement != null)
@@ -154,7 +155,7 @@ public class MySqlTableDefinition implements TableDefinition {
         if (colNames.length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        String queryString = "CREATE TABLE " + tableName + " (";
+        String queryString = "CREATE TABLE " + schema +"."+ tableName + " (";
 
         for (int i = 0; i < colNames.length - 1; i++) {
             queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
