@@ -15,10 +15,17 @@ public class PacketReader {
 
     private ColumnsMetadata cols;
 
+    // FIXME: get rid of this constructor in lieu of the other
     public PacketReader(File file, ColumnsMetadata cols) throws IOException {
         fileReader = new BufferedReader(new FileReader(file));
 
         String header = fileReader.readLine().trim();
+        identifier = header.replaceAll("/", "");
+        this.cols = cols;
+    }
+
+    public PacketReader(BufferedReader reader, String header, ColumnsMetadata cols) {
+        fileReader = reader;
         identifier = header.replaceAll("/", "");
         this.cols = cols;
     }
@@ -47,10 +54,6 @@ public class PacketReader {
             record.add(line.substring(offset, offset + widths[i]));
             offset += widths[i];
         }
-    }
-
-    public void close() throws IOException {
-        fileReader.close();
     }
 
     public List allRecords() throws IOException {

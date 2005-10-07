@@ -14,10 +14,10 @@ public class TableColumnsMetadata implements ColumnsMetadata {
 
     private ColumnsMetadata base;
 
-    public TableColumnsMetadata(ColumnsMetadata base, SqlDataType typeMapper) {
+    public TableColumnsMetadata(ColumnsMetadata base, SqlDataType sqlType) {
         this.base = base;
 
-        datasetIdType = typeMapper.getLong();
+        datasetIdType = sqlType.getLong();
         datasetIdColName = "Dataset_Id";
     }
 

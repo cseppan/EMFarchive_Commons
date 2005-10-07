@@ -10,10 +10,10 @@ public class MonthlyColumnsMetadata implements ColumnsMetadata {
 
     private String[] colNames;
 
-    public MonthlyColumnsMetadata(SqlDataType typeMapper) {
+    public MonthlyColumnsMetadata(SqlDataType sqlDataType) {
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5 };
 
-        String intType = typeMapper.getInt();
+        String intType = sqlDataType.getInt();
         colTypes = new String[] { intType, intType, intType, intType, intType, intType, intType, intType, intType,
                 intType, intType, intType, intType, intType };
 

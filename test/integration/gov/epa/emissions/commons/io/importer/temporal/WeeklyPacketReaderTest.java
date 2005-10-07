@@ -23,10 +23,6 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         reader = new PacketReader(file, cols);
     }
 
-    protected void tearDown() throws IOException {
-        reader.close();
-    }
-
     public void testShouldIdentifyPacketHeaderAsMonthly() {
         assertEquals("WEEKLY", reader.identify());
     }
