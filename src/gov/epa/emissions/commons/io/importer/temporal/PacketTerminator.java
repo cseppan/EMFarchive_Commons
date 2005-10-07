@@ -4,6 +4,10 @@ import java.util.List;
 
 public class PacketTerminator extends Record {
 
+    public boolean isEnd() {
+        return true;
+    }
+
     public void add(List list) {
         // No Op
     }

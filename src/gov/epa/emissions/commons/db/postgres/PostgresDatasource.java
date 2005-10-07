@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.db.postgres;
 
-import gov.epa.emissions.commons.db.DataAcceptor;
+import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.Query;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.sql.Connection;
@@ -11,14 +11,14 @@ public class PostgresDatasource implements Datasource {
 
     private Connection connection;
 
-    private DataAcceptor dataAcceptor;
+    private DataModifier dataAcceptor;
 
     private String name;
 
     public PostgresDatasource(String name, Connection connection) {
         this.connection = connection;
         this.name = name;
-        this.dataAcceptor = new DataAcceptor(connection);
+        this.dataAcceptor = new DataModifier(connection);
     }
 
     public String getName() {
@@ -29,12 +29,12 @@ public class PostgresDatasource implements Datasource {
         return connection;
     }
 
-    public DataAcceptor getDataAcceptor() {
+    public DataModifier getDataModifier() {
         return dataAcceptor;
     }
 
-    public Query query() {
-        return new PostgresQuery(connection);
+    public DataQuery query() {
+        return new PostgresDataQuery(connection);
     }
 
     public TableDefinition tableDefinition() {

@@ -25,4 +25,16 @@ public class MySqlTypeMapper implements SqlTypeMapper {
         return null;
     }
 
+    public String getString(int size) {
+        return "VARCHAR(" + size + ")";
+    }
+
+    public String getInt() {
+        return "INT";
+    }
+
+    public String getLong() {
+        return "INT";// FIXME: verify
+    }
+
 }

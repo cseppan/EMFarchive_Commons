@@ -15,7 +15,7 @@ public class PacketReader {
 
     public PacketReader(File file) throws IOException {
         fileReader = new BufferedReader(new FileReader(file));
-        
+
         String header = fileReader.readLine().trim();
         identifier = header.replaceAll("/", "");
     }
@@ -35,6 +35,7 @@ public class PacketReader {
     private Record doRead(String line) {
         Record record = new Record();
 
+        // TODO: Monthly-specific
         record.add(line.substring(0, 5));// code
         List tokens = parse(line.substring(5, (line.length() - 5)), 4);// months
         record.add(tokens);

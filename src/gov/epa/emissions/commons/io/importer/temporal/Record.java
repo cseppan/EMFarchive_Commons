@@ -27,4 +27,8 @@ public class Record {
         tokens.addAll(list);
     }
 
+    public boolean isEnd() {
+        return false;
+    }
+
 }

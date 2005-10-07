@@ -4,13 +4,13 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
-import gov.epa.emissions.commons.io.importer.CommonsTestCase;
+import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLTableType;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
 
-public abstract class ORLImporterTestCase extends CommonsTestCase {
+public abstract class ORLImporterTestCase extends DbTestCase {
 
     protected ORLDatasetTypesFactory types;
 

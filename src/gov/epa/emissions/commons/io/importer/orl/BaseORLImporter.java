@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.DataAcceptor;
+import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
@@ -397,7 +397,7 @@ public class BaseORLImporter extends FormattedImporter {
             // skip over non data lines as needed
             if (!line.startsWith("#") && line.trim().length() > 0) {
                 data = breakUpLine(line, columnWidths);
-                datasource.query().insertRow(qualifiedTableName, data, columnTypes);
+                datasource.getDataModifier().insertRow(qualifiedTableName, data, columnTypes);
                 numRows++;
             }
         }// while file is not empty
@@ -641,7 +641,7 @@ public class BaseORLImporter extends FormattedImporter {
      */
     private void postImport() throws Exception {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
-        DataAcceptor emissionsAcceptor = emissionsDatasource.getDataAcceptor();
+        DataModifier emissionsAcceptor = emissionsDatasource.getDataModifier();
         ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
         Table table = dataset.getTable(tableType.base());
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
@@ -652,7 +652,7 @@ public class BaseORLImporter extends FormattedImporter {
         modifyStateColumn(emissionsDatasource, emissionsAcceptor, qualifiedTableName, fipsName);
     }
 
-    private void modifyStateColumn(Datasource emissionsDatasource, DataAcceptor emissionsAcceptor,
+    private void modifyStateColumn(Datasource emissionsDatasource, DataModifier emissionsAcceptor,
             String qualifiedTableName, final String FIPS_NAME) throws Exception, SQLException {
         // artificially insert the STATE data column, a four
         // character String from the reference.fips table
@@ -731,7 +731,7 @@ public class BaseORLImporter extends FormattedImporter {
         }
     }
 
-    private String modifyFipsColumn(Datasource emissionsDatasource, DataAcceptor emissionsAcceptor,
+    private String modifyFipsColumn(Datasource emissionsDatasource, DataModifier emissionsAcceptor,
             ORLTableType tableType, String qualifiedTableName) throws Exception {
         // artificially insert the FIPS data column, a five
         // character String concatenating the state and county codes

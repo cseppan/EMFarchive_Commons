@@ -129,4 +129,26 @@ public class PostgresTableDefinition implements TableDefinition {
     private String clean(String data) {
         return (data).replace('-', '_');
     }
+
+    public void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
+            throws SQLException {
+        createTable(schema + "." + table, cols, colTypes, primaryCol);
+    }
+
+    public void createTable(String schema, String table, String[] colNames, String[] colTypes) throws SQLException {
+        int length = colNames.length;
+        if (length != colTypes.length)
+            throw new SQLException("There are different numbers of column names and types");
+
+        String queryString = "CREATE TABLE " + schema + "." + table + " (";
+
+        for (int i = 0; i < length - 1; i++) {
+            queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
+        }// for i
+        queryString += clean(colNames[length - 1]) + " " + colTypes[length - 1];
+
+        queryString = queryString + ")";
+
+        execute(queryString);
+    }
 }

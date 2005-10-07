@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.Query;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.orl.ORLDataFormat;
@@ -198,7 +198,7 @@ public class SummaryTableCreator {
         epTable = emissionsDatasource.getName() + "." + epTable;
         summaryTable = emissionsDatasource.getName() + "." + summaryTable;
 
-        Query emissionsQuery = emissionsDatasource.query();
+        DataQuery emissionsQuery = emissionsDatasource.query();
         ResultSet rs = emissionsQuery.executeQuery("SELECT DISTINCT(pollutant_code) FROM " + emTable);
         rs.last();
         int numOfPollutants = rs.getRow();
@@ -252,7 +252,7 @@ public class SummaryTableCreator {
         epTable = emissionsDatasource + "." + epTable;
         summaryTable = emissionsDatasource + "." + summaryTable;
 
-        Query emissionsQuery = emissionsDatasource.query();
+        DataQuery emissionsQuery = emissionsDatasource.query();
         ResultSet rs = emissionsQuery.executeQuery("SELECT DISTINCT(" + POLLUTANT_COL + ") FROM " + emTable);
         rs.last();
         int numOfPollutants = rs.getRow();
@@ -312,7 +312,7 @@ public class SummaryTableCreator {
     public void createMobileEmissionsSummaryTable(String emTable, String peTable, String summaryTable, boolean overwrite)
             throws SQLException {
         // TODO keithlee - test createMobileEmissionsSummaryTable()
-        Query emissionsQuery = emissionsDatasource.query();
+        DataQuery emissionsQuery = emissionsDatasource.query();
         ResultSet rs = emissionsQuery.executeQuery("SELECT DISTINCT(pollutant_code) FROM " + emTable);
         rs.last();
         int numOfPollutants = rs.getRow();
@@ -361,7 +361,7 @@ public class SummaryTableCreator {
             boolean annualNotAverageDaily) throws Exception {
         // connect to emissions database
         // get the pollutant CAS codes
-        Query emissionsQuery = emissionsDatasource.query();
+        DataQuery emissionsQuery = emissionsDatasource.query();
         String casQuery = "SELECT DISTINCT(" + CAS_COL + ") FROM " + orlTable;
         ResultSet rs = emissionsQuery.executeQuery(casQuery);
         rs.last();

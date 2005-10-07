@@ -1,17 +1,17 @@
 package gov.epa.emissions.commons.db.postgres;
 
-import gov.epa.emissions.commons.db.Query;
+import gov.epa.emissions.commons.db.DataQuery;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class PostgresQuery implements Query {
+public class PostgresDataQuery implements DataQuery {
 
     private Connection connection;
 
-    public PostgresQuery(Connection connection) {
+    public PostgresDataQuery(Connection connection) {
         this.connection = connection;
     }
 
@@ -40,28 +40,6 @@ public class PostgresQuery implements Query {
         statement.execute(query.toString());
 
         return statement.getResultSet();
-    }
-
-    public void insertRow(String table, String[] data, String[] colTypes) throws SQLException {
-        StringBuffer query = new StringBuffer();
-        query.append("INSERT INTO " + table + " VALUES(");
-
-        for (int i = 0; i < data.length; i++) {
-            if (colTypes[i].startsWith("VARCHAR")) {
-                String cleanedCell = data[i].replace('-', '_');
-                String cellWithSinglQuotesEscaped = cleanedCell.replace('\'', ' ');
-                query.append("'" + cellWithSinglQuotesEscaped + "'");
-            } else {
-                if (data[i].trim().length() == 0)
-                    data[i] = "NULL";
-                query.append(data[i]);
-            }
-            if (i < (data.length - 1))
-                query.append(',');
-        }
-        query.append(')');// close parentheses around the query
-
-        execute(query.toString());
     }
 
     public ResultSet selectAll(String table) throws SQLException {

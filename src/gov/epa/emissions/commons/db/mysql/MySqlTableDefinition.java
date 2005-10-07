@@ -32,7 +32,6 @@ public class MySqlTableDefinition implements TableDefinition {
         }
 
         return tableNames;
-
     }
 
     public void createTableWithOverwrite(String tableName, String[] colNames, String[] colTypes, String[] primaryCols)
@@ -144,5 +143,26 @@ public class MySqlTableDefinition implements TableDefinition {
             if (statement != null)
                 statement.close();
         }
+    }
+
+    public void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
+            throws SQLException {
+        createTable(schema + "." + table, cols, colTypes, primaryCol);
+    }
+
+    public void createTable(String schema, String tableName, String[] colNames, String[] colTypes) throws SQLException {
+        if (colNames.length != colTypes.length)
+            throw new SQLException("There are different numbers of column names and types");
+
+        String queryString = "CREATE TABLE " + tableName + " (";
+
+        for (int i = 0; i < colNames.length - 1; i++) {
+            queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
+        }
+        queryString += clean(colNames[colNames.length - 1]) + " " + colTypes[colNames.length - 1];
+
+        queryString = queryString + ")";
+        execute(queryString);
+
     }
 }

@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.db.mysql;
 
-import gov.epa.emissions.commons.db.DataAcceptor;
+import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.Query;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.io.Serializable;
@@ -14,14 +14,14 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
 
     private Connection connection;
 
-    private DataAcceptor dataAcceptor;
+    private DataModifier dataAcceptor;
 
     private String name;
 
     public MySqlDatasource(String name, Connection connection) {
         this.name = name;
         this.connection = connection;
-        this.dataAcceptor = new DataAcceptor(connection);
+        this.dataAcceptor = new DataModifier(connection);
     }
 
     public String getName() {
@@ -37,12 +37,12 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
         statement.execute(query);
     }
 
-    public DataAcceptor getDataAcceptor() {
+    public DataModifier getDataModifier() {
         return dataAcceptor;
     }
 
-    public Query query() {
-        return new MySqlQuery(connection);
+    public DataQuery query() {
+        return new MySqlDataQuery(connection);
     }
 
     public TableDefinition tableDefinition() {

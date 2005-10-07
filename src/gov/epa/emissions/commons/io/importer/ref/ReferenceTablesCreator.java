@@ -67,7 +67,7 @@ public class ReferenceTablesCreator {
             if (pollutants.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.query().insertRow(qualifiedTableName, pollutants, colTypes);
+            datasource.getDataModifier().insertRow(qualifiedTableName, pollutants, colTypes);
         }
     }
 
@@ -94,7 +94,7 @@ public class ReferenceTablesCreator {
             if (countries.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.query().insertRow(qualifiedTableName, countries, colTypes);
+            datasource.getDataModifier().insertRow(qualifiedTableName, countries, colTypes);
         }
     }
 
@@ -121,7 +121,7 @@ public class ReferenceTablesCreator {
             if (countries.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.query().insertRow(qualifiedTableName, countries, colTypes);
+            datasource.getDataModifier().insertRow(qualifiedTableName, countries, colTypes);
         }
     }
 
@@ -147,7 +147,7 @@ public class ReferenceTablesCreator {
             if (sectors.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.query().insertRow(qualifiedTableName, sectors, colTypes);
+            datasource.getDataModifier().insertRow(qualifiedTableName, sectors, colTypes);
         }
     }
 
@@ -186,7 +186,7 @@ public class ReferenceTablesCreator {
             for (int i = 0; i < counties.length; i++) {
                 data[i] = counties[i].trim();
             }
-            datasource.query().insertRow(qualifiedTableName, data, colTypes);
+            datasource.getDataModifier().insertRow(qualifiedTableName, data, colTypes);
         }
     }
 

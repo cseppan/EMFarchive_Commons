@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 public interface Datasource {
 
-    Query query();
+    DataQuery query();
 
     TableDefinition tableDefinition();
 
@@ -12,5 +12,5 @@ public interface Datasource {
 
     Connection getConnection();
 
-    DataAcceptor getDataAcceptor();
+    DataModifier getDataModifier();
 }

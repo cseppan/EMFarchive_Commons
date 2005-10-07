@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DataAcceptor {
+public class DataModifier {
 
     protected Connection connection = null;
 
-    public DataAcceptor(Connection connection) {
+    public DataModifier(Connection connection) {
         this.connection = connection;
     }
 
@@ -113,6 +113,28 @@ public class DataAcceptor {
         concat.append(")");
 
         return concat.toString();
+    }
+
+    public void insertRow(String table, String[] data, String[] colTypes) throws SQLException {
+        StringBuffer insert = new StringBuffer();
+        insert.append("INSERT INTO " + table + " VALUES(");
+
+        for (int i = 0; i < data.length; i++) {
+            if (colTypes[i].startsWith("VARCHAR")) {
+                String cleanedCell = data[i].replace('-', '_');
+                String cellWithSinglQuotesEscaped = cleanedCell.replace('\'', ' ');
+                insert.append("'" + cellWithSinglQuotesEscaped + "'");
+            } else {
+                if (data[i].trim().length() == 0)
+                    data[i] = "NULL";
+                insert.append(data[i]);
+            }
+            if (i < (data.length - 1))
+                insert.append(',');
+        }
+        insert.append(')');// close parentheses around the query
+
+        execute(insert.toString());
     }
 
 }

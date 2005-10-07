@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
-import gov.epa.emissions.commons.io.importer.CommonsTestCase;
+import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.DefaultORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ORLExporterTest extends CommonsTestCase {
+public class ORLExporterTest extends DbTestCase {
 
     private ORLDatasetTypesFactory types;
 

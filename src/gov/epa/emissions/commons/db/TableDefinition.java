@@ -39,4 +39,9 @@ public interface TableDefinition {
      */
     void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception;
 
+    void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
+            throws SQLException;
+
+    void createTable(String schema, String table, String[] cols, String[] colTypes) throws SQLException;
+
 }

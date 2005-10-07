@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-public abstract class CommonsTestCase extends TestCase {
+public abstract class DbTestCase extends TestCase {
 
     protected DatabaseSetup dbSetup;
 

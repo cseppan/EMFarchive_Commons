@@ -20,9 +20,22 @@ public class PostgresSqlTypeMapper implements SqlTypeMapper {
             if (name.indexOf("time") > -1) {
                 return "INT";
             }
-            return "float(15)";//TODO: what's the appropriate size for double ?
+            return "float(15)";// TODO: what's the appropriate size for double
+            // ?
         }
         return null;
+    }
+
+    public String getString(int size) {
+        return "VARCHAR(" + size + ")";
+    }
+
+    public String getInt() {
+        return "INTEGER";
+    }
+
+    public String getLong() {
+        return "BIGINT";
     }
 
 }

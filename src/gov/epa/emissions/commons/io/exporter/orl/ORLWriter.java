@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.exporter.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.Query;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
@@ -53,7 +53,7 @@ public class ORLWriter {
         Table baseTable = dataset.getTables()[0];
         String qualifiedTableName = datasource.getName() + "." + baseTable.getName();
 
-        Query query = datasource.query();
+        DataQuery query = datasource.query();
         ResultSet data = query.selectAll(qualifiedTableName);
 
         ORLBody body = bodyFactory.getBody(dataset.getDatasetType());
