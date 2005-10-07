@@ -20,12 +20,17 @@ public class PacketLoader {
     }
 
     public void load(Dataset dataset, PacketReader reader) throws ImporterException {
-        String table = reader.identify();
+        String table = toTableName(reader);
         try {
             insertRecords(table, dataset, reader);
         } catch (Exception e) {
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         }
+    }
+
+    private String toTableName(PacketReader reader) {
+        String identifier = reader.identify();
+        return identifier.replaceAll(" ", "_");
     }
 
     private void insertRecords(String table, Dataset dataset, PacketReader reader) throws Exception {
