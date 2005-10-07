@@ -31,7 +31,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/monthly.txt");
-        colsMetadata = new MonthlyTableColumnsMetadata(typeMapper);
+        colsMetadata = new TableColumnsMetadata(new MonthlyColumnsMetadata(typeMapper), typeMapper);
         reader = new PacketReader(file, colsMetadata);
 
         createTable("Monthly");

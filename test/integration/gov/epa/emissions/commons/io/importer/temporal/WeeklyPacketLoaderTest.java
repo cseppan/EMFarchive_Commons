@@ -31,7 +31,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/weekly.txt");
-        colsMetadata = new WeeklyTableColumnsMetadata(typeMapper);
+        colsMetadata = new TableColumnsMetadata(new WeeklyColumnsMetadata(typeMapper), typeMapper);
         reader = new PacketReader(file, colsMetadata);
 
         createTable("Weekly");

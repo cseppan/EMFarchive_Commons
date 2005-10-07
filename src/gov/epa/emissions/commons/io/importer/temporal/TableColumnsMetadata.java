@@ -6,24 +6,27 @@ import java.util.List;
 
 import gov.epa.emissions.commons.db.SqlTypeMapper;
 
-public class WeeklyTableColumnsMetadata extends WeeklyColumnsMetadata {
+public class TableColumnsMetadata implements ColumnsMetadata {
 
     private String datasetIdType;
+
     private String datasetIdColName;
 
-    public WeeklyTableColumnsMetadata(SqlTypeMapper typeMapper) {
-        super(typeMapper);
-        
+    private ColumnsMetadata base;
+
+    public TableColumnsMetadata(ColumnsMetadata base, SqlTypeMapper typeMapper) {
+        this.base = base;
+
         datasetIdType = typeMapper.getLong();
         datasetIdColName = "Dataset_Id";
     }
 
     public String[] colNames() {
-        return add(datasetIdColName, super.colNames());
+        return add(datasetIdColName, base.colNames());
     }
 
     public String[] colTypes() {
-        return add(datasetIdType, super.colTypes());
+        return add(datasetIdType, base.colTypes());
     }
 
     private String[] add(String element, String[] array) {
@@ -32,6 +35,10 @@ public class WeeklyTableColumnsMetadata extends WeeklyColumnsMetadata {
         all.addAll(Arrays.asList(array));
 
         return (String[]) all.toArray(new String[0]);
+    }
+
+    public int[] widths() {
+        return base.widths();
     }
 
 }

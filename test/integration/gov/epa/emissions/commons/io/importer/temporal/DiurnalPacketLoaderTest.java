@@ -31,7 +31,7 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
-        colsMetadata = new DiurnalTableColumnsMetadata(typeMapper);
+        colsMetadata = new TableColumnsMetadata(new DiurnalColumnsMetadata(typeMapper), typeMapper);
         reader = new PacketReader(file, colsMetadata);
 
         createTable("Diurnal_Weekday");
