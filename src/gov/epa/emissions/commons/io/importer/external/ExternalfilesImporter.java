@@ -11,9 +11,14 @@
 package gov.epa.emissions.commons.io.importer.external;
 
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.Importer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,14 +29,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExternalfilesImporter implements Importer {
     private static Log log = LogFactory.getLog(ExternalfilesImporter.class);
-
+    protected String importerName;
 
 	/**
 	 * 
 	 */
 	public ExternalfilesImporter() {
 		super();
-		// TODO Auto-generated constructor stub
+		importerName = "External files";
 	}
 
 	/* (non-Javadoc)
@@ -43,39 +48,62 @@ public class ExternalfilesImporter implements Importer {
 
 	}
 
-	public File[] preCondition(String folderPath, String fileName) throws Exception {
-        File path = validatePath(folderPath);
-        File file = validateFile(path, fileName);
-        File[] allFiles = null;
-        
-        
-        
-        return allFiles;
-	}
-
-	public File validatePath(String folderPath) throws Exception {
-        log.debug("check if folder exists " + folderPath);
-        File file = new File(folderPath);
-
-        if (!file.exists() || !file.isDirectory()) {
-            log.error("Folder " + folderPath + " does not exist");
-            throw new Exception("Folder does not exist");
-        }
-        log.debug("check if folder exists " + folderPath);
-        return file;
-	}
-
 	public File validateFile(File path, String fileName) throws Exception {
-        log.debug("check if file exists " + fileName);
+        log.debug("begin check if file exists " + fileName);
         File file = new File(path, fileName);
 
         if (!file.exists() || !file.isFile()) {
             log.error("File " + file.getAbsolutePath() + " not found");
             throw new Exception("File not found");
         }
-        log.debug("check if file exists " + fileName);
+        log.debug("end check if file exists " + fileName);
 
         return file;
 	}
+
+	public File[] preCondition(File path, String fileName, DatasetType datasetType) throws Exception {
+        File[] allFiles = null;
+        
+        int minFiles = datasetType.getMinfiles();
+
+        allFiles = extractFileNames(path, fileName);
+        if (allFiles.length < minFiles){
+        	throw new Exception(importerName + " importer requires " + minFiles + " files.  Only " + allFiles.length + " available");
+        }
+        
+        
+        return allFiles;
+	}
+
+	private File[] extractFileNames(File path, String fileName) throws Exception {
+		List allFiles = new ArrayList();
+		
+		File[] files = null;
+		
+		if (fileName.indexOf("*")>=0){
+			String[] allFilesInFolder = path.list();
+			for (int i=0; i<allFilesInFolder.length;i++){
+				log.debug("file: " + allFilesInFolder[i]);
+			}
+			Pattern pat = Pattern.compile(fileName);
+			log.debug("PATTERN: " + fileName);
+			for (int i = 0; i < allFilesInFolder.length; i++) {
+				String ipFile = allFilesInFolder[i];
+				log.debug("File #" + i + "/" + allFilesInFolder.length + " FileName= " +ipFile);
+				Matcher m = pat.matcher(ipFile);
+				if ( m.matches()){
+					allFiles.add(validateFile(path,ipFile));
+		        }				
+			}
+		}else{
+			allFiles.add(validateFile(path,fileName));
+		}
+		log.debug("objects in list: " + allFiles.size());
+		files = (File[])allFiles.toArray(new File[allFiles.size()]);
+		log.debug("Selected files in array: " + files.length);
+
+		return files;
+	}
+
 
 }

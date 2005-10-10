@@ -173,11 +173,11 @@ public class SimpleDataset implements Dataset {
         return endDateTime;
     }
 
-    public List getDataSources() {
+    public List getDatasources() {
         return datasources;
     }
 
-    public void setDataSources(List datasources) {
+    public void setDatasources(List datasources) {
         this.datasources = datasources;
     }
 

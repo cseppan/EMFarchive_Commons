@@ -72,9 +72,9 @@ public interface Dataset extends Serializable {
 
     void setTablesMap(Map datatables);
 
-    void setDataSources(List datasources);
+    void setDatasources(List datasources);
 
-    List getDataSources();
+    List getDatasources();
 
     // convenience methods
     Table getTable(String tableType);

@@ -16,16 +16,7 @@ public class ShapefilesImporter extends ExternalfilesImporter {
 
 	public ShapefilesImporter() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Check the preconditions for Shapefiles.
-	 * 
-	 */
-	public void preCondition() throws Exception {
-		
-	
+		importerName = "Shape files";
 	}
 
 	public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {

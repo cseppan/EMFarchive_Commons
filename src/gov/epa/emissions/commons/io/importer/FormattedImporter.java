@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
 
 import java.io.File;
 
@@ -54,32 +55,26 @@ public abstract class FormattedImporter implements Importer {
         }
     }
     
-	public File[] preCondition(String folderPath, String fileName) throws Exception {
-        File path = validatePath(folderPath);
-        File file = validateFile(path, fileName);
-        File[] allFiles = null;
-        
+	public File[] preCondition(File path, String fileName, DatasetType datasetType) throws Exception {
+        File[] allFiles = new File[1];
+        log.debug("" + allFiles.length);
+        log.debug("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        log.debug("$$$ Path: " + path.getAbsolutePath());
+        log.debug("$$$ Filename: " + fileName);
+        log.debug("IS DATASETTYPE NULL? " + (datasetType== null));
+        log.debug("$$$ DatasetType: " + datasetType.getName());
+        log.debug("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+		File file = validateFile(path, fileName);
+		allFiles[0]=file;
         
         
         return allFiles;
 	}
 
-	public File validatePath(String folderPath) throws Exception {
-        log.debug("check if folder exists " + folderPath);
-        File file = new File(folderPath);
-
-        if (!file.exists() || !file.isDirectory()) {
-            log.error("Folder " + folderPath + " does not exist");
-            throw new Exception("Folder does not exist");
-        }
-        log.debug("check if folder exists " + folderPath);
-        return file;
-	}
-
 	public File validateFile(File path, String fileName) throws Exception {
         log.debug("check if file exists " + fileName);
         File file = new File(path, fileName);
-
+        log.debug("File is: " + file.getAbsolutePath());
         if (!file.exists() || !file.isFile()) {
             log.error("File " + file.getAbsolutePath() + " not found");
             throw new Exception("File not found");

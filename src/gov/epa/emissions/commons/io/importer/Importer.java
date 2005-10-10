@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
 
 import java.io.File;
 
@@ -20,9 +21,8 @@ public interface Importer {
 	 * 
 	 * @throws Exception
 	 */
-	File[] preCondition(String folderPath, String fileName) throws Exception;
+	File[] preCondition(File path, String fileName, DatasetType datasetType) throws Exception;
 	
-	File validatePath(String folderPath) throws Exception;
     File validateFile(File path, String fileName) throws Exception;
 
     /**
@@ -31,5 +31,6 @@ public interface Importer {
      */
     // TODO: have a separate method for overwrite & non-overwrite
     void run(File[] files, Dataset dataset, boolean overwrite) throws Exception;
+
 
 }
