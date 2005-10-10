@@ -138,7 +138,6 @@ public class MySqlTableDefinition implements TableDefinition {
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            System.out.println("query-"+query);
             statement.execute(query);
         } finally {
             if (statement != null)

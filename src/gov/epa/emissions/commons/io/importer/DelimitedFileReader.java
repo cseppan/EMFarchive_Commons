@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.io.importer;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,20 +11,13 @@ import java.util.List;
 
 public class DelimitedFileReader implements Reader {
 
-    private String delimiter;
-
     private BufferedReader fileReader;
 
     private List comments;
 
     public DelimitedFileReader(File file) throws FileNotFoundException {
-        this.delimiter = findDelimiter();
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
-    }
-
-    private String findDelimiter() {
-        return " ";
     }
 
     public void close() throws IOException {
@@ -53,14 +45,10 @@ public class DelimitedFileReader implements Reader {
 
     private Record doRead(String line) {
         Record record = new Record();
-        String[] tokens = split(line);
+        String[] tokens = new DelimitedInputTokenizer().tokensUsingSpace(line);
         record.add(Arrays.asList(tokens));
 
         return record;
-    }
-
-    private String[] split(String line) {
-        return line.split(delimiter);
     }
 
     private boolean isComment(String line) {

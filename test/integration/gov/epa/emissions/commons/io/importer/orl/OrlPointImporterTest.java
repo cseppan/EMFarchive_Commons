@@ -18,8 +18,6 @@ public class OrlPointImporterTest extends DbTestCase {
 
     private SqlDataTypes sqlDataTypes;
 
-    private OrlPointImporter importer;
-
     private Dataset dataset;
 
     protected void setUp() throws Exception {
@@ -32,8 +30,6 @@ public class OrlPointImporterTest extends DbTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(new Random().nextLong());
-
-        importer = new OrlPointImporter(datasource, sqlDataTypes);
     }
 
     protected void tearDown() throws Exception {
@@ -41,11 +37,23 @@ public class OrlPointImporterTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void testShouldReadFromFileAndLoadMonthlyPacketIntoTable() throws Exception {
+    public void testShouldImportASmallAndSimplePointFile() throws Exception {
         File file = new File("test/data/orl/nc/small-point.txt");
 
+        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
+        // assert
+        TableReader tableReader = new TableReader(datasource.getConnection());
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+    }
+    
+    public void itestShouldImportASmallAndSimpleNonPointFile() throws Exception {
+        File file = new File("test/data/orl/nc/small-nonpoint.txt");
+        
+        OrlNonPointImporter importer = new OrlNonPointImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+        
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));

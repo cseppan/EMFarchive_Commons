@@ -8,11 +8,11 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;
 
-public class OrlPointImporter {
+public class OrlNonPointImporter {
 
     private OrlImporter delegate;
 
-    public OrlPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public OrlNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         ColumnsMetadata cols = new OrlPointColumnsMetadata(sqlDataTypes);
         delegate = new OrlImporter(datasource, cols, sqlDataTypes);
     }
