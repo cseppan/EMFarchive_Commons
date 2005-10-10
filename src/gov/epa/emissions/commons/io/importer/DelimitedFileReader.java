@@ -1,7 +1,5 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.io.importer.temporal.TerminatorRecord;
-import gov.epa.emissions.commons.io.importer.temporal.Record;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DelimitedFileReader {
+public class DelimitedFileReader implements Reader {
 
     private String delimiter;
 

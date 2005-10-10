@@ -6,7 +6,10 @@ import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -27,7 +30,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getTypeMapper();
+        typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/monthly.txt");
@@ -48,16 +51,16 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
     }
 
     public void testShouldLoadRecordsIntoMonthlyTable() throws Exception {
-        PacketLoader loader = new PacketLoader(datasource, colsMetadata);
+        DataLoader loader = new DataLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
+        String tableName = "monthly";
 
-        loader.load(dataset, reader);
+        loader.load(dataset, tableName, reader);
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
-        String tableName = "monthly";
 
         assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
                 tableName));

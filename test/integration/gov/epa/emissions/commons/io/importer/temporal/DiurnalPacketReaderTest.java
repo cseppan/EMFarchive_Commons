@@ -1,6 +1,9 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.PacketReader;
+import gov.epa.emissions.commons.io.importer.Record;
 
 import java.io.File;
 import java.io.IOException;

@@ -19,7 +19,6 @@ public class TableReader extends DbOperation {
             ITable tableObj = table(table);
             return tableObj.getRowCount();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("could not query table - " + table);
         }
     }
@@ -34,7 +33,6 @@ public class TableReader extends DbOperation {
 
             return iterator.getTable();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("could not lookup table - " + table);
         }
     }

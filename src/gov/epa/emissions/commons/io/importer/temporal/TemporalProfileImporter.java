@@ -3,7 +3,10 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.PacketReader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,14 +32,20 @@ public class TemporalProfileImporter {
                 String header = readHeader(fileReader);
                 ColumnsMetadata cols = colsMetadata(header);
                 PacketReader reader = new PacketReader(fileReader, header, cols);
-                PacketLoader loader = new PacketLoader(datasource, new TableColumnsMetadata(cols, sqlType));
+                DataLoader loader = new DataLoader(datasource, new TableColumnsMetadata(cols, sqlType));
 
-                loader.load(dataset, reader);
+                // Note: header is the same as table name
+                loader.load(dataset, table(header), reader);
             }
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
+    }
+
+    // TODO: revisit ?
+    private String table(String header) {
+        return header.replaceAll(" ", "_");
     }
 
     private boolean isEndOfFile(BufferedReader fileReader) throws IOException {

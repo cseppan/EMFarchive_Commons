@@ -6,7 +6,10 @@ import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -23,13 +26,13 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
     private ColumnsMetadata colsMetadata;
 
-    private PacketLoader loader;
+    private DataLoader loader;
 
     protected void setUp() throws Exception {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getTypeMapper();
+        typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
@@ -38,7 +41,7 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
         createTable("Diurnal_Weekday");
 
-        loader = new PacketLoader(datasource, colsMetadata);
+        loader = new DataLoader(datasource, colsMetadata);
     }
 
     protected void tearDown() throws Exception {
@@ -54,12 +57,12 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
+        String tableName = "Diurnal_Weekday";
 
-        loader.load(dataset, reader);
+        loader.load(dataset, tableName, reader);
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
-        String tableName = "Diurnal_Weekday";
 
         assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
                 tableName));

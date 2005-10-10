@@ -34,7 +34,7 @@ public class PostgresDbServer implements DbServer {
         return new PostgresDatasource(datasourceName, connection);
     }
 
-    public SqlDataType getTypeMapper() {
+    public SqlDataType getDataType() {
         return typeMapper;
     }
 

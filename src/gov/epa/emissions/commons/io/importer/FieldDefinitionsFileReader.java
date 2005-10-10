@@ -95,7 +95,6 @@ public class FieldDefinitionsFileReader {
             try {
                 details.setType(nameSplitString[i], typeSplitString[i]);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 
@@ -104,7 +103,6 @@ public class FieldDefinitionsFileReader {
             try {
                 details.setWidth(nameSplitString[i], widthSplitString[i]);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 

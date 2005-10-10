@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 public class TableColumnsMetadata implements ColumnsMetadata {
 

@@ -576,13 +576,13 @@ public class BaseORLImporter extends FormattedImporter {
     // FIXME: pull this out into a factory
     private FileColumnsMetadata getFileColumnsMetadata(DatasetType type) throws Exception {
         if (type.equals(typesFactory.nonPoint())) {
-            orlDataFormat = new ORLAreaNonpointDataFormat(dbServer.getTypeMapper(), extendedFormat);
+            orlDataFormat = new ORLAreaNonpointDataFormat(dbServer.getDataType(), extendedFormat);
         } else if (type.equals(typesFactory.nonRoad())) {
-            orlDataFormat = new ORLAreaNonroadDataFormat(dbServer.getTypeMapper(), extendedFormat);
+            orlDataFormat = new ORLAreaNonroadDataFormat(dbServer.getDataType(), extendedFormat);
         } else if (type.equals(typesFactory.onRoad())) {
-            orlDataFormat = new ORLMobileDataFormat(dbServer.getTypeMapper(), extendedFormat);
+            orlDataFormat = new ORLMobileDataFormat(dbServer.getDataType(), extendedFormat);
         } else if (type.equals(typesFactory.point())) {
-            orlDataFormat = new ORLPointDataFormat(dbServer.getTypeMapper(), extendedFormat);
+            orlDataFormat = new ORLPointDataFormat(dbServer.getDataType(), extendedFormat);
         } else {
             orlDataFormat = null;
             throw new Exception("Unknown ORL file type: " + type.getName());
@@ -659,7 +659,7 @@ public class BaseORLImporter extends FormattedImporter {
         final String STATE_NAME = "state_abbr";
         final int STATE_WIDTH = 4;
         final ColumnType STATE_TYPE = ColumnType.CHAR;
-        FileColumnsMetadata state = new FileColumnsMetadata(STATE_NAME, dbServer.getTypeMapper());
+        FileColumnsMetadata state = new FileColumnsMetadata(STATE_NAME, dbServer.getDataType());
         state.addColumnName(STATE_NAME);
 
         state.setWidth(STATE_NAME, String.valueOf(STATE_WIDTH));
@@ -740,7 +740,7 @@ public class BaseORLImporter extends FormattedImporter {
         if (!extendedFormat && (tableTypes.isNonRoad(tableType) || tableTypes.isOnRoad(tableType))) {
             final int FIPS_WIDTH = 5;
             final ColumnType FIPS_TYPE = ColumnType.CHAR;
-            FileColumnsMetadata fips = new FileColumnsMetadata(FIPS_NAME, dbServer.getTypeMapper());
+            FileColumnsMetadata fips = new FileColumnsMetadata(FIPS_NAME, dbServer.getDataType());
             fips.addColumnName(FIPS_NAME);
 
             fips.setWidth(FIPS_NAME, String.valueOf(FIPS_WIDTH));

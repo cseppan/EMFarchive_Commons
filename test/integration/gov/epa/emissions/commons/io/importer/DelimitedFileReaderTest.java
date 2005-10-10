@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.io.importer.temporal.Record;
 
 import java.io.File;
 import java.io.IOException;

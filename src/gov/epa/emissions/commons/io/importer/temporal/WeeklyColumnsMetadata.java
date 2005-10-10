@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 public class WeeklyColumnsMetadata implements ColumnsMetadata {
 

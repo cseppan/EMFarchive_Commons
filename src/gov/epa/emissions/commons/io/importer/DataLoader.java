@@ -1,39 +1,32 @@
-package gov.epa.emissions.commons.io.importer.temporal;
+package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PacketLoader {
+public class DataLoader {
 
     private Datasource datasource;
 
     private ColumnsMetadata cols;
 
-    public PacketLoader(Datasource datasource, ColumnsMetadata cols) {
+    public DataLoader(Datasource datasource, ColumnsMetadata cols) {
         this.datasource = datasource;
         this.cols = cols;
     }
 
-    public void load(Dataset dataset, PacketReader reader) throws ImporterException {
-        String table = toTableName(reader);
+    public void load(Dataset dataset, String table, Reader reader) throws ImporterException {
         try {
-            insertRecords(table, dataset, reader);
+            insertRecords(dataset, table, reader);
         } catch (Exception e) {
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         }
     }
 
-    private String toTableName(PacketReader reader) {
-        String identifier = reader.identify();
-        return identifier.replaceAll(" ", "_");
-    }
-
-    private void insertRecords(String table, Dataset dataset, PacketReader reader) throws Exception {
+    private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         Record record = reader.read();
         DataModifier modifier = datasource.getDataModifier();
         String qualifiedTable = datasource.getName() + "." + table;

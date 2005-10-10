@@ -27,7 +27,7 @@ public class TemporalProfileImporterTest extends DbTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getTypeMapper();
+        typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
         TableColumnsMetadata monthlyMeta = new TableColumnsMetadata(new MonthlyColumnsMetadata(typeMapper), typeMapper);

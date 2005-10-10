@@ -6,7 +6,7 @@ public interface DbServer {
 
     Datasource getReferenceDatasource();
 
-    SqlDataType getTypeMapper();
+    SqlDataType getDataType();
 
     /**
      * @return wraps a db-specific function around ascii column to convert it to

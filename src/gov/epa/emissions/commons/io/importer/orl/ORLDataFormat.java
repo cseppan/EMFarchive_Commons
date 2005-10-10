@@ -47,7 +47,6 @@ public abstract class ORLDataFormat {
             details.setType(name, type.getName());
             details.setWidth(name, String.valueOf(width));
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

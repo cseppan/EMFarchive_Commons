@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataType;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -14,24 +15,26 @@ import java.sql.SQLException;
 
 public class DelimitedFileLoaderTest extends DbTestCase {
 
-    private DelimitedFileReader reader;
+    private Reader reader;
 
     private Datasource datasource;
 
-    private SqlDataType typeMapper;
+    private SqlDataType dataType;
 
+    private ColumnsMetadata colsMetadata;
 
     protected void setUp() throws Exception {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getTypeMapper();
+        dataType = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/orl/SimpleDelimited.txt");
         reader = new DelimitedFileReader(file);
 
-        createTable("SimpleDelimited");
+        colsMetadata = new TableColumnsMetadata(new DelimitedColumnsMetadata(7, dataType), dataType);
+        createTable("SimpleDelimited", colsMetadata);
     }
 
     protected void tearDown() throws Exception {
@@ -39,25 +42,23 @@ public class DelimitedFileLoaderTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), "SimpleDelimited");
     }
 
-    private void createTable(String table) throws SQLException {
+    private void createTable(String table, ColumnsMetadata colsMetadata) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        String [] colNames = {"FIPS","PLANTID","SCC","NAIC","MACT","SRCTYPE","POINTID"};
-        String varcharType = typeMapper.getString(20);
-        String [] colTypes = {varcharType,varcharType,varcharType,varcharType,varcharType,varcharType, varcharType};
-        tableDefinition.createTable(datasource.getName(), table, colNames, colTypes);
+        tableDefinition.createTable(datasource.getName(), table, colsMetadata.colNames(), colsMetadata.colTypes());
     }
 
     public void testShouldLoadRecordsIntoTable() throws Exception {
-        DelimitedFileLoader loader = new DelimitedFileLoader(datasource);
+
+        DataLoader loader = new DataLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
+        String tableName = "simpledelimited";
 
-        loader.load(dataset, reader);
+        loader.load(dataset, tableName, reader);
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
-        String tableName = "simpledelimited";
 
         assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
                 tableName));

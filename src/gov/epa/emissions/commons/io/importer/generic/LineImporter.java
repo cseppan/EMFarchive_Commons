@@ -169,7 +169,7 @@ public class LineImporter extends FormattedImporter {
     
     // TODO: pull this out into a factory
     private FileColumnsMetadata getFileColumnsMetadata() throws Exception {
-    	FileColumnsMetadata details = new FileColumnsMetadata("", dbServer.getTypeMapper());
+    	FileColumnsMetadata details = new FileColumnsMetadata("", dbServer.getDataType());
         
     	/**
     	 * Need to setup a generic DataFormat
@@ -180,7 +180,6 @@ public class LineImporter extends FormattedImporter {
             details.setType(GenericNames.COLUMN_NAME, GenericNames.COLUMN_TYPE);
             details.setWidth(GenericNames.COLUMN_NAME, String.valueOf(GenericNames.COLUMN_WIDTH));
         } catch (Exception e) {
-            e.printStackTrace();
         }
         
         return details;
