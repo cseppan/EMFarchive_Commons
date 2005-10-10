@@ -37,7 +37,7 @@ public class PacketReader {
     public Record read() throws IOException {
         String line = fileReader.readLine();
         if (isEnd(line))
-            return new PacketTerminator();
+            return new TerminatorRecord();
 
         return doRead(line);
     }

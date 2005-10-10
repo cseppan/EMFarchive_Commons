@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import java.util.List;
 
-public class PacketTerminator extends Record {
+public class TerminatorRecord extends Record {
 
     public boolean isEnd() {
         return true;
