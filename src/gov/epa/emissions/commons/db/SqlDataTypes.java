@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.db;
 
-public interface SqlDataType {
+public interface SqlDataTypes {
 
     String getType(String name, String genericType, int width);
 
@@ -9,5 +9,9 @@ public interface SqlDataType {
     String getInt();
 
     String getLong();
+
+    String getReal();
+
+    String smallInt();
 
 }

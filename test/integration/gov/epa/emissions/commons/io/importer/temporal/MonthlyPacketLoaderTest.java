@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
@@ -22,7 +22,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
 
     private Datasource datasource;
 
-    private SqlDataType typeMapper;
+    private SqlDataTypes typeMapper;
 
     private ColumnsMetadata colsMetadata;
 
@@ -57,7 +57,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
         dataset.setName("test");
         String tableName = "monthly";
 
-        loader.load(dataset, tableName, reader);
+        loader.load(reader, dataset, tableName);
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());

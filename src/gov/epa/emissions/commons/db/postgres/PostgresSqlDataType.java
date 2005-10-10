@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.db.postgres;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 
-public class PostgresSqlDataType implements SqlDataType {
+public class PostgresSqlDataType implements SqlDataTypes {
 
     public String getType(String name, String genericType, int width) {
         if (genericType.equals("C"))
@@ -36,6 +36,14 @@ public class PostgresSqlDataType implements SqlDataType {
 
     public String getLong() {
         return "BIGINT";
+    }
+
+    public String getReal() {
+        return "FLOAT(15)";// FIXME: review the precision. too big or small ?
+    }
+
+    public String smallInt() {
+        return "INT2";
     }
 
 }

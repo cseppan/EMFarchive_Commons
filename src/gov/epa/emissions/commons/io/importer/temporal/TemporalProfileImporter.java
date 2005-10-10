@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -15,11 +15,11 @@ import java.io.IOException;
 
 public class TemporalProfileImporter {
 
-    private SqlDataType sqlType;
+    private SqlDataTypes sqlType;
 
     private Datasource datasource;
 
-    public TemporalProfileImporter(Datasource datasource, SqlDataType sqlType) {
+    public TemporalProfileImporter(Datasource datasource, SqlDataTypes sqlType) {
         this.datasource = datasource;
         this.sqlType = sqlType;
     }
@@ -35,7 +35,7 @@ public class TemporalProfileImporter {
                 DataLoader loader = new DataLoader(datasource, new TableColumnsMetadata(cols, sqlType));
 
                 // Note: header is the same as table name
-                loader.load(dataset, table(header), reader);
+                loader.load(reader, dataset, table(header));
             }
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "

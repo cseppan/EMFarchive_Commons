@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 
@@ -217,7 +217,7 @@ public final class ORLPointDataFormat extends ORLDataFormat {
 
     private static final ColumnType SECONDARY_CONTROL_EQUIPMENT_CODE_TYPE = ColumnType.INT;
 
-    public ORLPointDataFormat(SqlDataType sqlTypeMapper, boolean extendedFormat) {
+    public ORLPointDataFormat(SqlDataTypes sqlTypeMapper, boolean extendedFormat) {
         super(sqlTypeMapper, extendedFormat);
     }
 

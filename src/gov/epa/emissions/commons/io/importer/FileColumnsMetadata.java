@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +18,11 @@ public class FileColumnsMetadata {// TODO: why ???
 
     private String tableName;
 
-    private SqlDataType sqlTypeMapper;
+    private SqlDataTypes sqlTypeMapper;
 
     private List columns;
 
-    public FileColumnsMetadata(String tableName, SqlDataType sqlTypeMapper) {
+    public FileColumnsMetadata(String tableName, SqlDataTypes sqlTypeMapper) {
         this.tableName = tableName;
         this.sqlTypeMapper = sqlTypeMapper;
         columnNameTypeMap = new HashMap();

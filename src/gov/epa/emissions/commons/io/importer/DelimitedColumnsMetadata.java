@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 
 public class DelimitedColumnsMetadata implements ColumnsMetadata {
 
@@ -8,7 +8,7 @@ public class DelimitedColumnsMetadata implements ColumnsMetadata {
 
     private String[] colNames;
 
-    public DelimitedColumnsMetadata(int cols, SqlDataType typeMapper) {
+    public DelimitedColumnsMetadata(int cols, SqlDataTypes typeMapper) {
         // TODO: is the size sufficient ?
         colTypes = new String[cols];
         colNames = new String[cols];

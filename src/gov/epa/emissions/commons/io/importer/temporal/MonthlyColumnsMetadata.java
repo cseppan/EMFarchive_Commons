@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 public class MonthlyColumnsMetadata implements ColumnsMetadata {
@@ -11,7 +11,7 @@ public class MonthlyColumnsMetadata implements ColumnsMetadata {
 
     private String[] colNames;
 
-    public MonthlyColumnsMetadata(SqlDataType sqlDataType) {
+    public MonthlyColumnsMetadata(SqlDataTypes sqlDataType) {
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5 };
 
         String intType = sqlDataType.getInt();

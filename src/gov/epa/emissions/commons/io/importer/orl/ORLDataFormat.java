@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 
@@ -27,7 +27,7 @@ public abstract class ORLDataFormat {
 
     protected boolean extendedFormat;
 
-    protected SqlDataType sqlTypeMapper;
+    protected SqlDataTypes sqlTypeMapper;
 
     public static final String FIPS_NAME = "FIPS";
 
@@ -35,7 +35,7 @@ public abstract class ORLDataFormat {
 
     protected static final int FIPS_WIDTH = 5;
 
-    ORLDataFormat(SqlDataType sqlTypeMapper, boolean extendedFormat) {
+    ORLDataFormat(SqlDataTypes sqlTypeMapper, boolean extendedFormat) {
         this.sqlTypeMapper = sqlTypeMapper;
         this.extendedFormat = extendedFormat;
     }

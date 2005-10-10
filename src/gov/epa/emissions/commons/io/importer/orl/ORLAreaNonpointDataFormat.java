@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.ColumnType;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 
@@ -46,7 +46,7 @@ public final class ORLAreaNonpointDataFormat extends ORLAreaDataFormat {
     // RULE_EFFECTIVENESS -> REFF
     // RULE_PENETRATION -> RPEN
 
-    public ORLAreaNonpointDataFormat(SqlDataType sqlTypeMapper, boolean extendedFormat) {
+    public ORLAreaNonpointDataFormat(SqlDataTypes sqlTypeMapper, boolean extendedFormat) {
         super(sqlTypeMapper, extendedFormat);
     }
 

@@ -18,7 +18,8 @@ public class DataLoader {
         this.cols = cols;
     }
 
-    public void load(Dataset dataset, String table, Reader reader) throws ImporterException {
+    // TODO: review if any of these params should go into the constructor
+    public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
         try {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
@@ -39,9 +40,8 @@ public class DataLoader {
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
-        for (int i = 0; i < record.size(); i++) {
+        for (int i = 0; i < record.size(); i++)
             data.add(record.token(i));
-        }
 
         return (String[]) data.toArray(new String[0]);
     }

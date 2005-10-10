@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.ref;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.io.BufferedReader;
@@ -37,9 +37,9 @@ public class ReferenceTablesCreator {
 
     private File referenceFilesDir;
 
-    private SqlDataType sqlTypeMapper;
+    private SqlDataTypes sqlTypeMapper;
 
-    public ReferenceTablesCreator(File referenceFilesDir, SqlDataType sqlTypeMapper) {
+    public ReferenceTablesCreator(File referenceFilesDir, SqlDataTypes sqlTypeMapper) {
         this.referenceFilesDir = referenceFilesDir;
         this.sqlTypeMapper = sqlTypeMapper;
     }

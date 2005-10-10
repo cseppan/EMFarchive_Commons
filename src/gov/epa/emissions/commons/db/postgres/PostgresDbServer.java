@@ -2,14 +2,14 @@ package gov.epa.emissions.commons.db.postgres;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 
 import java.sql.Connection;
 
 //Note: Emissions & Reference are two schemas in a single database i.e. share a connection
 public class PostgresDbServer implements DbServer {
 
-    private SqlDataType typeMapper;
+    private SqlDataTypes typeMapper;
 
     private Datasource emissionsDatasource;
 
@@ -34,7 +34,7 @@ public class PostgresDbServer implements DbServer {
         return new PostgresDatasource(datasourceName, connection);
     }
 
-    public SqlDataType getDataType() {
+    public SqlDataTypes getDataType() {
         return typeMapper;
     }
 

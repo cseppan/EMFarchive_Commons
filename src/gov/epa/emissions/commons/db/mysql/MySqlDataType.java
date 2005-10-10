@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.db.mysql;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 
-public class MySqlDataType implements SqlDataType {
+public class MySqlDataType implements SqlDataTypes {
 
     public String getType(String name, String genericType, int width) {
         if (genericType.equals("C"))
@@ -35,6 +35,14 @@ public class MySqlDataType implements SqlDataType {
 
     public String getLong() {
         return "INT";// FIXME: verify
+    }
+
+    public String getReal() {
+        return "DOUBLE";// FIXME: verify precision
+    }
+
+    public String smallInt() {
+        return "SMALLINT";
     }
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import gov.epa.emissions.commons.db.SqlDataType;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 public class TableColumnsMetadata implements ColumnsMetadata {
@@ -15,7 +15,7 @@ public class TableColumnsMetadata implements ColumnsMetadata {
 
     private ColumnsMetadata base;
 
-    public TableColumnsMetadata(ColumnsMetadata base, SqlDataType sqlType) {
+    public TableColumnsMetadata(ColumnsMetadata base, SqlDataTypes sqlType) {
         this.base = base;
 
         datasetIdType = sqlType.getLong();
