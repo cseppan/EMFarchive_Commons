@@ -12,7 +12,7 @@ import gov.epa.emissions.framework.db.TableReader;
 import java.io.File;
 import java.util.Random;
 
-public class OrlPointImporterTest extends DbTestCase {
+public class OrlImporterTest extends DbTestCase {
 
     private Datasource datasource;
 
@@ -48,7 +48,7 @@ public class OrlPointImporterTest extends DbTestCase {
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
-    public void itestShouldImportASmallAndSimpleNonPointFile() throws Exception {
+    public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
         File file = new File("test/data/orl/nc/small-nonpoint.txt");
         
         OrlNonPointImporter importer = new OrlNonPointImporter(datasource, sqlDataTypes);
@@ -56,7 +56,7 @@ public class OrlPointImporterTest extends DbTestCase {
         
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(6, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
 }

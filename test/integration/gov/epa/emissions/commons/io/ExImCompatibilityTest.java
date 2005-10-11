@@ -20,6 +20,7 @@ public class ExImCompatibilityTest extends TestCase {
         run(expectedMessage, type, importFile, exportFile);
     }
 
+    // FIXME: why is this test idled ?
     public void FIXME_testExportShouldFailToMatchImportForUnmatchedData() throws Exception {
         String expectedMessage = "Status: failure";
 

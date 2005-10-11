@@ -33,14 +33,9 @@ public class ORLReaderTest extends TestCase {
         reader.read();
         assertEquals(6, reader.comments().size());
 
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
+        for (int i = 0; i < 8; i++) {
+            reader.read();
+        }
         assertEquals(7, reader.comments().size());
 
         reader.read();
@@ -56,34 +51,26 @@ public class ORLReaderTest extends TestCase {
         assertNotNull(record);
         assertEquals(12, record.size());
     }
-    
-    public void FIXME_testVariationsOfDelimiterWidthsAndQuotesInAPointFile() throws Exception {
+
+    public void testVariationsOfDelimiterWidthsAndQuotesInAPointFile() throws Exception {
         File file = new File(dataFolder, "point-with-variations.txt");
         reader = new DelimitedFileReader(file);
-        
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
+
+        for (int i = 0; i < 4; i++) {
+            assertEquals(28, reader.read().size());
+        }
 
         assertTrue(reader.read().isEnd());
     }
-    
+
     public void testVariationsOfDelimiterWidthsAndQuotesInTheSmallPointFile() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
         reader = new DelimitedFileReader(file);
-        
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        assertEquals(28, reader.read().size());
-        
+
+        for (int i = 0; i < 10; i++) {
+            assertEquals(28, reader.read().size());
+        }
+
         assertTrue(reader.read().isEnd());
     }
 }

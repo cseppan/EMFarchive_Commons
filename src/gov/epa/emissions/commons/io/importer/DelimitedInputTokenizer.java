@@ -2,57 +2,53 @@ package gov.epa.emissions.commons.io.importer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//FIXME: eliminate me ?
 public class DelimitedInputTokenizer {
 
-    public String[] tokensUsingSpace(String line) {
-        Pattern p = Pattern.compile("\\s");
-        String[] tokens = p.split(line);// split by single whitespace
+    private static final String ANY_CHAR_EXCEPT_WHITESPACE = "(([\\S]+))";
 
-        List results = new ArrayList();
-        for (int i = 0; i < tokens.length; i++) {
-            // identify start of quoted text
-            if (isStartOfQuotedText(tokens[i])) {
-                StringBuffer quoted = new StringBuffer();
-                i = squishQuotedTokens(tokens, i, quoted);
-                results.add(quoted.toString());
+    private static final String ANY_CHAR_EXCEPT_COMMA = "([^,^\\s.]+)";
+    
+    private static final String ANY_CHAR_EXCEPT_SEMICOLON = "([^;^\\s.]+)";
 
-                continue;
-            }
+    private static final String SINGLE_QUOTED_TEXT = "('(.)*')";
 
-            if (tokens[i].length() != 0)// skip comments
-                results.add(tokens[i]);
-        }
+    private static final String DOUBLE_QUOTED_TEXT = "(\"(.)*\")";
 
-        return (String[]) results.toArray(new String[0]);
+    // space & tabs included
+    public String[] tokensWhitepaceDelimited(String input) {
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + ANY_CHAR_EXCEPT_WHITESPACE;
+        return doTokenize(input, pattern);
     }
 
-    private boolean isStartOfQuotedText(String token) {
-        String single = "'(.)*'";
-        String startQuoted = "'(.)*^'";
-
-        return !Pattern.matches(single, token) && Pattern.matches(startQuoted, token);
+    public String[] tokensCommaDelimited(String input) {
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + ANY_CHAR_EXCEPT_COMMA;
+        return doTokenize(input, pattern);
     }
 
-    // squish/collapse the tokens into a single string.
-    // First token starts w/ quote and last ends with a quote
-    private int squishQuotedTokens(String[] tokens, int index, StringBuffer buffer) {
-        buffer.append(tokens[index].substring(1));
-        String quote = Character.toString(tokens[index].charAt(0));
+    public String[] tokensSemiColonDelimited(String input) {
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + ANY_CHAR_EXCEPT_SEMICOLON;
+        return doTokenize(input, pattern);
+    }
 
-        for (index++; (index < tokens.length); index++) {
-            if (tokens[index].endsWith(quote)) {// last token
-                buffer.append(" " + tokens[index].substring(0, tokens[index].length() - 1));
-                break;
-            }
-            if (tokens[index].length() == 0)// preserve whitespace
-                buffer.append(" ");
+    private String[] doTokenize(String input, String pattern) {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(input);
+
+        List tokens = new ArrayList();
+        while (m.find()) {
+            String token = input.substring(m.start(), m.end());
+
+            if (token.matches(SINGLE_QUOTED_TEXT) || token.matches(DOUBLE_QUOTED_TEXT))// quoted
+                tokens.add(token.substring(1, token.length() - 1));// strip
+            // quotes
             else
-                buffer.append(" " + tokens[index]);// text
+                tokens.add(token);
         }
-        return index;
+
+        return (String[]) tokens.toArray(new String[0]);
     }
 
 }

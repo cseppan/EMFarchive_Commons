@@ -32,6 +32,7 @@ public class OrlImporter {
             createTable(table, datasource, colsMetadata);
             doImport(file, dataset, table, colsMetadata);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         } finally {
