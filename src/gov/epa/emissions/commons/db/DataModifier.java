@@ -137,4 +137,9 @@ public class DataModifier {
         execute(insert.toString());
     }
 
+    public void dropData(String table) throws SQLException {
+        String sql = "DELETE FROM " + table;
+        execute(sql);
+    }
+
 }
