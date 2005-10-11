@@ -53,6 +53,8 @@ public class OrlImporter {
     }
 
     private void loadDataset(List comments, Dataset dataset) {
+        StringBuffer description = new StringBuffer();
+        
         for (Iterator iter = comments.iterator(); iter.hasNext();) {
             String comment = (String) iter.next();
             if (comment.startsWith("#COUNTRY")) {
@@ -60,6 +62,7 @@ public class OrlImporter {
                 dataset.setCountry(country);
                 dataset.setRegion(country);
             }
+            
             if (comment.startsWith("#YEAR")) {
                 String year = comment.substring("#YEAR".length()).trim();
                 int yearInt = Integer.parseInt(year);
@@ -67,7 +70,13 @@ public class OrlImporter {
                 
                 setStartStopDateTimes(dataset, yearInt);
             }
+            
+            //TODO: this probably applies to all importers
+            if(comment.startsWith("#DESC"))
+                description.append(comment.substring("#DESC".length()) + "\n");
         }
+        
+        dataset.setDescription(description.toString());
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {

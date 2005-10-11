@@ -106,11 +106,24 @@ public class OrlImporterTest extends DbTestCase {
         Date start = dataset.getStartDateTime();
         Date expectedStart = new GregorianCalendar(1995, Calendar.JANUARY, 1).getTime();
         assertEquals(expectedStart, start);
-        
+
         Date end = dataset.getStopDateTime();
         GregorianCalendar endCal = new GregorianCalendar(1995, Calendar.DECEMBER, 31, 23, 59, 59);
         endCal.set(Calendar.MILLISECOND, 999);
         assertEquals(endCal.getTime(), end);
+    }
+
+    public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
+        File file = new File("test/data/orl/nc/small-onroad.txt");
+
+        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+
+        // assert
+        String expected = " Created from file 99OR-MOD.TXT provided by M. Strum in November 2002.\n"
+                + " North Carolina data extracted from original file using UNIX grep command.\n"
+                + "    paste commands. \n";
+        assertEquals(expected, dataset.getDescription());
     }
 
 }
