@@ -15,6 +15,8 @@ public class PacketReader implements Reader {
 
     private ColumnsMetadata cols;
 
+    private List comments;
+
     // FIXME: get rid of this constructor in lieu of the other
     public PacketReader(File file, ColumnsMetadata cols) throws IOException {
         fileReader = new BufferedReader(new FileReader(file));
@@ -22,6 +24,7 @@ public class PacketReader implements Reader {
         String header = fileReader.readLine().trim();
         identifier = header.replaceAll("/", "");
         this.cols = cols;
+        comments = new ArrayList();
     }
 
     public PacketReader(BufferedReader reader, String header, ColumnsMetadata cols) {
@@ -36,10 +39,17 @@ public class PacketReader implements Reader {
 
     public Record read() throws IOException {
         String line = fileReader.readLine();
-        if (isEnd(line))
-            return new TerminatorRecord();
 
-        return doRead(line);
+        while (!isEnd(line)) {
+            if (isData(line))
+                return doRead(line);
+            if (isComment(line))
+                comments.add(line);
+
+            line = fileReader.readLine();
+        }
+
+        return new TerminatorRecord();
     }
 
     private Record doRead(String line) {
@@ -56,20 +66,20 @@ public class PacketReader implements Reader {
         }
     }
 
-    public List allRecords() throws IOException {
-        List records = new ArrayList();
-
-        String line = fileReader.readLine();
-        while (line != null && !isEnd(line)) {
-            records.add(doRead(line));
-            line = fileReader.readLine();
-        }
-
-        return records;
-    }
-
     private boolean isEnd(String line) {
         return line.trim().equals("/END/");
+    }
+
+    private boolean isData(String line) {
+        return !(line.trim().length() == 0) && (!isComment(line));
+    }
+
+    private boolean isComment(String line) {
+        return line.trim().startsWith("#");
+    }
+
+    public List comments() {
+        return comments;
     }
 
 }

@@ -3,32 +3,24 @@ package gov.epa.emissions.commons.db.postgres;
 import gov.epa.emissions.commons.db.ConnectionParams;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class PostgresConnectionFactory {
+import org.postgresql.jdbc3.Jdbc3PoolingDataSource;
 
-    private ConnectionParams params;
+public class PostgresConnectionFactory implements ConnectionFactory {
+
+    private Jdbc3PoolingDataSource source;
 
     public PostgresConnectionFactory(ConnectionParams params) {
-        this.params = params;
-    }
-
-    private Connection createConnection(String host, String port, String dbName, String user, String password)
-            throws SQLException {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException cnfx) {
-            throw new SQLException("Can't load JDBC driver!");
-        }
-
-        String url = "jdbc:postgresql://" + host + ((port != null) ? (":" + port) : "") + "/" + dbName;
-
-        return DriverManager.getConnection(url, user, password);
+        source = new Jdbc3PoolingDataSource();
+        source.setServerName(params.getHost());
+        source.setDatabaseName(params.getDbName());
+        source.setUser(params.getUsername());
+        source.setPassword(params.getPassword());
+        source.setMaxConnections(10);
     }
 
     public Connection getConnection() throws SQLException {
-        return createConnection(params.getHost(), params.getPort(), params.getDbName(), params.getUsername(), params
-                .getPassword());
+        return source.getConnection();
     }
 }

@@ -36,4 +36,8 @@ public abstract class DbTestCase extends TestCase {
         fieldDefsFile = new File("config/field_defs.dat");
         referenceFilesDir = new File("config/refDbFiles");
     }
+    
+    protected void tearDown() throws Exception {
+        dbSetup.tearDown();
+    }
 }

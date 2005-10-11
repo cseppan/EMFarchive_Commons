@@ -71,28 +71,24 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals(" 1000", record.token(8));
     }
 
-    public void testShouldReturnAllRecords() throws IOException {
-        assertEquals(13, reader.allRecords().size());
-    }
-
     public void testShouldIdentifyEndOfPacket() throws IOException {
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
+        for (int i = 0; i < 13; i++) {
+            assertNotNull(reader.read());
+        }
 
         Record end = reader.read();
         assertEquals(0, end.size());
         assertTrue("Should be the Packet Terminator", end.isEnd());
 
+    }
+
+    public void testShouldReadCommentsAsItReadsRecords() throws IOException {
+        for (int i = 0; i < 13; i++) {
+            assertNotNull(reader.read());
+        }
+
+        assertTrue("Should be the Packet Terminator", reader.read().isEnd());
+
+        assertEquals(3, reader.comments().size());
     }
 }

@@ -1,12 +1,13 @@
 package gov.epa.emissions.commons.db.mysql;
 
 import gov.epa.emissions.commons.db.ConnectionParams;
+import gov.epa.emissions.commons.db.postgres.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySqlConnectionFactory {
+public class MySqlConnectionFactory implements ConnectionFactory {
 
     private ConnectionParams params;
 

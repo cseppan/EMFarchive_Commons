@@ -25,9 +25,12 @@ public class MySqlDbServer implements DbServer {
 
     private Datasource referenceDatasource;
 
+    private Connection connection;
+
     public MySqlDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName,
             File fieldDefsFile, File referenceFilesDir) throws SQLException {
         this.typeMapper = new MySqlDataType();
+        this.connection = connection;
 
         createEmissionsDatasource(connection, emissionsDatasourceName);
         createReferenceDatasource(connection, referenceDatasourceName, fieldDefsFile, referenceFilesDir);
@@ -54,7 +57,7 @@ public class MySqlDbServer implements DbServer {
         try {
             ReferenceImporter importer = new ReferenceImporter(this, fieldDefsFile, referenceFilesDir, false);
             importer.run();
-            
+
             ReferenceTablesCreator tables = new ReferenceTablesCreator(null, getDataType());
             tables.createAdditionalRefTables(referenceDatasource);
         } catch (Exception e) {
@@ -105,6 +108,10 @@ public class MySqlDbServer implements DbServer {
 
     public String asciiToNumber(String asciiColumn, int precision) {
         return asciiColumn;
+    }
+
+    public void disconnect() throws SQLException {
+        connection.close();
     }
 
 }

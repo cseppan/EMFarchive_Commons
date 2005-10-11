@@ -81,21 +81,10 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         assertEquals("  999", record.token(13));
     }
 
-    public void testShouldReturnAllRecords() throws IOException {
-        assertEquals(10, reader.allRecords().size());
-    }
-
     public void testShouldIdentifyEndOfPacket() throws IOException {
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
-        reader.read();
+        for (int i = 0; i < 10; i++) {
+            assertNotNull(reader.read());
+        }
 
         Record end = reader.read();
         assertEquals(0, end.size());
