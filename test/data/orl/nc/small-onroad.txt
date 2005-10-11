@@ -1,7 +1,7 @@
 #ORL
 #TYPE    Mobile source toxics inventory, on-road mobile source only
-#COUNTRY US
-#YEAR    1999
+#COUNTRY PERU
+#YEAR    1995
 #DESC Created from file 99OR-MOD.TXT provided by M. Strum in November 2002.
 #DESC North Carolina data extracted from original file using UNIX grep command.
 #DESC    paste commands. 

@@ -70,6 +70,7 @@ public interface Dataset extends Serializable {
 
     Map getTablesMap();
 
+    // FIXME: never used ?
     void setTablesMap(Map datatables);
 
     void setDatasources(List datasources);

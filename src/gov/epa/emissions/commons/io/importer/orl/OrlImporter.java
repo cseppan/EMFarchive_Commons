@@ -13,6 +13,11 @@ import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
 public class OrlImporter {
 
@@ -32,11 +37,10 @@ public class OrlImporter {
             createTable(table, datasource, colsMetadata);
             doImport(file, dataset, table, colsMetadata);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         } finally {
-            // TODO: drop the table
+            // TODO: drop the table on failure
         }
     }
 
@@ -45,6 +49,34 @@ public class OrlImporter {
         Reader reader = new DelimitedFileReader(file);
 
         loader.load(reader, dataset, table);
+        loadDataset(reader.comments(), dataset);
+    }
+
+    private void loadDataset(List comments, Dataset dataset) {
+        for (Iterator iter = comments.iterator(); iter.hasNext();) {
+            String comment = (String) iter.next();
+            if (comment.startsWith("#COUNTRY")) {
+                String country = comment.substring("#COUNTRY".length()).trim();
+                dataset.setCountry(country);
+                dataset.setRegion(country);
+            }
+            if (comment.startsWith("#YEAR")) {
+                String year = comment.substring("#YEAR".length()).trim();
+                int yearInt = Integer.parseInt(year);
+                dataset.setYear(yearInt);
+                
+                setStartStopDateTimes(dataset, yearInt);
+            }
+        }
+    }
+
+    private void setStartStopDateTimes(Dataset dataset, int year) {
+        Date start = new GregorianCalendar(year, Calendar.JANUARY, 1).getTime();
+        dataset.setStartDateTime(start);
+        
+        Calendar endCal = new GregorianCalendar(year, Calendar.DECEMBER, 31, 23, 59, 59);
+        endCal.set(Calendar.MILLISECOND, 999);
+        dataset.setStopDateTime(endCal.getTime());
     }
 
     private String table(String datasetName) {

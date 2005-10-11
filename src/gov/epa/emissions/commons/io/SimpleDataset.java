@@ -32,7 +32,7 @@ public class SimpleDataset implements Dataset {
 
     private String region;
 
-    private String country = "US";
+    private String country;
 
     private String units;
 
