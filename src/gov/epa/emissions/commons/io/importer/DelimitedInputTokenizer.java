@@ -10,21 +10,25 @@ public class DelimitedInputTokenizer {
     private static final String ANY_CHAR_EXCEPT_WHITESPACE = "(([\\S]+))";
 
     private static final String ANY_CHAR_EXCEPT_COMMA = "([^,^\\s.]+)";
-    
+
     private static final String ANY_CHAR_EXCEPT_SEMICOLON = "([^;^\\s.]+)";
 
     private static final String SINGLE_QUOTED_TEXT = "('(.)*')";
 
     private static final String DOUBLE_QUOTED_TEXT = "(\"(.)*\")";
 
-    // space & tabs included
+    private static final String INLINE_COMMENTS = "!(.)*";
+
+    // whitespace includes space & tabs
     public String[] tokensWhitepaceDelimited(String input) {
-        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + ANY_CHAR_EXCEPT_WHITESPACE;
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS + "|"
+                + ANY_CHAR_EXCEPT_WHITESPACE;
         return doTokenize(input, pattern);
     }
 
     public String[] tokensCommaDelimited(String input) {
-        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + ANY_CHAR_EXCEPT_COMMA;
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS + "|"
+                + ANY_CHAR_EXCEPT_COMMA;
         return doTokenize(input, pattern);
     }
 

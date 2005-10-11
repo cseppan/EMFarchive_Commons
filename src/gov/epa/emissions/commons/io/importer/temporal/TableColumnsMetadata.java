@@ -9,33 +9,32 @@ import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 public class TableColumnsMetadata implements ColumnsMetadata {
 
-    private String datasetIdType;
-
-    private String datasetIdColName;
-
     private ColumnsMetadata base;
+
+    private List colNames;
+
+    private List colTypes;
 
     public TableColumnsMetadata(ColumnsMetadata base, SqlDataTypes sqlType) {
         this.base = base;
 
-        datasetIdType = sqlType.getLong();
-        datasetIdColName = "Dataset_Id";
+        colNames = new ArrayList();
+        colNames.add("Dataset_Id");
+        colNames.addAll(Arrays.asList(base.colNames()));
+        colNames.add("Comments");
+
+        colTypes = new ArrayList();
+        colTypes.add(sqlType.getLong());
+        colTypes.addAll(Arrays.asList(base.colTypes()));
+        colTypes.add(sqlType.getString(128));
     }
 
     public String[] colNames() {
-        return add(datasetIdColName, base.colNames());
+        return (String[]) colNames.toArray(new String[0]);
     }
 
     public String[] colTypes() {
-        return add(datasetIdType, base.colTypes());
-    }
-
-    private String[] add(String element, String[] array) {
-        List all = new ArrayList();
-        all.add(element);
-        all.addAll(Arrays.asList(array));
-
-        return (String[]) all.toArray(new String[0]);
+        return (String[]) colTypes.toArray(new String[0]);
     }
 
     public int[] widths() {

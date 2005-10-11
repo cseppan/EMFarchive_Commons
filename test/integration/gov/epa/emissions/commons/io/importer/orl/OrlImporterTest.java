@@ -69,5 +69,16 @@ public class OrlImporterTest extends DbTestCase {
         TableReader tableReader = new TableReader(datasource.getConnection());
         assertEquals(16, tableReader.count(datasource.getName(), dataset.getName()));
     }
+    
+    public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
+        File file = new File("test/data/orl/nc/small-onroad.txt");
+        
+        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+        
+        // assert
+        TableReader tableReader = new TableReader(datasource.getConnection());
+        assertEquals(18, tableReader.count(datasource.getName(), dataset.getName()));
+    }
 
 }

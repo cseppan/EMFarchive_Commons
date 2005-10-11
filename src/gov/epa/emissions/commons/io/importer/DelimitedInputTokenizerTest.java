@@ -84,12 +84,12 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-wE&9", tokens[5]);
         assertEquals("-9", tokens[9]);
     }
-    
+
     public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSemiColonDelimited() {
         String input = "37119; 0001; \"REXAMINC. ; CUSTOM'S   DIVISION, IMMIGRATION\"; 40201301 ; hi$ya;-wE&9;-9;-9;-9;-9";
-        
+
         String[] tokens = tokenizer.tokensSemiColonDelimited(input);
-        
+
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
         assertEquals("0001", tokens[1]);
@@ -98,5 +98,16 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("hi$ya", tokens[4]);
         assertEquals("-wE&9", tokens[5]);
         assertEquals("-9", tokens[9]);
+    }
+
+    public void testTokenizeTrailingInlineComments() {
+        String input = "37119 0001 ! EPA Derived  ";
+
+        String[] tokens = tokenizer.tokensWhitepaceDelimited(input);
+
+        assertEquals(3, tokens.length);
+        assertEquals("37119", tokens[0]);
+        assertEquals("0001", tokens[1]);
+        assertEquals("! EPA Derived  ", tokens[2]);
     }
 }
