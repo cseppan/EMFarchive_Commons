@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,9 +13,9 @@ public class DataLoader {
 
     private Datasource datasource;
 
-    private ColumnsMetadata cols;
+    private TableColumnsMetadata cols;
 
-    public DataLoader(Datasource datasource, ColumnsMetadata cols) {
+    public DataLoader(Datasource datasource, TableColumnsMetadata cols) {
         this.datasource = datasource;
         this.cols = cols;
     }
@@ -24,16 +25,17 @@ public class DataLoader {
         try {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
-            dropData(table);
+            dropData(table, dataset);
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         }
     }
 
-    private void dropData(String table) throws ImporterException {
+    private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.getDataModifier();
-            String qualifiedTable = qualifiedTableName(table);
-            modifier.dropData(qualifiedTable);
+            String key = cols.key();
+            long value = dataset.getDatasetid();
+            modifier.dropData(datasource.getName(), table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
         }

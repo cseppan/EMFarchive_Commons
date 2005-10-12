@@ -19,7 +19,7 @@ public class TableColumnsMetadata implements ColumnsMetadata {
         this.base = base;
 
         colNames = new ArrayList();
-        colNames.add("Dataset_Id");
+        colNames.add(key());
         colNames.addAll(Arrays.asList(base.colNames()));
         colNames.add("Comments");
 
@@ -39,6 +39,10 @@ public class TableColumnsMetadata implements ColumnsMetadata {
 
     public int[] widths() {
         return base.widths();
+    }
+
+    public String key() {
+        return "Dataset_Id";
     }
 
 }

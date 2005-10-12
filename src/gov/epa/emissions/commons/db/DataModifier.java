@@ -13,10 +13,10 @@ public class DataModifier {
         this.connection = connection;
     }
 
-    private void execute(String query) throws SQLException {
+    private void execute(String sql) throws SQLException {
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         try {
-            statement.execute(query);
+            statement.execute(sql);
         } finally {
             statement.close();
         }
@@ -137,8 +137,12 @@ public class DataModifier {
         execute(insert.toString());
     }
 
-    public void dropData(String table) throws SQLException {
-        execute("DELETE FROM " + table);
+    public void dropData(String schema, String table, String key, long value) throws SQLException {
+        execute("DELETE FROM " + qualified(schema, table) + " WHERE " + key + " = " + value);
+    }
+
+    private String qualified(String schema, String table) {
+        return schema + "." + table;
     }
 
 }

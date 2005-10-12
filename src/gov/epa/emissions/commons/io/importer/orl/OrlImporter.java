@@ -58,7 +58,7 @@ public class OrlImporter {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, ColumnsMetadata colsMetadata) throws Exception {
+    private void doImport(File file, Dataset dataset, String table, TableColumnsMetadata colsMetadata) throws Exception {
         DataLoader loader = new DataLoader(datasource, colsMetadata);
         Reader reader = new DelimitedFileReader(file);
 

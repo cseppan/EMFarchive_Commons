@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
@@ -27,7 +26,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private ColumnsMetadata colsMetadata;
+    private TableColumnsMetadata colsMetadata;
 
     private BufferedReader fileReader;
 

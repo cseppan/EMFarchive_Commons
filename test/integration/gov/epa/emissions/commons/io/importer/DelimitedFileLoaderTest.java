@@ -21,7 +21,7 @@ public class DelimitedFileLoaderTest extends DbTestCase {
 
     private SqlDataTypes dataType;
 
-    private ColumnsMetadata colsMetadata;
+    private TableColumnsMetadata colsMetadata;
 
     protected void setUp() throws Exception {
         super.setUp();
