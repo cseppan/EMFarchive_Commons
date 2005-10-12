@@ -10,8 +10,10 @@ import java.sql.Statement;
 public class MySqlDataQuery implements DataQuery {
 
     private Connection connection;
+    private String schema;
 
-    public MySqlDataQuery(Connection connection) {
+    public MySqlDataQuery(String schema, Connection connection) {
+        this.schema = schema;
         this.connection = connection;
     }
 
@@ -32,7 +34,7 @@ public class MySqlDataQuery implements DataQuery {
         for (int i = 1; i < columnNames.length; i++) {
             sb.append("," + columnNames[i]);
         }
-        final String fromSuffix = " FROM " + table;
+        final String fromSuffix = " FROM " + qualified(table);
         sb.append(fromSuffix);
 
         Statement statement = connection.createStatement();
@@ -40,6 +42,10 @@ public class MySqlDataQuery implements DataQuery {
         ResultSet results = statement.getResultSet();
 
         return results;
+    }
+
+    private String qualified(String table) {
+        return schema + "." + table;
     }
 
     public ResultSet selectAll(String table) throws SQLException {

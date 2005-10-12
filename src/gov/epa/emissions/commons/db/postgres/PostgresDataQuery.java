@@ -10,8 +10,10 @@ import java.sql.Statement;
 public class PostgresDataQuery implements DataQuery {
 
     private Connection connection;
+    private String schema;
 
-    public PostgresDataQuery(Connection connection) {
+    public PostgresDataQuery(String schema, Connection connection) {
+        this.schema = schema;
         this.connection = connection;
     }
 
@@ -26,20 +28,24 @@ public class PostgresDataQuery implements DataQuery {
     }
 
     // FIXME: duplicate methods in both datasources
-    public ResultSet select(String[] columnNames, String tableName) throws SQLException {
+    public ResultSet select(String[] columnNames, String table) throws SQLException {
         final String selectPrefix = "SELECT ";
         StringBuffer query = new StringBuffer(selectPrefix);
         query.append(columnNames[0]);
         for (int i = 1; i < columnNames.length; i++) {
             query.append("," + columnNames[i]);
         }
-        final String fromSuffix = " FROM " + tableName;
+        final String fromSuffix = " FROM " + qualified(table);
         query.append(fromSuffix);
 
         Statement statement = connection.createStatement();
         statement.execute(query.toString());
 
         return statement.getResultSet();
+    }
+
+    private String qualified(String table) {
+        return schema + "." + table;
     }
 
     public ResultSet selectAll(String table) throws SQLException {

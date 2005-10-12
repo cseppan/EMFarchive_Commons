@@ -367,7 +367,6 @@ public class BaseORLImporter extends FormattedImporter {
         // use the table type to get the table name
         Table table = dataset.getTable(tableType.base());
         String tableName = table.getName().trim();
-        String qualifiedTableName = datasource.getName() + "." + tableName;
 
         if (tableName == null) {
             throw new Exception("The dataset did not specify the table name for file name: " + fileName);
@@ -377,17 +376,17 @@ public class BaseORLImporter extends FormattedImporter {
 
         TableDefinition tableDefinition = datasource.tableDefinition();
         if (overwrite) {
-            tableDefinition.deleteTable(qualifiedTableName);
+            tableDefinition.deleteTable(tableName);
         }
         // else make sure table does not exist
-        else if (tableDefinition.tableExists(qualifiedTableName)) {
-            log.error("The table \"" + qualifiedTableName
+        else if (tableDefinition.tableExists(tableName)) {
+            log.error("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
-            throw new Exception("The table \"" + qualifiedTableName
+            throw new Exception("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
         }
 
-        tableDefinition.createTable(qualifiedTableName, columnNames, columnTypes, null);
+        tableDefinition.createTable(tableName, columnNames, columnTypes, null);
         String line = null;
         String[] data = null;
         int numRows = 0;
@@ -397,13 +396,13 @@ public class BaseORLImporter extends FormattedImporter {
             // skip over non data lines as needed
             if (!line.startsWith("#") && line.trim().length() > 0) {
                 data = breakUpLine(line, columnWidths);
-                datasource.getDataModifier().insertRow(qualifiedTableName, data, columnTypes);
+                datasource.getDataModifier().insertRow(tableName, data, columnTypes);
                 numRows++;
             }
         }// while file is not empty
 
         // perform capable table type specific processing
-        postProcess(datasource, qualifiedTableName, tableType.base());
+        postProcess(datasource, tableName, tableType.base());
 
         // when all the data is done ingesting..
         // close the database connections by calling acceptor.finish..
@@ -644,16 +643,16 @@ public class BaseORLImporter extends FormattedImporter {
         DataModifier emissionsAcceptor = emissionsDatasource.getDataModifier();
         ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
         Table table = dataset.getTable(tableType.base());
-        String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
+        String tableName = table.getName();
 
         // FIXME: what kind of modifications do we apply to Fips & State columns
         // ?
-        String fipsName = modifyFipsColumn(emissionsDatasource, emissionsAcceptor, tableType, qualifiedTableName);
-        modifyStateColumn(emissionsDatasource, emissionsAcceptor, qualifiedTableName, fipsName);
+        String fipsName = modifyFipsColumn(emissionsDatasource, emissionsAcceptor, tableType, tableName);
+        modifyStateColumn(emissionsDatasource, emissionsAcceptor, tableName, fipsName);
     }
 
     private void modifyStateColumn(Datasource emissionsDatasource, DataModifier emissionsAcceptor,
-            String qualifiedTableName, final String FIPS_NAME) throws Exception, SQLException {
+            String table, final String FIPS_NAME) throws Exception, SQLException {
         // artificially insert the STATE data column, a four
         // character String from the reference.fips table
         final String STATE_NAME = "state_abbr";
@@ -666,7 +665,7 @@ public class BaseORLImporter extends FormattedImporter {
         state.setType(STATE_NAME, STATE_TYPE.getName());
 
         // STATE column
-        emissionsDatasource.tableDefinition().addColumn(qualifiedTableName, STATE_NAME, state.getType(STATE_NAME),
+        emissionsDatasource.tableDefinition().addColumn(table, STATE_NAME, state.getType(STATE_NAME),
                 FIPS_NAME);
 
         // update STATE column
@@ -680,7 +679,7 @@ public class BaseORLImporter extends FormattedImporter {
          * mins max versus dozens of minutes and even hours.
          */
         Datasource referenceDatasource = dbServer.getReferenceDatasource();
-        final String FIPS_TABLE_NAME = referenceDatasource.getName() + ".fips";
+        final String FIPS_TABLE_NAME = "fips";
         final String[] fipsSelectColumns = { "DISTINCT " + SummaryTableCreator.STATE_COL, "country_code",
                 "FLOOR(" + dbServer.asciiToNumber(SummaryTableCreator.FIPS_COL, 5) + "/1000) AS state_code" };
         // select state abbreviations, country codes and state codes from
@@ -708,7 +707,7 @@ public class BaseORLImporter extends FormattedImporter {
         String fipsVal = dbServer.asciiToNumber(ORLDataFormat.FIPS_NAME, 5);
         final String[] usedStateCodesSelectColumns = { "DISTINCT FLOOR(" + fipsVal + "/1000) AS state_code" };
 
-        results = emissionsDatasource.query().select(usedStateCodesSelectColumns, qualifiedTableName);
+        results = emissionsDatasource.query().select(usedStateCodesSelectColumns, table);
         // we only need to issue SQL update commands for used state codes
         List usedStateCodes = new ArrayList();
         while (results.next()) {
@@ -726,13 +725,13 @@ public class BaseORLImporter extends FormattedImporter {
             String[] equalsClauses = { stateCode };
 
             // update
-            emissionsAcceptor.updateWhereEquals(qualifiedTableName, STATE_NAME, "'" + stateAbbr + "'", whereColumns,
+            emissionsAcceptor.updateWhereEquals(table, STATE_NAME, "'" + stateAbbr + "'", whereColumns,
                     equalsClauses);
         }
     }
 
     private String modifyFipsColumn(Datasource emissionsDatasource, DataModifier emissionsAcceptor,
-            ORLTableType tableType, String qualifiedTableName) throws Exception {
+            ORLTableType tableType, String table) throws Exception {
         // artificially insert the FIPS data column, a five
         // character String concatenating the state and county codes
         final String FIPS_NAME = ORLDataFormat.FIPS_NAME;
@@ -752,7 +751,7 @@ public class BaseORLImporter extends FormattedImporter {
             final int COUNTY_CODE_WIDTH = 3;
 
             // alter table
-            emissionsDatasource.tableDefinition().addColumn(qualifiedTableName, FIPS_NAME, fips.getType(FIPS_NAME),
+            emissionsDatasource.tableDefinition().addColumn(table, FIPS_NAME, fips.getType(FIPS_NAME),
                     COUNTY_CODE_NAME);
 
             // update FIPS column
@@ -774,7 +773,7 @@ public class BaseORLImporter extends FormattedImporter {
                     String[] likeClauses = { stidLike.toString(), cyidLike.toString() };
 
                     // update
-                    emissionsAcceptor.updateWhereLike(qualifiedTableName, FIPS_NAME, concatExpr, whereColumns,
+                    emissionsAcceptor.updateWhereLike(table, FIPS_NAME, concatExpr, whereColumns,
                             likeClauses);
                 }
             }

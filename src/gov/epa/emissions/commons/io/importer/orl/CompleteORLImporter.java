@@ -34,7 +34,7 @@ public class CompleteORLImporter extends BaseORLImporter {
         String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
 
         String summaryTableSuffix = (String) dataset.getTablesMap().get(tableType.summary());
-        String summaryTable = emissionsDatasource.getName() + "." + summaryTableSuffix;
+        String summaryTable = summaryTableSuffix;
 
         SummaryTableCreator modifier = new SummaryTableCreator(dbServer.getEmissionsDatasource(), dbServer
                 .getReferenceDatasource(), typesFactory);

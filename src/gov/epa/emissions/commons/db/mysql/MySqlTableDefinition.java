@@ -14,10 +14,10 @@ public class MySqlTableDefinition implements TableDefinition {
 
     private Connection connection;
 
-    private String datasource;
+    private String schema;
 
-    public MySqlTableDefinition(String datasource, Connection connection) {
-        this.datasource = datasource;
+    public MySqlTableDefinition(String schema, Connection connection) {
+        this.schema = schema;
         this.connection = connection;
     }
 
@@ -34,7 +34,7 @@ public class MySqlTableDefinition implements TableDefinition {
         return tableNames;
     }
 
-    public void createTableWithOverwrite(String tableName, String[] colNames, String[] colTypes, String[] primaryCols)
+    public void createTableWithOverwrite(String table, String[] colNames, String[] colTypes, String[] primaryCols)
             throws SQLException {
         // check to see if there are the same number of column names and column
         // types
@@ -42,9 +42,9 @@ public class MySqlTableDefinition implements TableDefinition {
         if (length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        deleteTable(tableName);
+        deleteTable(table);
 
-        String queryString = "CREATE TABLE " + tableName + " (";
+        String queryString = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < length - 1; i++) {
             queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
@@ -68,7 +68,7 @@ public class MySqlTableDefinition implements TableDefinition {
         if (colNames.length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        String ddlStatement = "CREATE TABLE " + table + " (";
+        String ddlStatement = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < colNames.length; i++) {
             // one of the columnnames was "dec" for december.. caused a problem
@@ -84,24 +84,23 @@ public class MySqlTableDefinition implements TableDefinition {
         execute(ddlStatement);
     }
 
-    public void deleteTable(String tableName) {
+    public void deleteTableQuietly(String table) {
         try {
-            execute("DROP TABLE IF EXISTS " + tableName);
+            execute("DROP TABLE IF EXISTS " + qualified(table));
         } catch (SQLException e) {
-            System.err.println("Could not delete table - " + tableName + ". Ignoring..");
+            System.err.println("Could not delete table - " + table + ". Ignoring..");
         }
     }
 
-    public void deleteTable(String schema, String table) throws SQLException {
-        String tableName = schema + "." + table;
-        execute("DROP TABLE IF EXISTS " + tableName);
+    public void deleteTable(String table) throws SQLException {
+        execute("DROP TABLE " + qualified(table));
     }
 
-    public boolean tableExists(String tableName) throws SQLException {
+    public boolean tableExists(String table) throws SQLException {
         // if SHOW TABLES query returns one or more rows, the table exists
         Statement statement = connection.createStatement();
         try {
-            statement.execute("SHOW TABLES FROM " + datasource + " LIKE '" + tableName + "'");
+            statement.execute("SHOW TABLES FROM " + schema + " LIKE '" + qualified(table) + "'");
             return statement.getResultSet().getRow() > 0;
         } finally {
             statement.close();
@@ -110,7 +109,7 @@ public class MySqlTableDefinition implements TableDefinition {
 
     public void addIndex(String table, String indexName, String[] indexColumnNames) throws SQLException {
         // instantiate a new string buffer in which the query would be created
-        StringBuffer sb = new StringBuffer("ALTER TABLE " + table + " ADD ");
+        StringBuffer sb = new StringBuffer("ALTER TABLE " + qualified(table) + " ADD ");
         final String INDEX = "INDEX ";
 
         sb.append(INDEX + indexName + "(" + indexColumnNames[0]);
@@ -124,7 +123,7 @@ public class MySqlTableDefinition implements TableDefinition {
 
     public void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception {
         // instantiate a new string buffer in which the query would be created
-        StringBuffer sb = new StringBuffer("ALTER TABLE " + table + " ADD ");
+        StringBuffer sb = new StringBuffer("ALTER TABLE " + qualified(table) + " ADD ");
         final String AFTER = " AFTER ";
 
         sb.append(columnName + " " + columnType);
@@ -150,16 +149,11 @@ public class MySqlTableDefinition implements TableDefinition {
         }
     }
 
-    public void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
-            throws SQLException {
-        createTable(schema + "." + table, cols, colTypes, primaryCol);
-    }
-
-    public void createTable(String schema, String tableName, String[] colNames, String[] colTypes) throws SQLException {
+    public void createTable(String table, String[] colNames, String[] colTypes) throws SQLException {
         if (colNames.length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        String queryString = "CREATE TABLE " + schema + "." + tableName + " (";
+        String queryString = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < colNames.length - 1; i++) {
             queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
@@ -168,7 +162,10 @@ public class MySqlTableDefinition implements TableDefinition {
 
         queryString = queryString + ")";
         execute(queryString);
+    }
 
+    private String qualified(String table) {
+        return schema + "." + table;
     }
 
 }

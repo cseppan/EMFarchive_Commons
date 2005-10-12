@@ -8,8 +8,10 @@ import java.sql.Statement;
 public class DataModifier {
 
     protected Connection connection = null;
+    private String schema;
 
-    public DataModifier(Connection connection) {
+    public DataModifier(String schema, Connection connection) {
+        this.schema = schema;
         this.connection = connection;
     }
 
@@ -44,7 +46,7 @@ public class DataModifier {
         }
 
         // instantiate a new string buffer in which the query would be created
-        StringBuffer sb = new StringBuffer("UPDATE " + table + " SET " + columnName + " = " + setExpr + " WHERE ");
+        StringBuffer sb = new StringBuffer("UPDATE " + qualified(table) + " SET " + columnName + " = " + setExpr + " WHERE ");
 
         // add the first LIKE expression
         sb.append(whereColumns[0] + " LIKE '" + likeClauses[0] + "'");
@@ -80,7 +82,7 @@ public class DataModifier {
         }
 
         // instantiate a new string buffer in which the query would be created
-        StringBuffer sb = new StringBuffer("UPDATE " + table + " SET " + columnName + " = " + setExpr + " WHERE ");
+        StringBuffer sb = new StringBuffer("UPDATE " + qualified(table) + " SET " + columnName + " = " + setExpr + " WHERE ");
 
         // add the first LIKE expression
         sb.append(whereColumns[0] + " = " + equalsClauses[0]);
@@ -117,7 +119,7 @@ public class DataModifier {
 
     public void insertRow(String table, String[] data, String[] colTypes) throws SQLException {
         StringBuffer insert = new StringBuffer();
-        insert.append("INSERT INTO " + table + " VALUES(");
+        insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
         for (int i = 0; i < data.length; i++) {
             if (colTypes[i].startsWith("VARCHAR")) {
@@ -137,11 +139,11 @@ public class DataModifier {
         execute(insert.toString());
     }
 
-    public void dropData(String schema, String table, String key, long value) throws SQLException {
-        execute("DELETE FROM " + qualified(schema, table) + " WHERE " + key + " = " + value);
+    public void dropData(String table, String key, long value) throws SQLException {
+        execute("DELETE FROM " + qualified(table) + " WHERE " + key + " = " + value);
     }
 
-    private String qualified(String schema, String table) {
+    private String qualified(String table) {
         return schema + "." + table;
     }
 

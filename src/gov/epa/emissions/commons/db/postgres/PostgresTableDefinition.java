@@ -14,7 +14,10 @@ public class PostgresTableDefinition implements TableDefinition {
 
     private Connection connection;
 
-    protected PostgresTableDefinition(Connection connection) {
+    private String schema;
+
+    protected PostgresTableDefinition(String schema, Connection connection) {
+        this.schema = schema;
         this.connection = connection;
     }
 
@@ -44,7 +47,7 @@ public class PostgresTableDefinition implements TableDefinition {
 
         deleteTable(table);
 
-        String queryString = "CREATE TABLE " + table + " (";
+        String queryString = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < length - 1; i++) {
             queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
@@ -69,7 +72,7 @@ public class PostgresTableDefinition implements TableDefinition {
         if (colNames.length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        String ddlStatement = "CREATE TABLE " + table + " (";
+        String ddlStatement = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < colNames.length; i++) {
             // one of the columnnames was "dec" for december.. caused a problem
@@ -87,10 +90,14 @@ public class PostgresTableDefinition implements TableDefinition {
 
     public void deleteTable(String table) {
         try {
-            execute("DROP TABLE " + table);
+            execute("DROP TABLE " + qualified(table));
         } catch (SQLException e) {
             System.err.println("Table " + table + " could not be dropped");
         }
+    }
+
+    private String qualified(String table) {
+        return schema + "." + table;
     }
 
     public boolean tableExists(String table) throws Exception {
@@ -101,7 +108,7 @@ public class PostgresTableDefinition implements TableDefinition {
         StringBuffer query = new StringBuffer();
         // postgres indexes must be unique across tables/database
         String syntheticIndexName = table.replace('.', '_') + "_" + indexName;
-        query.append("CREATE INDEX " + syntheticIndexName + " ON " + table + " (" + indexColumnNames[0]);
+        query.append("CREATE INDEX " + syntheticIndexName + " ON " + qualified(table) + " (" + indexColumnNames[0]);
         for (int i = 1; i < indexColumnNames.length; i++) {
             query.append(", " + indexColumnNames[i]);
         }
@@ -111,7 +118,7 @@ public class PostgresTableDefinition implements TableDefinition {
     }
 
     public void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception {
-        String statement = "ALTER TABLE " + table + " ADD " + columnName + " " + columnType;
+        String statement = "ALTER TABLE " + qualified(table) + " ADD " + columnName + " " + columnType;
         execute(statement);
     }
 
@@ -130,17 +137,12 @@ public class PostgresTableDefinition implements TableDefinition {
         return (data).replace('-', '_');
     }
 
-    public void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
-            throws SQLException {
-        createTable(schema + "." + table, cols, colTypes, primaryCol);
-    }
-
-    public void createTable(String schema, String table, String[] colNames, String[] colTypes) throws SQLException {
+    public void createTable(String table, String[] colNames, String[] colTypes) throws SQLException {
         int length = colNames.length;
         if (length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        String queryString = "CREATE TABLE " + schema + "." + table + " (";
+        String queryString = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < length - 1; i++) {
             queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
@@ -150,11 +152,6 @@ public class PostgresTableDefinition implements TableDefinition {
         queryString = queryString + ")";
 
         execute(queryString);
-    }
-
-    public void deleteTable(String schema, String table) throws SQLException {
-        String tableName = schema + "." + table;
-        execute("DROP TABLE " + tableName);
     }
 
 }

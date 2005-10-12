@@ -18,7 +18,7 @@ public class PostgresDatasource implements Datasource {
     public PostgresDatasource(String name, Connection connection) {
         this.connection = connection;
         this.name = name;
-        this.dataAcceptor = new DataModifier(connection);
+        this.dataAcceptor = new DataModifier(name, connection);
     }
 
     public String getName() {
@@ -34,11 +34,11 @@ public class PostgresDatasource implements Datasource {
     }
 
     public DataQuery query() {
-        return new PostgresDataQuery(connection);
+        return new PostgresDataQuery(name, connection);
     }
 
     public TableDefinition tableDefinition() {
-        return new PostgresTableDefinition(connection);
+        return new PostgresTableDefinition(name, connection);
     }
 
 }

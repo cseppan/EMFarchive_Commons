@@ -21,7 +21,7 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
     public MySqlDatasource(String name, Connection connection) {
         this.name = name;
         this.connection = connection;
-        this.dataAcceptor = new DataModifier(connection);
+        this.dataAcceptor = new DataModifier(name, connection);
     }
 
     public String getName() {
@@ -42,7 +42,7 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
     }
 
     public DataQuery query() {
-        return new MySqlDataQuery(connection);
+        return new MySqlDataQuery(name, connection);
     }
 
     public TableDefinition tableDefinition() {

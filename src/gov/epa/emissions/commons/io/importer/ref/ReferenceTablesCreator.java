@@ -46,7 +46,6 @@ public class ReferenceTablesCreator {
 
     public void createPollutantsTable(Datasource datasource) throws Exception {
         int col_count = POLLUTANT_COL_COUNT;
-        String qualifiedTableName = datasource.getName() + "." + POLLUTANT_TABLE;
 
         String fileName = referenceFilesDir + "/" + ADD_REF_FILES_DIR + "/pollutants.txt";
         File file = new File(fileName);
@@ -60,14 +59,14 @@ public class ReferenceTablesCreator {
         colNames = line.split(DELIMITER);
         String[] primaryCol = { colNames[0] };
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTableWithOverwrite(qualifiedTableName, colNames, colTypes, primaryCol);
+        tableDefinition.createTableWithOverwrite(POLLUTANT_TABLE, colNames, colTypes, primaryCol);
         while ((line = bfr.readLine()) != null && line.trim().length() != 0) {
             line = line.trim();
             String[] pollutants = line.split(DELIMITER);
             if (pollutants.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.getDataModifier().insertRow(qualifiedTableName, pollutants, colTypes);
+            datasource.getDataModifier().insertRow(POLLUTANT_TABLE, pollutants, colTypes);
         }
     }
 
@@ -85,8 +84,7 @@ public class ReferenceTablesCreator {
         line = bfr.readLine();
         colNames = line.split(",");
         String[] primaryCol = { colNames[0] };
-        String qualifiedTableName = datasource.getName() + "." + tableName;
-        datasource.tableDefinition().createTableWithOverwrite(qualifiedTableName, colNames, colTypes, primaryCol);
+        datasource.tableDefinition().createTableWithOverwrite(tableName, colNames, colTypes, primaryCol);
 
         while ((line = bfr.readLine()) != null && line.trim().length() != 0) {
             line = line.trim();
@@ -94,13 +92,12 @@ public class ReferenceTablesCreator {
             if (countries.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.getDataModifier().insertRow(qualifiedTableName, countries, colTypes);
+            datasource.getDataModifier().insertRow(tableName, countries, colTypes);
         }
     }
 
     public void createStatesTable(Datasource datasource) throws Exception {
         int col_count = STATES_COL_COUNT;
-        String qualifiedTableName = datasource.getName() + "." + STATES_TABLE;
 
         String fileName = referenceFilesDir + "/" + ADD_REF_FILES_DIR + "/states.txt";
         File file = new File(fileName);
@@ -113,7 +110,7 @@ public class ReferenceTablesCreator {
         line = bfr.readLine();
         colNames = line.split(",");
         String[] primaryCol = { colNames[0], colNames[1] };
-        datasource.tableDefinition().createTableWithOverwrite(qualifiedTableName, colNames, colTypes, primaryCol);
+        datasource.tableDefinition().createTableWithOverwrite(STATES_TABLE, colNames, colTypes, primaryCol);
 
         while ((line = bfr.readLine()) != null && line.trim().length() != 0) {
             line = line.trim();
@@ -121,13 +118,12 @@ public class ReferenceTablesCreator {
             if (countries.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.getDataModifier().insertRow(qualifiedTableName, countries, colTypes);
+            datasource.getDataModifier().insertRow(STATES_TABLE, countries, colTypes);
         }
     }
 
     public void createSectorsTable(Datasource datasource) throws Exception {
         int col_count = SECTORS_COL_COUNT;
-        String qualifiedTableName = datasource.getName() + "." + SECTORS_TABLE;
         String fileName = referenceFilesDir + "/" + ADD_REF_FILES_DIR + "/sectors.txt";
         File file = new File(fileName);
         FileReader fr = new FileReader(file);
@@ -139,7 +135,7 @@ public class ReferenceTablesCreator {
         line = bfr.readLine();
         colNames = line.split(",");
         String[] primaryCol = { colNames[0] };
-        datasource.tableDefinition().createTableWithOverwrite(qualifiedTableName, colNames, colTypes, primaryCol);
+        datasource.tableDefinition().createTableWithOverwrite(SECTORS_TABLE, colNames, colTypes, primaryCol);
 
         while ((line = bfr.readLine()) != null && line.trim().length() != 0) {
             line = line.trim();
@@ -147,7 +143,7 @@ public class ReferenceTablesCreator {
             if (sectors.length != col_count) {
                 throw new Exception("The file is not in the expected format");
             }
-            datasource.getDataModifier().insertRow(qualifiedTableName, sectors, colTypes);
+            datasource.getDataModifier().insertRow(SECTORS_TABLE, sectors, colTypes);
         }
     }
 
@@ -170,8 +166,7 @@ public class ReferenceTablesCreator {
         String[] colNames;
         line = bfr.readLine();
         colNames = line.split(",");
-        String qualifiedTableName = datasource.getName() + "." + tableName;
-        datasource.tableDefinition().createTableWithOverwrite(qualifiedTableName, colNames, colTypes, null);
+        datasource.tableDefinition().createTableWithOverwrite(tableName, colNames, colTypes, null);
         int lineNo = 1;
         while ((line = bfr.readLine()) != null && line.trim().length() != 0) {
             lineNo++;
@@ -186,7 +181,7 @@ public class ReferenceTablesCreator {
             for (int i = 0; i < counties.length; i++) {
                 data[i] = counties[i].trim();
             }
-            datasource.getDataModifier().insertRow(qualifiedTableName, data, colTypes);
+            datasource.getDataModifier().insertRow(tableName, data, colTypes);
         }
     }
 

@@ -7,17 +7,12 @@ public interface TableDefinition {
 
     List getTableNames() throws SQLException;
 
-    void createTableWithOverwrite(String tableName, String[] colNames, String[] colTypes, String[] primaryCols)
+    void createTableWithOverwrite(String table, String[] colNames, String[] colTypes, String[] primaryCols)
             throws SQLException;
 
     void createTable(String table, String[] colNames, String[] colTypes, String primaryCol) throws SQLException;
 
-    void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
-            throws SQLException;
-
-    void createTable(String schema, String table, String[] cols, String[] colTypes) throws SQLException;
-
-    void deleteTable(String schema, String table) throws SQLException;
+    void createTable(String table, String[] colNames, String[] colTypes) throws SQLException;
 
     void deleteTable(String table) throws SQLException;
 

@@ -57,7 +57,7 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
     private void createTable(String table) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(datasource.getName(), table, colsMetadata.colNames(), colsMetadata.colTypes());
+        tableDefinition.createTable(table, colsMetadata.colNames(), colsMetadata.colTypes());
     }
 
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {

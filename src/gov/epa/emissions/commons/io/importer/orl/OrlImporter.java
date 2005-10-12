@@ -51,7 +51,7 @@ public class OrlImporter {
     private void dropTable(String table, Datasource datasource) throws ImporterException {
         try {
             TableDefinition def = datasource.tableDefinition();
-            def.deleteTable(datasource.getName(), table);
+            def.deleteTable(table);
         } catch (SQLException e) {
             throw new ImporterException(
                     "could not drop table " + table + " after encountering error importing dataset", e);
@@ -108,7 +108,7 @@ public class OrlImporter {
 
     private void createTable(String table, Datasource datasource, ColumnsMetadata colsMetadata) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(datasource.getName(), table, colsMetadata.colNames(), colsMetadata.colTypes());
+        tableDefinition.createTable(table, colsMetadata.colNames(), colsMetadata.colTypes());
     }
 
 }

@@ -116,7 +116,6 @@ public class LineImporter extends FormattedImporter {
         String baseTableType = tableType.baseTypes()[0];
         Table table = dataset.getTable(baseTableType);
         String tableName = table.getName().trim();
-        String qualifiedTableName = datasource.getName() + "." + tableName;
 
         if (tableName == null) {
             throw new Exception("The dataset did not specify the table name for file name: " + fileName);
@@ -126,17 +125,17 @@ public class LineImporter extends FormattedImporter {
 
         TableDefinition tableDefinition = datasource.tableDefinition();
         if (overwrite) {
-            tableDefinition.deleteTable(qualifiedTableName);
+            tableDefinition.deleteTable(tableName);
         }
         // else make sure table does not exist
-        else if (tableDefinition.tableExists(qualifiedTableName)) {
-            log.error("The table \"" + qualifiedTableName
+        else if (tableDefinition.tableExists(tableName)) {
+            log.error("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
-            throw new Exception("The table \"" + qualifiedTableName
+            throw new Exception("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
         }
 
-        tableDefinition.createTable(qualifiedTableName, columnNames, columnTypes, null);
+        tableDefinition.createTable(tableName, columnNames, columnTypes, null);
         String line = null;
         Vector v = new Vector();
         int numRows = 0;
@@ -154,10 +153,10 @@ public class LineImporter extends FormattedImporter {
         
         String[] data = new String[v.size()];
         v.copyInto(data);
-        datasource.getDataModifier().insertRow(qualifiedTableName, data, columnTypes);
+        datasource.getDataModifier().insertRow(tableName, data, columnTypes);
 
         // perform capable table type specific processing
-        postProcess(datasource, qualifiedTableName, baseTableType);
+        postProcess(datasource, tableName, baseTableType);
 
         // when all the data is done ingesting..
         // close the database connections by calling acceptor.finish..
