@@ -4,9 +4,10 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.DataLoader;
-import gov.epa.emissions.commons.io.importer.PacketReader;
+import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +36,7 @@ public class TemporalProfileImporter {
             while (!isEndOfFile(fileReader)) {
                 String header = readHeader(fileReader);
                 ColumnsMetadata cols = colsMetadata(header);
-                PacketReader reader = new PacketReader(fileReader, header, cols);
+                Reader reader = new FixedWidthPacketReader(fileReader, header, cols);
                 DataLoader loader = new DataLoader(datasource, new TableColumnsMetadata(cols, sqlType));
 
                 // Note: header is the same as table name

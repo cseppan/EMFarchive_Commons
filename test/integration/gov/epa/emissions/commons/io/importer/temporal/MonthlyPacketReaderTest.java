@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.importer.Record;
 
@@ -27,7 +28,7 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         ColumnsMetadata cols = new MonthlyColumnsMetadata((SqlDataTypes) typeMapper.proxy());
         
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new PacketReader(fileReader, fileReader.readLine().trim(), cols);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), cols);
     }
 
     protected void tearDown() throws Exception {

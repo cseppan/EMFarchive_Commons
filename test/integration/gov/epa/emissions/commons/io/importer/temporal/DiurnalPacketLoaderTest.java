@@ -7,9 +7,10 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.DataLoader;
-import gov.epa.emissions.commons.io.importer.PacketReader;
+import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -20,7 +21,7 @@ import java.sql.SQLException;
 
 public class DiurnalPacketLoaderTest extends DbTestCase {
 
-    private PacketReader reader;
+    private Reader reader;
 
     private Datasource datasource;
 
@@ -45,12 +46,12 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
     }
 
     protected void tearDown() throws Exception {
         fileReader.close();
-        
+
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekday");
     }

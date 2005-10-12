@@ -8,8 +8,9 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.PacketReader;
+import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -20,7 +21,7 @@ import java.sql.SQLException;
 
 public class WeeklyPacketLoaderTest extends DbTestCase {
 
-    private PacketReader reader;
+    private Reader reader;
 
     private Datasource datasource;
 
@@ -52,7 +53,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
 
         try {
             DataLoader loader = new DataLoader(datasource, colsMetadata);
@@ -78,7 +79,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
     public void testShouldDropDataOnEncounteringBadData() throws Exception {
         File file = new File("test/data/temporal-profiles/BAD-weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
 
         DataLoader loader = new DataLoader(datasource, colsMetadata);
 
