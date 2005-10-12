@@ -23,6 +23,7 @@ public class IDAHeaderReaderTest extends DbTestCase {
         assertEquals(polls[4],"PM10");
         assertEquals(polls[5],"PM2_5");
         assertEquals(polls[6],"NH3");
+        assertEquals(10,headerReader.comments().size());
     }
 
 

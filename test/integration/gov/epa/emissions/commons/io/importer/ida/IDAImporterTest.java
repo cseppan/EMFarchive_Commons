@@ -46,5 +46,16 @@ public class IDAImporterTest extends DbTestCase {
         TableReader tableReader = new TableReader(datasource.getConnection());
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
+    
+    public void itestShouldImportASmallPointFile() throws Exception {
+        File file = new File("test/data/ida/small-point.txt");
+
+        IDAAreaImporter importer = new IDAAreaImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+
+        // assert
+        TableReader tableReader = new TableReader(datasource.getConnection());
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+    }
 
 }
