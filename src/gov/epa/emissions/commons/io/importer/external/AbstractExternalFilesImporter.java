@@ -1,7 +1,7 @@
 /*
  * Creation on Oct 3, 2005
  * Eclipse Project Name: Commons
- * File Name: ExternalfilesImporter.java
+ * File Name: AbstractExternalFilesImporter.java
  * Author: Conrad F. D'Cruz
  */
 /**
@@ -27,25 +27,33 @@ import org.apache.commons.logging.LogFactory;
  * @author Conrad F. D'Cruz
  *
  */
-public class ExternalfilesImporter implements Importer {
-    private static Log log = LogFactory.getLog(ExternalfilesImporter.class);
+public abstract class AbstractExternalFilesImporter implements Importer {
+    private static Log log = LogFactory.getLog(AbstractExternalFilesImporter.class);
     protected String importerName;
 
 	/**
 	 * 
 	 */
-	public ExternalfilesImporter() {
+	public AbstractExternalFilesImporter() {
 		super();
-		importerName = "External files";
+		importerName = "Abstract External Files Importer";
+		log.debug("Default AbstractExternal Files importer created");
 	}
 
+	public AbstractExternalFilesImporter(String name) {
+		super();
+		importerName = name;
+		log.debug("Abstract External Files importer created: " + name);
+	}
+	
 	/* (non-Javadoc)
 	 * @see gov.epa.emissions.commons.io.importer.Importer#run(java.io.File[], gov.epa.emissions.commons.io.Dataset, boolean)
 	 */
 	public void run(File[] files, Dataset dataset, boolean overwrite)
 			throws Exception {
-		// TODO Auto-generated method stub
 
+		//Note:  For any external file in this hierarch the body of this method is empty
+		
 	}
 
 	public File validateFile(File path, String fileName) throws Exception {
@@ -65,12 +73,12 @@ public class ExternalfilesImporter implements Importer {
         File[] allFiles = null;
         
         int minFiles = datasetType.getMinfiles();
-
+        log.debug("Min files for " + datasetType.getName()+": " + minFiles);
         allFiles = extractFileNames(path, fileName);
+        log.debug("Number of files in directory: " + allFiles.length);
         if (allFiles.length < minFiles){
-        	throw new Exception(importerName + " importer requires " + minFiles + " files.  Only " + allFiles.length + " available");
+        	throw new Exception(importerName + " importer requires " + minFiles + " files");
         }
-        
         
         return allFiles;
 	}
@@ -85,8 +93,8 @@ public class ExternalfilesImporter implements Importer {
 			for (int i=0; i<allFilesInFolder.length;i++){
 				log.debug("file: " + allFilesInFolder[i]);
 			}
-			Pattern pat = Pattern.compile(fileName);
-			log.debug("PATTERN: " + fileName);
+			Pattern pat = Pattern.compile(createPattern(fileName));
+			log.debug("PATTERN to match files: " + fileName);
 			for (int i = 0; i < allFilesInFolder.length; i++) {
 				String ipFile = allFilesInFolder[i];
 				log.debug("File #" + i + "/" + allFilesInFolder.length + " FileName= " +ipFile);
@@ -104,6 +112,34 @@ public class ExternalfilesImporter implements Importer {
 
 		return files;
 	}
+	
+	private String createPattern(String inputString) {
+		System.out.println("INPUT STRING= " + inputString);
+		String OPEN_QUOTE = "\\Q";
+		String END_QUOTE = "\\E";
+		String dotPattern = OPEN_QUOTE + "." + END_QUOTE;
+		String asterixPattern=".*";
+		String inputPattern = null;
+		
+		int dotLocn = inputString.indexOf(".");
+		inputPattern = inputString.substring(0, dotLocn) + dotPattern
+				+ inputString.substring(dotLocn + 1, inputString.length());
 
+		String outputPattern="";
+		String holdPattern = inputPattern;
+		boolean done=false;
+		while (!done){
+			int asterixPos = holdPattern.indexOf("*");
+			
+			if (asterixPos <0) {
+				done =true;
+			}else{
+				outputPattern=outputPattern + holdPattern.substring(0,asterixPos) + asterixPattern;
+				holdPattern=holdPattern.substring(asterixPos+1, holdPattern.length());
+			}
+		}
+
+		return outputPattern;
+	}
 
 }
