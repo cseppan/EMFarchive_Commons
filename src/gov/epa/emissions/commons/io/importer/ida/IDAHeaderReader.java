@@ -12,15 +12,20 @@ public class IDAHeaderReader {
 
 	private BufferedReader reader;
 
-	private String pollutantTag;
+	private String pollutantTag1;
 
+	private String pollutantTag2;
+	
 	private String[] pollutants;
 
 	private List comments;
 
+	
+
 	public IDAHeaderReader(BufferedReader reader) {
 		this.reader = reader;
-		pollutantTag = "#DATA";
+		pollutantTag1 = "#DATA";
+		pollutantTag2 = "#POLID";
 		comments = new ArrayList();
 	}
 
@@ -36,8 +41,7 @@ public class IDAHeaderReader {
 				if (isComment(line)) {
 					comments.add(line);
 					if (isPollutantLine(line)) {
-						pollutants = parse(line
-								.substring(pollutantTag.length()));
+						pollutants = parse(line);
 						return;
 					}
 				}
@@ -56,11 +60,17 @@ public class IDAHeaderReader {
 
 	private String[] parse(String line) {
 		Pattern pattern = Pattern.compile("\\s");
+		if(line.startsWith(pollutantTag1)){
+			line = line.substring(pollutantTag1.length());
+		}
+		else{
+			line = line.substring(pollutantTag2.length());
+		}
 		return pattern.split(line.trim());
 	}
 
 	private boolean isPollutantLine(String line) {
-		return (line.startsWith(pollutantTag));
+		return (line.startsWith(pollutantTag1));
 	}
 
 	public List comments() {
