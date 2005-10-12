@@ -1,8 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +15,11 @@ public class PacketReader implements Reader {
 
     private List comments;
 
-    // FIXME: get rid of this constructor in lieu of the other
-    public PacketReader(File file, ColumnsMetadata cols) throws IOException {
-        fileReader = new BufferedReader(new FileReader(file));
-
-        String header = fileReader.readLine().trim();
-        identifier = header.replaceAll("/", "");
-        this.cols = cols;
-        comments = new ArrayList();
-    }
-
     public PacketReader(BufferedReader reader, String header, ColumnsMetadata cols) {
         fileReader = reader;
         identifier = header.replaceAll("/", "");
         this.cols = cols;
+        comments = new ArrayList();
     }
 
     public String identify() {

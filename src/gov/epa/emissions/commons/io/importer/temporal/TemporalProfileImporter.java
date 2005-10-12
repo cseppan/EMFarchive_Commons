@@ -19,9 +19,13 @@ public class TemporalProfileImporter {
 
     private Datasource datasource;
 
+    private TemporalColumnsMetadataFactory metadataFactory;
+
     public TemporalProfileImporter(Datasource datasource, SqlDataTypes sqlType) {
         this.datasource = datasource;
         this.sqlType = sqlType;
+
+        metadataFactory = new TemporalColumnsMetadataFactory(sqlType);
     }
 
     public void run(File file, Dataset dataset) throws ImporterException {
@@ -38,6 +42,7 @@ public class TemporalProfileImporter {
                 loader.load(reader, dataset, table(header));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
@@ -53,15 +58,11 @@ public class TemporalProfileImporter {
     }
 
     private ColumnsMetadata colsMetadata(String header) throws ImporterException {
-        // FIXME: turn into a factory
-        if (header.equals("MONTHLY"))
-            return new MonthlyColumnsMetadata(sqlType);
-        if (header.equals("WEEKLY"))
-            return new WeeklyColumnsMetadata(sqlType);
-        if (header.startsWith("DIURNAL"))
-            return new DiurnalColumnsMetadata(sqlType);
+        ColumnsMetadata meta = metadataFactory.get(header);
+        if (meta == null)
+            throw new ImporterException("invalid header - " + header);
 
-        throw new ImporterException("invalid header - " + header);
+        return meta;
     }
 
     private String readHeader(BufferedReader fileReader) throws IOException {

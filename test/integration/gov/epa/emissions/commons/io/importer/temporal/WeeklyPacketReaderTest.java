@@ -5,7 +5,9 @@ import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.importer.Record;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 import org.jmock.Mock;
@@ -15,6 +17,8 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
 
     private PacketReader reader;
 
+    private BufferedReader fileReader;
+
     protected void setUp() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
 
@@ -23,7 +27,13 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         typeMapper.stubs().method("getLong").will(returnValue("long"));
 
         ColumnsMetadata cols = new WeeklyColumnsMetadata((SqlDataTypes) typeMapper.proxy());
-        reader = new PacketReader(file, cols);
+        fileReader = new BufferedReader(new FileReader(file));
+        reader = new PacketReader(fileReader, fileReader.readLine().trim(), cols);
+    }
+
+    protected void tearDown() throws IOException {
+        fileReader.close();
+
     }
 
     public void testShouldIdentifyPacketHeaderAsMonthly() {

@@ -13,7 +13,9 @@ import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.sql.SQLException;
 
 public class DiurnalPacketLoaderTest extends DbTestCase {
@@ -28,23 +30,27 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
     private DataLoader loader;
 
+    private BufferedReader fileReader;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
-
-        File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
         colsMetadata = new TableColumnsMetadata(new DiurnalColumnsMetadata(typeMapper), typeMapper);
-        reader = new PacketReader(file, colsMetadata);
 
         createTable("Diurnal_Weekday");
-
         loader = new DataLoader(datasource, colsMetadata);
+
+        File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
+        fileReader = new BufferedReader(new FileReader(file));
+        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
     }
 
     protected void tearDown() throws Exception {
+        fileReader.close();
+        
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekday");
     }

@@ -13,7 +13,9 @@ import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.sql.SQLException;
 
 public class MonthlyPacketLoaderTest extends DbTestCase {
@@ -26,6 +28,8 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
 
     private ColumnsMetadata colsMetadata;
 
+    private BufferedReader fileReader;
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -35,12 +39,14 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
 
         File file = new File("test/data/temporal-profiles/monthly.txt");
         colsMetadata = new TableColumnsMetadata(new MonthlyColumnsMetadata(typeMapper), typeMapper);
-        reader = new PacketReader(file, colsMetadata);
-
         createTable("Monthly");
+        
+        fileReader = new BufferedReader(new FileReader(file));
+        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
     }
 
     protected void tearDown() throws Exception {
+        fileReader.close();
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), "monthly");
     }

@@ -13,7 +13,9 @@ import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.sql.SQLException;
 
 public class WeeklyPacketLoaderTest extends DbTestCase {
@@ -49,18 +51,23 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
-        reader = new PacketReader(file, colsMetadata);
+        BufferedReader fileReader = new BufferedReader(new FileReader(file));
+        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
 
-        DataLoader loader = new DataLoader(datasource, colsMetadata);
+        try {
+            DataLoader loader = new DataLoader(datasource, colsMetadata);
 
-        Dataset dataset = new SimpleDataset();
-        dataset.setName("test");
-        String tableName = "Weekly";
+            Dataset dataset = new SimpleDataset();
+            dataset.setName("test");
+            String tableName = "Weekly";
 
-        loader.load(reader, dataset, tableName);
+            loader.load(reader, dataset, tableName);
 
-        // assert
-        assertEquals(13, countRecords(tableName));
+            // assert
+            assertEquals(13, countRecords(tableName));
+        } finally {
+            fileReader.close();
+        }
     }
 
     private int countRecords(String tableName) {
@@ -70,7 +77,8 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     public void testShouldDropDataOnEncounteringBadData() throws Exception {
         File file = new File("test/data/temporal-profiles/BAD-weekly.txt");
-        reader = new PacketReader(file, colsMetadata);
+        BufferedReader fileReader = new BufferedReader(new FileReader(file));
+        reader = new PacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
 
         DataLoader loader = new DataLoader(datasource, colsMetadata);
 
@@ -83,6 +91,8 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         } catch (ImporterException e) {
             assertEquals(0, countRecords(tableName));
             return;
+        } finally {
+            fileReader.close();
         }
 
         fail("should have encountered an error(missing cols) on record 3");
