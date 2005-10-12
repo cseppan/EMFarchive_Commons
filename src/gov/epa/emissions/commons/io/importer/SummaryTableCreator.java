@@ -1,14 +1,13 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DataQuery;
+import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.orl.ORLDataFormat;
 import gov.epa.emissions.commons.io.importer.orl.ORLPointDataFormat;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,177 +191,19 @@ public class SummaryTableCreator {
         this.types = typesFactory;
     }
 
-    public void createAreaSummaryTable(String emTable, String epTable, String summaryTable, boolean overwrite)
-            throws Exception {
-        emTable = emissionsDatasource.getName() + "." + emTable;
-        epTable = emissionsDatasource.getName() + "." + epTable;
-        summaryTable = emissionsDatasource.getName() + "." + summaryTable;
-
-        DataQuery emissionsQuery = emissionsDatasource.query();
-        ResultSet rs = emissionsQuery.executeQuery("SELECT DISTINCT(pollutant_code) FROM " + emTable);
-        rs.last();
-        int numOfPollutants = rs.getRow();
-
-        rs.first();
-        String[] pollutants = new String[numOfPollutants];
-
-        String selectPart = "";
-        String joinPart = "";
-        String cleanPoll;
-
-        for (int i = 0; i < numOfPollutants; i++) {
-            pollutants[i] = rs.getString(POLLUTANT_COL);
-            cleanPoll = clean(pollutants[i]);
-            selectPart = selectPart + cleanPoll + "." + EMISSION_COL + " as " + cleanPoll + ", ";
-            joinPart = joinPart + "LEFT JOIN (SELECT " + FIPS_COL + ", " + SCC_COL + ", " + EMISSION_COL + " FROM "
-                    + emTable + " WHERE " + POLLUTANT_COL + " = '" + pollutants[i] + "') " + cleanPoll + " ON (e."
-                    + FIPS_COL + " = " + cleanPoll + "." + FIPS_COL + " AND e." + SCC_COL + " = " + cleanPoll + "."
-                    + SCC_COL + ") ";
-            rs.next();
-        }
-        rs.close();
-
-        selectPart = selectPart.substring(0, selectPart.length() - 2);
-
-        String query = "CREATE TABLE " + summaryTable + " AS SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", "
-                + "e." + FIPS_COL + " as " + FIPS + ", e." + SCC_COL + " as " + SCC + ", ep." + MACT_COL + " as "
-                + MACT + ", " + SIC_AREA_COL + " as " + SIC + ", " + NAICS_AREA_COL + " as " + NAICS + ", "
-                + selectPart + " FROM " + epTable + " as ep, " + referenceDatasource.getName() + ".fips as f, "
-                + "(SELECT DISTINCT " + FIPS_COL + ", " + SCC_COL + " FROM " + emTable + ") e " + joinPart
-                + " WHERE (e." + FIPS_COL + " = f." + FIPS_COL + " AND f.country_code='US') AND (e." + FIPS_COL
-                + "=ep." + FIPS_COL + " AND e." + SCC_COL + "=ep." + SCC_COL + ")";
-
-        if (overwrite)
-            emissionsQuery.execute("DROP TABLE IF EXISTS " + summaryTable);// FIXME:
-        // db-specific
-        else if (emissionsDatasource.tableDefinition().getTableNames().contains(summaryTable))
-            throw new Exception("Table \"" + summaryTable
-                    + "\" already exists. Must either overwrite table or choose new name.");
-        emissionsQuery.execute(query);
-    }// createAreaSummaryTable(String, String, String, String)
-
     private String clean(String dirtyStr) {
         return dirtyStr.replace('-', '_');
     }
 
-    public void createPointSummaryTable(String emTable, String epTable, String euTable, String erTable,
-            String summaryTable, boolean overwrite) throws Exception {
-        // TODO: prefix before invocation
-        emTable = emissionsDatasource.getName() + "." + emTable;
-        epTable = emissionsDatasource + "." + epTable;
-        summaryTable = emissionsDatasource + "." + summaryTable;
-
-        DataQuery emissionsQuery = emissionsDatasource.query();
-        ResultSet rs = emissionsQuery.executeQuery("SELECT DISTINCT(" + POLLUTANT_COL + ") FROM " + emTable);
-        rs.last();
-        int numOfPollutants = rs.getRow();
-
-        rs.first();
-        String[] pollutants = new String[numOfPollutants];
-
-        String selectPart = "";
-        String joinPart = "";
-        String cleanPoll;
-
-        for (int i = 0; i < numOfPollutants; i++) {
-            pollutants[i] = rs.getString(POLLUTANT_COL);
-            cleanPoll = clean(pollutants[i]);
-            selectPart = selectPart + cleanPoll + "." + EMISSION_COL + " as " + cleanPoll + ", ";
-            joinPart = joinPart + "LEFT JOIN (SELECT " + FIPS_COL + ", " + FACILITY_COL + ", " + UNIT_COL + ", "
-                    + PROCESS_COL + ", " + POINT_COL + "," + EMISSION_COL + " FROM " + emTable + " WHERE "
-                    + POLLUTANT_COL + " = '" + pollutants[i] + "') " + cleanPoll + " ON (e." + FIPS_COL + " = "
-                    + cleanPoll + "." + FIPS_COL + " AND e." + FACILITY_COL + " = " + cleanPoll + "." + FACILITY_COL
-                    + " AND e." + UNIT_COL + " = " + cleanPoll + "." + UNIT_COL + " AND e." + PROCESS_COL + " = "
-                    + cleanPoll + "." + PROCESS_COL + " AND e." + POINT_COL + " = " + cleanPoll + "." + POINT_COL
-                    + ") ";
-            rs.next();
-        }
-        rs.close();
-
-        selectPart = selectPart.substring(0, selectPart.length() - 2);
-
-        String query = "CREATE TABLE " + summaryTable + " AS SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", "
-                + "e." + FIPS_COL + " as " + FIPS + ", e." + FACILITY_COL + " as " + FACILITY + ", e." + UNIT_COL
-                + " as " + UNIT + ", e." + PROCESS_COL + " as " + PROCESS + ", e." + POINT_COL + " as " + POINT
-                + ", ep." + SCC_COL + " as " + SCC + ", ep." + MACT_COL + " as " + MACT + ", eu." + SIC_COL + " as "
-                + SIC + ", eu." + NAICS_COL + " as " + NAICS + ", er." + EXIT_TEMP_COL + " as " + EXIT_TEMP + ", er."
-                + EXIT_VEL_COL + " as " + EXIT_VEL + ", er." + EXIT_FLOW_RATE_COL + " as " + EXIT_FLOW_RATE + ", er."
-                + HEIGHT_COL + " as " + HEIGHT + ", er." + DIAMETER_COL + " as " + DIAMETER + ", er." + X_COORD_COL
-                + " as " + X_COORD + ", er." + Y_COORD_COL + " as " + Y_COORD + ", " + selectPart + " FROM "
-                + referenceDatasource.getName() + ".fips as f, " + epTable + " as ep, " + euTable + " as eu, "
-                + erTable + " as er, " + "(SELECT DISTINCT " + FIPS_COL + ", " + FACILITY_COL + ", " + UNIT_COL + ", "
-                + PROCESS_COL + ", " + POINT_COL + " FROM " + emTable + " ) e " + joinPart + " WHERE (e." + FIPS_COL
-                + " = f." + FIPS_COL + " AND f.country_code='US') AND (e." + FIPS_COL + " = ep." + FIPS_COL + " AND e."
-                + FACILITY_COL + " = ep." + FACILITY_COL + " AND e." + UNIT_COL + " = ep." + UNIT_COL + " AND e."
-                + PROCESS_COL + " = ep." + PROCESS_COL + " AND e." + POINT_COL + " = ep." + POINT_COL + ") AND (e."
-                + FIPS_COL + " = eu." + FIPS_COL + " AND e." + FACILITY_COL + " = eu." + FACILITY_COL + " AND e."
-                + UNIT_COL + " = eu." + UNIT_COL + ") AND (e." + FIPS_COL + " = er." + FIPS_COL + " AND e."
-                + FACILITY_COL + " = er." + FACILITY_COL + " AND e." + POINT_COL + " = er." + POINT_COL + ")";
-
-        if (overwrite)
-            emissionsQuery.execute("DROP TABLE IF EXISTS " + summaryTable);
-        else if (emissionsDatasource.tableDefinition().getTableNames().contains(summaryTable))
-            throw new Exception("Table \"" + summaryTable
-                    + "\" already exists. Must either overwrite table or choose new name.");
-        emissionsQuery.execute(query);
-    }// createPointSumaryTable(String, String, String, String, String,
-
-    // String)
-
-    public void createMobileEmissionsSummaryTable(String emTable, String peTable, String summaryTable, boolean overwrite)
-            throws SQLException {
-        // TODO keithlee - test createMobileEmissionsSummaryTable()
-        DataQuery emissionsQuery = emissionsDatasource.query();
-        ResultSet rs = emissionsQuery.executeQuery("SELECT DISTINCT(pollutant_code) FROM " + emTable);
-        rs.last();
-        int numOfPollutants = rs.getRow();
-
-        rs.first();
-        String[] pollutants = new String[numOfPollutants];
-
-        String selectPart = "";
-        String joinPart = "";
-        String cleanPoll;
-
-        for (int i = 0; i < numOfPollutants; i++) {
-            pollutants[i] = rs.getString(POLLUTANT_COL);
-            cleanPoll = pollutants[i].replace('-', '_');
-            selectPart = selectPart + cleanPoll + "." + EMISSION_COL + " as " + cleanPoll + ", ";
-            joinPart = joinPart + "LEFT JOIN (SELECT " + FIPS_COL + ", " + SCC_COL + ", " + EMISSION_COL + " FROM "
-                    + emTable + " WHERE " + POLLUTANT_COL + " = '" + pollutants[i] + "') " + cleanPoll + " ON (e."
-                    + FIPS_COL + " = " + cleanPoll + "." + FIPS_COL + " AND e." + SCC_COL + " = " + cleanPoll + "."
-                    + SCC_COL + ") ";
-            rs.next();
-        }
-        rs.close();
-
-        selectPart = selectPart.substring(0, selectPart.length() - 2);
-
-        String query = "CREATE TABLE " + summaryTable + " AS SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", "
-                + "e." + FIPS_COL + " as " + FIPS + ", e." + SCC_COL + " as " + SCC// +",
-                // ep."
-                // + MACT_COL + " as " + MACT + ", " + SIC_AREA_COL + " as " +
-                // SIC + ", "
-                // + NAICS_AREA_COL + " as " + NAICS
-                + ", " + selectPart + " FROM " + peTable + " as pe, " + referenceDatasource.getName() + ".fips as f, "
-                + "(SELECT DISTINCT " + FIPS_COL + ", " + SCC_COL + " FROM " + emTable + ") e " + joinPart
-                + " WHERE (e." + FIPS_COL + " = f." + FIPS_COL + " AND f.country_code='US') AND (e." + FIPS_COL
-                + "=pe." + FIPS_COL + " AND e." + SCC_COL + "=pe." + SCC_COL + ")";
-
-        if (overwrite)
-            emissionsQuery.execute("DROP TABLE IF EXISTS " + summaryTable);
-        else if (emissionsDatasource.tableDefinition().getTableNames().contains(summaryTable))
-            throw new SQLException("Table \"" + summaryTable
-                    + "\" already exists. Must either overwrite table or choose new name.");
-        emissionsQuery.execute(query);
-    }// createMobileEmissionsSummaryTable(String, String, boolean)
-
     public void createORLSummaryTable(DatasetType datasetType, String orlTable, String summaryTable, boolean overwrite,
             boolean annualNotAverageDaily) throws Exception {
+        String qualifiedSummaryTable = emissionsDatasource.getName() + "." + summaryTable;
+        String qualifiedOrlTable = emissionsDatasource.getName() + "." + orlTable;
+
         // connect to emissions database
         // get the pollutant CAS codes
         DataQuery emissionsQuery = emissionsDatasource.query();
-        String casQuery = "SELECT DISTINCT(" + CAS_COL + ") FROM " + orlTable;
+        String casQuery = "SELECT DISTINCT(" + CAS_COL + ") FROM " + qualifiedOrlTable;
         ResultSet rs = emissionsQuery.executeQuery(casQuery);
         rs.last();
         int numOfPollutants = rs.getRow();
@@ -396,7 +237,7 @@ public class SummaryTableCreator {
             tempSelectDistinct = " SELECT DISTINCT e." + FIPS_COL_ORL + " as " + FIPS + ", e." + SCC_COL_ORL + " as "
                     + SCC + ", ";
             tempFromSelectDistinct = " FROM (SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + " FROM "
-                    + orlTable + " ) e ";
+                    + qualifiedOrlTable + " ) e ";
 
             if (datasetType.equals(orlTypes.nonPoint())) {
                 summarySelectDistinct = " SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", " + "e." + FIPS_COL_ORL
@@ -405,12 +246,12 @@ public class SummaryTableCreator {
                         + NAICS_COL_ORL + " as " + NAICS + ", ";
                 summaryFromSelectDistinct += "(SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
                         + SIC_COL_ORL + ", " + MACT_COL_ORL + ", " + SRCTYPE_COL + ", " + NAICS_COL_ORL + " FROM "
-                        + orlTable + " ) e ";
+                        + qualifiedOrlTable + " ) e ";
             } else {
                 summarySelectDistinct = " SELECT DISTINCT f." + STATE_COL + " as " + STATE + ", " + "e." + FIPS_COL_ORL
                         + " as " + FIPS + ", e." + SCC_COL_ORL + " as " + SCC + ", ";
                 summaryFromSelectDistinct += "(SELECT DISTINCT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + " FROM "
-                        + orlTable + " ) e ";
+                        + qualifiedOrlTable + " ) e ";
             }
         } else if (datasetType.equals(types.point())) {
             // String createIndex = " (INDEX orl_key (" + FIPS + ", " + PLANTID
@@ -432,12 +273,13 @@ public class SummaryTableCreator {
                     + ERPTYPE_COL + ", " + SRCTYPE_COL + ", " + HEIGHT_COL_ORL + ", " + DIAMETER_COL_ORL + ", "
                     + EXIT_TEMP_COL_ORL + ", " + EXIT_FLOW_RATE_COL_ORL + ", " + EXIT_VEL_COL_ORL + ", " + SIC_COL_ORL
                     + ", " + MACT_COL_ORL + ", " + NAICS_COL_ORL + ", " + CTYPE_COL + ", " + X_COORD_COL_ORL + ", "
-                    + Y_COORD_COL_ORL + ", " + UMTZ_COL + " FROM " + orlTable + " ) e ";
+                    + Y_COORD_COL_ORL + ", " + UMTZ_COL + " FROM " + qualifiedOrlTable + " ) e ";
             tempSelectDistinct = " SELECT DISTINCT e." + FIPS_COL_ORL + " as " + FIPS + ", e." + PLANTID_COL + " as "
                     + PLANTID + ", e." + POINTID_COL + " as " + POINTID + ", e." + STACKID_COL + " as " + STACKID
                     + ", e." + SEGMENT_COL + " as " + SEGMENT + ", e." + SCC_COL_ORL + " as " + SCC + ", ";
             tempFromSelectDistinct = " FROM (SELECT DISTINCT " + FIPS_COL_ORL + ", " + PLANTID_COL + ", " + POINTID_COL
-                    + ", " + STACKID_COL + ", " + SEGMENT_COL + ", " + SCC_COL_ORL + " FROM " + orlTable + " ) e ";
+                    + ", " + STACKID_COL + ", " + SEGMENT_COL + ", " + SCC_COL_ORL + " FROM " + qualifiedOrlTable
+                    + " ) e ";
         }
 
         // if there is a large number of tables, join small
@@ -486,9 +328,10 @@ public class SummaryTableCreator {
                 if (datasetType.equals(orlTypes.nonPoint()) || datasetType.equals(types.nonRoad())
                         || datasetType.equals(types.onRoad())) {
                     tempTableJoinParts[i] += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
-                            + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[index]
-                            + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL
-                            + " AND e." + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
+                            + emissionCol + " FROM " + qualifiedOrlTable + " WHERE " + CAS_COL + " = '"
+                            + pollutants[index] + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll
+                            + "." + FIPS_COL_ORL + " AND e." + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL
+                            + ") ";
                     summaryTableAndPart += "e." + FIPS_COL_ORL + " = t" + i + "." + FIPS + " AND e." + SCC_COL_ORL
                             + " = t" + i + "." + SCC + " AND ";
                 }
@@ -497,12 +340,13 @@ public class SummaryTableCreator {
                 else if (datasetType.equals(types.point())) {
                     tempTableJoinParts[i] = tempTableJoinParts[i] + "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", "
                             + PLANTID_COL + ", " + POINTID_COL + ", " + STACKID_COL + ", " + SEGMENT_COL + ", "
-                            + SCC_COL_ORL + ", " + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '"
-                            + pollutants[index] + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll
-                            + "." + FIPS_COL_ORL + " AND e." + PLANTID_COL + " = " + cleanPoll + "." + PLANTID_COL
-                            + " AND e." + POINTID_COL + " = " + cleanPoll + "." + POINTID_COL + " AND e." + STACKID_COL
-                            + " = " + cleanPoll + "." + STACKID_COL + " AND e." + SEGMENT_COL + " = " + cleanPoll + "."
-                            + SEGMENT_COL + " AND e." + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
+                            + SCC_COL_ORL + ", " + emissionCol + " FROM " + qualifiedOrlTable + " WHERE " + CAS_COL
+                            + " = '" + pollutants[index] + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = "
+                            + cleanPoll + "." + FIPS_COL_ORL + " AND e." + PLANTID_COL + " = " + cleanPoll + "."
+                            + PLANTID_COL + " AND e." + POINTID_COL + " = " + cleanPoll + "." + POINTID_COL + " AND e."
+                            + STACKID_COL + " = " + cleanPoll + "." + STACKID_COL + " AND e." + SEGMENT_COL + " = "
+                            + cleanPoll + "." + SEGMENT_COL + " AND e." + SCC_COL_ORL + " = " + cleanPoll + "."
+                            + SCC_COL_ORL + ") ";
                     summaryTableAndPart += "e." + FIPS_COL_ORL + " = t" + i + "." + FIPS + " AND e." + PLANTID_COL
                             + " = t" + i + "." + PLANTID + " AND e." + POINTID_COL + " = t" + i + "." + POINTID
                             + " AND e." + STACKID_COL + " = t" + i + "." + STACKID + " AND e." + SEGMENT_COL + " = t"
@@ -539,18 +383,18 @@ public class SummaryTableCreator {
                         || datasetType.equals(types.onRoad())) {
                     // get FIPS, SCC and CAS for pollutant
                     summaryTableJoinPart += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + SCC_COL_ORL + ", "
-                            + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[i] + "') "
-                            + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL + " AND e."
-                            + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
+                            + emissionCol + " FROM " + qualifiedOrlTable + " WHERE " + CAS_COL + " = '" + pollutants[i]
+                            + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL
+                            + " AND e." + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
                 } else if (datasetType.equals(types.point())) {
                     // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS
                     // for pollutant
                     summaryTableJoinPart += "LEFT JOIN (SELECT " + FIPS_COL_ORL + ", " + PLANTID_COL + ", "
                             + POINTID_COL + ", " + STACKID_COL + ", " + SEGMENT_COL + ", " + SCC_COL_ORL + ", "
-                            + emissionCol + " FROM " + orlTable + " WHERE " + CAS_COL + " = '" + pollutants[i] + "') "
-                            + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL + " AND e."
-                            + PLANTID_COL + " = " + cleanPoll + "." + PLANTID_COL + " AND e." + POINTID_COL + " = "
-                            + cleanPoll + "." + POINTID_COL + " AND e." + STACKID_COL + " = " + cleanPoll + "."
+                            + emissionCol + " FROM " + qualifiedOrlTable + " WHERE " + CAS_COL + " = '" + pollutants[i]
+                            + "') " + cleanPoll + " ON (e." + FIPS_COL_ORL + " = " + cleanPoll + "." + FIPS_COL_ORL
+                            + " AND e." + PLANTID_COL + " = " + cleanPoll + "." + PLANTID_COL + " AND e." + POINTID_COL
+                            + " = " + cleanPoll + "." + POINTID_COL + " AND e." + STACKID_COL + " = " + cleanPoll + "."
                             + STACKID_COL + " AND e." + SEGMENT_COL + " = " + cleanPoll + "." + SEGMENT_COL + " AND e."
                             + SCC_COL_ORL + " = " + cleanPoll + "." + SCC_COL_ORL + ") ";
                 }
@@ -571,24 +415,26 @@ public class SummaryTableCreator {
         }
         // the summary table CREATE statement
         summaryTableSelectPart = summaryTableSelectPart.substring(0, summaryTableSelectPart.length() - 2);
-        String query = "CREATE TABLE " + summaryTable + /* createIndex + */" AS " + summarySelectDistinct
+        String query = "CREATE TABLE " + qualifiedSummaryTable + /* createIndex + */" AS " + summarySelectDistinct
                 + summaryTableSelectPart + summaryFromSelectDistinct + summaryTableJoinPart + " WHERE (e."
                 + FIPS_COL_ORL + " = f." + FIPS_COL_REF + " AND " + summaryTableAndPart + "f.country_code='US')";
 
         // create the actual table
         if (overwrite)
-            tableDefinition.deleteTable(summaryTable);
-        else if (tableDefinition.getTableNames().contains(summaryTable))
-            throw new Exception("The table \"" + summaryTable
+            tableDefinition.deleteTable(qualifiedSummaryTable);
+        else if (tableDefinition.getTableNames().contains(qualifiedSummaryTable))
+            throw new Exception("The table \"" + qualifiedSummaryTable
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
         emissionsQuery.execute(query);
 
         // drop the temp tables, if needed
+        tableDefinition.deleteTable(qualifiedOrlTable);
         if (tempTableNames != null) {
             for (int i = 0; i < tempTableNames.length; i++) {
                 tableDefinition.deleteTable(tempTableNames[i]);
             }
         }
+
     }
 
 }

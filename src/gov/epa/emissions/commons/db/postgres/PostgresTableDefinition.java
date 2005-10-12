@@ -92,7 +92,7 @@ public class PostgresTableDefinition implements TableDefinition {
         try {
             execute("DROP TABLE " + qualified(table));
         } catch (SQLException e) {
-            System.err.println("Table " + table + " could not be dropped");
+            System.err.println("Table " + qualified(table) + " could not be dropped");
         }
     }
 

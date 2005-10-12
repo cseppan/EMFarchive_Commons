@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Table;
@@ -25,20 +24,13 @@ public class CompleteORLImporter extends BaseORLImporter {
     }
 
     private void createSummaryTable(Dataset dataset, boolean overwrite) throws Exception {
-        Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
-
         ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
-        // only one base type.
-        // FIXME: why not have a ORLTableType that only has one base table ?
         Table table = dataset.getTable(tableType.base());
-        String qualifiedTableName = emissionsDatasource.getName() + "." + table.getName();
-
-        String summaryTableSuffix = (String) dataset.getTablesMap().get(tableType.summary());
-        String summaryTable = summaryTableSuffix;
+        String summaryTable = (String) dataset.getTablesMap().get(tableType.summary());
 
         SummaryTableCreator modifier = new SummaryTableCreator(dbServer.getEmissionsDatasource(), dbServer
                 .getReferenceDatasource(), typesFactory);
-        modifier.createORLSummaryTable(dataset.getDatasetType(), qualifiedTableName, summaryTable, overwrite,
+        modifier.createORLSummaryTable(dataset.getDatasetType(), table.getName(), summaryTable, overwrite,
                 annualNotAverageDaily);
     }
 

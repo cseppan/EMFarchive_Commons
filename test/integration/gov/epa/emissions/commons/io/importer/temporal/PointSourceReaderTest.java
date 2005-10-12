@@ -2,8 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.DelimitedPacketReader;
-import gov.epa.emissions.commons.io.importer.PacketReader;
+import gov.epa.emissions.commons.io.importer.PointSourceReader;
 import gov.epa.emissions.commons.io.importer.Record;
 
 import java.io.BufferedReader;
@@ -14,9 +13,9 @@ import java.io.IOException;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-public class PointSourcePacketReaderTest extends MockObjectTestCase {
+public class PointSourceReaderTest extends MockObjectTestCase {
 
-    private PacketReader reader;
+    private PointSourceReader reader;
 
     private BufferedReader fileReader;
 
@@ -28,18 +27,18 @@ public class PointSourcePacketReaderTest extends MockObjectTestCase {
 
         ColumnsMetadata cols = new PointSourceColumnsMetadata((SqlDataTypes) typeMapper.proxy());
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new DelimitedPacketReader(fileReader, fileReader.readLine().trim(), cols);
+        reader = new PointSourceReader(fileReader, cols);
     }
 
     protected void tearDown() throws IOException {
         fileReader.close();
     }
 
-    public void testShouldIdentifyPacketHeaderAsMonthly() {
+    public void testShouldIdentifyPacketHeader() {
         assertEquals("POINT DEFN", reader.identify());
     }
 
-    public void testShouldReadThirteenRecordsOfThePacket() throws IOException {
+    public void testShouldReadTwentyRecordsOfThePacket() throws IOException {
         for (int i = 0; i < 20; i++) {
             Record record = reader.read();
             assertNotNull(record);
@@ -64,7 +63,7 @@ public class PointSourcePacketReaderTest extends MockObjectTestCase {
         Record record = reader.read();
 
         assertEquals(5, record.size());
-        
+
         assertEquals("10100101", record.token(0));
         assertEquals("462", record.token(1));
         assertEquals("8", record.token(2));
