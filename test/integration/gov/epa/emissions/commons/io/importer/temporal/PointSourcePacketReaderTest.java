@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.DelimitedPacketReader;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.importer.Record;
 
@@ -28,7 +28,7 @@ public class PointSourcePacketReaderTest extends MockObjectTestCase {
 
         ColumnsMetadata cols = new PointSourceColumnsMetadata((SqlDataTypes) typeMapper.proxy());
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), cols);
+        reader = new DelimitedPacketReader(fileReader, fileReader.readLine().trim(), cols);
     }
 
     protected void tearDown() throws IOException {
@@ -39,49 +39,41 @@ public class PointSourcePacketReaderTest extends MockObjectTestCase {
         assertEquals("POINT DEFN", reader.identify());
     }
 
-    public void itestShouldReadThirteenRecordsOfThePacket() throws IOException {
+    public void testShouldReadThirteenRecordsOfThePacket() throws IOException {
         for (int i = 0; i < 20; i++) {
             Record record = reader.read();
             assertNotNull(record);
         }
     }
 
-    public void itestShouldReadFirstRecordCorrectly() throws IOException {
+    public void testShouldReadFirstRecordCorrectly() throws IOException {
         Record record = reader.read();
 
-        assertEquals(9, record.size());
+        assertEquals(5, record.size());
 
-        assertEquals("    1", record.token(0));
-        assertEquals(" 200", record.token(1));
-        assertEquals(" 200", record.token(2));
-        assertEquals(" 200", record.token(3));
-        assertEquals(" 200", record.token(4));
-        assertEquals(" 200", record.token(5));
-        assertEquals("   0", record.token(6));
-        assertEquals("   0", record.token(7));
-        assertEquals(" 1000", record.token(8));
+        assertEquals("0000000000", record.token(0));
+        assertEquals("262", record.token(1));
+        assertEquals("7", record.token(2));
+        assertEquals("24", record.token(3));
+        assertEquals("-9", record.token(4));
     }
 
-    public void itestShouldReadSecondRecordCorrectly() throws IOException {
+    public void testShouldReadSecondRecordCorrectly() throws IOException {
         reader.read(); // ignore
 
         Record record = reader.read();
 
-        assertEquals(9, record.size());
-
-        assertEquals("    2", record.token(0));
-        assertEquals(" 200", record.token(1));
-        assertEquals(" 200", record.token(2));
-        assertEquals(" 200", record.token(3));
-        assertEquals(" 200", record.token(4));
-        assertEquals(" 200", record.token(5));
-        assertEquals("   0", record.token(6));
-        assertEquals("   0", record.token(7));
-        assertEquals(" 1000", record.token(8));
+        assertEquals(5, record.size());
+        
+        assertEquals("10100101", record.token(0));
+        assertEquals("462", record.token(1));
+        assertEquals("8", record.token(2));
+        assertEquals("33", record.token(3));
+        assertEquals("-9", record.token(4));
     }
 
-    public void itestShouldIdentifyEndOfPacket() throws IOException {
-        for (int i = 0; i < 13; i++) {
+    public void testShouldIdentifyEndOfPacket() throws IOException {
+        for (int i = 0; i < 20; i++) {
             assertNotNull(reader.read());
         }
 
@@ -91,8 +83,8 @@ public class PointSourcePacketReaderTest extends MockObjectTestCase {
 
     }
 
-    public void itestShouldReadCommentsAsItReadsRecords() throws IOException {
-        for (int i = 0; i < 13; i++) {
+    public void testShouldReadCommentsAsItReadsRecords() throws IOException {
+        for (int i = 0; i < 20; i++) {
             assertNotNull(reader.read());
         }
 

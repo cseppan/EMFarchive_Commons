@@ -54,7 +54,7 @@ public class PacketReaderImpl implements PacketReader {
     }
 
     private boolean isEnd(String line) {
-        return line.trim().equals("/END/");
+        return (line == null) || (line.trim().equals("/END/"));
     }
 
     private boolean isData(String line) {
