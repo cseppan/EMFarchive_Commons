@@ -14,7 +14,7 @@ public class DelimitedColumnsMetadata implements ColumnsMetadata {
         colNames = new String[cols];
 
         for (int i = 0; i < cols; i++) {
-            colTypes[i] = typeMapper.getString(32);
+            colTypes[i] = typeMapper.stringType(32);
             colNames[i] = "Col_" + i;
         }
     }

@@ -161,10 +161,10 @@ public class ReferenceTablesCreator {
         String line = null;
 
         String[] colTypes = { "VARCHAR(8)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)",
-                sqlTypeMapper.getType("", "N", 0), sqlTypeMapper.getType("", "N", 0),
-                sqlTypeMapper.getType("", "N", 0), sqlTypeMapper.getType("", "N", 0),
-                sqlTypeMapper.getType("", "N", 0), sqlTypeMapper.getType("", "N", 0),
-                sqlTypeMapper.getType("", "N", 0), "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(128)",
+                sqlTypeMapper.type("", "N", 0), sqlTypeMapper.type("", "N", 0),
+                sqlTypeMapper.type("", "N", 0), sqlTypeMapper.type("", "N", 0),
+                sqlTypeMapper.type("", "N", 0), sqlTypeMapper.type("", "N", 0),
+                sqlTypeMapper.type("", "N", 0), "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(128)",
                 "VARCHAR(32)", "VARCHAR(32)", "VARCHAR(32)", };
 
         String[] colNames;

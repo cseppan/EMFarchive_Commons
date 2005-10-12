@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 
 public class PostgresSqlDataType implements SqlDataTypes {
 
-    public String getType(String name, String genericType, int width) {
+    public String type(String name, String genericType, int width) {
         if (genericType.equals("C"))
             return "VARCHAR(" + width + ")";
         if (genericType.equals("I"))
@@ -26,24 +26,28 @@ public class PostgresSqlDataType implements SqlDataTypes {
         return null;
     }
 
-    public String getString(int size) {
+    public String stringType(int size) {
         return "VARCHAR(" + size + ")";
     }
 
-    public String getInt() {
+    public String intType() {
         return "INTEGER";
     }
 
-    public String getLong() {
+    public String longType() {
         return "BIGINT";
     }
 
-    public String getReal() {
+    public String realType() {
         return "FLOAT(15)";// FIXME: review the precision. too big or small ?
     }
 
     public String smallInt() {
         return "INT2";
+    }
+
+    public String charType() {
+        return stringType(1);
     }
 
 }

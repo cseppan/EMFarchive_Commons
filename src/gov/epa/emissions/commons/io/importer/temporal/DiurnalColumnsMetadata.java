@@ -14,7 +14,7 @@ public class DiurnalColumnsMetadata implements ColumnsMetadata {
     public DiurnalColumnsMetadata(SqlDataTypes typeMapper) {
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5 };
 
-        String intType = typeMapper.getInt();
+        String intType = typeMapper.intType();
         colTypes = new String[] { intType, intType, intType, intType, intType, intType, intType, intType, intType,
                 intType, intType, intType, intType, intType, intType, intType, intType, intType, intType, intType,
                 intType, intType, intType, intType, intType, intType };

@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 
 public class MySqlDataType implements SqlDataTypes {
 
-    public String getType(String name, String genericType, int width) {
+    public String type(String name, String genericType, int width) {
         if (genericType.equals("C"))
             return "VARCHAR(" + width + ")";
         if (genericType.equals("I"))
@@ -25,24 +25,28 @@ public class MySqlDataType implements SqlDataTypes {
         return null;
     }
 
-    public String getString(int size) {
+    public String stringType(int size) {
         return "VARCHAR(" + size + ")";
     }
 
-    public String getInt() {
+    public String intType() {
         return "INT";
     }
 
-    public String getLong() {
+    public String longType() {
         return "INT";// FIXME: verify
     }
 
-    public String getReal() {
+    public String realType() {
         return "DOUBLE";// FIXME: verify precision
     }
 
     public String smallInt() {
         return "SMALLINT";
+    }
+
+    public String charType() {
+        return stringType(1);
     }
 
 }

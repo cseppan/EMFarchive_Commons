@@ -22,8 +22,7 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         File file = new File("test/data/temporal-profiles/monthly.txt");
 
         Mock typeMapper = mock(SqlDataTypes.class);
-        typeMapper.stubs().method("getInt").will(returnValue("int"));
-        typeMapper.stubs().method("getLong").will(returnValue("long"));
+        typeMapper.stubs().method(ANYTHING).will(returnValue("ANY"));
 
         ColumnsMetadata cols = new MonthlyColumnsMetadata((SqlDataTypes) typeMapper.proxy());
         

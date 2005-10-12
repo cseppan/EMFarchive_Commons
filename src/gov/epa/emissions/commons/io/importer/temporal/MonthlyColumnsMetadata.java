@@ -14,7 +14,7 @@ public class MonthlyColumnsMetadata implements ColumnsMetadata {
     public MonthlyColumnsMetadata(SqlDataTypes sqlDataType) {
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5 };
 
-        String intType = sqlDataType.getInt();
+        String intType = sqlDataType.intType();
         colTypes = new String[] { intType, intType, intType, intType, intType, intType, intType, intType, intType,
                 intType, intType, intType, intType, intType };
 

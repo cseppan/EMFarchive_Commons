@@ -10,10 +10,10 @@ public class OrlNonPointColumnsMetadata implements ColumnsMetadata {
     private String[] colNames;
 
     public OrlNonPointColumnsMetadata(SqlDataTypes types) {
-        String intType = types.getInt();
-        colTypes = new String[] { intType, types.getString(10), types.getString(4), types.getString(6),
-                types.getString(2), types.getString(6), types.getString(16), types.getReal(), types.getReal(),
-                types.getReal(), types.getReal(), types.getReal() };
+        String intType = types.intType();
+        colTypes = new String[] { intType, types.stringType(10), types.stringType(4), types.stringType(6),
+                types.stringType(2), types.stringType(6), types.stringType(16), types.realType(), types.realType(),
+                types.realType(), types.realType(), types.realType() };
 
         colNames = new String[] { "FIPS", "SCC", "SIC", "MACT", "SRCTYPE", "NAICS", "POLL", "ANN_EMIS", "AVD_EMIS",
                 "CEFF", "REFF", "RPEN" };

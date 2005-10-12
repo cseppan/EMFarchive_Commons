@@ -16,6 +16,7 @@ import org.jmock.MockObjectTestCase;
 public class DiurnalPacketReaderTest extends MockObjectTestCase {
 
     private PacketReader reader;
+
     private BufferedReader fileReader;
 
     protected void setUp() throws Exception {
@@ -33,12 +34,12 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
     protected void tearDown() throws Exception {
         fileReader.close();
     }
-    
-    public void testShouldIdentifyPacketHeaderAsMonthly() {
+
+    public void testShouldIdentifyPacketHeaderAsDiurnalWeekday() {
         assertEquals("DIURNAL WEEKDAY", reader.identify());
     }
 
-    public void testShouldReadTwentyRecordsOfTheWeeklyPacket() throws IOException {
+    public void testShouldReadTwentyRecordsOfTheDiurnalPacket() throws IOException {
         for (int i = 0; i < 20; i++) {
             Record record = reader.read();
             assertNotNull(record);

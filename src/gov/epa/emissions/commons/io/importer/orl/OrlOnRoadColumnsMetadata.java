@@ -10,8 +10,8 @@ public class OrlOnRoadColumnsMetadata implements ColumnsMetadata {
     private String[] colNames;
 
     public OrlOnRoadColumnsMetadata(SqlDataTypes types) {
-        colTypes = new String[] { types.getInt(), types.getString(10), types.getString(16), types.getReal(),
-                types.getReal() };
+        colTypes = new String[] { types.intType(), types.stringType(10), types.stringType(16), types.realType(),
+                types.realType() };
 
         colNames = new String[] { "FIPS", "SCC", "POLL", "ANN_EMIS", "AVD_EMIS" };
     }

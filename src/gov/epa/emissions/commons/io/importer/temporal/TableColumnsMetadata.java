@@ -24,9 +24,9 @@ public class TableColumnsMetadata implements ColumnsMetadata {
         colNames.add("Comments");
 
         colTypes = new ArrayList();
-        colTypes.add(sqlType.getLong());
+        colTypes.add(sqlType.longType());
         colTypes.addAll(Arrays.asList(base.colTypes()));
-        colTypes.add(sqlType.getString(128));
+        colTypes.add(sqlType.stringType(128));
     }
 
     public String[] colNames() {

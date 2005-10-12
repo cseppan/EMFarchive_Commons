@@ -13,41 +13,39 @@ import java.io.IOException;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-public class WeeklyPacketReaderTest extends MockObjectTestCase {
+public class PointSourcePacketReaderTest extends MockObjectTestCase {
 
     private PacketReader reader;
 
     private BufferedReader fileReader;
 
     protected void setUp() throws Exception {
-        File file = new File("test/data/temporal-profiles/weekly.txt");
+        File file = new File("test/data/temporal-crossreference/point-source.txt");
 
         Mock typeMapper = mock(SqlDataTypes.class);
-        typeMapper.stubs().method("getInt").will(returnValue("int"));
-        typeMapper.stubs().method("getLong").will(returnValue("long"));
+        typeMapper.stubs().method(ANYTHING).will(returnValue("ANY"));
 
-        ColumnsMetadata cols = new WeeklyColumnsMetadata((SqlDataTypes) typeMapper.proxy());
+        ColumnsMetadata cols = new PointSourceColumnsMetadata((SqlDataTypes) typeMapper.proxy());
         fileReader = new BufferedReader(new FileReader(file));
         reader = new PacketReader(fileReader, fileReader.readLine().trim(), cols);
     }
 
     protected void tearDown() throws IOException {
         fileReader.close();
-
     }
 
-    public void testShouldIdentifyPacketHeaderAsWeekly() {
-        assertEquals("WEEKLY", reader.identify());
+    public void testShouldIdentifyPacketHeaderAsMonthly() {
+        assertEquals("POINT DEFN", reader.identify());
     }
 
-    public void testShouldReadThirteenRecordsOfTheWeeklyPacket() throws IOException {
-        for (int i = 0; i < 13; i++) {
+    public void itestShouldReadThirteenRecordsOfThePacket() throws IOException {
+        for (int i = 0; i < 20; i++) {
             Record record = reader.read();
             assertNotNull(record);
         }
     }
 
-    public void testShouldReadFirstRecordCorrectly() throws IOException {
+    public void itestShouldReadFirstRecordCorrectly() throws IOException {
         Record record = reader.read();
 
         assertEquals(9, record.size());
@@ -63,7 +61,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals(" 1000", record.token(8));
     }
 
-    public void testShouldReadSecondRecordCorrectly() throws IOException {
+    public void itestShouldReadSecondRecordCorrectly() throws IOException {
         reader.read(); // ignore
 
         Record record = reader.read();
@@ -81,7 +79,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals(" 1000", record.token(8));
     }
 
-    public void testShouldIdentifyEndOfPacket() throws IOException {
+    public void itestShouldIdentifyEndOfPacket() throws IOException {
         for (int i = 0; i < 13; i++) {
             assertNotNull(reader.read());
         }
@@ -92,7 +90,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
 
     }
 
-    public void testShouldReadCommentsAsItReadsRecords() throws IOException {
+    public void itestShouldReadCommentsAsItReadsRecords() throws IOException {
         for (int i = 0; i < 13; i++) {
             assertNotNull(reader.read());
         }

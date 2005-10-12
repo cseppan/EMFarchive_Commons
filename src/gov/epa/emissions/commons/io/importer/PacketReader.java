@@ -4,26 +4,38 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PacketReader implements Reader {
 
     private BufferedReader fileReader;
 
-    private String identifier;
+    private String header;
 
     private ColumnsMetadata cols;
 
     private List comments;
 
-    public PacketReader(BufferedReader reader, String header, ColumnsMetadata cols) {
+    public PacketReader(BufferedReader reader, String headerLine, ColumnsMetadata cols) {
         fileReader = reader;
-        identifier = header.replaceAll("/", "");
+        header = parseHeader(headerLine);
         this.cols = cols;
         comments = new ArrayList();
     }
 
+    private String parseHeader(String header) {
+        Pattern p = Pattern.compile("/[a-zA-Z\\s]+/");
+        Matcher m = p.matcher(header);
+        if (m.find()) {
+            return header.substring(m.start() + 1, m.end() - 1);
+        }
+
+        return null;
+    }
+
     public String identify() {
-        return identifier;
+        return header;
     }
 
     public Record read() throws IOException {

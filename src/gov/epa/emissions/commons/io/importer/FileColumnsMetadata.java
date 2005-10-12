@@ -47,7 +47,7 @@ public class FileColumnsMetadata {// TODO: why ???
     public String getType(String name) {
         String type = (String) columnNameTypeMap.get(name);
 
-        return sqlTypeMapper.getType(name, type, getWidth(name));
+        return sqlTypeMapper.type(name, type, getWidth(name));
     }
 
     public int getWidth(String name) {
