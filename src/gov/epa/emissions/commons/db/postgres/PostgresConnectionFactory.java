@@ -9,15 +9,27 @@ import org.postgresql.jdbc3.Jdbc3PoolingDataSource;
 
 public class PostgresConnectionFactory implements ConnectionFactory {
 
+    private static PostgresConnectionFactory instance;
+
     private Jdbc3PoolingDataSource source;
 
-    public PostgresConnectionFactory(ConnectionParams params) {
+    private PostgresConnectionFactory(ConnectionParams params) {
         source = new Jdbc3PoolingDataSource();
         source.setServerName(params.getHost());
         source.setDatabaseName(params.getDbName());
         source.setUser(params.getUsername());
         source.setPassword(params.getPassword());
-        source.setMaxConnections(10);
+        source.setMaxConnections(16);
+    }
+
+    // NOTE: the only reason why this is a Singleton - need to have
+    // a pool of DB connections for the entire test suite. Could not find
+    // a simple, intuitive way to do it.
+    public static PostgresConnectionFactory instance(ConnectionParams params) {
+        if (instance == null)
+            instance = new PostgresConnectionFactory(params);
+
+        return instance;
     }
 
     public Connection getConnection() throws SQLException {
