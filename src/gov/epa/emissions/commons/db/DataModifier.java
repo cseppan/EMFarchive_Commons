@@ -138,8 +138,7 @@ public class DataModifier {
     }
 
     public void dropData(String table) throws SQLException {
-        String sql = "DELETE FROM " + table;
-        execute(sql);
+        execute("DELETE FROM " + table);
     }
 
 }

@@ -92,6 +92,11 @@ public class MySqlTableDefinition implements TableDefinition {
         }
     }
 
+    public void deleteTable(String schema, String table) throws SQLException {
+        String tableName = schema + "." + table;
+        execute("DROP TABLE IF EXISTS " + tableName);
+    }
+
     public boolean tableExists(String tableName) throws SQLException {
         // if SHOW TABLES query returns one or more rows, the table exists
         Statement statement = connection.createStatement();
@@ -154,7 +159,7 @@ public class MySqlTableDefinition implements TableDefinition {
         if (colNames.length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        String queryString = "CREATE TABLE " + schema +"."+ tableName + " (";
+        String queryString = "CREATE TABLE " + schema + "." + tableName + " (";
 
         for (int i = 0; i < colNames.length - 1; i++) {
             queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
@@ -165,4 +170,5 @@ public class MySqlTableDefinition implements TableDefinition {
         execute(queryString);
 
     }
+
 }

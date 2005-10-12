@@ -12,7 +12,14 @@ public interface TableDefinition {
 
     void createTable(String table, String[] colNames, String[] colTypes, String primaryCol) throws SQLException;
 
-    void deleteTable(String tableName) throws SQLException;
+    void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
+            throws SQLException;
+
+    void createTable(String schema, String table, String[] cols, String[] colTypes) throws SQLException;
+
+    void deleteTable(String schema, String table) throws SQLException;
+
+    void deleteTable(String table) throws SQLException;
 
     boolean tableExists(String tableName) throws Exception;
 
@@ -38,10 +45,5 @@ public interface TableDefinition {
      *            default function (add to end)
      */
     void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception;
-
-    void createTable(String schema, String table, String[] cols, String[] colTypes, String primaryCol)
-            throws SQLException;
-
-    void createTable(String schema, String table, String[] cols, String[] colTypes) throws SQLException;
 
 }

@@ -65,8 +65,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     private int countRecords(String tableName) {
         TableReader tableReader = new TableReader(datasource.getConnection());
-        int countRecords = tableReader.count(datasource.getName(), tableName);
-        return countRecords;
+        return tableReader.count(datasource.getName(), tableName);
     }
 
     public void testShouldDropDataOnEncounteringBadData() throws Exception {

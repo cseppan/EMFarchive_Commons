@@ -46,9 +46,12 @@ public class OrlImporterTest extends DbTestCase {
         OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
-        // assert
+        assertEquals(10, countRecords());
+    }
+
+    private int countRecords() {
         TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        return tableReader.count(datasource.getName(), dataset.getName());
     }
 
     public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
@@ -57,9 +60,7 @@ public class OrlImporterTest extends DbTestCase {
         OrlNonPointImporter importer = new OrlNonPointImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
-        // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(6, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(6, countRecords());
     }
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {
@@ -68,9 +69,7 @@ public class OrlImporterTest extends DbTestCase {
         OrlNonRoadImporter importer = new OrlNonRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
-        // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(16, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(16, countRecords());
     }
 
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
@@ -79,9 +78,7 @@ public class OrlImporterTest extends DbTestCase {
         OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
-        // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(18, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(18, countRecords());
     }
 
     public void testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {

@@ -151,4 +151,10 @@ public class PostgresTableDefinition implements TableDefinition {
 
         execute(queryString);
     }
+
+    public void deleteTable(String schema, String table) throws SQLException {
+        String tableName = schema + "." + table;
+        execute("DROP TABLE " + tableName);
+    }
+
 }

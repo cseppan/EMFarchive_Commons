@@ -35,12 +35,26 @@ public class OrlImporter {
 
         try {
             createTable(table, datasource, colsMetadata);
+        } catch (SQLException e) {
+            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
+        }
+
+        try {
             doImport(file, dataset, table, colsMetadata);
         } catch (Exception e) {
+            dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
-        } finally {
-            // TODO: drop the table on failure
+        }
+    }
+
+    private void dropTable(String table, Datasource datasource) throws ImporterException {
+        try {
+            TableDefinition def = datasource.tableDefinition();
+            def.deleteTable(datasource.getName(), table);
+        } catch (SQLException e) {
+            throw new ImporterException(
+                    "could not drop table " + table + " after encountering error importing dataset", e);
         }
     }
 
@@ -54,7 +68,7 @@ public class OrlImporter {
 
     private void loadDataset(List comments, Dataset dataset) {
         StringBuffer description = new StringBuffer();
-        
+
         for (Iterator iter = comments.iterator(); iter.hasNext();) {
             String comment = (String) iter.next();
             if (comment.startsWith("#COUNTRY")) {
@@ -62,27 +76,27 @@ public class OrlImporter {
                 dataset.setCountry(country);
                 dataset.setRegion(country);
             }
-            
+
             if (comment.startsWith("#YEAR")) {
                 String year = comment.substring("#YEAR".length()).trim();
                 int yearInt = Integer.parseInt(year);
                 dataset.setYear(yearInt);
-                
+
                 setStartStopDateTimes(dataset, yearInt);
             }
-            
-            //TODO: this probably applies to all importers
-            if(comment.startsWith("#DESC"))
+
+            // TODO: this probably applies to all importers
+            if (comment.startsWith("#DESC"))
                 description.append(comment.substring("#DESC".length()) + "\n");
         }
-        
+
         dataset.setDescription(description.toString());
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {
         Date start = new GregorianCalendar(year, Calendar.JANUARY, 1).getTime();
         dataset.setStartDateTime(start);
-        
+
         Calendar endCal = new GregorianCalendar(year, Calendar.DECEMBER, 31, 23, 59, 59);
         endCal.set(Calendar.MILLISECOND, 999);
         dataset.setStopDateTime(endCal.getTime());
