@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
@@ -16,7 +15,6 @@ import gov.epa.emissions.framework.db.TableReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.sql.SQLException;
 
 public class DiurnalPacketLoaderTest extends DbTestCase {
 
@@ -40,7 +38,7 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
         colsMetadata = new TableColumnsMetadata(new DiurnalColumnsMetadata(typeMapper), typeMapper);
 
-        createTable("Diurnal_Weekday");
+        createTable("Diurnal_Weekday", datasource, colsMetadata);
         loader = new DataLoader(datasource, colsMetadata);
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
@@ -53,11 +51,6 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekday");
-    }
-
-    private void createTable(String table) throws SQLException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, colsMetadata.colNames(), colsMetadata.colTypes());
     }
 
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {

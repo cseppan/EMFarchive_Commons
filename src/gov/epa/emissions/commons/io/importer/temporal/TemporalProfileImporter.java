@@ -43,7 +43,6 @@ public class TemporalProfileImporter {
                 loader.load(reader, dataset, table(header));
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }

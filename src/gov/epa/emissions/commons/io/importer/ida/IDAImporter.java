@@ -30,7 +30,6 @@ public class IDAImporter {
 		{
 			doImport(reader,colsMetadata,comments, dataset, table);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		} finally {
 			// TODO: drop the table

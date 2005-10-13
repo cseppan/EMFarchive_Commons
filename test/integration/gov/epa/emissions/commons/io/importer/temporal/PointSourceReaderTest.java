@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.PointSourceReader;
 import gov.epa.emissions.commons.io.importer.Record;
 
 import java.io.BufferedReader;

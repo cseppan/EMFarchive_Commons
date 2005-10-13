@@ -5,55 +5,55 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 
-public class DelimitedFileLoaderTest extends DbTestCase {
+public class OptionalColumnsDataLoaderTest extends DbTestCase {
 
     private Reader reader;
 
     private Datasource datasource;
 
-    private SqlDataTypes dataType;
+    private SqlDataTypes dataTypes;
 
-    private TableColumnsMetadata colsMetadata;
+    private OptionalColumnsTableMetadata colsMetadata;
+
+    private String table;
 
     protected void setUp() throws Exception {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        dataType = dbServer.getDataType();
+        dataTypes = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
-        File file = new File("test/data/orl/SimpleDelimited.txt");
+        File file = new File("test/data/variable-cols.txt");
         reader = new DelimitedFileReader(file);
 
-        colsMetadata = new TableColumnsMetadata(new DelimitedColumnsMetadata(7, dataType), dataType);
-        createTable("SimpleDelimited", datasource, colsMetadata);
+        colsMetadata = new OptionalColumnsTableMetadata(new PointSourceTemporalCrossReferenceColumnsMetadata(dataTypes), dataTypes);
+        table = "varying";
+        createTable(table, datasource, colsMetadata);
     }
 
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        dbUpdate.dropTable(datasource.getName(), "SimpleDelimited");
+        dbUpdate.dropTable(datasource.getName(), table);
     }
 
     public void testShouldLoadRecordsIntoTable() throws Exception {
-        DataLoader loader = new DataLoader(datasource, colsMetadata);
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
-        String tableName = "simpledelimited";
 
-        loader.load(reader, dataset, tableName);
+        loader.load(reader, dataset, table);
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
 
-        assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
-                tableName));
-        assertEquals(10, tableReader.count(datasource.getName(), tableName));
+        assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
+        assertEquals(20, tableReader.count(datasource.getName(), table));
     }
 }

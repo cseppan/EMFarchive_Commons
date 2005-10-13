@@ -31,4 +31,8 @@ public class Record {
         return false;
     }
 
+    public List tokens() {
+        return tokens;
+    }
+
 }

@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.PointSourceReader;
 import gov.epa.emissions.commons.io.importer.Record;
 
 import java.io.BufferedReader;
@@ -59,18 +58,28 @@ public class PointSourceDataVariationsReaderTest extends MockObjectTestCase {
         assertEquals("7", record.token(10));
         assertEquals("8", record.token(11));
     }
-    
+
     public void testShouldReadSixTokensIntoSecondRecord() throws IOException {
         assertNotNull(reader.read());
         Record record = reader.read();
-        
+
         assertEquals(6, record.size());
-        
+
         assertEquals("10100101", record.token(0));
         assertEquals("462", record.token(1));
         assertEquals("8", record.token(2));
         assertEquals("33", record.token(3));
         assertEquals("-9", record.token(4));
         assertEquals("1", record.token(5));
+    }
+
+    public void testShouldReadCommentsAsItReadsRecords() throws IOException {
+        for (int i = 0; i < 20; i++) {
+            assertNotNull(reader.read());
+        }
+
+        assertTrue("Should be the Packet Terminator", reader.read().isEnd());
+
+        assertEquals(3, reader.comments().size());
     }
 }

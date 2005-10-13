@@ -1,9 +1,13 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.DatabaseSetup;
+import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -39,5 +43,15 @@ public abstract class DbTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         dbSetup.tearDown();
+    }
+
+    protected void createTable(String table, Datasource datasource, ColumnsMetadata cols) throws SQLException {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(table, cols.colNames(), cols.colTypes());
+    }
+
+    protected void dropTable(String table, Datasource datasource) throws Exception, SQLException {
+        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        dbUpdate.dropTable(datasource.getName(), table);
     }
 }
