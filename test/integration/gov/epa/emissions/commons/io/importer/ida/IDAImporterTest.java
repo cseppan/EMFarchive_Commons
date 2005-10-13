@@ -36,7 +36,7 @@ public class IDAImporterTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void testShouldImportASmallAreaFile() throws Exception {
+    public void itestShouldImportASmallAreaFile() throws Exception {
         File file = new File("test/data/ida/small-area.txt");
 
         IDAAreaImporter importer = new IDAAreaImporter(datasource, sqlDataTypes);
@@ -47,7 +47,7 @@ public class IDAImporterTest extends DbTestCase {
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
-    public void testShouldImportASmallPointFile() throws Exception {
+    public void itestShouldImportASmallPointFile() throws Exception {
         File file = new File("test/data/ida/small-point.txt");
 
         IDAPointImporter importer = new IDAPointImporter(datasource, sqlDataTypes);
@@ -58,7 +58,7 @@ public class IDAImporterTest extends DbTestCase {
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
-    public void FIXME_testShouldImportASmallMobileFile() throws Exception {
+    public void testShouldImportASmallMobileFile() throws Exception {
         File file = new File("test/data/ida/small-mobile.txt");
 
         IDAMobileImporter importer = new IDAMobileImporter(datasource, sqlDataTypes);

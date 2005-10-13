@@ -70,7 +70,7 @@ public class IDAHeaderReader {
 	}
 
 	private boolean isPollutantLine(String line) {
-		return (line.startsWith(pollutantTag1));
+		return (line.startsWith(pollutantTag1) ||  (line.startsWith(pollutantTag2)));
 	}
 
 	public List comments() {

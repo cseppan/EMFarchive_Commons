@@ -10,8 +10,8 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
-
 public class IDAMobileImporter {
+	
 	private IDAImporter delegate;
 
 	private SqlDataTypes sqlDataTypes;
@@ -34,6 +34,7 @@ public class IDAMobileImporter {
 					.run(reader, colsMetadata, headerReader.comments(), dataset);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ImporterException("could not import File - "
 					+ file.getAbsolutePath() + " into Dataset - "
 					+ dataset.getName());

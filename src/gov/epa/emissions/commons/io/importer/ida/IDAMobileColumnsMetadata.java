@@ -18,13 +18,12 @@ public class IDAMobileColumnsMetadata implements ColumnsMetadata {
 	public IDAMobileColumnsMetadata(String[] pollutants, SqlDataTypes dataTypes) {
 		String intType = dataTypes.intType();
 		String[] desColTypes = new String[] { intType, intType,
-				dataTypes.stringType(10) };
-		String[] desColNames = new String[] { "STID", "CYID","LINK_ID", "SCC" };
+				dataTypes.stringType(10),dataTypes.stringType(10)};
+		String[] desColNames = new String[] { "STID", "CYID", "LINK_ID", "SCC" };
 		int[] desColWidths = new int[] { 2, 3, 10, 10 };
 		colTypes = addPollTypes(pollutants.length, desColTypes, dataTypes);
 		colNames = addPollNames(pollutants, desColNames);
 		widths = addPollWidths(pollutants.length, desColWidths);
-
 	}
 
 	public int[] widths() {

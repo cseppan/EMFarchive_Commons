@@ -32,7 +32,6 @@ public class IDAImporter {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-			
 		} finally {
 			// TODO: drop the table
 		}
