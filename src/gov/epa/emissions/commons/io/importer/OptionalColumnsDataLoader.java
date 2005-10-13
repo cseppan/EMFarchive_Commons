@@ -57,8 +57,18 @@ public class OptionalColumnsDataLoader {
 
         if (data.size() < cols.colTypes().length)
             cols.addDefaultValuesForOptionals(data);
+        massageNullMarkers(data);
 
         return (String[]) data.toArray(new String[0]);
+    }
+
+    // FIXME: this needs to be applied to ALL data loaders
+    private void massageNullMarkers(List data) {
+        for (int i = 0; i < data.size(); i++) {
+            String element = (String) data.get(i);
+            if (element.equals("-9"))// NULL marker
+                data.set(i, "");
+        }
     }
 
 }

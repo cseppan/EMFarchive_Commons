@@ -55,6 +55,6 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         TableReader tableReader = new TableReader(datasource.getConnection());
 
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
-        assertEquals(20, tableReader.count(datasource.getName(), table));
+        assertEquals(6, tableReader.count(datasource.getName(), table));
     }
 }

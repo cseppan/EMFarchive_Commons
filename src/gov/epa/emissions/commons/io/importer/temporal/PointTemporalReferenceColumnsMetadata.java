@@ -19,7 +19,7 @@ public class PointTemporalReferenceColumnsMetadata implements OptionalColumnsMet
 
     public PointTemporalReferenceColumnsMetadata(SqlDataTypes types) {
         minTypes = new String[] { types.stringType(10), types.intType(), types.intType(), types.intType() };
-        String charType = types.stringType(2);
+        String charType = types.charType();
         optionalTypes = new String[] { charType, types.intType(), charType, charType,
                 charType, charType, charType, charType };
 
@@ -51,5 +51,9 @@ public class PointTemporalReferenceColumnsMetadata implements OptionalColumnsMet
 
     public String[] optionalTypes() {
         return optionalTypes;
+    }
+
+    public String[] minTypes() {
+        return minTypes;
     }
 }

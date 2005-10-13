@@ -4,4 +4,6 @@ public interface OptionalColumnsMetadata extends ColumnsMetadata {
 
     String[] optionalTypes();
 
+    String[] minTypes();
+
 }

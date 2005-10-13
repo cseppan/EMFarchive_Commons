@@ -44,15 +44,47 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
         return null;
     }
 
-    // FIXME: handle inline comments
+    // FIXME: rework this mess
     public void addDefaultValuesForOptionals(List data) {
-//        String last = (String) data.get(data.size() - 1);
-        int fillers = colTypes.size() - data.size() - 1;
+        if (!includesComment(data))
+            addDefaultValuesWithComment(data);
+        else
+            addDefaultValues(data);
+    }
+
+    private void addDefaultValues(List data) {
+        int optionalCount = optionalCount(data);
+        int toAdd = toAdd(optionalCount);
+        int insertAt = insertAt(optionalCount);
+
+        for (int i = 0; i < toAdd; i++)
+            data.add(insertAt + i, "");
+    }
+
+    private int insertAt(int optionalCount) {
+        return base.minTypes().length + 1 + optionalCount;
+    }
+
+    private int toAdd(int optionalCount) {
+        return base.optionalTypes().length - optionalCount;
+    }
+
+    private int optionalCount(List data) {
+        return data.size() - (2 + base.minTypes().length);
+    }
+
+    private void addDefaultValuesWithComment(List data) {
         String[] optionalTypes = base.optionalTypes();
-        for (int i = optionalTypes.length - fillers; i < optionalTypes.length; i++) {
-            data.add("");// default values
-        }
+        int toAdd = colTypes.size() - data.size() - 1;
+
+        for (int i = optionalTypes.length - toAdd; i < optionalTypes.length; i++)
+            data.add("");
         data.add("");// comment
+    }
+
+    private boolean includesComment(List data) {
+        String last = (String) data.get(data.size() - 1);
+        return last.startsWith("!");
     }
 
 }
