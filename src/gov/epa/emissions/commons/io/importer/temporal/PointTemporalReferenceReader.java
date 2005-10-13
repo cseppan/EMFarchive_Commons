@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
@@ -12,13 +11,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PointSourceReader implements Reader {
+public class PointTemporalReferenceReader implements Reader {
 
     private DataReader delegate;
 
     private String header;
 
-    public PointSourceReader(BufferedReader reader, ColumnsMetadata cols) throws IOException {
+    public PointTemporalReferenceReader(BufferedReader reader) throws IOException {
         header = parseHeader(reader.readLine());
         delegate = new DataReader(reader, new WhitespaceDelimitedParser());
     }

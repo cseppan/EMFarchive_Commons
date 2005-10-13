@@ -46,12 +46,13 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
 
     // FIXME: handle inline comments
     public void addDefaultValuesForOptionals(List data) {
+//        String last = (String) data.get(data.size() - 1);
         int fillers = colTypes.size() - data.size() - 1;
         String[] optionalTypes = base.optionalTypes();
         for (int i = optionalTypes.length - fillers; i < optionalTypes.length; i++) {
-            data.add("-9");// default values
+            data.add("");// default values
         }
-        data.add("NA");// comment
+        data.add("");// comment
     }
 
 }

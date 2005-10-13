@@ -7,13 +7,12 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
-import gov.epa.emissions.commons.io.importer.PointSourceTemporalCrossReferenceColumnsMetadata;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 import java.util.Random;
 
-public class PointSourceImporterTest extends DbTestCase {
+public class PointTemporalReferenceImporterTest extends DbTestCase {
 
     private Datasource datasource;
 
@@ -32,7 +31,7 @@ public class PointSourceImporterTest extends DbTestCase {
         dataset.setName("test");
         dataset.setDatasetid(new Random().nextLong());
 
-        PointSourceTemporalCrossReferenceColumnsMetadata base = new PointSourceTemporalCrossReferenceColumnsMetadata(sqlDataTypes);
+        PointTemporalReferenceColumnsMetadata base = new PointTemporalReferenceColumnsMetadata(sqlDataTypes);
         OptionalColumnsTableMetadata cols = new OptionalColumnsTableMetadata(base, sqlDataTypes);
         createTable("POINT_SOURCE", datasource, cols);
     }
@@ -44,7 +43,7 @@ public class PointSourceImporterTest extends DbTestCase {
     public void testShouldImportAFileWithVariableCols() throws Exception {
         File file = new File("test/data/temporal-crossreference/point-source-VARIABLE-COLS.txt");
 
-        PointSourceImporter importer = new PointSourceImporter(datasource, sqlDataTypes);
+        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         assertEquals(20, countRecords("POINT_SOURCE"));
@@ -58,7 +57,7 @@ public class PointSourceImporterTest extends DbTestCase {
     public void IDLE_testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
-        PointSourceImporter importer = new PointSourceImporter(datasource, sqlDataTypes);
+        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         // assert

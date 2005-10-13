@@ -1,12 +1,13 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.importer.OptionalColumnsMetadata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PointSourceTemporalCrossReferenceColumnsMetadata implements OptionalColumnsMetadata {
+public class PointTemporalReferenceColumnsMetadata implements OptionalColumnsMetadata {
 
     private String[] minTypes;
 
@@ -16,7 +17,7 @@ public class PointSourceTemporalCrossReferenceColumnsMetadata implements Optiona
 
     private String[] optionalTypes;
 
-    public PointSourceTemporalCrossReferenceColumnsMetadata(SqlDataTypes types) {
+    public PointTemporalReferenceColumnsMetadata(SqlDataTypes types) {
         minTypes = new String[] { types.stringType(10), types.intType(), types.intType(), types.intType() };
         String charType = types.stringType(2);
         optionalTypes = new String[] { charType, types.intType(), charType, charType,

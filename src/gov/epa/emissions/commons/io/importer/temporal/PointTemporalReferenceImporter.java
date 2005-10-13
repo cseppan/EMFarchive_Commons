@@ -6,22 +6,21 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
-import gov.epa.emissions.commons.io.importer.PointSourceTemporalCrossReferenceColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-public class PointSourceImporter {
+public class PointTemporalReferenceImporter {
 
     private Datasource datasource;
 
     private OptionalColumnsTableMetadata colsMetadata;
 
-    public PointSourceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public PointTemporalReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
-        colsMetadata = new OptionalColumnsTableMetadata(new PointSourceTemporalCrossReferenceColumnsMetadata(
+        colsMetadata = new OptionalColumnsTableMetadata(new PointTemporalReferenceColumnsMetadata(
                 sqlDataTypes), sqlDataTypes);
     }
 
@@ -41,7 +40,7 @@ public class PointSourceImporter {
             throws Exception {
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        Reader reader = new PointSourceReader(fileReader, colsMetadata);
+        Reader reader = new PointTemporalReferenceReader(fileReader);
 
         loader.load(reader, dataset, table);
     }

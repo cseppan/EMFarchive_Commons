@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.temporal.PointTemporalReferenceColumnsMetadata;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -32,7 +33,7 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         File file = new File("test/data/variable-cols.txt");
         reader = new DelimitedFileReader(file);
 
-        colsMetadata = new OptionalColumnsTableMetadata(new PointSourceTemporalCrossReferenceColumnsMetadata(dataTypes), dataTypes);
+        colsMetadata = new OptionalColumnsTableMetadata(new PointTemporalReferenceColumnsMetadata(dataTypes), dataTypes);
         table = "varying";
         createTable(table, datasource, colsMetadata);
     }
