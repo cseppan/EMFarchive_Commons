@@ -1,14 +1,49 @@
 package gov.epa.emissions.commons.io.importer;
 
-public class InternalSource {
+import java.io.Serializable;
+import java.util.StringTokenizer;
 
+public class InternalSource implements Serializable {
+
+	private final String INTERNALSOURCE_COL_DELIMITER=",";
     private String source;
     private String table;
     private String type;
     private String[] cols;
+	private String columns;
     private long sourceSize;
 
-    public String getTable() {
+    /**
+	 * @return Returns the columns.
+	 */
+	public String getColumns() {
+		columns="";
+		if (cols.length>0){
+			for (int i=0;i<cols.length;i++){
+				columns=columns + INTERNALSOURCE_COL_DELIMITER + cols[i]; 
+			}
+			
+		}
+		return columns;
+	}
+
+	/**
+	 * @param columns The columns to set.
+	 */
+	public void setColumns(String columns) {
+		this.columns = columns;
+		
+		StringTokenizer stk = new StringTokenizer(columns,INTERNALSOURCE_COL_DELIMITER);
+		if (columns.length()>0){
+			cols = new String[stk.countTokens()];
+			int i=0;
+			while (stk.hasMoreTokens()){
+				cols[i]=stk.nextToken();
+			}			
+		}
+	}
+
+	public String getTable() {
         return table;
     }
 
