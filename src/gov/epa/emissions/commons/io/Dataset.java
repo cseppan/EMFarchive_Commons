@@ -54,6 +54,7 @@ public interface Dataset extends Serializable {
 
     void setCountry(String country);
 
+    //FIXME: use the TemporalResolution instead
     void setTemporalResolution(String name);
 
     String getTemporalResolution();

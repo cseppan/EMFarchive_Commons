@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.InternalSource;
+import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
@@ -65,16 +66,30 @@ public class OrlImporterTest extends DbTestCase {
         importer.run(file, dataset);
 
         assertEquals(6, countRecords());
-        //dataset properties
+    }
+
+    public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
+        File file = new File("test/data/orl/nc/small-nonpoint.txt");
+
+        OrlNonPointImporter importer = new OrlNonPointImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+
         List sources = dataset.getInternalSources();
         assertEquals(1, sources.size());
-        InternalSource ds = (InternalSource) sources.get(0);
-        assertEquals(dataset.getName(), ds.getTable());
-        assertEquals("ORL NonPoint", ds.getType());
+        InternalSource source = (InternalSource) sources.get(0);
+        assertEquals(dataset.getName(), source.getTable());
+        assertEquals("ORL NonPoint", source.getType());
+
         ColumnsMetadata cols = new TableColumnsMetadata(new OrlNonPointColumnsMetadata(sqlDataTypes), sqlDataTypes);
-        assertEquals(cols.colNames().length, ds.getCols().length);
-        assertEquals(file.getAbsolutePath(), ds.getSource());
-        // TODO: size ?
+        String[] actualCols = source.getCols();
+        String[] expectedCols = cols.colNames();
+        assertEquals(expectedCols.length, actualCols.length);
+        for (int i = 0; i < actualCols.length; i++) {
+            assertEquals(expectedCols[i], actualCols[i]);
+        }
+
+        assertEquals(file.getAbsolutePath(), source.getSource());
+        assertEquals(file.length(), source.getSourceSize());
     }
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {
@@ -122,6 +137,17 @@ public class OrlImporterTest extends DbTestCase {
         GregorianCalendar endCal = new GregorianCalendar(1995, Calendar.DECEMBER, 31, 23, 59, 59);
         endCal.set(Calendar.MILLISECOND, 999);
         assertEquals(endCal.getTime(), end);
+    }
+
+    public void testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
+        File file = new File("test/data/orl/nc/small-onroad.txt");
+
+        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+
+        // assert
+        assertEquals(TemporalResolution.ANNUAL.getName(), dataset.getTemporalResolution());
+        assertEquals("short tons/year", dataset.getUnits());
     }
 
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {

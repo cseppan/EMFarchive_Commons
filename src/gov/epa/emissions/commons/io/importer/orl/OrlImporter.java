@@ -10,6 +10,7 @@ import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.InternalSource;
 import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.io.File;
@@ -67,43 +68,67 @@ public class OrlImporter {
         loadDataset(file, table, colsMetadata, reader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, TableColumnsMetadata colsMetadata, List comments, Dataset dataset) {
+    private void loadDataset(File file, String table, TableColumnsMetadata colsMetadata, List comments, Dataset dataset)
+            throws ImporterException {
+        setInternalSource(file, table, colsMetadata, dataset);
+        addAttributesExtractedFromComments(comments, dataset);
+        dataset.setUnits("short tons/year");
+        dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
+    }
+
+    // TODO: this applies to all the Importers. Needs to be pulled out
+    private void setInternalSource(File file, String table, TableColumnsMetadata colsMetadata, Dataset dataset) {
         InternalSource source = new InternalSource();
         source.setTable(table);
         source.setType(colsMetadata.identify());
         source.setCols(colsMetadata.colNames());
         source.setSource(file.getAbsolutePath());
-        
+        source.setSourceSize(file.length());
+
         dataset.addInternalSource(source);
-        
-        addAttributesFromComments(comments, dataset);
     }
 
-    private void addAttributesFromComments(List comments, Dataset dataset) {
-        StringBuffer description = new StringBuffer();
+    private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
+        // TODO: this probably applies to all importers
+        if (!(tag("#ORL", comments) != null))
+            throw new ImporterException("The tag - 'ORL' is mandatory, and is invalid");
 
+        String country = tag("#COUNTRY", comments);
+        if (country == null || country.length() == 0)
+            throw new ImporterException("The tag - 'COUNTRY' is mandatory, and is invalid");
+        dataset.setCountry(country);
+        dataset.setRegion(country);
+
+        String year = tag("#YEAR", comments);
+        if (year == null || year.length() == 0)
+            throw new ImporterException("The tag - 'YEAR' is mandatory, and is invalid");
+        dataset.setYear(Integer.parseInt(year));
+        setStartStopDateTimes(dataset, Integer.parseInt(year));
+
+        dataset.setDescription(descriptions(comments));
+    }
+
+    private String descriptions(List comments) {
+        StringBuffer description = new StringBuffer();
         for (Iterator iter = comments.iterator(); iter.hasNext();) {
             String comment = (String) iter.next();
-            if (comment.startsWith("#COUNTRY")) {
-                String country = comment.substring("#COUNTRY".length()).trim();
-                dataset.setCountry(country);
-                dataset.setRegion(country);
-            }
 
-            if (comment.startsWith("#YEAR")) {
-                String year = comment.substring("#YEAR".length()).trim();
-                int yearInt = Integer.parseInt(year);
-                dataset.setYear(yearInt);
-
-                setStartStopDateTimes(dataset, yearInt);
-            }
-
-            // TODO: this probably applies to all importers
             if (comment.startsWith("#DESC"))
                 description.append(comment.substring("#DESC".length()) + "\n");
         }
 
-        dataset.setDescription(description.toString());
+        return description.toString();
+    }
+
+    private String tag(String tag, List comments) {
+        for (Iterator iter = comments.iterator(); iter.hasNext();) {
+            String comment = (String) iter.next();
+            if (comment.startsWith(tag)) {
+                return comment.substring(tag.length()).trim();
+            }
+        }
+
+        return null;
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {

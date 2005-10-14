@@ -6,6 +6,7 @@ public class InternalSource {
     private String table;
     private String type;
     private String[] cols;
+    private long sourceSize;
 
     public String getTable() {
         return table;
@@ -37,6 +38,14 @@ public class InternalSource {
 
     public void setCols(String[] cols) {
         this.cols = cols;
+    }
+
+    public long getSourceSize() {
+        return sourceSize;
+    }
+
+    public void setSourceSize(long sourceSize) {
+        this.sourceSize = sourceSize;
     }
 
 }
