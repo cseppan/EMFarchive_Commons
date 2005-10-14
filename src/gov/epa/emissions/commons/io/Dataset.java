@@ -84,7 +84,15 @@ public interface Dataset extends Serializable {
     // contain details of each table name/table type/ source/ size
     List getInternalSources();
     void setInternalSources(List internalSources);
-    
+    void addInternalSource(InternalSource source);
+
+    // Datasets for external files will have a list of 
+    // External Source objects.  An external source object will
+    // contain details of each source (sourcename etc)
+    List getExternalSources();
+    void setExternalSources(List externalSources);
+    void addExternalSource(ExternalSource source);
+
     // convenience methods
     Table getTable(String tableType);
 
@@ -92,5 +100,4 @@ public interface Dataset extends Serializable {
 
     public Table[] getTables();
 
-    void addInternalSource(InternalSource source);
 }

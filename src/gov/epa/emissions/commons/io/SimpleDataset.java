@@ -48,6 +48,7 @@ public class SimpleDataset implements Dataset {
     private List datasources;
     
     private List internalSources;
+    private List externalSources;
    
     private List tables;
 
@@ -234,6 +235,18 @@ public class SimpleDataset implements Dataset {
     public void addInternalSource(InternalSource source) {
         internalSources.add(source);
     }
+
+	public List getExternalSources() {
+		return this.externalSources;
+	}
+
+	public void setExternalSources(List externalSources) {
+		this.externalSources=externalSources;
+	}
+
+	public void addExternalSource(ExternalSource source) {
+		externalSources.add(source);
+	}
 
     
 
