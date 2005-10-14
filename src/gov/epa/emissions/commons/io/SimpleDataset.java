@@ -227,13 +227,14 @@ public class SimpleDataset implements Dataset {
 		return this.internalSources;
 	}
 
-	public void setInternalSources(List internalsources) {
-		this.internalSources=internalsources;
+	public void setInternalSources(List internalSources) {
+		this.internalSources=internalSources;
 	}
 
     public void addInternalSource(InternalSource source) {
         internalSources.add(source);
     }
+
     
 
 }
