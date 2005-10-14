@@ -5,6 +5,9 @@ import java.util.StringTokenizer;
 
 public class InternalSource implements Serializable {
 
+	//do not touch needed for hibernate mapping
+	private long internalsourceid;
+	
 	private final String INTERNALSOURCE_COL_DELIMITER=",";
     private String source;
     private String table;
@@ -82,5 +85,19 @@ public class InternalSource implements Serializable {
     public void setSourceSize(long sourceSize) {
         this.sourceSize = sourceSize;
     }
+
+	/**
+	 * @return Returns the internalsourceid.
+	 */
+	public long getInternalsourceid() {
+		return internalsourceid;
+	}
+
+	/**
+	 * @param internalsourceid The internalsourceid to set.
+	 */
+	public void setInternalsourceid(long internalsourceid) {
+		this.internalsourceid = internalsourceid;
+	}
 
 }
