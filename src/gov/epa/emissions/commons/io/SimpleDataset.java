@@ -45,7 +45,9 @@ public class SimpleDataset implements Dataset {
     private Date endDateTime;
 
     private List datasources;
-
+    
+    private List internalsources;
+   
     private List tables;
 
     private DatasetType datasetType;
@@ -218,5 +220,14 @@ public class SimpleDataset implements Dataset {
     public DatasetType getDatasetType() {
         return datasetType;
     }
+
+	public List getInternalSources() {
+		return this.internalsources;
+	}
+
+	public void setInternalSources(List internalsources) {
+		this.internalsources=internalsources;
+	}
+    
 
 }

@@ -77,6 +77,12 @@ public interface Dataset extends Serializable {
 
     List getDatasources();
 
+    // Datasets for non-external files will have a list of 
+    // Internal Source objects.  An internal source object will
+    // contain details of each table name/table type/ source/ size
+    List getInternalSources();
+    void setInternalSources(List internalsources);
+    
     // convenience methods
     Table getTable(String tableType);
 
