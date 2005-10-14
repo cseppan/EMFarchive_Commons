@@ -30,17 +30,6 @@ public class ORLExporter extends FixedFormatExporter {
         return new ORLExporter(dbServer, new NoOverwriteStrategy(dbServer, typesFactory));
     }
 
-    // FIXME: what's this gibberish ?
-    // Now start writing the output data. Here are some notes
-    // The database field of column 2 is the state abbreviation code.
-    // Ignore it.
-    // The database field called CAS is now called POLL.
-    // Separate the fields by a delimeter character, usually a comma
-    // Always check whether a data value is a null; if so, write out a
-    // -9
-    // For Annual Emisions and Average Day Emissions, use an exponential
-    // format as these data values can be very small
-
     public void run(Dataset dataset, File file) throws Exception {
         writeStrategy.write(dataset, file);
     }

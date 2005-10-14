@@ -110,12 +110,8 @@ public class OrlImporter {
 
     private String descriptions(List comments) {
         StringBuffer description = new StringBuffer();
-        for (Iterator iter = comments.iterator(); iter.hasNext();) {
-            String comment = (String) iter.next();
-
-            if (comment.startsWith("#DESC"))
-                description.append(comment.substring("#DESC".length()) + "\n");
-        }
+        for (Iterator iter = comments.iterator(); iter.hasNext();)
+            description.append(iter.next() + "\n");
 
         return description.toString();
     }
