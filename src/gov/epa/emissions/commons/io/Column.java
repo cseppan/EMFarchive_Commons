@@ -1,17 +1,21 @@
 package gov.epa.emissions.commons.io;
 
-import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import corejava.Format;
-
 public class Column {
 
-    public static final Format FORMAT = new Format("%5d");
+    private ColumnFormatter formatter;
 
-    public void format(ResultSet data, PrintWriter writer) throws SQLException {
-        writer.print(FORMAT.format(data.getInt("FIPS")));
+    private String name;
+
+    public Column(ColumnFormatter formatter, String name) {
+        this.formatter = formatter;
+        this.name = name;
+    }
+
+    public String format(ResultSet data) throws SQLException {
+        return formatter.format(name, data);
     }
 
 }

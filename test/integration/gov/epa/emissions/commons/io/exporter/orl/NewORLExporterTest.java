@@ -70,8 +70,8 @@ public class NewORLExporterTest extends DbTestCase {
         assertEquals(headers(dataset.getDescription()).size(), lines.size());
     }
 
-    public void testShouldExportFirstRecordOfTable() throws Exception {
-        File file = File.createTempFile("onroad", "orl");
+    public void testShouldExportTableRowsAsRecords() throws Exception {
+        File file = File.createTempFile("onroad", ".orl");
         file.deleteOnExit();
 
         exporter.export(file);
@@ -79,6 +79,10 @@ public class NewORLExporterTest extends DbTestCase {
         // assert headers
         List lines = readData(file);
         assertEquals(18, lines.size());
+        String line = (String) lines.get(0);
+        //FIXME: revisit once 'comments' is moved from Table to specific ColumnsMetadata
+//        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, ! EPA-derived", line);
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9", line);
     }
 
     private List readData(File file) throws IOException {
@@ -86,7 +90,6 @@ public class NewORLExporterTest extends DbTestCase {
 
         BufferedReader r = new BufferedReader(new FileReader(file));
         for (String line = r.readLine(); line != null; line = r.readLine()) {
-            System.out.println(line);
             if (isNotEmpty(line) && !isComment(line))
                 data.add(line);
         }

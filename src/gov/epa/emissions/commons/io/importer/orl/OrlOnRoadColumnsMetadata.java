@@ -34,9 +34,13 @@ public class OrlOnRoadColumnsMetadata implements ORLColumnsMetadata {
     }
 
     public Column[] cols() {
-        Column fips = new Column();
+        Column fips = new Column(new IntegerFormatter(), "FIPS");
+        Column scc = new Column(new StringFormatter(10), "SCC");
+        Column pollutant = new Column(new StringFormatter(16), "POLL");
+        Column annualEmissions = new Column(new RealFormatter(), "ANN_EMIS");
+        Column averageDailyEmissions = new Column(new RealFormatter(), "AVD_EMIS");
 
-        return new Column[] { fips };
+        return new Column[] { fips, scc, pollutant, annualEmissions, averageDailyEmissions };
     }
 
 }

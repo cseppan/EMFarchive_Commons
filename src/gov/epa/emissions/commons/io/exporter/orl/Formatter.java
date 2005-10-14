@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-interface Formatter {
+public interface Formatter {
     static final String DELIMITER = ",";
 
     void format(ResultSet data, PrintWriter writer) throws SQLException;

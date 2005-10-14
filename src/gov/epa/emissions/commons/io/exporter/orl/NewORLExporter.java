@@ -36,6 +36,10 @@ public class NewORLExporter {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
 
+        write(file, writer);
+    }
+
+    private void write(File file, PrintWriter writer) throws ExporterException {
         try {
             writeHeaders(writer, dataset);
             writerData(writer, dataset, datasource);
@@ -44,6 +48,10 @@ public class NewORLExporter {
         } finally {
             writer.close();
         }
+    }
+
+    private void writeHeaders(PrintWriter writer, Dataset dataset) {
+        writer.println(dataset.getDescription());
     }
 
     private void writerData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
@@ -58,13 +66,11 @@ public class NewORLExporter {
 
     private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
-            cols[i].format(data, writer);
+            writer.print(cols[i].format(data));
+            if (i + 1 < cols.length)
+                writer.print(", ");// delimiter
         }
         writer.println();
-    }
-
-    private void writeHeaders(PrintWriter writer, Dataset dataset) {
-        writer.println(dataset.getDescription());
     }
 
 }
