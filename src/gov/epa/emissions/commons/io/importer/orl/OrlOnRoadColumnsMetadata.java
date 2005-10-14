@@ -1,9 +1,10 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.exporter.orl.ORLColumnsMetadata;
 
-public class OrlOnRoadColumnsMetadata implements ColumnsMetadata {
+public class OrlOnRoadColumnsMetadata implements ORLColumnsMetadata {
 
     private String[] colTypes;
 
@@ -30,6 +31,12 @@ public class OrlOnRoadColumnsMetadata implements ColumnsMetadata {
 
     public String identify() {
         return "ORL OnRoad";
+    }
+
+    public Column[] cols() {
+        Column fips = new Column();
+
+        return new Column[] { fips };
     }
 
 }

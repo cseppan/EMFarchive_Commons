@@ -7,7 +7,8 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.orl.OrlPointImporter;
+import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -28,6 +29,8 @@ public class NewORLExporterTest extends DbTestCase {
 
     private Dataset dataset;
 
+    private NewORLExporter exporter;
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -40,11 +43,14 @@ public class NewORLExporterTest extends DbTestCase {
         dataset.setDatasetid(new Random().nextLong());
 
         doImport();
+
+        ORLColumnsMetadata colsMetadata = new OrlOnRoadColumnsMetadata(sqlDataTypes);
+        exporter = new NewORLExporter(dataset, datasource, colsMetadata);
     }
 
     private void doImport() throws ImporterException {
-        File file = new File("test/data/orl/nc/small-point.txt");
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        File file = new File("test/data/orl/nc/small-onroad.txt");
+        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
     }
 
@@ -53,17 +59,43 @@ public class NewORLExporterTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void testShouldExportHeadersForPoint() throws Exception {
-        NewORLExporter exporter = new NewORLExporter(dataset);
-
-        File file = File.createTempFile("point", "orl");
+    public void testShouldExportHeadersForOnRoad() throws Exception {
+        File file = File.createTempFile("onroad", "orl");
         file.deleteOnExit();
 
         exporter.export(file);
 
         // assert headers
-        List lines = read(file);
+        List lines = readComments(file);
         assertEquals(headers(dataset.getDescription()).size(), lines.size());
+    }
+
+    public void testShouldExportFirstRecordOfTable() throws Exception {
+        File file = File.createTempFile("onroad", "orl");
+        file.deleteOnExit();
+
+        exporter.export(file);
+
+        // assert headers
+        List lines = readData(file);
+        assertEquals(18, lines.size());
+    }
+
+    private List readData(File file) throws IOException {
+        List data = new ArrayList();
+
+        BufferedReader r = new BufferedReader(new FileReader(file));
+        for (String line = r.readLine(); line != null; line = r.readLine()) {
+            System.out.println(line);
+            if (isNotEmpty(line) && !isComment(line))
+                data.add(line);
+        }
+
+        return data;
+    }
+
+    private boolean isNotEmpty(String line) {
+        return line.length() != 0;
     }
 
     private List headers(String description) {
@@ -75,16 +107,20 @@ public class NewORLExporterTest extends DbTestCase {
         return headers;
     }
 
-    private List read(File file) throws IOException {
+    private List readComments(File file) throws IOException {
         List lines = new ArrayList();
 
         BufferedReader r = new BufferedReader(new FileReader(file));
         for (String line = r.readLine(); line != null; line = r.readLine()) {
-            if (line.length() != 0)
+            if (isNotEmpty(line) && isComment(line))
                 lines.add(line);
         }
 
         return lines;
+    }
+
+    private boolean isComment(String line) {
+        return line.startsWith("#");
     }
 
 }
