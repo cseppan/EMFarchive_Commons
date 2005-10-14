@@ -23,8 +23,8 @@ public class IDAFileReader implements Reader {
 			List comments) {
 		fileReader = reader;
 		this.colsMetadata = colsMetadata;
-		comments = new ArrayList();
-		comments.addAll(comments);
+		this.comments = new ArrayList();
+		this.comments.addAll(comments);
 	}
 
 	public void close() throws IOException {

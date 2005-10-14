@@ -35,7 +35,7 @@ public class IDAAreaImporter {
 		} catch (Exception e) {
 			throw new ImporterException("could not import File - "
 					+ file.getAbsolutePath() + " into Dataset - "
-					+ dataset.getName());
+					+ dataset.getName() + "\n" + e.getMessage());
 		}
 
 	}

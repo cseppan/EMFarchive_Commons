@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.io.BufferedReader;
@@ -47,7 +48,39 @@ public class IDAImporter {
 		Reader idaReader = new IDAFileReader(reader, colsMetadata, comments);
 		DataLoader loader = new DataLoader(datasource, tableColMetadata);
 
+		Record record = idaReader.read();
+		
+		List headerComments = idaReader.comments();
+		checkHeaderTags(headerComments);
+		
+		loader.insertRow(record,dataset,table);
 		loader.load(idaReader, dataset, table);
+	}
+
+	private void checkHeaderTags(List headerComments) throws Exception {
+		checkTag("#IDA",headerComments);
+		checkTag("#COUNTRY",headerComments);
+		checkTag("#YEAR",headerComments);
+		checkTag("#DATA","#POLID",headerComments);
+	}
+
+	private void checkTag(String tag1, String tag2, List headerComments) throws Exception {
+		for(int i=0;i<headerComments.size();i++){
+			String comment = (String) headerComments.get(i);
+			if(comment.trim().startsWith(tag1) || comment.trim().startsWith(tag2))
+				return;
+		}
+		throw new Exception("Could not find tag '"+tag1 +"' or '"+tag2);
+		
+	}
+
+	private void checkTag(String tag,List headerComents) throws Exception {
+		for(int i=0;i<headerComents.size();i++){
+			String comment = (String) headerComents.get(i);
+			if(comment.trim().startsWith(tag))
+				return;
+		}
+		throw new Exception("Could not find tag '"+tag +"'");
 	}
 
 	private String table(String datasetName) {
@@ -60,5 +93,6 @@ public class IDAImporter {
 		tableDefinition.createTable(table, colsMetadata.colNames(),
 				colsMetadata.colTypes());
 	}
+
 
 }
