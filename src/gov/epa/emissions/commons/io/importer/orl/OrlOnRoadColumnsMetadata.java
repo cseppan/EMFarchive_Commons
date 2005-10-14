@@ -28,4 +28,8 @@ public class OrlOnRoadColumnsMetadata implements ColumnsMetadata {
         return colNames;
     }
 
+    public String identify() {
+        return "ORL OnRoad";
+    }
+
 }

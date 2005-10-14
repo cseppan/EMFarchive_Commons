@@ -5,7 +5,10 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.InternalSource;
+import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -13,6 +16,7 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Random;
 
 public class OrlImporterTest extends DbTestCase {
@@ -61,6 +65,16 @@ public class OrlImporterTest extends DbTestCase {
         importer.run(file, dataset);
 
         assertEquals(6, countRecords());
+        //dataset properties
+        List sources = dataset.getInternalSources();
+        assertEquals(1, sources.size());
+        InternalSource ds = (InternalSource) sources.get(0);
+        assertEquals(dataset.getName(), ds.getTable());
+        assertEquals("ORL NonPoint", ds.getType());
+        ColumnsMetadata cols = new TableColumnsMetadata(new OrlNonPointColumnsMetadata(sqlDataTypes), sqlDataTypes);
+        assertEquals(cols.colNames().length, ds.getCols().length);
+        assertEquals(file.getAbsolutePath(), ds.getSource());
+        // TODO: size ?
     }
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {

@@ -45,4 +45,8 @@ public class TableColumnsMetadata implements ColumnsMetadata {
         return "Dataset_Id";
     }
 
+    public String identify() {
+        return base.identify();
+    }
+
 }

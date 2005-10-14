@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.InternalSource;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
@@ -63,10 +64,22 @@ public class OrlImporter {
         Reader reader = new DelimitedFileReader(file);
 
         loader.load(reader, dataset, table);
-        loadDataset(reader.comments(), dataset);
+        loadDataset(file, table, colsMetadata, reader.comments(), dataset);
     }
 
-    private void loadDataset(List comments, Dataset dataset) {
+    private void loadDataset(File file, String table, TableColumnsMetadata colsMetadata, List comments, Dataset dataset) {
+        InternalSource source = new InternalSource();
+        source.setTable(table);
+        source.setType(colsMetadata.identify());
+        source.setCols(colsMetadata.colNames());
+        source.setSource(file.getAbsolutePath());
+        
+        dataset.addInternalSource(source);
+        
+        addAttributesFromComments(comments, dataset);
+    }
+
+    private void addAttributesFromComments(List comments, Dataset dataset) {
         StringBuffer description = new StringBuffer();
 
         for (Iterator iter = comments.iterator(); iter.hasNext();) {

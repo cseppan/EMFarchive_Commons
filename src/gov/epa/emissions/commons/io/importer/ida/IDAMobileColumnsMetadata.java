@@ -74,4 +74,8 @@ public class IDAMobileColumnsMetadata implements ColumnsMetadata {
 		return widths;
 	}
 
+    public String identify() {
+        return "IDA Mobile";
+    }
+
 }

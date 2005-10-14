@@ -8,7 +8,10 @@ public class DelimitedColumnsMetadata implements ColumnsMetadata {
 
     private String[] colNames;
 
-    public DelimitedColumnsMetadata(int cols, SqlDataTypes typeMapper) {
+    private String identifier;
+
+    public DelimitedColumnsMetadata(String identifier, int cols, SqlDataTypes typeMapper) {
+        this.identifier = identifier;
         // TODO: is the size sufficient ?
         colTypes = new String[cols];
         colNames = new String[cols];
@@ -29,6 +32,10 @@ public class DelimitedColumnsMetadata implements ColumnsMetadata {
 
     public String[] colNames() {
         return colNames;
+    }
+
+    public String identify() {
+        return identifier;
     }
 
 }

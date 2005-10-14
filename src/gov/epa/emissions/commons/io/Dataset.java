@@ -10,6 +10,8 @@
 
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.io.importer.InternalSource;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -89,4 +91,6 @@ public interface Dataset extends Serializable {
     void addTable(Table importedTable);
 
     public Table[] getTables();
+
+    void addInternalSource(InternalSource source);
 }

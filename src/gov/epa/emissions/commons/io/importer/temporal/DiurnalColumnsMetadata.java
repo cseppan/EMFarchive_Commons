@@ -36,4 +36,8 @@ public class DiurnalColumnsMetadata implements ColumnsMetadata {
         return colNames;
     }
 
+    public String identify() {
+        return "Diurnal - Temporal Profile";
+    }
+
 }

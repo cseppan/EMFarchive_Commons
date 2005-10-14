@@ -32,4 +32,8 @@ public class WeeklyColumnsMetadata implements ColumnsMetadata {
         return colNames;
     }
 
+    public String identify() {
+        return "Weekly - Temporal Profile";
+    }
+
 }

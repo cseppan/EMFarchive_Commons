@@ -54,4 +54,8 @@ public class IDAActivityColumnsMetadata implements ColumnsMetadata {
 		return (String[]) names.toArray(new String[0]);
 	}
 
+    public String identify() {
+        return "IDA Activity";
+    }
+
 }

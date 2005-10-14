@@ -56,4 +56,8 @@ public class PointTemporalReferenceColumnsMetadata implements OptionalColumnsMet
     public String[] minTypes() {
         return minTypes;
     }
+
+    public String identify() {
+        return "Point - Temporal Reference";
+    }
 }

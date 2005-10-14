@@ -31,7 +31,7 @@ public class DelimitedFileLoaderTest extends DbTestCase {
         File file = new File("test/data/orl/SimpleDelimited.txt");
         reader = new DelimitedFileReader(file);
 
-        colsMetadata = new TableColumnsMetadata(new DelimitedColumnsMetadata(7, dataType), dataType);
+        colsMetadata = new TableColumnsMetadata(new DelimitedColumnsMetadata("test", 7, dataType), dataType);
         createTable("SimpleDelimited", datasource, colsMetadata);
     }
 

@@ -87,4 +87,8 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
         return last.startsWith("!");
     }
 
+    public String identify() {
+        return base.identify();
+    }
+
 }

@@ -116,4 +116,8 @@ public class IDAPointColumnsMetadata implements ColumnsMetadata {
 		return widths;
 	}
 
+    public String identify() {
+        return "IDA Point";
+    }
+
 }

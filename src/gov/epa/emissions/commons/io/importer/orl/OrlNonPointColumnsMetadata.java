@@ -31,4 +31,8 @@ public class OrlNonPointColumnsMetadata implements ColumnsMetadata {
         return colNames;
     }
 
+    public String identify() {
+        return "ORL NonPoint";
+    }
+
 }

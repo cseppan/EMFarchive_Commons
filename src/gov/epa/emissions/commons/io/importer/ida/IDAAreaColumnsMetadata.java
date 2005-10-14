@@ -87,4 +87,8 @@ public class IDAAreaColumnsMetadata implements ColumnsMetadata {
 		return widths;
 	}
 
+    public String identify() {
+        return "IDA Area";
+    }
+
 }

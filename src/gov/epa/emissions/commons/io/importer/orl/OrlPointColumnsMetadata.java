@@ -35,4 +35,8 @@ public class OrlPointColumnsMetadata implements ColumnsMetadata {
         return colNames;
     }
 
+    public String identify() {
+        return "ORL Point";
+    }
+
 }

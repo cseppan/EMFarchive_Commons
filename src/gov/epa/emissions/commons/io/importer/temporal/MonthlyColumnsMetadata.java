@@ -34,4 +34,8 @@ public class MonthlyColumnsMetadata implements ColumnsMetadata {
         return colNames;
     }
 
+    public String identify() {
+        return "Monthly - Temporal Profile";
+    }
+
 }

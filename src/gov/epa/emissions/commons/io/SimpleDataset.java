@@ -10,6 +10,8 @@
 
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.io.importer.InternalSource;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public class SimpleDataset implements Dataset {
 
     private List datasources;
     
-    private List internalsources;
+    private List internalSources;
    
     private List tables;
 
@@ -58,6 +60,7 @@ public class SimpleDataset implements Dataset {
      */
     public SimpleDataset() {
         tables = new ArrayList();
+        internalSources = new ArrayList();
     }
 
     public String getDatasetTypeName() {
@@ -222,12 +225,16 @@ public class SimpleDataset implements Dataset {
     }
 
 	public List getInternalSources() {
-		return this.internalsources;
+		return this.internalSources;
 	}
 
 	public void setInternalSources(List internalsources) {
-		this.internalsources=internalsources;
+		this.internalSources=internalsources;
 	}
+
+    public void addInternalSource(InternalSource source) {
+        internalSources.add(source);
+    }
     
 
 }
