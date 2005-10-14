@@ -10,7 +10,6 @@
 
 package gov.epa.emissions.commons.io;
 
-import gov.epa.emissions.commons.io.importer.InternalSource;
 
 import java.util.ArrayList;
 import java.util.Date;

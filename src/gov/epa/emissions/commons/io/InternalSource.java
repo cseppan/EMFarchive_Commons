@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
 import java.util.StringTokenizer;
