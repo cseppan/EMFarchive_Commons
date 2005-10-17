@@ -5,13 +5,16 @@ import java.sql.SQLException;
 
 public class Column {
 
-    private ColumnFormatter formatter;
-
     private String name;
 
-    public Column(ColumnFormatter formatter, String name) {
-        this.formatter = formatter;
+    private String sqlType;
+
+    private ColumnFormatter formatter;
+
+    public Column(String sqlType, ColumnFormatter formatter, String name) {
         this.name = name;
+        this.sqlType = sqlType;
+        this.formatter = formatter;
     }
 
     public String format(ResultSet data) throws SQLException {
@@ -20,6 +23,10 @@ public class Column {
 
     public String name() {
         return name;
+    }
+
+    public String sqlType() {
+        return sqlType;
     }
 
 }
