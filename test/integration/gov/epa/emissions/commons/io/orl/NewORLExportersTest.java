@@ -4,19 +4,11 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.NewExporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NewImporter;
-import gov.epa.emissions.commons.io.orl.NewORLExporter;
-import gov.epa.emissions.commons.io.orl.OrlNonPointColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.OrlNonPointImporter;
-import gov.epa.emissions.commons.io.orl.OrlNonRoadColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.OrlNonRoadImporter;
-import gov.epa.emissions.commons.io.orl.OrlOnRoadColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.OrlOnRoadImporter;
-import gov.epa.emissions.commons.io.orl.OrlPointColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.OrlPointImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -58,7 +50,8 @@ public class NewORLExportersTest extends DbTestCase {
         NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-onroad.txt");
 
-        File file = doExport(new OrlOnRoadColumnsMetadata(sqlDataTypes));
+        NewExporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
+        File file = doExport(exporter);
 
         // assert headers
         assertComments(file);
@@ -74,7 +67,8 @@ public class NewORLExportersTest extends DbTestCase {
         NewImporter importer = new OrlNonRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
 
-        File file = doExport(new OrlNonRoadColumnsMetadata(sqlDataTypes));
+        NewExporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
+        File file = doExport(exporter);
 
         // assert headers
         assertComments(file);
@@ -90,7 +84,8 @@ public class NewORLExportersTest extends DbTestCase {
         NewImporter importer = new OrlNonPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonpoint.txt");
 
-        File file = doExport(new OrlNonPointColumnsMetadata(sqlDataTypes));
+        NewExporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
+        File file = doExport(exporter);
 
         // assert headers
         assertComments(file);
@@ -108,7 +103,8 @@ public class NewORLExportersTest extends DbTestCase {
         NewImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-point.txt");
 
-        File file = doExport(new OrlPointColumnsMetadata(sqlDataTypes));
+        NewExporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
+        File file = doExport(exporter);
 
         // assert headers
         assertComments(file);
@@ -128,11 +124,10 @@ public class NewORLExportersTest extends DbTestCase {
         assertEquals(headers(dataset.getDescription()).size(), comments.size());
     }
 
-    private File doExport(ORLColumnsMetadata colsMetadata) throws Exception {
+    private File doExport(NewExporter exporter) throws Exception {
         File file = File.createTempFile("exported", "orl");
         file.deleteOnExit();
 
-        NewORLExporter exporter = new NewORLExporter(dataset, datasource, colsMetadata);
         exporter.export(file);
 
         return file;

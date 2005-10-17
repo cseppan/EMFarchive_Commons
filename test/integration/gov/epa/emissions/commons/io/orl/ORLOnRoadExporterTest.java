@@ -4,13 +4,11 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.NewExporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NewImporter;
-import gov.epa.emissions.commons.io.orl.NewORLExporter;
-import gov.epa.emissions.commons.io.orl.OrlOnRoadColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.OrlOnRoadImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -31,7 +29,7 @@ public class ORLOnRoadExporterTest extends DbTestCase {
 
     private Dataset dataset;
 
-    private NewORLExporter exporter;
+    private NewExporter exporter;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -46,8 +44,7 @@ public class ORLOnRoadExporterTest extends DbTestCase {
 
         doImport();
 
-        ORLColumnsMetadata colsMetadata = new OrlOnRoadColumnsMetadata(sqlDataTypes);
-        exporter = new NewORLExporter(dataset, datasource, colsMetadata);
+        exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
     }
 
     private void doImport() throws ImporterException {
@@ -82,8 +79,10 @@ public class ORLOnRoadExporterTest extends DbTestCase {
         List lines = readData(file);
         assertEquals(18, lines.size());
         String line = (String) lines.get(0);
-        //FIXME: revisit once 'comments' is moved from Table to specific ColumnsMetadata
-//        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, ! EPA-derived", line);
+        // FIXME: revisit once 'comments' is moved from Table to specific
+        // ColumnsMetadata
+        // assertEquals("37001, 2201001150, 100414, 1.0626200e+000, -9, !
+        // EPA-derived", line);
         assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9", line);
     }
 
