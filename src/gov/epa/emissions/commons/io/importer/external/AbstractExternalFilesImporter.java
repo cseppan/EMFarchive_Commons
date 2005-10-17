@@ -52,9 +52,18 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 	public void run(File[] files, Dataset dataset, boolean overwrite)
 			throws Exception {
 
-		//Note:  For any external file in this hierarch the body of this method is empty
-		
+        	log.debug("updating non-ORL dataset");
+        	updateExternalDataset(dataset,files);
+        }	
+
+	private void updateExternalDataset(Dataset dataset, File[] files) {
+    	List fileNames = new ArrayList();
+    	for (int i=0; i<files.length;i++){
+    		fileNames.add(files[i].getAbsolutePath());
+    	}
+    	dataset.setExternalSources(fileNames);
 	}
+
 
 	public File validateFile(File path, String fileName) throws Exception {
         log.debug("begin check if file exists " + fileName);
