@@ -21,13 +21,13 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class OrlImporter {
+public class ORLImporter {
 
     private Datasource datasource;
 
     private TableColumnsMetadata colsMetadata;
 
-    public OrlImporter(Datasource datasource, ColumnsMetadata cols, SqlDataTypes sqlDataTypes) {
+    public ORLImporter(Datasource datasource, ColumnsMetadata cols, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
         colsMetadata = new TableColumnsMetadata(cols, sqlDataTypes);
     }

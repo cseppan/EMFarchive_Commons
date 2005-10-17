@@ -7,7 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.orl.OrlPointImporter;
+import gov.epa.emissions.commons.io.orl.ORLPointImporter;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
@@ -36,7 +36,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingTokensInData() throws Exception {
         File file = new File("test/data/orl/nc/BAD-point.txt");
 
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
             importer.run(file, dataset);
@@ -53,7 +53,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingORLTagInHeader() throws Exception {
         File file = new File("test/data/orl/nc/MISSING-ORL-TAG-IN-HEADER-point.txt");
 
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
             importer.run(file, dataset);
@@ -70,7 +70,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingCountryTagInHeader() throws Exception {
         File file = new File("test/data/orl/nc/MISSING-COUNTRY-TAG-IN-HEADER-point.txt");
 
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
             importer.run(file, dataset);
@@ -87,7 +87,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringEmptyCountryTagInHeader() throws Exception {
         File file = new File("test/data/orl/nc/EMPTY-COUNTRY-TAG-IN-HEADER-point.txt");
 
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
             importer.run(file, dataset);
@@ -104,7 +104,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingYearTagInHeader() throws Exception {
         File file = new File("test/data/orl/nc/MISSING-YEAR-TAG-IN-HEADER-point.txt");
 
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
             importer.run(file, dataset);
@@ -121,7 +121,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringEmptyYearTagInHeader() throws Exception {
         File file = new File("test/data/orl/nc/EMPTY-YEAR-TAG-IN-HEADER-point.txt");
 
-        OrlPointImporter importer = new OrlPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
             importer.run(file, dataset);

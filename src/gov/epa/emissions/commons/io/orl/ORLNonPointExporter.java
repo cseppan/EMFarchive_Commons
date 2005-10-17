@@ -13,7 +13,7 @@ public class ORLNonPointExporter implements NewExporter {
     private NewORLExporter delegate;
 
     public ORLNonPointExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ORLColumnsMetadata colsMetadata = new OrlNonPointColumnsMetadata(sqlDataTypes);
+        ORLColumnsMetadata colsMetadata = new ORLNonPointColumnsMetadata(sqlDataTypes);
         delegate = new NewORLExporter(dataset, datasource, colsMetadata);
     }
 

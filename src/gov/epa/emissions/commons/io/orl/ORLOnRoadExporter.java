@@ -13,7 +13,7 @@ public class ORLOnRoadExporter implements NewExporter {
     private NewORLExporter delegate;
 
     public ORLOnRoadExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ORLColumnsMetadata colsMetadata = new OrlOnRoadColumnsMetadata(sqlDataTypes);
+        ORLColumnsMetadata colsMetadata = new ORLOnRoadColumnsMetadata(sqlDataTypes);
         delegate = new NewORLExporter(dataset, datasource, colsMetadata);
     }
 

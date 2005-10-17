@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NewORLExporter {
+class NewORLExporter {
 
     private Dataset dataset;
 

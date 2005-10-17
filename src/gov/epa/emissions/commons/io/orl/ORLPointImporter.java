@@ -9,13 +9,13 @@ import gov.epa.emissions.commons.io.importer.NewImporter;
 
 import java.io.File;
 
-public class OrlPointImporter implements NewImporter {
+public class ORLPointImporter implements NewImporter {
 
-    private OrlImporter delegate;
+    private ORLImporter delegate;
 
-    public OrlPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ColumnsMetadata cols = new OrlPointColumnsMetadata(sqlDataTypes);
-        delegate = new OrlImporter(datasource, cols, sqlDataTypes);
+    public ORLPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+        ColumnsMetadata cols = new ORLPointColumnsMetadata(sqlDataTypes);
+        delegate = new ORLImporter(datasource, cols, sqlDataTypes);
     }
 
     public void run(File file, Dataset dataset) throws ImporterException {

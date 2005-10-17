@@ -7,13 +7,13 @@ import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.SmallIntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
-public class OrlPointColumnsMetadata implements ORLColumnsMetadata {
+public class ORLPointColumnsMetadata implements ORLColumnsMetadata {
 
     private String[] colTypes;
 
     private String[] colNames;
 
-    public OrlPointColumnsMetadata(SqlDataTypes types) {
+    public ORLPointColumnsMetadata(SqlDataTypes types) {
         String intType = types.intType();
         colTypes = new String[] { intType, types.stringType(15), types.stringType(15), types.stringType(15),
                 types.stringType(15), types.stringType(40), types.stringType(10), types.stringType(2),

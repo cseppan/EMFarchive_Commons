@@ -13,7 +13,7 @@ public class ORLPointExporter implements NewExporter {
     private NewORLExporter delegate;
 
     public ORLPointExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ORLColumnsMetadata colsMetadata = new OrlPointColumnsMetadata(sqlDataTypes);
+        ORLColumnsMetadata colsMetadata = new ORLPointColumnsMetadata(sqlDataTypes);
         delegate = new NewORLExporter(dataset, datasource, colsMetadata);
     }
 

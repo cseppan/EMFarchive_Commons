@@ -49,7 +49,7 @@ public class ORLOnRoadExporterTest extends DbTestCase {
 
     private void doImport() throws ImporterException {
         File file = new File("test/data/orl/nc/small-onroad.txt");
-        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
     }
 
