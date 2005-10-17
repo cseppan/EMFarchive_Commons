@@ -18,4 +18,8 @@ public class Column {
         return formatter.format(name, data);
     }
 
+    public String name() {
+        return name;
+    }
+
 }

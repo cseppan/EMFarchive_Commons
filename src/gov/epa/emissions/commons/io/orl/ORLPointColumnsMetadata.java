@@ -1,5 +1,8 @@
 package gov.epa.emissions.commons.io.orl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
@@ -11,8 +14,6 @@ public class ORLPointColumnsMetadata implements ORLColumnsMetadata {
 
     private String[] colTypes;
 
-    private String[] colNames;
-
     public ORLPointColumnsMetadata(SqlDataTypes types) {
         String intType = types.intType();
         colTypes = new String[] { intType, types.stringType(15), types.stringType(15), types.stringType(15),
@@ -21,10 +22,6 @@ public class ORLPointColumnsMetadata implements ORLColumnsMetadata {
                 types.realType(), types.stringType(4), types.stringType(6), types.stringType(6), types.stringType(1),
                 types.realType(), types.realType(), types.smallInt(), types.stringType(16), types.realType(),
                 types.realType(), types.realType(), types.realType(), intType, intType };
-
-        colNames = new String[] { "FIPS", "PLANTID", "POINTID", "STACKID", "SEGMENT", "PLANT", "SCC", "ERPTYPE",
-                "SRCTYPE", "STKHGT", "STKDIAM", "STKTEMP", "STKFLOW", "STKVEL", "SIC", "MACT", "NAICS", "CTYPE",
-                "XLOC", "YLOC", "UTMZ", "POLL", "ANN_EMIS", "AVD_EMIS", "CEFF", "REFF", "CPRI", "CSEC" };
     }
 
     public int[] widths() {
@@ -36,7 +33,14 @@ public class ORLPointColumnsMetadata implements ORLColumnsMetadata {
     }
 
     public String[] colNames() {
-        return colNames;
+        Column[] cols = cols();
+
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     public String identify() {

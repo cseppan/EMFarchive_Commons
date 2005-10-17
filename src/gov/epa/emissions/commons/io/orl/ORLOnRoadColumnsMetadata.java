@@ -6,17 +6,18 @@ import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ORLOnRoadColumnsMetadata implements ORLColumnsMetadata {
 
     private String[] colTypes;
-
-    private String[] colNames;
+    private SqlDataTypes types;
 
     public ORLOnRoadColumnsMetadata(SqlDataTypes types) {
+        this.types = types;
         colTypes = new String[] { types.intType(), types.stringType(10), types.stringType(16), types.realType(),
                 types.realType() };
-
-        colNames = new String[] { "FIPS", "SCC", "POLL", "ANN_EMIS", "AVD_EMIS" };
     }
 
     public int[] widths() {
@@ -28,7 +29,14 @@ public class ORLOnRoadColumnsMetadata implements ORLColumnsMetadata {
     }
 
     public String[] colNames() {
-        return colNames;
+        Column[] cols = cols();
+
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     public String identify() {

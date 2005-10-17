@@ -1,5 +1,8 @@
 package gov.epa.emissions.commons.io.orl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
@@ -10,13 +13,9 @@ public class ORLNonRoadColumnsMetadata implements ORLColumnsMetadata {
 
     private String[] colTypes;
 
-    private String[] colNames;
-
     public ORLNonRoadColumnsMetadata(SqlDataTypes types) {
         colTypes = new String[] { types.intType(), types.stringType(10), types.stringType(16), types.realType(),
                 types.realType(), types.realType(), types.realType(), types.realType() };
-
-        colNames = new String[] { "FIPS", "SCC", "POLL", "ANN_EMIS", "AVD_EMIS", "CEFF", "REFF", "RPEN" };
     }
 
     public int[] widths() {
@@ -28,7 +27,14 @@ public class ORLNonRoadColumnsMetadata implements ORLColumnsMetadata {
     }
 
     public String[] colNames() {
-        return colNames;
+        Column[] cols = cols();
+
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     public String identify() {
