@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.NewImporter;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 import gov.epa.emissions.framework.db.DbUpdate;
@@ -104,7 +105,7 @@ public class OrlImporterTest extends DbTestCase {
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
-        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         assertEquals(18, countRecords());
@@ -113,7 +114,7 @@ public class OrlImporterTest extends DbTestCase {
     public void testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
-        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         // assert
@@ -125,7 +126,7 @@ public class OrlImporterTest extends DbTestCase {
     public void testShouldLoadStartStopDateTimeIntoDatasetOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
-        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         // assert
@@ -142,7 +143,7 @@ public class OrlImporterTest extends DbTestCase {
     public void testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
-        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         // assert
@@ -153,7 +154,7 @@ public class OrlImporterTest extends DbTestCase {
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
-        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         // assert

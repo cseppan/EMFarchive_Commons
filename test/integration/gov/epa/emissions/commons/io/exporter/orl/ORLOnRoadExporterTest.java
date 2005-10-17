@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NewImporter;
 import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-public class NewORLExporterTest extends DbTestCase {
+public class ORLOnRoadExporterTest extends DbTestCase {
 
     private Datasource datasource;
 
@@ -50,7 +51,7 @@ public class NewORLExporterTest extends DbTestCase {
 
     private void doImport() throws ImporterException {
         File file = new File("test/data/orl/nc/small-onroad.txt");
-        OrlOnRoadImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
+        NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
     }
 
