@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.exporter.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -8,8 +8,9 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NewImporter;
-import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadImporter;
+import gov.epa.emissions.commons.io.orl.NewORLExporter;
+import gov.epa.emissions.commons.io.orl.OrlOnRoadColumnsMetadata;
+import gov.epa.emissions.commons.io.orl.OrlOnRoadImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;

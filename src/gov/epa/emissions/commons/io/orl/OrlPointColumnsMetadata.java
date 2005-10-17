@@ -1,9 +1,11 @@
-package gov.epa.emissions.commons.io.importer.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.SmallInteger;
-import gov.epa.emissions.commons.io.exporter.orl.ORLColumnsMetadata;
+import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.RealFormatter;
+import gov.epa.emissions.commons.io.SmallIntegerFormatter;
+import gov.epa.emissions.commons.io.StringFormatter;
 
 public class OrlPointColumnsMetadata implements ORLColumnsMetadata {
 
@@ -62,7 +64,7 @@ public class OrlPointColumnsMetadata implements ORLColumnsMetadata {
         Column ctype = new Column(new StringFormatter(1), "CTYPE");
         Column xloc = new Column(new RealFormatter(), "XLOC");
         Column yloc = new Column(new RealFormatter(), "YLOC");
-        Column utmz = new Column(new SmallInteger(), "UTMZ");
+        Column utmz = new Column(new SmallIntegerFormatter(), "UTMZ");
         Column pollutant = new Column(new StringFormatter(16), "POLL");
         Column annualEmissions = new Column(new RealFormatter(), "ANN_EMIS");
         Column averageDailyEmissions = new Column(new RealFormatter(), "AVD_EMIS");

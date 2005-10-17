@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.exporter.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -8,14 +8,15 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NewImporter;
-import gov.epa.emissions.commons.io.importer.orl.OrlNonPointColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.orl.OrlNonPointImporter;
-import gov.epa.emissions.commons.io.importer.orl.OrlNonRoadColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.orl.OrlNonRoadImporter;
-import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.orl.OrlOnRoadImporter;
-import gov.epa.emissions.commons.io.importer.orl.OrlPointColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.orl.OrlPointImporter;
+import gov.epa.emissions.commons.io.orl.NewORLExporter;
+import gov.epa.emissions.commons.io.orl.OrlNonPointColumnsMetadata;
+import gov.epa.emissions.commons.io.orl.OrlNonPointImporter;
+import gov.epa.emissions.commons.io.orl.OrlNonRoadColumnsMetadata;
+import gov.epa.emissions.commons.io.orl.OrlNonRoadImporter;
+import gov.epa.emissions.commons.io.orl.OrlOnRoadColumnsMetadata;
+import gov.epa.emissions.commons.io.orl.OrlOnRoadImporter;
+import gov.epa.emissions.commons.io.orl.OrlPointColumnsMetadata;
+import gov.epa.emissions.commons.io.orl.OrlPointImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -53,7 +54,7 @@ public class NewORLExportersTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void itestShouldExportOnRoad() throws Exception {
+    public void testShouldExportOnRoad() throws Exception {
         NewImporter importer = new OrlOnRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-onroad.txt");
 
@@ -69,7 +70,7 @@ public class NewORLExportersTest extends DbTestCase {
         assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9", (String) data.get(1));
     }
 
-    public void itestShouldExportNonRoad() throws Exception {
+    public void testShouldExportNonRoad() throws Exception {
         NewImporter importer = new OrlNonRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
 
@@ -85,7 +86,7 @@ public class NewORLExportersTest extends DbTestCase {
         assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9", (String) data.get(1));
     }
 
-    public void itestShouldExportNonPoint() throws Exception {
+    public void testShouldExportNonPoint() throws Exception {
         NewImporter importer = new OrlNonPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonpoint.txt");
 
@@ -115,13 +116,11 @@ public class NewORLExportersTest extends DbTestCase {
         // assert records
         List records = readData(file);
         assertEquals(10, records.size());
-        assertEquals(
-                "37119,            0001,            0001,               1,               1," +
-                "                 REXAMINC.;CUSTOMDIVISION,   40201301, 02, 01, 6.0000000e+001, " +
-                "7.5000000e+000, 3.7500000e+002, 2.0834600e+003, 4.7160000e+001, 3083,   0714," +
-                "      0, L, -8.0708100e+001, 3.5120000e+001, 17,           108883, " +
-                "9.7041400e+000, -9, -9, -9,    -9,    -9",
-                (String) records.get(0));
+        assertEquals("37119,            0001,            0001,               1,               1,"
+                + "                 REXAMINC.;CUSTOMDIVISION,   40201301, 02, 01, 6.0000000e+001, "
+                + "7.5000000e+000, 3.7500000e+002, 2.0834600e+003, 4.7160000e+001, 3083,   0714,"
+                + "      0, L, -8.0708100e+001, 3.5120000e+001, 17,           108883, "
+                + "9.7041400e+000, -9, -9, -9,    -9,    -9", (String) records.get(0));
     }
 
     private void assertComments(File file) throws IOException {

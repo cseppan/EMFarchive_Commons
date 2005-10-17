@@ -1,6 +1,5 @@
-package gov.epa.emissions.commons.io.importer.orl;
+package gov.epa.emissions.commons.io;
 
-import gov.epa.emissions.commons.io.ColumnFormatter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

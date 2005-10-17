@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.orl.OrlPointImporter;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;

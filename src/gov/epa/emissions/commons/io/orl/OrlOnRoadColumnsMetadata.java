@@ -1,8 +1,10 @@
-package gov.epa.emissions.commons.io.importer.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.exporter.orl.ORLColumnsMetadata;
+import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.RealFormatter;
+import gov.epa.emissions.commons.io.StringFormatter;
 
 public class OrlOnRoadColumnsMetadata implements ORLColumnsMetadata {
 

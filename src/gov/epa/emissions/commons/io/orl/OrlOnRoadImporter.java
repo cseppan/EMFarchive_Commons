@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -9,12 +9,12 @@ import gov.epa.emissions.commons.io.importer.NewImporter;
 
 import java.io.File;
 
-public class OrlNonPointImporter implements NewImporter {
+public class OrlOnRoadImporter implements NewImporter {
 
     private OrlImporter delegate;
 
-    public OrlNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ColumnsMetadata cols = new OrlNonPointColumnsMetadata(sqlDataTypes);
+    public OrlOnRoadImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+        ColumnsMetadata cols = new OrlOnRoadColumnsMetadata(sqlDataTypes);
         delegate = new OrlImporter(datasource, cols, sqlDataTypes);
     }
 

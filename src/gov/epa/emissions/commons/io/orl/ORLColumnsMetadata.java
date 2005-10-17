@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.exporter.orl;
+package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
