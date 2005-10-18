@@ -1,6 +1,9 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.LongFormatter;
+import gov.epa.emissions.commons.io.StringFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,32 +11,35 @@ import java.util.List;
 
 public class OptionalColumnsTableMetadata implements ColumnsMetadata {
 
-    private List colNames;
-
-    private List colTypes;
-
     private OptionalColumnsMetadata base;
 
-    public OptionalColumnsTableMetadata(OptionalColumnsMetadata base, SqlDataTypes sqlType) {
+    private SqlDataTypes types;
+
+    public OptionalColumnsTableMetadata(OptionalColumnsMetadata base, SqlDataTypes types) {
         this.base = base;
-
-        colNames = new ArrayList();
-        colNames.add(key());
-        colNames.addAll(Arrays.asList(base.colNames()));
-        colNames.add("Comments");
-
-        colTypes = new ArrayList();
-        colTypes.add(sqlType.longType());
-        colTypes.addAll(Arrays.asList(base.colTypes()));
-        colTypes.add(sqlType.stringType(128));
+        this.types = types;
     }
 
     public String[] colNames() {
-        return (String[]) colNames.toArray(new String[0]);
+        Column[] cols = cols();
+
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     public String[] colTypes() {
-        return (String[]) colTypes.toArray(new String[0]);
+        Column[] cols = cols();
+
+        List sqlTypes = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            sqlTypes.add(cols[i].sqlType());
+        }
+
+        return (String[]) sqlTypes.toArray(new String[0]);
     }
 
     public String key() {
@@ -42,6 +48,19 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
 
     public int[] widths() {
         return null;
+    }
+
+    public Column[] cols() {
+        List cols = new ArrayList();
+        cols.addAll(Arrays.asList(base.cols()));
+
+        Column datasetId = new Column(types.longType(), new LongFormatter(), key());
+        cols.add(0, datasetId);
+
+        Column inlineComments = new Column(types.stringType(128), new StringFormatter(128), "Comments");
+        cols.add(inlineComments);
+
+        return (Column[]) cols.toArray(new Column[0]);
     }
 
     // FIXME: rework this mess
@@ -62,22 +81,22 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
     }
 
     private int insertAt(int optionalCount) {
-        return base.minTypes().length + 1 + optionalCount;
+        return base.minCols().length + 1 + optionalCount;
     }
 
     private int toAdd(int optionalCount) {
-        return base.optionalTypes().length - optionalCount;
+        return base.optionalCols().length - optionalCount;
     }
 
     private int optionalCount(List data) {
-        return data.size() - (2 + base.minTypes().length);
+        return data.size() - (2 + base.minCols().length);
     }
 
     private void addDefaultValuesWithComment(List data) {
-        String[] optionalTypes = base.optionalTypes();
-        int toAdd = colTypes.size() - data.size() - 1;
+        Column[] optionalCols = base.optionalCols();
+        int toAdd = cols().length - data.size() - 1;
 
-        for (int i = optionalTypes.length - toAdd; i < optionalTypes.length; i++)
+        for (int i = optionalCols.length - toAdd; i < optionalCols.length; i++)
             data.add("");
         data.add("");// comment
     }

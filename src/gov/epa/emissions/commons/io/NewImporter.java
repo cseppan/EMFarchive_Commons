@@ -1,6 +1,6 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io;
 
-import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;
 

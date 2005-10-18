@@ -1,25 +1,22 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MonthlyColumnsMetadata implements ColumnsMetadata {
 
     private int[] widths;
 
-    private String[] colTypes;
+    private SqlDataTypes types;
 
-    private String[] colNames;
-
-    public MonthlyColumnsMetadata(SqlDataTypes sqlDataType) {
+    public MonthlyColumnsMetadata(SqlDataTypes types) {
+        this.types = types;
         widths = new int[] { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5 };
-
-        String intType = sqlDataType.intType();
-        colTypes = new String[] { intType, intType, intType, intType, intType, intType, intType, intType, intType,
-                intType, intType, intType, intType, intType };
-
-        colNames = new String[] { "Code", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
-                "Dec", "Total_Weights" };
     }
 
     public int[] widths() {
@@ -27,15 +24,48 @@ public class MonthlyColumnsMetadata implements ColumnsMetadata {
     }
 
     public String[] colTypes() {
-        return colTypes;
+        Column[] cols = cols();
+
+        List sqlTypes = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            sqlTypes.add(cols[i].sqlType());
+        }
+
+        return (String[]) sqlTypes.toArray(new String[0]);
     }
 
     public String[] colNames() {
-        return colNames;
+        Column[] cols = cols();
+
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     public String identify() {
         return "Monthly - Temporal Profile";
+    }
+
+    public Column[] cols() {
+        Column code = new Column(types.intType(), new IntegerFormatter(), "Code");
+        Column jan = new Column(types.intType(), new IntegerFormatter(), "Jan");
+        Column feb = new Column(types.intType(), new IntegerFormatter(), "Feb");
+        Column mar = new Column(types.intType(), new IntegerFormatter(), "Mar");
+        Column apr = new Column(types.intType(), new IntegerFormatter(), "Apr");
+        Column may = new Column(types.intType(), new IntegerFormatter(), "May");
+        Column jun = new Column(types.intType(), new IntegerFormatter(), "Jun");
+        Column jul = new Column(types.intType(), new IntegerFormatter(), "Jul");
+        Column aug = new Column(types.intType(), new IntegerFormatter(), "Aug");
+        Column sep = new Column(types.intType(), new IntegerFormatter(), "Sep");
+        Column oct = new Column(types.intType(), new IntegerFormatter(), "Oct");
+        Column nov = new Column(types.intType(), new IntegerFormatter(), "Nov");
+        Column dec = new Column(types.intType(), new IntegerFormatter(), "Dec");
+        Column totalWeights = new Column(types.intType(), new IntegerFormatter(), "Total_Weights");
+
+        return new Column[] { code, jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, totalWeights };
     }
 
 }

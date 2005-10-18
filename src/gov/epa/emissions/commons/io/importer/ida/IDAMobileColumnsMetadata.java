@@ -1,81 +1,94 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.RealFormatter;
+import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-
 public class IDAMobileColumnsMetadata implements ColumnsMetadata {
 
-	private String[] colTypes;
+    private int[] widths;
 
-	private String[] colNames;
+    private Column[] cols;
 
-	private int[] widths;
+    public IDAMobileColumnsMetadata(String[] pollutants, SqlDataTypes types) {
+        cols = createCols(types, pollutants);
 
-	public IDAMobileColumnsMetadata(String[] pollutants, SqlDataTypes dataTypes) {
-		String intType = dataTypes.intType();
-		String[] desColTypes = new String[] { intType, intType,
-				dataTypes.stringType(10),dataTypes.stringType(10)};
-		String[] desColNames = new String[] { "STID", "CYID", "LINK_ID", "SCC" };
-		int[] desColWidths = new int[] { 2, 3, 10, 10 };
-		colTypes = addPollTypes(pollutants.length, desColTypes, dataTypes);
-		colNames = addPollNames(pollutants, desColNames);
-		widths = addPollWidths(pollutants.length, desColWidths);
-	}
+        int[] desColWidths = new int[] { 2, 3, 10, 10 };
+        widths = addPollWidths(pollutants.length, desColWidths);
+    }
 
-	public int[] widths() {
-		return widths;
-	}
+    public int[] widths() {
+        return widths;
+    }
 
-	public String[] colTypes() {
-		return colTypes;
-	}
+    public String[] colTypes() {
+        Column[] cols = cols();
 
-	public String[] colNames() {
-		return colNames;
-	}
+        List sqlTypes = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            sqlTypes.add(cols[i].sqlType());
+        }
 
-	private String[] addPollTypes(int noOfPollutants, String[] array,
-			SqlDataTypes dataTypes) {
-		List types = new ArrayList();
-		types.addAll(Arrays.asList(array));
-		for (int i = 0; i < noOfPollutants; i++) {
-			types.add(dataTypes.realType());
-			types.add(dataTypes.realType());
-		}
-		return (String[]) types.toArray(new String[0]);
-	}
+        return (String[]) sqlTypes.toArray(new String[0]);
+    }
 
-	private String[] addPollNames(String[] pollutants, String[] desColNames) {
-		List names = new ArrayList();
-		names.addAll(Arrays.asList(desColNames));
-		for (int i = 0; i < pollutants.length; i++) {
-			names.add("ANN_" + pollutants[i]);
-			names.add("AVD_" + pollutants[i]);
-		}
-		return (String[]) names.toArray(new String[0]);
-	}
+    public String[] colNames() {
+        Column[] cols = cols();
 
-	private int[] addPollWidths(int length, int[] desColWidths) {
-		int resolution = 2;
-		int totalCols = desColWidths.length + resolution * length;
-		int[] widths = new int[totalCols];
-		for (int i = 0; i < desColWidths.length; i++) {
-			widths[i] = desColWidths[i];
-		}
-		for (int i = 0; i < length; i ++) {
-			int startIndex = desColWidths.length+i*resolution;
-			widths[startIndex	 ] = 10;
-			widths[startIndex + 1] = 10;
-		}
-		return widths;
-	}
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
+
+        return (String[]) names.toArray(new String[0]);
+    }
+
+    private int[] addPollWidths(int length, int[] desColWidths) {
+        int resolution = 2;
+        int totalCols = desColWidths.length + resolution * length;
+        int[] widths = new int[totalCols];
+        for (int i = 0; i < desColWidths.length; i++) {
+            widths[i] = desColWidths[i];
+        }
+        for (int i = 0; i < length; i++) {
+            int startIndex = desColWidths.length + i * resolution;
+            widths[startIndex] = 10;
+            widths[startIndex + 1] = 10;
+        }
+        return widths;
+    }
 
     public String identify() {
         return "IDA Mobile";
     }
 
+    public Column[] cols() {
+        return cols;
+    }
+
+    private Column[] createCols(SqlDataTypes types, String[] pollutants) {
+        Column stid = new Column(types.intType(), new IntegerFormatter(), "STID");
+        Column cyid = new Column(types.intType(), new IntegerFormatter(), "CYID");
+        Column linkId = new Column(types.stringType(10), new StringFormatter(10), "LINK_ID");
+        Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
+
+        List cols = new ArrayList();
+        cols.addAll(Arrays.asList(new Column[] { stid, cyid, linkId, scc }));
+
+        for (int i = 0; i < pollutants.length; i++) {
+            Column ann = new Column(types.realType(), new RealFormatter(), "ANN_" + pollutants[i]);
+            Column avd = new Column(types.realType(), new RealFormatter(), "AVD_" + pollutants[i]);
+
+            cols.addAll(Arrays.asList(new Column[] { ann, avd }));
+        }
+
+        return (Column[]) cols.toArray(new Column[0]);
+    }
 }

@@ -1,123 +1,150 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.RealFormatter;
+import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-
 public class IDAPointColumnsMetadata implements ColumnsMetadata {
 
-	private String[] colTypes;
+    private int[] widths;
 
-	private String[] colNames;
+    private Column[] cols;
 
-	private int[] widths;
+    public IDAPointColumnsMetadata(String[] pollutants, SqlDataTypes types) {
+        cols = createCols(types, pollutants);
 
-	public IDAPointColumnsMetadata(String[] pollutants, SqlDataTypes dataTypes) {
-		String intType = dataTypes.intType();
-		String realType = dataTypes.realType();
+        int[] desColWidths = new int[] { 2, 3, 15, 15, 12, 6, 6, 2, 40, 10, 4, 4, 4, 6, 4, 10, 9, 8, 1, 2, 2, 2, 2, 2,
+                2, 1, 2, 11, 12, 8, 5, 5, 9, 4, 9, 9, 1 };
+        widths = addPollWidths(pollutants.length, desColWidths);
 
-		String[] desColNames = new String[] { "STID", "CYID", "PLANTID",
-				"POINTID", "STACKID", "ORISID", "BLRID", "SEGMENT", "PLANT",
-				"SCC", "BEGYR", "ENDYR", "STKHGT", "STKDIAM", "STKTEMP",
-				"STKFLOW", "STKVEL", "BOILCAP", "CAPUNITS", "WINTHRU",
-				"SPRTHRU", "SUMTHRU", "FALTHRU", "HOURS", "START", "DAYS",
-				"WEEKS", "THRUPUT", "MAXRATE", "HEATCON", "SULFCON", "ASHCON",
-				"NETDC", "SIC", "LATC", "LONC", "OFFSHORE" };
-		int[] desColWidths = new int[] { 2, 3, 15, 15, 12, 6, 6, 2, 40, 10, 4,
-				4, 4, 6, 4, 10, 9, 8, 1, 2, 2, 2, 2, 2, 2, 1, 2, 11, 12, 8, 5,
-				5, 9, 4, 9, 9, 1 };
-		
-		String[] desColTypes = new String[] {
-				intType, intType,
-				dataTypes.stringType(15),dataTypes.stringType(15),
-				dataTypes.stringType(12),dataTypes.stringType(6),
-				dataTypes.stringType(6),dataTypes.stringType(2),
-				dataTypes.stringType(40),dataTypes.stringType(10),
-				intType,intType,
-				realType,realType,realType,realType,realType,realType,
-				dataTypes.stringType(2),
-				realType,realType,realType,realType,
-				intType,intType,intType,intType,
-				realType,realType,realType,realType,realType,realType,
-				intType,
-				realType, realType, dataTypes.stringType(2)
-		};				
-				
-		colTypes = addPollTypes(pollutants.length, desColTypes, dataTypes);
-		colNames = addPollNames(pollutants, desColNames);
-		widths = addPollWidths(pollutants.length, desColWidths);
+    }
 
-	}
+    public int[] widths() {
+        return widths;
+    }
 
-	public int[] widths() {
-		return widths;
-	}
+    public String[] colTypes() {
+        Column[] cols = cols();
 
-	public String[] colTypes() {
-		return colTypes;
-	}
+        List sqlTypes = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            sqlTypes.add(cols[i].sqlType());
+        }
 
-	public String[] colNames() {
-		return colNames;
-	}
+        return (String[]) sqlTypes.toArray(new String[0]);
+    }
 
-	private String[] addPollTypes(int noOfPollutants, String[] array,
-			SqlDataTypes dataTypes) {
-		List types = new ArrayList();
-		types.addAll(Arrays.asList(array));
-		for (int i = 0; i < noOfPollutants; i++) {
-			types.add(dataTypes.realType());
-			types.add(dataTypes.realType());
-			types.add(dataTypes.realType());
-			types.add(dataTypes.realType());
-			types.add(dataTypes.realType());
-			types.add(dataTypes.intType());
-			types.add(dataTypes.intType());
-		}
-		return (String[]) types.toArray(new String[0]);
-	}
+    public String[] colNames() {
+        Column[] cols = cols();
 
-	private String[] addPollNames(String[] pollutants, String[] desColNames) {
-		List names = new ArrayList();
-		names.addAll(Arrays.asList(desColNames));
-		for (int i = 0; i < pollutants.length; i++) {
-			names.add("ANN_" + pollutants[i]);
-			names.add("AVD_" + pollutants[i]);
-			names.add("CE_" + pollutants[i]);
-			names.add("RE_" + pollutants[i]);
-			names.add("EMF_" + pollutants[i]);
-			names.add("CPRI_" + pollutants[i]);
-			names.add("CSEC_" + pollutants[i]);
-		}
-		return (String[]) names.toArray(new String[0]);
-	}
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++) {
+            names.add(cols[i].name());
+        }
 
-	private int[] addPollWidths(int length, int[] desColWidths) {
-		int resolution = 7;
-		int totalCols = desColWidths.length + resolution * length;
-		int[] widths = new int[totalCols];
-		for (int i = 0; i < desColWidths.length; i++) {
-			widths[i] = desColWidths[i];
-		}
-		for (int i = 0; i < length; i++) {
-			int startIndex = desColWidths.length + i * resolution;
-			widths[startIndex] = 13;
-			widths[startIndex + 1] = 13;
-			widths[startIndex + 2] = 7;
-			widths[startIndex + 3] = 3;
-			widths[startIndex + 4] = 10;
-			widths[startIndex + 5] = 3;
-			widths[startIndex + 6] = 3;
-		}
-		return widths;
-	}
+        return (String[]) names.toArray(new String[0]);
+    }
+
+    private int[] addPollWidths(int length, int[] desColWidths) {
+        int resolution = 7;
+        int totalCols = desColWidths.length + resolution * length;
+        int[] widths = new int[totalCols];
+        for (int i = 0; i < desColWidths.length; i++) {
+            widths[i] = desColWidths[i];
+        }
+        for (int i = 0; i < length; i++) {
+            int startIndex = desColWidths.length + i * resolution;
+            widths[startIndex] = 13;
+            widths[startIndex + 1] = 13;
+            widths[startIndex + 2] = 7;
+            widths[startIndex + 3] = 3;
+            widths[startIndex + 4] = 10;
+            widths[startIndex + 5] = 3;
+            widths[startIndex + 6] = 3;
+        }
+        return widths;
+    }
 
     public String identify() {
         return "IDA Point";
     }
 
+    public Column[] cols() {
+        return cols;
+    }
+
+    private Column[] createCols(SqlDataTypes types, String[] pollutants) {
+        List cols = new ArrayList();
+
+        Column[] mandatory = createMandatoryCols(types);
+        cols.addAll(Arrays.asList(mandatory));
+        addPollutantsBasedCols(types, pollutants, cols);
+
+        return (Column[]) cols.toArray(new Column[0]);
+    }
+
+    private void addPollutantsBasedCols(SqlDataTypes types, String[] pollutants, List cols) {
+        for (int i = 0; i < pollutants.length; i++) {
+            Column ann = new Column(types.realType(), new RealFormatter(), "ANN_" + pollutants[i]);
+            Column avd = new Column(types.realType(), new RealFormatter(), "AVD_" + pollutants[i]);
+            Column ce = new Column(types.realType(), new RealFormatter(), "CE_" + pollutants[i]);
+            Column re = new Column(types.realType(), new RealFormatter(), "RE_" + pollutants[i]);
+            Column emf = new Column(types.realType(), new RealFormatter(), "EMF_" + pollutants[i]);
+            Column cpri = new Column(types.realType(), new RealFormatter(), "CPRI_" + pollutants[i]);
+            Column csec = new Column(types.realType(), new RealFormatter(), "CSEC_" + pollutants[i]);
+
+            cols.addAll(Arrays.asList(new Column[] { ann, avd, ce, re, emf, cpri, csec }));
+        }
+    }
+
+    private Column[] createMandatoryCols(SqlDataTypes types) {
+        List cols = new ArrayList();
+
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "STID"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "CYID"));
+        cols.add(new Column(types.stringType(15), new StringFormatter(15), "PLANTID"));
+        cols.add(new Column(types.stringType(15), new StringFormatter(15), "POINTID"));
+        cols.add(new Column(types.stringType(12), new StringFormatter(12), "STACKID"));
+        cols.add(new Column(types.stringType(6), new StringFormatter(6), "ORISID"));
+        cols.add(new Column(types.stringType(6), new StringFormatter(6), "BLRID"));
+        cols.add(new Column(types.stringType(2), new StringFormatter(2), "SEGMENT"));
+        cols.add(new Column(types.stringType(40), new StringFormatter(40), "PLANT"));
+        cols.add(new Column(types.stringType(10), new StringFormatter(10), "SCC"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "BEGYR"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "ENDYR"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "STKHGT"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "STKDIAM"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "STKTEMP"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "STKFLOW"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "STKVEL"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "BOILCAP"));
+        cols.add(new Column(types.stringType(2), new StringFormatter(2), "CAPUNITS"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "WINTHRU"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "SPRTHRU"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "SUMTHRU"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "FALTHRU"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "HOURS"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "START"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "DAYS"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "WEEKS"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "THRUPUT"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "MAXRATE"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "HEATCON"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "SULFCON"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "ASHCON"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "NETDC"));
+        cols.add(new Column(types.intType(), new IntegerFormatter(), "SIC"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "LATC"));
+        cols.add(new Column(types.realType(), new RealFormatter(), "LONC"));
+        cols.add(new Column(types.stringType(2), new StringFormatter(2), "OFFSHORE"));
+
+        return (Column[]) cols.toArray(new Column[0]);
+    }
 }

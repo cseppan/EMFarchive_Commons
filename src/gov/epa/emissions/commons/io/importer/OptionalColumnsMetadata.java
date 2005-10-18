@@ -1,9 +1,11 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.io.Column;
+
 public interface OptionalColumnsMetadata extends ColumnsMetadata {
 
-    String[] optionalTypes();
+    Column[] optionalCols();
 
-    String[] minTypes();
+    Column[] minCols();
 
 }

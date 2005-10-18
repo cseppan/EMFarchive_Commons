@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.exporter.orl.ExporterException;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,9 +22,9 @@ class NewORLExporter {
 
     private Datasource datasource;
 
-    private ORLColumnsMetadata colsMetadata;
+    private ColumnsMetadata colsMetadata;
 
-    public NewORLExporter(Dataset dataset, Datasource datasource, ORLColumnsMetadata colsMetadata) {
+    public NewORLExporter(Dataset dataset, Datasource datasource, ColumnsMetadata colsMetadata) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.colsMetadata = colsMetadata;

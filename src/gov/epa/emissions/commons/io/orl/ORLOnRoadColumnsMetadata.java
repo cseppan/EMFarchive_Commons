@@ -5,16 +5,17 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ORLOnRoadColumnsMetadata implements ORLColumnsMetadata {
+public class ORLOnRoadColumnsMetadata implements ColumnsMetadata {
 
-    private SqlDataTypes types;
+    private Column[] cols;
 
     public ORLOnRoadColumnsMetadata(SqlDataTypes types) {
-        this.types = types;
+        cols = createCols(types);
     }
 
     public int[] widths() {
@@ -49,6 +50,10 @@ public class ORLOnRoadColumnsMetadata implements ORLColumnsMetadata {
     }
 
     public Column[] cols() {
+        return cols;
+    }
+
+    private Column[] createCols(SqlDataTypes types) {
         Column fips = new Column(types.intType(), new IntegerFormatter(), "FIPS");
         Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
         Column pollutant = new Column(types.stringType(16), new StringFormatter(16), "POLL");

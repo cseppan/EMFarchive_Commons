@@ -3,9 +3,9 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.NewImporter;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.NewImporter;
 
 import java.io.File;
 
