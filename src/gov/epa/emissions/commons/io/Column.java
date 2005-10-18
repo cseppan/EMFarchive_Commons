@@ -1,9 +1,11 @@
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.db.DbColumn;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Column {
+public class Column implements DbColumn {
 
     private String name;
 

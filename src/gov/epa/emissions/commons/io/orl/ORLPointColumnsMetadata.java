@@ -8,9 +8,6 @@ import gov.epa.emissions.commons.io.SmallIntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ORLPointColumnsMetadata implements ColumnsMetadata {
 
     private SqlDataTypes types;
@@ -21,28 +18,6 @@ public class ORLPointColumnsMetadata implements ColumnsMetadata {
 
     public int[] widths() {
         return null;
-    }
-
-    public String[] colTypes() {
-        Column[] cols = cols();
-
-        List sqlTypes = new ArrayList();
-        for (int i = 0; i < cols.length; i++) {
-            sqlTypes.add(cols[i].sqlType());
-        }
-
-        return (String[]) sqlTypes.toArray(new String[0]);
-    }
-
-    public String[] colNames() {
-        Column[] cols = cols();
-
-        List names = new ArrayList();
-        for (int i = 0; i < cols.length; i++) {
-            names.add(cols[i].name());
-        }
-
-        return (String[]) names.toArray(new String[0]);
     }
 
     public String identify() {

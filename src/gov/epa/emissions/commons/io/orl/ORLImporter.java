@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
@@ -15,6 +16,7 @@ import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -81,11 +83,19 @@ public class ORLImporter {
         InternalSource source = new InternalSource();
         source.setTable(table);
         source.setType(colsMetadata.identify());
-        source.setCols(colsMetadata.colNames());
+        source.setCols(colNames(colsMetadata.cols()));
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
 
         dataset.addInternalSource(source);
+    }
+
+    private String[] colNames(Column[] cols) {
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++)
+            names.add(cols[i].name());
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
@@ -142,7 +152,7 @@ public class ORLImporter {
 
     private void createTable(String table, Datasource datasource, ColumnsMetadata colsMetadata) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, colsMetadata.colNames(), colsMetadata.colTypes());
+        tableDefinition.createTable(table, colsMetadata.cols());
     }
 
 }

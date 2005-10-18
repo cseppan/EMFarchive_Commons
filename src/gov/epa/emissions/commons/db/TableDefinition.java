@@ -7,12 +7,14 @@ public interface TableDefinition {
 
     List getTableNames() throws SQLException;
 
+    // FIXME: legacy. Remove when new Importers/Exporters are complete
     void createTableWithOverwrite(String table, String[] colNames, String[] colTypes, String[] primaryCols)
             throws SQLException;
 
+    // FIXME: legacy. Remove when new Importers/Exporters are complete
     void createTable(String table, String[] colNames, String[] colTypes, String primaryCol) throws SQLException;
 
-    void createTable(String table, String[] colNames, String[] colTypes) throws SQLException;
+    void createTable(String table, DbColumn[] cols) throws SQLException;
 
     void deleteTable(String table) throws SQLException;
 

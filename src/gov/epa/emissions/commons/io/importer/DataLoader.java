@@ -13,11 +13,11 @@ public class DataLoader {
 
     private Datasource datasource;
 
-    private TableColumnsMetadata cols;
+    private TableColumnsMetadata colsMetadata;
 
     public DataLoader(Datasource datasource, TableColumnsMetadata cols) {
         this.datasource = datasource;
-        this.cols = cols;
+        this.colsMetadata = cols;
     }
 
     // TODO: review if any of these params should go into the constructor
@@ -33,7 +33,7 @@ public class DataLoader {
     public void insertRow(Record record, Dataset dataset, String table) throws Exception {
         DataModifier modifier = datasource.getDataModifier();
         if(!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), cols.colTypes());
+            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
         }
     }
 
@@ -41,7 +41,7 @@ public class DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.getDataModifier();
-            String key = cols.key();
+            String key = colsMetadata.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -53,7 +53,7 @@ public class DataLoader {
         Record record = reader.read();
         DataModifier modifier = datasource.getDataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), cols.colTypes());
+            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
             record = reader.read();
         }
     }

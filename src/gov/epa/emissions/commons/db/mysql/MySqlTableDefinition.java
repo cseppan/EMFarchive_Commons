@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.db.mysql;
 
+import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.sql.Connection;
@@ -149,16 +150,13 @@ public class MySqlTableDefinition implements TableDefinition {
         }
     }
 
-    public void createTable(String table, String[] colNames, String[] colTypes) throws SQLException {
-        if (colNames.length != colTypes.length)
-            throw new SQLException("There are different numbers of column names and types");
-
+    public void createTable(String table, DbColumn[] cols) throws SQLException {
         String queryString = "CREATE TABLE " + qualified(table) + " (";
 
-        for (int i = 0; i < colNames.length - 1; i++) {
-            queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
+        for (int i = 0; i < cols.length - 1; i++) {
+            queryString += clean(cols[i].name()) + " " + cols[i].sqlType() + ", ";
         }
-        queryString += clean(colNames[colNames.length - 1]) + " " + colTypes[colNames.length - 1];
+        queryString += clean(cols[cols.length - 1].name()) + " " + cols[cols.length - 1].sqlType();
 
         queryString = queryString + ")";
         execute(queryString);

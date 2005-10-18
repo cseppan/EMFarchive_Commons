@@ -47,7 +47,7 @@ public abstract class DbTestCase extends TestCase {
 
     protected void createTable(String table, Datasource datasource, ColumnsMetadata cols) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, cols.colNames(), cols.colTypes());
+        tableDefinition.createTable(table, cols.cols());
     }
 
     protected void dropTable(String table, Datasource datasource) throws Exception, SQLException {

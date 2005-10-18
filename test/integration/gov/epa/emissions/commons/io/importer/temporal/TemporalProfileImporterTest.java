@@ -46,7 +46,7 @@ public class TemporalProfileImporterTest extends DbTestCase {
     private void createTable(String table, Datasource datasource, TableColumnsMetadata colsMetadata)
             throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, colsMetadata.colNames(), colsMetadata.colTypes());
+        tableDefinition.createTable(table, colsMetadata.cols());
     }
 
     protected void tearDown() throws Exception {

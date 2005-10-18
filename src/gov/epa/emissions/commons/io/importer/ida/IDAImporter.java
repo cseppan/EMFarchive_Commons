@@ -90,8 +90,7 @@ public class IDAImporter {
 	private void createTable(String table, Datasource datasource,
 			ColumnsMetadata colsMetadata) throws SQLException {
 		TableDefinition tableDefinition = datasource.tableDefinition();
-		tableDefinition.createTable(table, colsMetadata.colNames(),
-				colsMetadata.colTypes());
+		tableDefinition.createTable(table, colsMetadata.cols());
 	}
 
 

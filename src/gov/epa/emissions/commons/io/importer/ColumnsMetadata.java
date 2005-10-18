@@ -6,10 +6,6 @@ public interface ColumnsMetadata {
 
     int[] widths();
 
-    String[] colTypes();
-
-    String[] colNames();
-
     String identify();
 
     Column[] cols();

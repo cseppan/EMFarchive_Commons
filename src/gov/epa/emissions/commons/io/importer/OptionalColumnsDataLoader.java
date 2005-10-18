@@ -12,11 +12,11 @@ public class OptionalColumnsDataLoader {
 
     private Datasource datasource;
 
-    private OptionalColumnsTableMetadata cols;
+    private OptionalColumnsTableMetadata colsMetadata;
 
     public OptionalColumnsDataLoader(Datasource datasource, OptionalColumnsTableMetadata cols) {
         this.datasource = datasource;
-        this.cols = cols;
+        this.colsMetadata = cols;
     }
 
     // TODO: review if any of these params should go into the constructor
@@ -33,7 +33,7 @@ public class OptionalColumnsDataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.getDataModifier();
-            String key = cols.key();
+            String key = colsMetadata.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -44,19 +44,18 @@ public class OptionalColumnsDataLoader {
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         DataModifier modifier = datasource.getDataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
-            String[] types = cols.colTypes();
-            String[] data = data(dataset, record, cols);
-            modifier.insertRow(table, data, types);
+            String[] data = data(dataset, record, colsMetadata);
+            modifier.insertRow(table, data, colsMetadata.cols());
         }
     }
 
-    private String[] data(Dataset dataset, Record record, OptionalColumnsTableMetadata cols) {
+    private String[] data(Dataset dataset, Record record, OptionalColumnsTableMetadata colsMetadata) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
         data.addAll(record.tokens());
 
-        if (data.size() < cols.colTypes().length)
-            cols.addDefaultValuesForOptionals(data);
+        if (data.size() < colsMetadata.cols().length)
+            colsMetadata.addDefaultValuesForOptionals(data);
         massageNullMarkers(data);
 
         return (String[]) data.toArray(new String[0]);

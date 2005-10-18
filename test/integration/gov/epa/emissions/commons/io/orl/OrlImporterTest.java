@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.NewImporter;
@@ -20,6 +21,7 @@ import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -86,9 +88,10 @@ public class OrlImporterTest extends DbTestCase {
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
-        ColumnsMetadata cols = new TableColumnsMetadata(new ORLNonPointColumnsMetadata(sqlDataTypes), sqlDataTypes);
+        ColumnsMetadata colsMetadata = new TableColumnsMetadata(new ORLNonPointColumnsMetadata(sqlDataTypes),
+                sqlDataTypes);
         String[] actualCols = source.getCols();
-        String[] expectedCols = cols.colNames();
+        String[] expectedCols = colNames(colsMetadata.cols());
         assertEquals(expectedCols.length, actualCols.length);
         for (int i = 0; i < actualCols.length; i++) {
             assertEquals(expectedCols[i], actualCols[i]);
@@ -96,6 +99,14 @@ public class OrlImporterTest extends DbTestCase {
 
         assertEquals(file.getAbsolutePath(), source.getSource());
         assertEquals(file.length(), source.getSourceSize());
+    }
+
+    private String[] colNames(Column[] cols) {
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++)
+            names.add(cols[i].name());
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {

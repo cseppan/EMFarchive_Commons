@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.db.postgres;
 
+import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.sql.Connection;
@@ -137,17 +138,13 @@ public class PostgresTableDefinition implements TableDefinition {
         return (data).replace('-', '_');
     }
 
-    public void createTable(String table, String[] colNames, String[] colTypes) throws SQLException {
-        int length = colNames.length;
-        if (length != colTypes.length)
-            throw new SQLException("There are different numbers of column names and types");
-
+    public void createTable(String table, DbColumn[] cols) throws SQLException {
         String queryString = "CREATE TABLE " + qualified(table) + " (";
 
-        for (int i = 0; i < length - 1; i++) {
-            queryString += clean(colNames[i]) + " " + colTypes[i] + ", ";
+        for (int i = 0; i < cols.length - 1; i++) {
+            queryString += clean(cols[i].name()) + " " + cols[i].sqlType() + ", ";
         }// for i
-        queryString += clean(colNames[length - 1]) + " " + colTypes[length - 1];
+        queryString += clean(cols[cols.length - 1].name()) + " " + cols[cols.length - 1].sqlType();
 
         queryString = queryString + ")";
 

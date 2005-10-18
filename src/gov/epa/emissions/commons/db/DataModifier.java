@@ -8,6 +8,7 @@ import java.sql.Statement;
 public class DataModifier {
 
     protected Connection connection = null;
+
     private String schema;
 
     public DataModifier(String schema, Connection connection) {
@@ -46,7 +47,8 @@ public class DataModifier {
         }
 
         // instantiate a new string buffer in which the query would be created
-        StringBuffer sb = new StringBuffer("UPDATE " + qualified(table) + " SET " + columnName + " = " + setExpr + " WHERE ");
+        StringBuffer sb = new StringBuffer("UPDATE " + qualified(table) + " SET " + columnName + " = " + setExpr
+                + " WHERE ");
 
         // add the first LIKE expression
         sb.append(whereColumns[0] + " LIKE '" + likeClauses[0] + "'");
@@ -82,7 +84,8 @@ public class DataModifier {
         }
 
         // instantiate a new string buffer in which the query would be created
-        StringBuffer sb = new StringBuffer("UPDATE " + qualified(table) + " SET " + columnName + " = " + setExpr + " WHERE ");
+        StringBuffer sb = new StringBuffer("UPDATE " + qualified(table) + " SET " + columnName + " = " + setExpr
+                + " WHERE ");
 
         // add the first LIKE expression
         sb.append(whereColumns[0] + " = " + equalsClauses[0]);
@@ -117,12 +120,35 @@ public class DataModifier {
         return concat.toString();
     }
 
+    // FIXME: remove, once Importers/Exporters are complete
     public void insertRow(String table, String[] data, String[] colTypes) throws SQLException {
         StringBuffer insert = new StringBuffer();
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
         for (int i = 0; i < data.length; i++) {
             if (colTypes[i].startsWith("VARCHAR")) {
+                String cleanedCell = data[i].replace('-', '_');
+                String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
+                insert.append("'" + cellWithSingleQuotesEscaped + "'");
+            } else {
+                if (data[i].trim().length() == 0)
+                    data[i] = "NULL";
+                insert.append(data[i]);
+            }
+            if (i < (data.length - 1))
+                insert.append(',');
+        }
+        insert.append(')');// close parentheses around the query
+
+        execute(insert.toString());
+    }
+
+    public void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
+        StringBuffer insert = new StringBuffer();
+        insert.append("INSERT INTO " + qualified(table) + " VALUES(");
+
+        for (int i = 0; i < data.length; i++) {
+            if (cols[i].sqlType().startsWith("VARCHAR")) {
                 String cleanedCell = data[i].replace('-', '_');
                 String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
                 insert.append("'" + cellWithSingleQuotesEscaped + "'");
