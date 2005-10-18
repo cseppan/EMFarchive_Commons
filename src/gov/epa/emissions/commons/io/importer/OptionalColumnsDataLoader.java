@@ -24,7 +24,6 @@ public class OptionalColumnsDataLoader {
         try {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
-            e.printStackTrace();
             dropData(table, dataset);
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         }
@@ -44,6 +43,10 @@ public class OptionalColumnsDataLoader {
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         DataModifier modifier = datasource.getDataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
+            if (record.size() < colsMetadata.minCols().length)
+                throw new ImporterException("Dataset - " + dataset.getName() + " has a record " + record
+                        + " that has less than number of minimum columns");
+
             String[] data = data(dataset, record, colsMetadata);
             modifier.insertRow(table, data, colsMetadata.cols());
         }

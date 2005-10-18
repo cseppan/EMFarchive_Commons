@@ -13,8 +13,6 @@ import java.io.File;
 
 public class OptionalColumnsDataLoaderTest extends DbTestCase {
 
-    private Reader reader;
-
     private Datasource datasource;
 
     private SqlDataTypes dataTypes;
@@ -30,9 +28,6 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         dataTypes = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
-        File file = new File("test/data/variable-cols.txt");
-        reader = new DelimitedFileReader(file);
-
         colsMetadata = new OptionalColumnsTableMetadata(new PointTemporalReferenceColumnsMetadata(dataTypes), dataTypes);
         table = "varying";
         createTable(table, datasource, colsMetadata);
@@ -43,12 +38,14 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), table);
     }
 
-    public void testShouldLoadRecordsIntoTable() throws Exception {
+    public void testShouldLoadRecordsFromFileWithVariableColsIntoTable() throws Exception {
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
 
+        File file = new File("test/data/variable-cols.txt");
+        DelimitedFileReader reader = new DelimitedFileReader(file);
         loader.load(reader, dataset, table);
 
         // assert
@@ -56,5 +53,25 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
 
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
         assertEquals(6, tableReader.count(datasource.getName(), table));
+    }
+
+    public void testShouldFailToLoadRecordsAsOneOfTheRecordsHasLessThanMinCols() throws Exception {
+        Dataset dataset = new SimpleDataset();
+        dataset.setName("test");
+
+        File file = new File("test/data/variable-cols-with-errors.txt");
+        DelimitedFileReader reader = new DelimitedFileReader(file);
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
+
+        try {
+            loader.load(reader, dataset, table);
+        } catch (ImporterException e) {
+            TableReader tableReader = new TableReader(datasource.getConnection());
+            assertEquals(0, tableReader.count(datasource.getName(), table));
+            
+            return;
+        }
+
+        fail("should have failed due to error in record 5 having less than min cols");
     }
 }

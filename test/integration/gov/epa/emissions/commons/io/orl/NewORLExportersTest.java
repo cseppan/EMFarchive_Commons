@@ -112,11 +112,13 @@ public class NewORLExportersTest extends DbTestCase {
         // assert records
         List records = readData(file);
         assertEquals(10, records.size());
-        assertEquals("37119,            0001,            0001,               1,               1,"
+        String expected = "37119,            0001,            0001,               1,               1,"
                 + "                 REXAMINC.;CUSTOMDIVISION,   40201301, 02, 01, 6.0000000e+001, "
                 + "7.5000000e+000, 3.7500000e+002, 2.0834600e+003, 4.7160000e+001, 3083,   0714,"
                 + "      0, L, -8.0708100e+001, 3.5120000e+001, 17,           108883, "
-                + "9.7041400e+000, -9, -9, -9,    -9,    -9", (String) records.get(0));
+                + "9.7041400e+000, -9, -9, -9, -9, -9";
+        String actual = (String) records.get(0);
+        assertEquals(expected, actual);
     }
 
     private void assertComments(File file) throws IOException {

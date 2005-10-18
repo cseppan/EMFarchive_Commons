@@ -12,11 +12,6 @@ import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.ORLNonPointColumnsMetadata;
-import gov.epa.emissions.commons.io.orl.ORLNonPointImporter;
-import gov.epa.emissions.commons.io.orl.ORLNonRoadImporter;
-import gov.epa.emissions.commons.io.orl.ORLOnRoadImporter;
-import gov.epa.emissions.commons.io.orl.ORLPointImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -27,6 +22,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
+
+import org.dbunit.dataset.ITable;
 
 public class OrlImporterTest extends DbTestCase {
 
@@ -74,6 +71,29 @@ public class OrlImporterTest extends DbTestCase {
         importer.run(file, dataset);
 
         assertEquals(6, countRecords());
+    }
+    
+    public void testShouldImportNonPointFileWithVaryingCols() throws Exception {
+        File file = new File("test/data/orl/nc/varying-cols-nonpoint.txt");
+        
+        ORLNonPointImporter importer = new ORLNonPointImporter(datasource, sqlDataTypes);
+        importer.run(file, dataset);
+        
+        TableReader tableReader = new TableReader(datasource.getConnection());    
+        
+        assertEquals(6, tableReader.count(datasource.getName(), dataset.getName()));
+        ITable table = tableReader.table(datasource.getName(), dataset.getName());
+        assertNull(table.getValue(0, "CEFF"));
+        assertNull(table.getValue(0, "REFF"));
+        assertNull(table.getValue(0, "RPEN"));
+
+        assertNull(table.getValue(1, "CEFF"));
+        assertNull(table.getValue(1, "REFF"));
+        assertEquals(new Float(1.0), table.getValue(1, "RPEN"));
+        
+        assertNull(table.getValue(2, "CEFF"));
+        assertNull(table.getValue(2, "REFF"));
+        assertNull(table.getValue(2, "RPEN"));
     }
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
@@ -167,7 +187,7 @@ public class OrlImporterTest extends DbTestCase {
         assertEquals("short tons/year", dataset.getUnits());
     }
 
-    public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
+    public void itestShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
         NewImporter importer = new ORLOnRoadImporter(datasource, sqlDataTypes);

@@ -29,14 +29,13 @@ public class DataLoader {
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         }
     }
-    
+
     public void insertRow(Record record, Dataset dataset, String table) throws Exception {
         DataModifier modifier = datasource.getDataModifier();
-        if(!record.isEnd()) {
+        if (!record.isEnd()) {
             modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
         }
     }
-
 
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
@@ -57,7 +56,7 @@ public class DataLoader {
             record = reader.read();
         }
     }
-    
+
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());

@@ -40,7 +40,7 @@ public class TableReader extends DbOperation {
     public boolean exists(String schema, String table) {
         try {
             QueryDataSet ds = new QueryDataSet(super.connection);
-            ds.addTable(schema + "." + table);
+            ds.addTable(qualified(schema, table));
 
             ITableIterator iterator = ds.iterator();
             Assert.assertTrue(iterator.next());
@@ -51,7 +51,15 @@ public class TableReader extends DbOperation {
     }
 
     public int count(String schema, String table) {
-        return count(schema + "." + table);
+        return count(qualified(schema, table));
+    }
+
+    public ITable table(String schema, String table) {
+        return table(qualified(schema, table));
+    }
+
+    private String qualified(String schema, String table) {
+        return schema + "." + table;
     }
 
 }

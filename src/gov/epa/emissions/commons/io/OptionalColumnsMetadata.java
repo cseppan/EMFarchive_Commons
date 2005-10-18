@@ -1,6 +1,6 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io;
 
-import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 
 public interface OptionalColumnsMetadata extends ColumnsMetadata {
 

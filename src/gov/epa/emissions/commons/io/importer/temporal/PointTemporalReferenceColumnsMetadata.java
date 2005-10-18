@@ -4,8 +4,8 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.OptionalColumnsMetadata;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.OptionalColumnsMetadata;
 
 import java.util.ArrayList;
 import java.util.Arrays;

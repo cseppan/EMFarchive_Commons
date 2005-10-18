@@ -6,13 +6,14 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.OptionalColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -27,11 +28,11 @@ public class ORLImporter {
 
     private Datasource datasource;
 
-    private TableColumnsMetadata colsMetadata;
+    private OptionalColumnsTableMetadata colsMetadata;
 
-    public ORLImporter(Datasource datasource, ColumnsMetadata cols, SqlDataTypes sqlDataTypes) {
+    public ORLImporter(Datasource datasource, OptionalColumnsMetadata cols, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
-        colsMetadata = new TableColumnsMetadata(cols, sqlDataTypes);
+        colsMetadata = new OptionalColumnsTableMetadata(cols, sqlDataTypes);
     }
 
     public void run(File file, Dataset dataset) throws ImporterException {
@@ -62,15 +63,15 @@ public class ORLImporter {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, TableColumnsMetadata colsMetadata) throws Exception {
-        DataLoader loader = new DataLoader(datasource, colsMetadata);
+    private void doImport(File file, Dataset dataset, String table, OptionalColumnsTableMetadata colsMetadata) throws Exception {
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
         Reader reader = new DelimitedFileReader(file);
 
         loader.load(reader, dataset, table);
         loadDataset(file, table, colsMetadata, reader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, TableColumnsMetadata colsMetadata, List comments, Dataset dataset)
+    private void loadDataset(File file, String table, ColumnsMetadata colsMetadata, List comments, Dataset dataset)
             throws ImporterException {
         setInternalSource(file, table, colsMetadata, dataset);
         addAttributesExtractedFromComments(comments, dataset);
@@ -79,7 +80,7 @@ public class ORLImporter {
     }
 
     // TODO: this applies to all the Importers. Needs to be pulled out
-    private void setInternalSource(File file, String table, TableColumnsMetadata colsMetadata, Dataset dataset) {
+    private void setInternalSource(File file, String table, ColumnsMetadata colsMetadata, Dataset dataset) {
         InternalSource source = new InternalSource();
         source.setTable(table);
         source.setType(colsMetadata.identify());

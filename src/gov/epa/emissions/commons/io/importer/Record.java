@@ -35,4 +35,9 @@ public class Record {
         return tokens;
     }
 
+    
+    public String toString() {
+        return tokens.toString();
+    }
+
 }
