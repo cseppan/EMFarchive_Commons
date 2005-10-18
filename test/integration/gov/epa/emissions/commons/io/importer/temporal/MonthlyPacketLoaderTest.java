@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -51,7 +52,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
     }
 
     public void testShouldLoadRecordsIntoMonthlyTable() throws Exception {
-        DataLoader loader = new DataLoader(datasource, tableColsMetadata);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");

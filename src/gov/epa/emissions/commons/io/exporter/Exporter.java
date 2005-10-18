@@ -8,9 +8,6 @@ import java.io.File;
  * The exporter interface for writing a table type to a text file.
  */
 public interface Exporter {
-    
-    //FIXME: change to an IOException
-    //void exportTableToFile(Dataset dataset, String fileName) throws Exception;
 
-	public void run(Dataset dataset, File file) throws Exception;
+    void run(Dataset dataset, File file) throws Exception;
 }

@@ -34,8 +34,6 @@ public class ExternalSource implements Serializable {
 	 * @param datasource
 	 */
 	public ExternalSource(String datasource) {
-		super();
-		// TODO Auto-generated constructor stub
 		this.datasource = datasource;
 	}
 

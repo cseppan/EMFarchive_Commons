@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
@@ -46,7 +46,7 @@ public class IDAImporter {
 		createTable(table, datasource, tableColMetadata);
 
 		Reader idaReader = new IDAFileReader(reader, colsMetadata, comments);
-		DataLoader loader = new DataLoader(datasource, tableColMetadata);
+		FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableColMetadata);
 
 		Record record = idaReader.read();
 		

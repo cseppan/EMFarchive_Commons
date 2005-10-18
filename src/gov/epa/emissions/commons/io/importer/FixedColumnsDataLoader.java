@@ -3,18 +3,19 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OptionalColumnsDataLoader implements DataLoader {
+public class FixedColumnsDataLoader implements DataLoader {
 
     private Datasource datasource;
 
-    private OptionalColumnsTableMetadata colsMetadata;
+    private TableColumnsMetadata colsMetadata;
 
-    public OptionalColumnsDataLoader(Datasource datasource, OptionalColumnsTableMetadata cols) {
+    public FixedColumnsDataLoader(Datasource datasource, TableColumnsMetadata cols) {
         this.datasource = datasource;
         this.colsMetadata = cols;
     }
@@ -26,6 +27,13 @@ public class OptionalColumnsDataLoader implements DataLoader {
         } catch (Exception e) {
             dropData(table, dataset);
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
+        }
+    }
+
+    public void insertRow(Record record, Dataset dataset, String table) throws Exception {
+        DataModifier modifier = datasource.getDataModifier();
+        if (!record.isEnd()) {
+            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
         }
     }
 
@@ -41,36 +49,21 @@ public class OptionalColumnsDataLoader implements DataLoader {
     }
 
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
+        Record record = reader.read();
         DataModifier modifier = datasource.getDataModifier();
-        for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
-            if (record.size() < colsMetadata.minCols().length)
-                throw new ImporterException("Dataset - " + dataset.getName() + " has a record " + record
-                        + " that has less than number of minimum columns");
-
-            String[] data = data(dataset, record, colsMetadata);
-            modifier.insertRow(table, data, colsMetadata.cols());
+        while (!record.isEnd()) {
+            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
+            record = reader.read();
         }
     }
 
-    private String[] data(Dataset dataset, Record record, OptionalColumnsTableMetadata colsMetadata) {
+    private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
-        data.addAll(record.tokens());
-
-        if (data.size() < colsMetadata.cols().length)
-            colsMetadata.addDefaultValuesForOptionals(data);
-        massageNullMarkers(data);
+        for (int i = 0; i < record.size(); i++)
+            data.add(record.token(i));
 
         return (String[]) data.toArray(new String[0]);
-    }
-
-    // FIXME: should this be applied to ALL data loaders ?
-    private void massageNullMarkers(List data) {
-        for (int i = 0; i < data.size(); i++) {
-            String element = (String) data.get(i);
-            if (element.equals("-9"))// NULL marker
-                data.set(i, "");
-        }
     }
 
 }

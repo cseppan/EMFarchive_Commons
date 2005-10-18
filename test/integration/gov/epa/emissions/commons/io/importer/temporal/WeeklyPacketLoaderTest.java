@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -51,7 +52,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
 
         try {
-            DataLoader loader = new DataLoader(datasource, tableColsMetadata);
+            DataLoader loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
 
             Dataset dataset = new SimpleDataset();
             dataset.setName("test");
@@ -76,7 +77,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), tableColsMetadata);
 
-        DataLoader loader = new DataLoader(datasource, tableColsMetadata);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");

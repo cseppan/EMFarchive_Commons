@@ -9,8 +9,10 @@ public class LongFormatter implements ColumnFormatter {
 
     public final Format FORMAT = new Format("%10d");// FIXME: precision for long
 
-    // FIXME: what about -9 ? Same for other formatters.
     public String format(String name, ResultSet data) throws SQLException {
+        if (data.getString(name) == null || data.getFloat(name) == -9)
+            return "-9";
+
         return FORMAT.format(data.getInt(name));
     }
 

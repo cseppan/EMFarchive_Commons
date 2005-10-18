@@ -41,7 +41,7 @@ public class DelimitedFileLoaderTest extends DbTestCase {
     }
 
     public void testShouldLoadRecordsIntoTable() throws Exception {
-        DataLoader loader = new DataLoader(datasource, colsMetadata);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, colsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
