@@ -15,10 +15,6 @@ public class ORLOnRoadColumnsMetadata implements ColumnsMetadata {
         cols = createCols(types);
     }
 
-    public int[] widths() {
-        return null;
-    }
-
     public String identify() {
         return "ORL OnRoad";
     }
@@ -28,11 +24,11 @@ public class ORLOnRoadColumnsMetadata implements ColumnsMetadata {
     }
 
     private Column[] createCols(SqlDataTypes types) {
-        Column fips = new Column(types.intType(), new IntegerFormatter(), "FIPS");
-        Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
-        Column pollutant = new Column(types.stringType(16), new StringFormatter(16), "POLL");
-        Column annualEmissions = new Column(types.realType(), new RealFormatter(), "ANN_EMIS");
-        Column averageDailyEmissions = new Column(types.realType(), new RealFormatter(), "AVD_EMIS");
+        Column fips = new Column("FIPS", types.intType(), new IntegerFormatter());
+        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
+        Column pollutant = new Column("POLL", types.stringType(16), new StringFormatter(16));
+        Column annualEmissions = new Column("ANN_EMIS", types.realType(), new RealFormatter());
+        Column averageDailyEmissions = new Column("AVD_EMIS", types.realType(), new RealFormatter());
 
         return new Column[] { fips, scc, pollutant, annualEmissions, averageDailyEmissions };
     }

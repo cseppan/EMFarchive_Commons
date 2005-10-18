@@ -4,8 +4,6 @@ import gov.epa.emissions.commons.io.Column;
 
 public interface ColumnsMetadata {
 
-    int[] widths();
-
     String identify();
 
     Column[] cols();

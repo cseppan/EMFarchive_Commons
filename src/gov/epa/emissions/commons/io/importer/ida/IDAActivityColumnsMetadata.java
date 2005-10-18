@@ -19,10 +19,6 @@ public class IDAActivityColumnsMetadata implements ColumnsMetadata {
         cols = createCols(types, pollutants);
     }
 
-    public int[] widths() {
-        return null;
-    }
-
     public String identify() {
         return "IDA Activity";
     }
@@ -32,16 +28,16 @@ public class IDAActivityColumnsMetadata implements ColumnsMetadata {
     }
 
     private Column[] createCols(SqlDataTypes types, String[] pollutants) {
-        Column stid = new Column(types.intType(), new IntegerFormatter(), "STID");
-        Column cyid = new Column(types.intType(), new IntegerFormatter(), "CYID");
-        Column linkId = new Column(types.stringType(10), new StringFormatter(10), "LINK_ID");
-        Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
+        Column stid = new Column("STID", types.intType(), new IntegerFormatter());
+        Column cyid = new Column("CYID", types.intType(), new IntegerFormatter());
+        Column linkId = new Column("LINK_ID", types.stringType(10), new StringFormatter(10));
+        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
 
         List cols = new ArrayList();
         cols.addAll(Arrays.asList(new Column[] { stid, cyid, linkId, scc }));
 
         for (int i = 0; i < pollutants.length; i++) {
-            Column col = new Column(types.realType(), new RealFormatter(), pollutants[i]);
+            Column col = new Column(pollutants[i], types.realType(), new RealFormatter());
             cols.add(col);
         }
 

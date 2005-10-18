@@ -13,12 +13,20 @@ public class Column implements DbColumn {
 
     private ColumnFormatter formatter;
 
-    public Column(String sqlType, ColumnFormatter formatter, String name) {
+    private int width;
+
+    public Column(String name, String sqlType, ColumnFormatter formatter) {
         this.name = name;
         this.sqlType = sqlType;
         this.formatter = formatter;
+        this.width = -999;
     }
 
+    public Column(String name, String sqlType, int width, ColumnFormatter formatter) {
+        this(name, sqlType, formatter);
+        this.width = width;
+    }
+    
     public String format(ResultSet data) throws SQLException {
         return formatter.format(name, data);
     }
@@ -29,6 +37,10 @@ public class Column implements DbColumn {
 
     public String sqlType() {
         return sqlType;
+    }
+
+    public int width() {
+        return width;
     }
 
 }

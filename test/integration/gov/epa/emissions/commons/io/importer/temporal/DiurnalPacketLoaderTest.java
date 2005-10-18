@@ -24,7 +24,7 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private TableColumnsMetadata colsMetadata;
+    private TableColumnsMetadata tableColsMetadata;
 
     private DataLoader loader;
 
@@ -36,10 +36,11 @@ public class DiurnalPacketLoaderTest extends DbTestCase {
         DbServer dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
-        colsMetadata = new TableColumnsMetadata(new DiurnalColumnsMetadata(typeMapper), typeMapper);
+        DiurnalColumnsMetadata colsMetadata = new DiurnalColumnsMetadata(typeMapper);
+        tableColsMetadata = new TableColumnsMetadata(colsMetadata, typeMapper);
 
-        createTable("Diurnal_Weekday", datasource, colsMetadata);
-        loader = new DataLoader(datasource, colsMetadata);
+        createTable("Diurnal_Weekday", datasource, tableColsMetadata);
+        loader = new DataLoader(datasource, tableColsMetadata);
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
         fileReader = new BufferedReader(new FileReader(file));

@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
@@ -13,41 +14,10 @@ import java.util.List;
 
 public class IDAPointColumnsMetadata implements ColumnsMetadata {
 
-    private int[] widths;
-
     private Column[] cols;
 
     public IDAPointColumnsMetadata(String[] pollutants, SqlDataTypes types) {
         cols = createCols(types, pollutants);
-
-        int[] desColWidths = new int[] { 2, 3, 15, 15, 12, 6, 6, 2, 40, 10, 4, 4, 4, 6, 4, 10, 9, 8, 1, 2, 2, 2, 2, 2,
-                2, 1, 2, 11, 12, 8, 5, 5, 9, 4, 9, 9, 1 };
-        widths = addPollWidths(pollutants.length, desColWidths);
-
-    }
-
-    public int[] widths() {
-        return widths;
-    }
-
-    private int[] addPollWidths(int length, int[] desColWidths) {
-        int resolution = 7;
-        int totalCols = desColWidths.length + resolution * length;
-        int[] widths = new int[totalCols];
-        for (int i = 0; i < desColWidths.length; i++) {
-            widths[i] = desColWidths[i];
-        }
-        for (int i = 0; i < length; i++) {
-            int startIndex = desColWidths.length + i * resolution;
-            widths[startIndex] = 13;
-            widths[startIndex + 1] = 13;
-            widths[startIndex + 2] = 7;
-            widths[startIndex + 3] = 3;
-            widths[startIndex + 4] = 10;
-            widths[startIndex + 5] = 3;
-            widths[startIndex + 6] = 3;
-        }
-        return widths;
     }
 
     public String identify() {
@@ -70,13 +40,13 @@ public class IDAPointColumnsMetadata implements ColumnsMetadata {
 
     private void addPollutantsBasedCols(SqlDataTypes types, String[] pollutants, List cols) {
         for (int i = 0; i < pollutants.length; i++) {
-            Column ann = new Column(types.realType(), new RealFormatter(), "ANN_" + pollutants[i]);
-            Column avd = new Column(types.realType(), new RealFormatter(), "AVD_" + pollutants[i]);
-            Column ce = new Column(types.realType(), new RealFormatter(), "CE_" + pollutants[i]);
-            Column re = new Column(types.realType(), new RealFormatter(), "RE_" + pollutants[i]);
-            Column emf = new Column(types.realType(), new RealFormatter(), "EMF_" + pollutants[i]);
-            Column cpri = new Column(types.realType(), new RealFormatter(), "CPRI_" + pollutants[i]);
-            Column csec = new Column(types.realType(), new RealFormatter(), "CSEC_" + pollutants[i]);
+            Column ann = new Column("ANN_" + pollutants[i], types.realType(), 13, new RealFormatter());
+            Column avd = new Column("AVD_" + pollutants[i], types.realType(), 13, new RealFormatter());
+            Column ce = new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter());
+            Column re = new Column("RE_" + pollutants[i], types.realType(), 3, new RealFormatter());
+            Column emf = new Column("EMF_" + pollutants[i], types.realType(), 10, new RealFormatter());
+            Column cpri = new Column("CPRI_" + pollutants[i], types.realType(), 3, new RealFormatter());
+            Column csec = new Column("CSEC_" + pollutants[i], types.realType(), 3, new RealFormatter());
 
             cols.addAll(Arrays.asList(new Column[] { ann, avd, ce, re, emf, cpri, csec }));
         }
@@ -85,43 +55,43 @@ public class IDAPointColumnsMetadata implements ColumnsMetadata {
     private Column[] createMandatoryCols(SqlDataTypes types) {
         List cols = new ArrayList();
 
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "STID"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "CYID"));
-        cols.add(new Column(types.stringType(15), new StringFormatter(15), "PLANTID"));
-        cols.add(new Column(types.stringType(15), new StringFormatter(15), "POINTID"));
-        cols.add(new Column(types.stringType(12), new StringFormatter(12), "STACKID"));
-        cols.add(new Column(types.stringType(6), new StringFormatter(6), "ORISID"));
-        cols.add(new Column(types.stringType(6), new StringFormatter(6), "BLRID"));
-        cols.add(new Column(types.stringType(2), new StringFormatter(2), "SEGMENT"));
-        cols.add(new Column(types.stringType(40), new StringFormatter(40), "PLANT"));
-        cols.add(new Column(types.stringType(10), new StringFormatter(10), "SCC"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "BEGYR"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "ENDYR"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "STKHGT"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "STKDIAM"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "STKTEMP"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "STKFLOW"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "STKVEL"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "BOILCAP"));
-        cols.add(new Column(types.stringType(2), new StringFormatter(2), "CAPUNITS"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "WINTHRU"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "SPRTHRU"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "SUMTHRU"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "FALTHRU"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "HOURS"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "START"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "DAYS"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "WEEKS"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "THRUPUT"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "MAXRATE"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "HEATCON"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "SULFCON"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "ASHCON"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "NETDC"));
-        cols.add(new Column(types.intType(), new IntegerFormatter(), "SIC"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "LATC"));
-        cols.add(new Column(types.realType(), new RealFormatter(), "LONC"));
-        cols.add(new Column(types.stringType(2), new StringFormatter(2), "OFFSHORE"));
+        cols.add(new Column("STID", types.intType(), 2, new IntegerFormatter()));
+        cols.add(new Column("CYID", types.intType(), 3, new IntegerFormatter()));
+        cols.add(new Column("PLANTID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("POINTID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("STACKID", types.stringType(12), 12, new StringFormatter(12)));
+        cols.add(new Column("ORISID", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("BLRID", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("SEGMENT", types.stringType(2), 2, new StringFormatter(2)));
+        cols.add(new Column("PLANT", types.stringType(40), 40, new StringFormatter(40)));
+        cols.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("BEGYR", types.intType(), 4, new IntegerFormatter()));
+        cols.add(new Column("ENDYR", types.intType(), 4, new IntegerFormatter()));
+        cols.add(new Column("STKHGT", types.realType(), 4, new RealFormatter()));
+        cols.add(new Column("STKDIAM", types.realType(), 6, new RealFormatter()));
+        cols.add(new Column("STKTEMP", types.realType(), 4, new RealFormatter()));
+        cols.add(new Column("STKFLOW", types.realType(), 10, new RealFormatter()));
+        cols.add(new Column("STKVEL", types.realType(), 9, new RealFormatter()));
+        cols.add(new Column("BOILCAP", types.realType(), 8, new RealFormatter()));
+        cols.add(new Column("CAPUNITS", types.charType(), 1, new CharFormatter()));
+        cols.add(new Column("WINTHRU", types.realType(), 2, new RealFormatter()));
+        cols.add(new Column("SPRTHRU", types.realType(), 2, new RealFormatter()));
+        cols.add(new Column("SUMTHRU", types.realType(), 2, new RealFormatter()));
+        cols.add(new Column("FALTHRU", types.realType(), 2, new RealFormatter()));
+        cols.add(new Column("HOURS", types.intType(), 2, new IntegerFormatter()));
+        cols.add(new Column("START", types.intType(), 2, new IntegerFormatter()));
+        cols.add(new Column("DAYS", types.intType(), 1, new IntegerFormatter()));
+        cols.add(new Column("WEEKS", types.intType(), 2, new IntegerFormatter()));
+        cols.add(new Column("THRUPUT", types.realType(), 11, new RealFormatter()));
+        cols.add(new Column("MAXRATE", types.realType(), 12, new RealFormatter()));
+        cols.add(new Column("HEATCON", types.realType(), 8, new RealFormatter()));
+        cols.add(new Column("SULFCON", types.realType(), 5, new RealFormatter()));
+        cols.add(new Column("ASHCON", types.realType(), 5, new RealFormatter()));
+        cols.add(new Column("NETDC", types.realType(), 9, new RealFormatter()));
+        cols.add(new Column("SIC", types.intType(), 4, new IntegerFormatter()));
+        cols.add(new Column("LATC", types.realType(), 9, new RealFormatter()));
+        cols.add(new Column("LONC", types.realType(), 9, new RealFormatter()));
+        cols.add(new Column("OFFSHORE", types.stringType(1), 1, new StringFormatter(1)));
 
         return (Column[]) cols.toArray(new Column[0]);
     }

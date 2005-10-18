@@ -16,43 +16,39 @@ public class ORLPointColumnsMetadata implements ColumnsMetadata {
         this.types = types;
     }
 
-    public int[] widths() {
-        return null;
-    }
-
     public String identify() {
         return "ORL Point";
     }
 
     public Column[] cols() {
-        Column fips = new Column(types.intType(), new IntegerFormatter(), "FIPS");
-        Column plantId = new Column(types.stringType(15), new StringFormatter(15), "PLANTID");
-        Column pointId = new Column(types.stringType(15), new StringFormatter(15), "POINTID");
-        Column stackId = new Column(types.stringType(15), new StringFormatter(15), "STACKID");
-        Column segment = new Column(types.stringType(15), new StringFormatter(15), "SEGMENT");
-        Column plant = new Column(types.stringType(40), new StringFormatter(40), "PLANT");
-        Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
-        Column erpType = new Column(types.stringType(2), new StringFormatter(2), "ERPTYPE");
-        Column srcType = new Column(types.stringType(2), new StringFormatter(2), "SRCTYPE");
-        Column stkhgt = new Column(types.realType(), new RealFormatter(), "STKHGT");
-        Column stkdiam = new Column(types.realType(), new RealFormatter(), "STKDIAM");
-        Column stktemp = new Column(types.realType(), new RealFormatter(), "STKTEMP");
-        Column stkflow = new Column(types.realType(), new RealFormatter(), "STKFLOW");
-        Column stkvel = new Column(types.realType(), new RealFormatter(), "STKVEL");
-        Column sic = new Column(types.stringType(4), new StringFormatter(4), "SIC");
-        Column mact = new Column(types.stringType(6), new StringFormatter(6), "MACT");
-        Column naics = new Column(types.stringType(6), new StringFormatter(6), "NAICS");
-        Column ctype = new Column(types.stringType(1), new StringFormatter(1), "CTYPE");
-        Column xloc = new Column(types.realType(), new RealFormatter(), "XLOC");
-        Column yloc = new Column(types.realType(), new RealFormatter(), "YLOC");
-        Column utmz = new Column(types.smallInt(), new SmallIntegerFormatter(), "UTMZ");
-        Column pollutant = new Column(types.stringType(16), new StringFormatter(16), "POLL");
-        Column annualEmissions = new Column(types.realType(), new RealFormatter(), "ANN_EMIS");
-        Column averageDailyEmissions = new Column(types.realType(), new RealFormatter(), "AVD_EMIS");
-        Column ceff = new Column(types.realType(), new RealFormatter(), "CEFF");
-        Column reff = new Column(types.realType(), new RealFormatter(), "REFF");
-        Column cpri = new Column(types.intType(), new IntegerFormatter(), "CPRI");
-        Column csec = new Column(types.intType(), new IntegerFormatter(), "CSEC");
+        Column fips = new Column("FIPS", types.intType(), new IntegerFormatter());
+        Column plantId = new Column("PLANTID", types.stringType(15), new StringFormatter(15));
+        Column pointId = new Column("POINTID", types.stringType(15), new StringFormatter(15));
+        Column stackId = new Column("STACKID", types.stringType(15), new StringFormatter(15));
+        Column segment = new Column("SEGMENT", types.stringType(15), new StringFormatter(15));
+        Column plant = new Column("PLANT", types.stringType(40), new StringFormatter(40));
+        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
+        Column erpType = new Column("ERPTYPE", types.stringType(2), new StringFormatter(2));
+        Column srcType = new Column("SRCTYPE", types.stringType(2), new StringFormatter(2));
+        Column stkhgt = new Column("STKHGT", types.realType(), new RealFormatter());
+        Column stkdiam = new Column("STKDIAM", types.realType(), new RealFormatter());
+        Column stktemp = new Column("STKTEMP", types.realType(), new RealFormatter());
+        Column stkflow = new Column("STKFLOW", types.realType(), new RealFormatter());
+        Column stkvel = new Column("STKVEL", types.realType(), new RealFormatter());
+        Column sic = new Column("SIC", types.stringType(4), new StringFormatter(4));
+        Column mact = new Column("MACT", types.stringType(6), new StringFormatter(6));
+        Column naics = new Column("NAICS", types.stringType(6), new StringFormatter(6));
+        Column ctype = new Column("CTYPE", types.stringType(1), new StringFormatter(1));
+        Column xloc = new Column("XLOC", types.realType(), new RealFormatter());
+        Column yloc = new Column("YLOC", types.realType(), new RealFormatter());
+        Column utmz = new Column("UTMZ", types.smallInt(), new SmallIntegerFormatter());
+        Column pollutant = new Column("POLL", types.stringType(16), new StringFormatter(16));
+        Column annualEmissions = new Column("ANN_EMIS", types.realType(), new RealFormatter());
+        Column averageDailyEmissions = new Column("AVD_EMIS", types.realType(), new RealFormatter());
+        Column ceff = new Column("CEFF", types.realType(), new RealFormatter());
+        Column reff = new Column("REFF", types.realType(), new RealFormatter());
+        Column cpri = new Column("CPRI", types.intType(), new IntegerFormatter());
+        Column csec = new Column("CSEC", types.intType(), new IntegerFormatter());
 
         return new Column[] { fips, plantId, pointId, stackId, segment, plant, scc, erpType, srcType, stkhgt, stkdiam,
                 stktemp, stkflow, stkvel, sic, mact, naics, ctype, xloc, yloc, utmz, pollutant, annualEmissions,

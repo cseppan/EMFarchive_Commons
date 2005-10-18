@@ -13,34 +13,10 @@ import java.util.List;
 
 public class IDAMobileColumnsMetadata implements ColumnsMetadata {
 
-    private int[] widths;
-
     private Column[] cols;
 
     public IDAMobileColumnsMetadata(String[] pollutants, SqlDataTypes types) {
         cols = createCols(types, pollutants);
-
-        int[] desColWidths = new int[] { 2, 3, 10, 10 };
-        widths = addPollWidths(pollutants.length, desColWidths);
-    }
-
-    public int[] widths() {
-        return widths;
-    }
-
-    private int[] addPollWidths(int length, int[] desColWidths) {
-        int resolution = 2;
-        int totalCols = desColWidths.length + resolution * length;
-        int[] widths = new int[totalCols];
-        for (int i = 0; i < desColWidths.length; i++) {
-            widths[i] = desColWidths[i];
-        }
-        for (int i = 0; i < length; i++) {
-            int startIndex = desColWidths.length + i * resolution;
-            widths[startIndex] = 10;
-            widths[startIndex + 1] = 10;
-        }
-        return widths;
     }
 
     public String identify() {
@@ -52,17 +28,17 @@ public class IDAMobileColumnsMetadata implements ColumnsMetadata {
     }
 
     private Column[] createCols(SqlDataTypes types, String[] pollutants) {
-        Column stid = new Column(types.intType(), new IntegerFormatter(), "STID");
-        Column cyid = new Column(types.intType(), new IntegerFormatter(), "CYID");
-        Column linkId = new Column(types.stringType(10), new StringFormatter(10), "LINK_ID");
-        Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
+        Column stid = new Column("STID", types.intType(), 2, new IntegerFormatter());
+        Column cyid = new Column("CYID", types.intType(), 3, new IntegerFormatter());
+        Column linkId = new Column("LINK_ID", types.stringType(10), 10, new StringFormatter(10));
+        Column scc = new Column("SCC", types.stringType(10), 10, new StringFormatter(10));
 
         List cols = new ArrayList();
         cols.addAll(Arrays.asList(new Column[] { stid, cyid, linkId, scc }));
 
         for (int i = 0; i < pollutants.length; i++) {
-            Column ann = new Column(types.realType(), new RealFormatter(), "ANN_" + pollutants[i]);
-            Column avd = new Column(types.realType(), new RealFormatter(), "AVD_" + pollutants[i]);
+            Column ann = new Column("ANN_" + pollutants[i], types.realType(), 10, new RealFormatter());
+            Column avd = new Column("AVD_" + pollutants[i], types.realType(), 10, new RealFormatter());
 
             cols.addAll(Arrays.asList(new Column[] { ann, avd }));
         }

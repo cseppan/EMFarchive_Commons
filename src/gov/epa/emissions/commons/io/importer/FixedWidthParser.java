@@ -1,24 +1,26 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.io.Column;
+
 public class FixedWidthParser implements Parser {
 
-    private ColumnsMetadata cols;
+    private ColumnsMetadata colsMetadata;
 
-    public FixedWidthParser(ColumnsMetadata cols) {
-        this.cols = cols;
+    public FixedWidthParser(ColumnsMetadata colsMetadata) {
+        this.colsMetadata = colsMetadata;
     }
 
     public Record parse(String line) {
         Record record = new Record();
-        addTokens(line, record, cols.widths());
+        addTokens(line, record, colsMetadata.cols());
         return record;
     }
 
-    private void addTokens(String line, Record record, int[] widths) {
+    private void addTokens(String line, Record record, Column[] columns) {
         int offset = 0;
-        for (int i = 0; i < widths.length; i++) {
-            record.add(line.substring(offset, offset + widths[i]));
-            offset += widths[i];
+        for (int i = 0; i < columns.length; i++) {
+            record.add(line.substring(offset, offset + columns[i].width()));
+            offset += columns[i].width();
         }
     }
 }

@@ -24,10 +24,6 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
         return "Dataset_Id";
     }
 
-    public int[] widths() {
-        return null;
-    }
-
     public Column[] cols() {
         return cols;
     }
@@ -36,10 +32,10 @@ public class OptionalColumnsTableMetadata implements ColumnsMetadata {
         List cols = new ArrayList();
         cols.addAll(Arrays.asList(base.cols()));
 
-        Column datasetId = new Column(types.longType(), new LongFormatter(), key());
+        Column datasetId = new Column(key(), types.longType(), new LongFormatter());
         cols.add(0, datasetId);
 
-        Column inlineComments = new Column(types.stringType(128), new StringFormatter(128), "Comments");
+        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
         cols.add(inlineComments);
 
         return (Column[]) cols.toArray(new Column[0]);

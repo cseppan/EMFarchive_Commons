@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
@@ -24,7 +25,9 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private TableColumnsMetadata colsMetadata;
+    private TableColumnsMetadata tableColsMetadata;
+
+    private ColumnsMetadata colsMetadata;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -33,8 +36,9 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
-        colsMetadata = new TableColumnsMetadata(new WeeklyColumnsMetadata(typeMapper), typeMapper);
-        createTable("Weekly", datasource, colsMetadata);
+        colsMetadata = new WeeklyColumnsMetadata(typeMapper);
+        tableColsMetadata = new TableColumnsMetadata(colsMetadata, typeMapper);
+        createTable("Weekly", datasource, tableColsMetadata);
     }
 
     protected void tearDown() throws Exception {
@@ -47,7 +51,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
 
         try {
-            DataLoader loader = new DataLoader(datasource, colsMetadata);
+            DataLoader loader = new DataLoader(datasource, tableColsMetadata);
 
             Dataset dataset = new SimpleDataset();
             dataset.setName("test");
@@ -70,9 +74,9 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
     public void testShouldDropDataOnEncounteringBadData() throws Exception {
         File file = new File("test/data/temporal-profiles/BAD-weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), tableColsMetadata);
 
-        DataLoader loader = new DataLoader(datasource, colsMetadata);
+        DataLoader loader = new DataLoader(datasource, tableColsMetadata);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");

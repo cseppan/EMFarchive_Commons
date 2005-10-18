@@ -18,10 +18,6 @@ public class DelimitedColumnsMetadata implements ColumnsMetadata {
         this.identifier = identifier;
     }
 
-    public int[] widths() {
-        return null;
-    }
-
     public String identify() {
         return identifier;
     }
@@ -34,7 +30,7 @@ public class DelimitedColumnsMetadata implements ColumnsMetadata {
         List columns = new ArrayList();
 
         for (int i = 0; i < cols; i++)
-            columns.add(new Column(types.stringType(32), new StringFormatter(32), "Col_" + i));
+            columns.add(new Column("Col_" + i, types.stringType(32), new StringFormatter(32)));
 
         return (Column[]) columns.toArray(new Column[0]);
     }

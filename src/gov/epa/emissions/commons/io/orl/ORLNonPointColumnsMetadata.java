@@ -15,27 +15,23 @@ public class ORLNonPointColumnsMetadata implements ColumnsMetadata {
         this.types = types;
     }
 
-    public int[] widths() {
-        return null;
-    }
-
     public String identify() {
         return "ORL NonPoint";
     }
 
     public Column[] cols() {
-        Column fips = new Column(types.intType(), new IntegerFormatter(), "FIPS");
-        Column scc = new Column(types.stringType(10), new StringFormatter(10), "SCC");
-        Column sic = new Column(types.stringType(4), new StringFormatter(4), "SIC");
-        Column mact = new Column(types.stringType(6), new StringFormatter(6), "MACT");
-        Column srcType = new Column(types.stringType(2), new StringFormatter(2), "SRCTYPE");
-        Column naics = new Column(types.stringType(6), new StringFormatter(6), "NAICS");
-        Column pollutant = new Column(types.stringType(16), new StringFormatter(16), "POLL");
-        Column annualEmissions = new Column(types.realType(), new RealFormatter(), "ANN_EMIS");
-        Column averageDailyEmissions = new Column(types.realType(), new RealFormatter(), "AVD_EMIS");
-        Column ceff = new Column(types.realType(), new RealFormatter(), "CEFF");
-        Column reff = new Column(types.realType(), new RealFormatter(), "REFF");
-        Column rpen = new Column(types.realType(), new RealFormatter(), "RPEN");
+        Column fips = new Column("FIPS", types.intType(), new IntegerFormatter());
+        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
+        Column sic = new Column("SIC", types.stringType(4), new StringFormatter(4));
+        Column mact = new Column("MACT", types.stringType(6), new StringFormatter(6));
+        Column srcType = new Column("SRCTYPE", types.stringType(2), new StringFormatter(2));
+        Column naics = new Column("NAICS", types.stringType(6), new StringFormatter(6));
+        Column pollutant = new Column("POLL", types.stringType(16), new StringFormatter(16));
+        Column annualEmissions = new Column("ANN_EMIS", types.realType(), new RealFormatter());
+        Column averageDailyEmissions = new Column("AVD_EMIS", types.realType(), new RealFormatter());
+        Column ceff = new Column("CEFF", types.realType(), new RealFormatter());
+        Column reff = new Column("REFF", types.realType(), new RealFormatter());
+        Column rpen = new Column("RPEN", types.realType(), new RealFormatter());
 
         return new Column[] { fips, scc, sic, mact, srcType, naics, pollutant, annualEmissions, averageDailyEmissions,
                 ceff, reff, rpen };
