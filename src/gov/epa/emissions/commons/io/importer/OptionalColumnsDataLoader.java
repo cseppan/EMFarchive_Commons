@@ -19,7 +19,6 @@ public class OptionalColumnsDataLoader implements DataLoader {
         this.colsMetadata = cols;
     }
 
-    // TODO: review if any of these params should go into the constructor
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
         try {
             insertRecords(dataset, table, reader);

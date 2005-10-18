@@ -54,16 +54,14 @@ public class PointTemporalReferenceImporterTest extends DbTestCase {
         return tableReader.count(datasource.getName(), table);
     }
 
-    public void IDLE_testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
-        File file = new File("test/data/orl/nc/small-onroad.txt");
+    public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
+        File file = new File("test/data/temporal-crossreference/point-source.txt");
 
         PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
         // assert
-        String expected = " Created from file 99OR-MOD.TXT provided by M. Strum in November 2002.\n"
-                + " North Carolina data extracted from original file using UNIX grep command.\n"
-                + "    paste commands. \n";
+        String expected = "# comment1\n#comment 2  \n#comment 3\n";
         assertEquals(expected, dataset.getDescription());
     }
 

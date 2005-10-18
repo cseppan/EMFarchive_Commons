@@ -100,7 +100,6 @@ public class ORLImporter {
     }
 
     private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
-        // TODO: this probably applies to all importers
         if (!(tag("#ORL", comments) != null))
             throw new ImporterException("The tag - 'ORL' is mandatory, and is invalid");
 
@@ -116,6 +115,7 @@ public class ORLImporter {
         dataset.setYear(Integer.parseInt(year));
         setStartStopDateTimes(dataset, Integer.parseInt(year));
 
+        // TODO: this probably applies to all importers
         dataset.setDescription(descriptions(comments));
     }
 
