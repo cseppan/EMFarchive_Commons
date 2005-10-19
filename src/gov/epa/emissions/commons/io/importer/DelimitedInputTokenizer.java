@@ -9,9 +9,11 @@ public class DelimitedInputTokenizer {
 
     private static final String ANY_CHAR_EXCEPT_WHITESPACE = "(([\\S]+))";
 
-    private static final String ANY_CHAR_EXCEPT_COMMA = "([^,^\\s.]+)";
+    private static final String ANY_CHAR_EXCEPT_COMMA = "[^,\\s]+";
 
-    private static final String ANY_CHAR_EXCEPT_SEMICOLON = "([^;^\\s.]+)";
+    private static final String ANY_CHAR_EXCEPT_SEMICOLON = "[^;\\s]+";
+
+    private static final String ANY_CHAR_EXCEPT_SEMICOLON2 = "[^;\\s]+";
 
     private static final String SINGLE_QUOTED_TEXT = "('(.)*')";
 
@@ -33,7 +35,14 @@ public class DelimitedInputTokenizer {
     }
 
     public String[] tokensSemiColonDelimited(String input) {
-        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + ANY_CHAR_EXCEPT_SEMICOLON;
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS + "|"
+                + ANY_CHAR_EXCEPT_SEMICOLON;
+        return doTokenize(input, pattern);
+    }
+
+    public String[] tokensSemiColonDelimited2(String input) {
+        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS + "|"
+                + ANY_CHAR_EXCEPT_SEMICOLON2;
         return doTokenize(input, pattern);
     }
 
@@ -43,7 +52,7 @@ public class DelimitedInputTokenizer {
 
         List tokens = new ArrayList();
         while (m.find()) {
-            String token = input.substring(m.start(), m.end());
+            String token = input.substring(m.start(), m.end()).trim();
 
             if (token.matches(SINGLE_QUOTED_TEXT) || token.matches(DOUBLE_QUOTED_TEXT))// quoted
                 tokens.add(token.substring(1, token.length() - 1));// strip
@@ -55,4 +64,17 @@ public class DelimitedInputTokenizer {
         return (String[]) tokens.toArray(new String[0]);
     }
 
+    public String[] tokens(String input, int minimumTokens) {
+        String[] commaDelimited = tokensCommaDelimited(input);
+        if (commaDelimited.length >= minimumTokens)
+            return commaDelimited;
+
+        String[] semiColonDelimited = tokensSemiColonDelimited(input);
+        if (semiColonDelimited.length >= minimumTokens) {
+            System.out.println("semi-colon delimited");
+            return semiColonDelimited;
+        }
+
+        return null;
+    }
 }

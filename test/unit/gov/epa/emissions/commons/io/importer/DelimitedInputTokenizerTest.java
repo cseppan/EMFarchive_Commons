@@ -108,6 +108,36 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals(3, tokens.length);
         assertEquals("37119", tokens[0]);
         assertEquals("0001", tokens[1]);
-        assertEquals("! EPA Derived  ", tokens[2]);
+        assertEquals("! EPA Derived", tokens[2]);
+    }
+
+    public void testTokenizeSpaceDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
+        String input = "37119 0001 ! EPA Derived  ";
+        String[] tokens = tokenizer.tokens(input, 3);
+
+        assertEquals(3, tokens.length);
+        assertEquals("37119", tokens[0]);
+        assertEquals("0001", tokens[1]);
+        assertEquals("! EPA Derived", tokens[2]);
+    }
+
+    public void testTokenizeCommaDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
+        String input = "37119 , 0001, ! EPA Derived  ";
+        String[] tokens = tokenizer.tokens(input, 3);
+
+        assertEquals(3, tokens.length);
+        assertEquals("37119", tokens[0]);
+        assertEquals("0001", tokens[1]);
+        assertEquals("! EPA Derived", tokens[2]);
+    }
+
+    public void testTokenizeSemiColonDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
+        String input = "37119 ; 0001 ;! EPA Derived  ";
+        String[] tokens = tokenizer.tokensSemiColonDelimited2(input);
+
+        assertEquals(3, tokens.length);
+        assertEquals("37119", tokens[0]);
+        assertEquals("0001", tokens[1]);
+        assertEquals("! EPA Derived", tokens[2]);
     }
 }
