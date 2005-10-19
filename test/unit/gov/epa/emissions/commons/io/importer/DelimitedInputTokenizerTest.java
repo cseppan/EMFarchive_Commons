@@ -133,7 +133,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
 
     public void testTokenizeSemiColonDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
         String input = "37119 ; 0001 ;! EPA Derived  ";
-        String[] tokens = tokenizer.tokensSemiColonDelimited2(input);
+        String[] tokens = tokenizer.tokensSemiColonDelimited(input);
 
         assertEquals(3, tokens.length);
         assertEquals("37119", tokens[0]);

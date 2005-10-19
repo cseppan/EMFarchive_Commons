@@ -13,8 +13,6 @@ public class DelimitedInputTokenizer {
 
     private static final String ANY_CHAR_EXCEPT_SEMICOLON = "[^;\\s]+";
 
-    private static final String ANY_CHAR_EXCEPT_SEMICOLON2 = "[^;\\s]+";
-
     private static final String SINGLE_QUOTED_TEXT = "('(.)*')";
 
     private static final String DOUBLE_QUOTED_TEXT = "(\"(.)*\")";
@@ -37,12 +35,6 @@ public class DelimitedInputTokenizer {
     public String[] tokensSemiColonDelimited(String input) {
         String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS + "|"
                 + ANY_CHAR_EXCEPT_SEMICOLON;
-        return doTokenize(input, pattern);
-    }
-
-    public String[] tokensSemiColonDelimited2(String input) {
-        String pattern = DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS + "|"
-                + ANY_CHAR_EXCEPT_SEMICOLON2;
         return doTokenize(input, pattern);
     }
 
