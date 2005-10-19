@@ -5,10 +5,10 @@ import java.util.StringTokenizer;
 
 public class InternalSource implements Serializable {
 
-	//do not touch needed for hibernate mapping
-	private long internalsourceid;
-	
 	private final String INTERNALSOURCE_COL_DELIMITER=",";
+
+	private long listindex;
+	
     private String source;
     private String table;
     private String type;
@@ -87,17 +87,18 @@ public class InternalSource implements Serializable {
     }
 
 	/**
-	 * @return Returns the internalsourceid.
+	 * @return Returns the listindex.
 	 */
-	public long getInternalsourceid() {
-		return internalsourceid;
+	public long getListindex() {
+		return listindex;
 	}
 
 	/**
-	 * @param internalsourceid The internalsourceid to set.
+	 * @param listindex The listindex to set.
 	 */
-	public void setInternalsourceid(long internalsourceid) {
-		this.internalsourceid = internalsourceid;
+	public void setListindex(long listindex) {
+		this.listindex = listindex;
 	}
+
 
 }

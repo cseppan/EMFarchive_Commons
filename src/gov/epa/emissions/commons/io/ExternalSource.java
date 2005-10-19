@@ -18,11 +18,24 @@ import java.io.Serializable;
  */
 public class ExternalSource implements Serializable {
 
-	//do not touch needed for hibernate mapping
-	private long externalsourceid;
-
 	private String datasource;
+	private long listindex;
 	
+
+	/**
+	 * @return Returns the listindex.
+	 */
+	public long getListindex() {
+		return listindex;
+	}
+
+	/**
+	 * @param listindex The listindex to set.
+	 */
+	public void setListindex(long listindex) {
+		this.listindex = listindex;
+	}
+
 	/**
 	 * 
 	 */
@@ -49,20 +62,6 @@ public class ExternalSource implements Serializable {
 	 */
 	public void setDatasource(String datasource) {
 		this.datasource = datasource;
-	}
-
-	/**
-	 * @return Returns the externalsourceid.
-	 */
-	public long getExternalsourceid() {
-		return externalsourceid;
-	}
-
-	/**
-	 * @param externalsourceid The externalsourceid to set.
-	 */
-	public void setExternalsourceid(long externalsourceid) {
-		this.externalsourceid = externalsourceid;
 	}
 
 }

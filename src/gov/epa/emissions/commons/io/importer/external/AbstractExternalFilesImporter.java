@@ -12,6 +12,7 @@ package gov.epa.emissions.commons.io.importer.external;
 
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.io.ExternalSource;
 import gov.epa.emissions.commons.io.importer.Importer;
 
 import java.io.File;
@@ -54,14 +55,20 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
         	log.debug("updating non-ORL dataset");
         	updateExternalDataset(dataset,files);
+        	log.debug("completed updating non-ORL dataset");
         }	
 
 	private void updateExternalDataset(Dataset dataset, File[] files) {
-    	List fileNames = new ArrayList();
+		log.debug("Values: " + dataset.getName() + " Total number of files to update= " + files.length);
+		ExternalSource extSrc=null;
+		
     	for (int i=0; i<files.length;i++){
-    		fileNames.add(files[i].getAbsolutePath());
+    		extSrc = new ExternalSource(files[i].getAbsolutePath());
+    		extSrc.setListindex(i);
+    		dataset.addExternalSource(extSrc);
     	}
-    	dataset.setExternalSources(fileNames);
+    	log.debug("List contains " + dataset.getExternalSources().size() + " files to update");
+    	
 	}
 
 
