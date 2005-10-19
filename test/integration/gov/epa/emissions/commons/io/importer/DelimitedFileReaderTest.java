@@ -11,7 +11,7 @@ public class DelimitedFileReaderTest extends TestCase {
 
     protected void setUp() throws Exception {
         File file = new File("test/data/orl/SimpleDelimited.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
     }
 
     protected void tearDown() throws IOException {

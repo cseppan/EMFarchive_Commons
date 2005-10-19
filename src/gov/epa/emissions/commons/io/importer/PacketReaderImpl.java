@@ -65,4 +65,8 @@ public class PacketReaderImpl implements PacketReader {
         return comments;
     }
 
+    public void close() {
+        // no op
+    }
+
 }

@@ -46,4 +46,8 @@ public class DataReader implements Reader {
         return comments;
     }
 
+    public void close() {
+        // no op
+    }
+
 }

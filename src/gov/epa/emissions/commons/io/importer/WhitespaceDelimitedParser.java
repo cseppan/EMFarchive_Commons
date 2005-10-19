@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 public class WhitespaceDelimitedParser implements Parser {
 
-    private DelimitedInputTokenizer delimitedInputTokenizer;
+    private WhitespaceDelimitedTokenizer tokenizer;
 
     public WhitespaceDelimitedParser() {
-        delimitedInputTokenizer = new DelimitedInputTokenizer();
+        tokenizer = new WhitespaceDelimitedTokenizer();
     }
 
     public Record parse(String line) {
         Record record = new Record();
-        String[] tokens = delimitedInputTokenizer.tokensWhitepaceDelimited(line);
+        String[] tokens = tokenizer.tokens(line);
         record.add(Arrays.asList(tokens));
 
         return record;

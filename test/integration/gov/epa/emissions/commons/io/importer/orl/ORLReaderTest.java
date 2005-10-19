@@ -1,7 +1,8 @@
 package gov.epa.emissions.commons.io.importer.orl;
 
-import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
+import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
+import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedFileReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import junit.framework.TestCase;
 
 public class ORLReaderTest extends TestCase {
 
-    private DelimitedFileReader reader;
+    private Reader reader;
 
     private String dataFolder = "test/data/orl/nc";
 
@@ -20,7 +21,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testShouldIdentifyFirstSixLinesOfSmallPointFileAsComments() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new WhitespaceDelimitedFileReader(file);
 
         assertNotNull(reader.read());
         assertEquals(6, reader.comments().size());
@@ -28,7 +29,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testShouldCollectAllTenCommentsOfSmallPointFile() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new WhitespaceDelimitedFileReader(file);
 
         reader.read();
         assertEquals(6, reader.comments().size());
@@ -45,7 +46,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testShouldCreateRecordWithTwelveTokensForEachLineOfSmallNonPointFile() throws Exception {
         File file = new File(dataFolder, "small-nonpoint.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new WhitespaceDelimitedFileReader(file);
 
         Record record = reader.read();
         assertNotNull(record);
@@ -54,7 +55,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testVariationsOfDelimiterWidthsAndQuotesInAPointFile() throws Exception {
         File file = new File(dataFolder, "point-with-variations.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new WhitespaceDelimitedFileReader(file);
 
         for (int i = 0; i < 4; i++) {
             assertEquals(28, reader.read().size());
@@ -65,7 +66,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testVariationsOfDelimiterWidthsAndQuotesInTheSmallPointFile() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new WhitespaceDelimitedFileReader(file);
 
         for (int i = 0; i < 10; i++) {
             assertEquals(28, reader.read().size());

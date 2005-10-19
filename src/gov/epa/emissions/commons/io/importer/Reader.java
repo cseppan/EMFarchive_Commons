@@ -9,4 +9,6 @@ public interface Reader {
 
     List comments();
 
+    void close() throws IOException;
+
 }

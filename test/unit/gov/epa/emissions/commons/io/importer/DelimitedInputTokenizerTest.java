@@ -4,16 +4,11 @@ import junit.framework.TestCase;
 
 public class DelimitedInputTokenizerTest extends TestCase {
 
-    private DelimitedInputTokenizer tokenizer;
-
-    protected void setUp() {
-        tokenizer = new DelimitedInputTokenizer();
-    }
-
     public void testTokenizeStringWithSingleQuotedTextContainingSpacesSpaceDelimited() {
         String input = "37119 0001  'REXAMINC.; CUSTOM   DIVISION'   40201301   hi$ya -wE&9 -9 -9 -9 -9";
 
-        String[] tokens = tokenizer.tokensWhitepaceDelimited(input);
+        WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -28,7 +23,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
     public void testTokenizeStringWithDoubleQuotedTextContainingSpacesSpaceDelimited() {
         String input = "37119 0001  \"REXAMINC.; CUSTOM   DIVISION\"   40201301   hi$ya -wE&9 -9 -9 -9 -9";
 
-        String[] tokens = tokenizer.tokensWhitepaceDelimited(input);
+        WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -43,7 +39,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
     public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSpaceDelimited() {
         String input = "37119 0001  \"REXAMINC.; CUSTOM'S   DIVISION\"   40201301   hi$ya -wE&9 -9 -9 -9 -9";
 
-        String[] tokens = tokenizer.tokensWhitepaceDelimited(input);
+        WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -58,7 +55,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
     public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesTabDelimited() {
         String input = "37119   0001  \"REXAMINC.; CUSTOM'S     DIVISION\"      40201301    hi$ya   -wE&9   -9  -9  -9  -9";
 
-        String[] tokens = tokenizer.tokensWhitepaceDelimited(input);
+        WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -73,7 +71,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
     public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesCommaDelimited() {
         String input = "37119, 0001, \"REXAMINC.; CUSTOM'S   DIVISION, IMMIGRATION\" , 40201301 ,hi$ya,-wE&9,-9,-9,-9,-9";
 
-        String[] tokens = tokenizer.tokensCommaDelimited(input);
+        CommaDelimitedTokenizer tokenizer = new CommaDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -88,7 +87,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
     public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSemiColonDelimited() {
         String input = "37119; 0001; \"REXAMINC. ; CUSTOM'S   DIVISION, IMMIGRATION\"; 40201301 ; hi$ya;-wE&9;-9;-9;-9;-9";
 
-        String[] tokens = tokenizer.tokensSemiColonDelimited(input);
+        Tokenizer tokenizer = new SemiColonDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -103,7 +103,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
     public void testTokenizeTrailingInlineComments() {
         String input = "37119 0001 ! EPA Derived  ";
 
-        String[] tokens = tokenizer.tokensWhitepaceDelimited(input);
+        WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(3, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -113,7 +114,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
 
     public void testTokenizeSpaceDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
         String input = "37119 0001 ! EPA Derived  ";
-        String[] tokens = tokenizer.tokens(input, 3);
+        DelimiterIdentifyingTokenizer tokenizer = new DelimiterIdentifyingTokenizer(3);
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(3, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -123,7 +125,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
 
     public void testTokenizeCommaDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
         String input = "37119 , 0001, ! EPA Derived  ";
-        String[] tokens = tokenizer.tokens(input, 3);
+        DelimiterIdentifyingTokenizer tokenizer = new DelimiterIdentifyingTokenizer(3);
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(3, tokens.length);
         assertEquals("37119", tokens[0]);
@@ -133,7 +136,8 @@ public class DelimitedInputTokenizerTest extends TestCase {
 
     public void testTokenizeSemiColonDelimitedAutomaticallyBasedOnMiniminExpectedTokens() {
         String input = "37119 ; 0001 ;! EPA Derived  ";
-        String[] tokens = tokenizer.tokensSemiColonDelimited(input);
+        Tokenizer tokenizer = new SemiColonDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
 
         assertEquals(3, tokens.length);
         assertEquals("37119", tokens[0]);

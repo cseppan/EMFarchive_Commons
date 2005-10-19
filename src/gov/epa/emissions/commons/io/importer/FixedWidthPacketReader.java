@@ -23,4 +23,8 @@ public class FixedWidthPacketReader implements PacketReader {
     public String identify() {
         return delegate.identify();
     }
+
+    public void close() {
+        delegate.close();
+    }
 }

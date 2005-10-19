@@ -43,4 +43,8 @@ public class PointTemporalReferenceReader implements Reader {
     public String identify() {
         return header;
     }
+
+    public void close() {
+        delegate.close();
+    }
 }

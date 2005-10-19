@@ -29,7 +29,7 @@ public class DelimitedFileLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/orl/SimpleDelimited.txt");
-        reader = new DelimitedFileReader(file);
+        reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
 
         colsMetadata = new TableColumnsMetadata(new DelimitedColumnsMetadata("test", 7, dataType), dataType);
         createTable("SimpleDelimited", datasource, colsMetadata);

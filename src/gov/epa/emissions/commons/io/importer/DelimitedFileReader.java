@@ -15,12 +15,12 @@ public class DelimitedFileReader implements Reader {
 
     private List comments;
 
-    private DelimitedInputTokenizer delimitedInputTokenizer;
+    private Tokenizer tokenizer;
 
-    public DelimitedFileReader(File file) throws FileNotFoundException {
+    public DelimitedFileReader(File file, Tokenizer tokenizer) throws FileNotFoundException {
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
-        delimitedInputTokenizer = new DelimitedInputTokenizer();
+        this.tokenizer = tokenizer;
     }
 
     public void close() throws IOException {
@@ -48,7 +48,7 @@ public class DelimitedFileReader implements Reader {
 
     private Record doRead(String line) {
         Record record = new Record();
-        String[] tokens = delimitedInputTokenizer.tokensWhitepaceDelimited(line);
+        String[] tokens = tokenizer.tokens(line);
         record.add(Arrays.asList(tokens));
 
         return record;

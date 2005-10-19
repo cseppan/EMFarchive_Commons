@@ -45,7 +45,7 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         dataset.setName("test");
 
         File file = new File("test/data/variable-cols.txt");
-        DelimitedFileReader reader = new DelimitedFileReader(file);
+        Reader reader = new WhitespaceDelimitedFileReader(file);
         loader.load(reader, dataset, table);
 
         // assert
@@ -60,7 +60,7 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         dataset.setName("test");
 
         File file = new File("test/data/variable-cols-with-errors.txt");
-        DelimitedFileReader reader = new DelimitedFileReader(file);
+        Reader reader = new WhitespaceDelimitedFileReader(file);
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
 
         try {

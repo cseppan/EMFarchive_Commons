@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.OptionalColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
+import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
@@ -28,24 +28,27 @@ public class ORLImporter {
 
     private Datasource datasource;
 
-    private OptionalColumnsTableMetadata colsMetadata;
+    private OptionalColumnsTableMetadata tableColsMetadata;
 
-    public ORLImporter(Datasource datasource, OptionalColumnsMetadata cols, SqlDataTypes sqlDataTypes) {
+    private OptionalColumnsMetadata colsMetadata;
+
+    public ORLImporter(Datasource datasource, OptionalColumnsMetadata colsMetadata, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
-        colsMetadata = new OptionalColumnsTableMetadata(cols, sqlDataTypes);
+        this.colsMetadata = colsMetadata;
+        tableColsMetadata = new OptionalColumnsTableMetadata(colsMetadata, sqlDataTypes);
     }
 
     public void run(File file, Dataset dataset) throws ImporterException {
         String table = table(dataset.getName());
 
         try {
-            createTable(table, datasource, colsMetadata);
+            createTable(table, datasource, tableColsMetadata);
         } catch (SQLException e) {
             throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
         }
 
         try {
-            doImport(file, dataset, table, colsMetadata);
+            doImport(file, dataset, table, colsMetadata, tableColsMetadata);
         } catch (Exception e) {
             dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
@@ -63,12 +66,12 @@ public class ORLImporter {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, OptionalColumnsTableMetadata colsMetadata) throws Exception {
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
-        Reader reader = new DelimitedFileReader(file);
+    private void doImport(File file, Dataset dataset, String table, OptionalColumnsMetadata colsMetadata, OptionalColumnsTableMetadata tableColsMetadata) throws Exception {
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableColsMetadata);
+        Reader reader = new DelimiterIdentifyingFileReader(file, colsMetadata.minCols().length);
 
         loader.load(reader, dataset, table);
-        loadDataset(file, table, colsMetadata, reader.comments(), dataset);
+        loadDataset(file, table, tableColsMetadata, reader.comments(), dataset);
     }
 
     private void loadDataset(File file, String table, ColumnsMetadata colsMetadata, List comments, Dataset dataset)
