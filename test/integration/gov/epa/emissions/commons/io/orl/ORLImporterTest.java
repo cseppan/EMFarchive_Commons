@@ -25,7 +25,7 @@ import java.util.Random;
 
 import org.dbunit.dataset.ITable;
 
-public class OrlImporterTest extends DbTestCase {
+public class ORLImporterTest extends DbTestCase {
 
     private Datasource datasource;
 
@@ -187,7 +187,7 @@ public class OrlImporterTest extends DbTestCase {
         assertEquals("short tons/year", dataset.getUnits());
     }
 
-    public void itestShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
+    public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File file = new File("test/data/orl/nc/small-onroad.txt");
 
         NewImporter importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
