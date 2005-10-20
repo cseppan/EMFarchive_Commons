@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.NewImporter;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
@@ -15,11 +15,13 @@ import java.io.FileReader;
 import java.util.Iterator;
 import java.util.List;
 
-public class PointTemporalReferenceImporter implements NewImporter {
+public class PointTemporalReferenceImporter implements Importer {
 
     private Datasource datasource;
 
     private OptionalColumnsTableMetadata colsMetadata;
+
+    private File file;
 
     public PointTemporalReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
@@ -30,7 +32,11 @@ public class PointTemporalReferenceImporter implements NewImporter {
     /**
      * Expects table 'POINT_SOURCE' to be available in Datasource
      */
-    public void run(File file, Dataset dataset) throws ImporterException {
+    public void preCondition(File folder, String filePattern) {
+        this.file = new File(folder, filePattern);
+    }
+
+    public void run(Dataset dataset) throws ImporterException {
         try {
             doImport(file, dataset, "POINT_SOURCE", colsMetadata);
         } catch (Exception e) {
@@ -50,7 +56,7 @@ public class PointTemporalReferenceImporter implements NewImporter {
     }
 
     private void loadDataset(Reader reader, Dataset dataset) {
-        //TODO: other properties ?
+        // TODO: other properties ?
         dataset.setDescription(descriptions(reader.comments()));
     }
 
@@ -61,4 +67,5 @@ public class PointTemporalReferenceImporter implements NewImporter {
 
         return description.toString();
     }
+
 }

@@ -24,8 +24,13 @@ public abstract class FormattedImporter implements Importer {
 
     protected DbServer dbServer;
 
-    protected FormattedImporter(DbServer dbServer) {
+    protected File[] files;
+
+    private DatasetType datasetType;
+
+    protected FormattedImporter(DbServer dbServer, DatasetType datasetType) {
         this.dbServer = dbServer;
+        this.datasetType = datasetType;
     }
 
     /**
@@ -55,29 +60,24 @@ public abstract class FormattedImporter implements Importer {
         }
     }
     
-	public File[] preCondition(File path, String fileName, DatasetType datasetType) throws Exception {
-        File[] allFiles = new File[1];
-        log.debug("" + allFiles.length);
-        log.debug("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+	public void preCondition(File path, String fileName) throws ImporterException {
+        files = new File[1];
+        log.debug("" + files.length);
         log.debug("$$$ Path: " + path.getAbsolutePath());
         log.debug("$$$ Filename: " + fileName);
         log.debug("IS DATASETTYPE NULL? " + (datasetType== null));
         log.debug("$$$ DatasetType: " + datasetType.getName());
-        log.debug("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 		File file = validateFile(path, fileName);
-		allFiles[0]=file;
-        
-        
-        return allFiles;
+		files[0]=file;
 	}
 
-	public File validateFile(File path, String fileName) throws Exception {
+	private File validateFile(File path, String fileName) throws ImporterException {
         log.debug("check if file exists " + fileName);
         File file = new File(path, fileName);
         log.debug("File is: " + file.getAbsolutePath());
         if (!file.exists() || !file.isFile()) {
             log.error("File " + file.getAbsolutePath() + " not found");
-            throw new Exception("File not found");
+            throw new ImporterException("File not found");
         }
         log.debug("check if file exists " + fileName);
 

@@ -10,6 +10,7 @@ import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.FormattedImporter;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.ORLDatasetTypesFactory;
 import gov.epa.emissions.commons.io.importer.ORLTableType;
 import gov.epa.emissions.commons.io.importer.ORLTableTypes;
@@ -90,8 +91,9 @@ public class BaseORLImporter extends FormattedImporter {
 
     protected ORLTableTypes tableTypes;
 
-    public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily, ORLDatasetTypesFactory typesFactory) {
-        super(dbServer);
+    public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily, ORLDatasetTypesFactory typesFactory,
+            DatasetType datasetType) {
+        super(dbServer, datasetType);
         this.tableTypes = new ORLTableTypes(typesFactory);
         this.annualNotAverageDaily = annualNotAverageDaily;
 
@@ -102,29 +104,27 @@ public class BaseORLImporter extends FormattedImporter {
      * Take a array of Files and put them database, overwriting existing
      * corresponding tables specified in dataset based on overwrite flag.
      * 
-     * @param files -
-     *            an array of Files which are checked prior to import
      * @param dataset -
      *            Dataset specifying needed properties such as datasetType and
      *            table name (table name look-up is based on file name)
-     * @param overwrite -
-     *            whether or not to overwrite corresponding tables
+     * @param files -
+     *            an array of Files which are checked prior to import
      */
-    public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {
+    public void run(Dataset dataset) throws Exception {
         this.dataset = dataset;
 
         Datasource datasource = dbServer.getEmissionsDatasource();
         if (files.length != 1) {
-            throw new Exception("Can only import one valid orl file at a time: " + files);
+            throw new ImporterException("Can only import one valid orl file at a time: " + files);
         }
 
         DatasetType type = dataset.getDatasetType();
         if (!type.equals(typesFactory.nonPoint()) && !type.equals(typesFactory.nonRoad())
                 && !type.equals(typesFactory.onRoad()) && !type.equals(typesFactory.point())) {
-            throw new Exception("Unknown/unhandled ORL type: " + type.getName());
+            throw new ImporterException("Unknown/unhandled ORL type: " + type.getName());
         }
 
-        importFile(files[0], datasource, type, overwrite);
+        importFile(files[0], datasource, type);
         postImport();
     }
 
@@ -138,7 +138,7 @@ public class BaseORLImporter extends FormattedImporter {
      * @param details -
      *            the details with which to import the file
      */
-    public void importFile(File file, Datasource datasource, DatasetType type, boolean overwrite) throws Exception {
+    public void importFile(File file, Datasource datasource, DatasetType type) throws Exception {
         // get a bufferedreader for the file to be imported in
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -182,7 +182,7 @@ public class BaseORLImporter extends FormattedImporter {
         String[] columnTypes = metadata.getColumnTypes();
         int[] columnWidths = metadata.getColumnWidths();
 
-        doImport(file, datasource, reader, columnNames, columnTypes, columnWidths, overwrite);
+        doImport(file, datasource, reader, columnNames, columnTypes, columnWidths);
 
         // set dataset variables not specified in files
         final String unitsValue = "short tons";
@@ -356,7 +356,7 @@ public class BaseORLImporter extends FormattedImporter {
     }
 
     private String doImport(File file, Datasource datasource, BufferedReader reader, String[] columnNames,
-            String[] columnTypes, int[] columnWidths, boolean overwrite) throws Exception {
+            String[] columnTypes, int[] columnWidths) throws Exception {
         String fileName = file.getName();
         DatasetType datasetType = dataset.getDatasetType();
         ORLTableType tableType = tableTypes.type(datasetType);
@@ -375,11 +375,8 @@ public class BaseORLImporter extends FormattedImporter {
         }
 
         TableDefinition tableDefinition = datasource.tableDefinition();
-        if (overwrite) {
-            tableDefinition.deleteTable(tableName);
-        }
-        // else make sure table does not exist
-        else if (tableDefinition.tableExists(tableName)) {
+        tableDefinition.deleteTable(tableName);
+        if (tableDefinition.tableExists(tableName)) {
             log.error("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
             throw new Exception("The table \"" + tableName
@@ -651,8 +648,8 @@ public class BaseORLImporter extends FormattedImporter {
         modifyStateColumn(emissionsDatasource, emissionsAcceptor, tableName, fipsName);
     }
 
-    private void modifyStateColumn(Datasource emissionsDatasource, DataModifier emissionsAcceptor,
-            String table, final String FIPS_NAME) throws Exception, SQLException {
+    private void modifyStateColumn(Datasource emissionsDatasource, DataModifier emissionsAcceptor, String table,
+            final String FIPS_NAME) throws Exception, SQLException {
         // artificially insert the STATE data column, a four
         // character String from the reference.fips table
         final String STATE_NAME = "state_abbr";
@@ -665,8 +662,7 @@ public class BaseORLImporter extends FormattedImporter {
         state.setType(STATE_NAME, STATE_TYPE.getName());
 
         // STATE column
-        emissionsDatasource.tableDefinition().addColumn(table, STATE_NAME, state.getType(STATE_NAME),
-                FIPS_NAME);
+        emissionsDatasource.tableDefinition().addColumn(table, STATE_NAME, state.getType(STATE_NAME), FIPS_NAME);
 
         // update STATE column
         /**
@@ -725,8 +721,7 @@ public class BaseORLImporter extends FormattedImporter {
             String[] equalsClauses = { stateCode };
 
             // update
-            emissionsAcceptor.updateWhereEquals(table, STATE_NAME, "'" + stateAbbr + "'", whereColumns,
-                    equalsClauses);
+            emissionsAcceptor.updateWhereEquals(table, STATE_NAME, "'" + stateAbbr + "'", whereColumns, equalsClauses);
         }
     }
 
@@ -751,8 +746,8 @@ public class BaseORLImporter extends FormattedImporter {
             final int COUNTY_CODE_WIDTH = 3;
 
             // alter table
-            emissionsDatasource.tableDefinition().addColumn(table, FIPS_NAME, fips.getType(FIPS_NAME),
-                    COUNTY_CODE_NAME);
+            emissionsDatasource.tableDefinition()
+                    .addColumn(table, FIPS_NAME, fips.getType(FIPS_NAME), COUNTY_CODE_NAME);
 
             // update FIPS column
             for (int stid = 0; stid < STATE_CODE_WIDTH; stid++) {
@@ -773,8 +768,7 @@ public class BaseORLImporter extends FormattedImporter {
                     String[] likeClauses = { stidLike.toString(), cyidLike.toString() };
 
                     // update
-                    emissionsAcceptor.updateWhereLike(table, FIPS_NAME, concatExpr, whereColumns,
-                            likeClauses);
+                    emissionsAcceptor.updateWhereLike(table, FIPS_NAME, concatExpr, whereColumns, likeClauses);
                 }
             }
         }

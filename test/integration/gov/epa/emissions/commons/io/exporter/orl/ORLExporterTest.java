@@ -160,7 +160,8 @@ public class ORLExporterTest extends DbTestCase {
         dataset.setDatasetType(type);
         dataset.addTable(new Table(tableName, tableType.base()));
 
-        Importer importer = new BaseORLImporter(dbSetup.getDbServer(), true, types);
-        importer.run(new File[] { new File("test/data/orl/nc", filename) }, dataset, true);
+        Importer importer = new BaseORLImporter(dbSetup.getDbServer(), true, types, type);
+        importer.preCondition(new File("test/data/orl/nc"), filename);
+        importer.run(dataset);
     }
 }

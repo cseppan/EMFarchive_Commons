@@ -195,7 +195,7 @@ public class SummaryTableCreator {
         return dirtyStr.replace('-', '_');
     }
 
-    public void createORLSummaryTable(DatasetType datasetType, String orlTable, String summaryTable, boolean overwrite,
+    public void createORLSummaryTable(DatasetType datasetType, String orlTable, String summaryTable,
             boolean annualNotAverageDaily) throws Exception {
         String qualifiedSummaryTable = emissionsDatasource.getName() + "." + summaryTable;
         String qualifiedOrlTable = emissionsDatasource.getName() + "." + orlTable;
@@ -420,9 +420,7 @@ public class SummaryTableCreator {
                 + FIPS_COL_ORL + " = f." + FIPS_COL_REF + " AND " + summaryTableAndPart + "f.country_code='US')";
 
         // create the actual table
-        if (overwrite)
-            tableDefinition.deleteTable(qualifiedSummaryTable);
-        else if (tableDefinition.getTableNames().contains(qualifiedSummaryTable))
+        if (tableDefinition.getTableNames().contains(qualifiedSummaryTable))
             throw new Exception("The table \"" + qualifiedSummaryTable
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
         emissionsQuery.execute(query);

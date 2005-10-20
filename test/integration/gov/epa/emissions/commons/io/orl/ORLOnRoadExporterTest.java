@@ -5,10 +5,9 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.NewExporter;
-import gov.epa.emissions.commons.io.NewImporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
-import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -47,10 +46,10 @@ public class ORLOnRoadExporterTest extends DbTestCase {
         exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
     }
 
-    private void doImport() throws ImporterException {
-        File file = new File("test/data/orl/nc/small-onroad.txt");
-        NewImporter importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
-        importer.run(file, dataset);
+    private void doImport() throws Exception {
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
+        importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
+        importer.run(dataset);
     }
 
     protected void tearDown() throws Exception {

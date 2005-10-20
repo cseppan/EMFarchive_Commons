@@ -9,6 +9,7 @@ import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.OptionalColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
@@ -24,7 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class ORLImporter {
+public class ORLImporter implements Importer {
 
     private Datasource datasource;
 
@@ -32,13 +33,20 @@ public class ORLImporter {
 
     private OptionalColumnsMetadata colsMetadata;
 
+    private File file;
+
     public ORLImporter(Datasource datasource, OptionalColumnsMetadata colsMetadata, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
         this.colsMetadata = colsMetadata;
         tableColsMetadata = new OptionalColumnsTableMetadata(colsMetadata, sqlDataTypes);
     }
 
-    public void run(File file, Dataset dataset) throws ImporterException {
+    // TODO: verify if file exists
+    public void preCondition(File folder, String filePattern) {
+        this.file = new File(folder, filePattern);
+    }
+
+    public void run(Dataset dataset) throws ImporterException {
         String table = table(dataset.getName());
 
         try {
@@ -66,7 +74,8 @@ public class ORLImporter {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, OptionalColumnsMetadata colsMetadata, OptionalColumnsTableMetadata tableColsMetadata) throws Exception {
+    private void doImport(File file, Dataset dataset, String table, OptionalColumnsMetadata colsMetadata,
+            OptionalColumnsTableMetadata tableColsMetadata) throws Exception {
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableColsMetadata);
         Reader reader = new DelimiterIdentifyingFileReader(file, colsMetadata.minCols().length);
 

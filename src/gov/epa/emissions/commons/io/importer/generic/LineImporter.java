@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
 import gov.epa.emissions.commons.io.importer.FormattedImporter;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.TableType;
 
 import java.io.BufferedReader;
@@ -19,39 +20,39 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class LineImporter extends FormattedImporter {
-	
-	private static Log log = LogFactory.getLog(LineImporter.class);
-	private final String[] basetypes = {"TextLines"};
-	private final String summary = "TextLinesSummary";
-	
-	protected LineImporter(DbServer dbServer) {
-		super(dbServer);
-		// TODO Auto-generated constructor stub
-	}
-	
+
+    private static Log log = LogFactory.getLog(LineImporter.class);
+
+    private final String[] basetypes = { "TextLines" };
+
+    private final String summary = "TextLinesSummary";
+
+    protected LineImporter(DbServer dbServer, DatasetType datasetType) {
+        super(dbServer, datasetType);
+        // TODO Auto-generated constructor stub
+    }
+
     /**
      * Take a array of Files and put them database, overwriting existing
      * corresponding tables specified in dataset based on overwrite flag.
      * 
-     * @param files -
-     *            an array of Files which are checked prior to import
      * @param dataset -
      *            Dataset specifying needed properties such as datasetType and
      *            table name (table name look-up is based on file name)
-     * @param overwrite -
-     *            whether or not to overwrite corresponding tables
+     * @param files -
+     *            an array of Files which are checked prior to import
      */
-    public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {
+    public void run(Dataset dataset) throws Exception {
         this.dataset = dataset;
 
         // explicitly make sure only one valid file is returned
         if (files.length != 1) {
-            throw new Exception("Can only import one valid input file at a time: " + files);
+            throw new ImporterException("Can only import one valid input file at a time: " + files);
         }
-  
+
         // import the file
         Datasource datasource = dbServer.getEmissionsDatasource();
-        importFile(files[0], datasource, overwrite);
+        importFile(files[0], datasource);
     }
 
     /**
@@ -64,7 +65,7 @@ public class LineImporter extends FormattedImporter {
      * @param details -
      *            the details with which to import the file
      */
-    public void importFile(File file, Datasource datasource, boolean overwrite) throws Exception {
+    public void importFile(File file, Datasource datasource) throws Exception {
         // get a bufferedreader for the file to be imported in
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -90,7 +91,7 @@ public class LineImporter extends FormattedImporter {
             long currentLastModified = file.lastModified();
             if (lastModified != currentLastModified) {
                 reader.close();
-                throw new Exception("File " + file.getAbsolutePath()
+                throw new ImporterException("File " + file.getAbsolutePath()
                         + " changed during import. Do not edit file while import is executing.");
             }
         }
@@ -100,11 +101,11 @@ public class LineImporter extends FormattedImporter {
         String[] columnTypes = metadata.getColumnTypes();
         int[] columnWidths = metadata.getColumnWidths();
 
-        doImport(file, datasource, reader, columnNames, columnTypes, columnWidths, overwrite);
+        doImport(file, datasource, reader, columnNames, columnTypes, columnWidths);
     }
 
     private String doImport(File file, Datasource datasource, BufferedReader reader, String[] columnNames,
-            String[] columnTypes, int[] columnWidths, boolean overwrite) throws Exception {
+            String[] columnTypes, int[] columnWidths) throws Exception {
         String fileName = file.getName();
         DatasetType datasetType = dataset.getDatasetType();
         TableType tableType = new TableType(datasetType, basetypes, summary);
@@ -124,11 +125,8 @@ public class LineImporter extends FormattedImporter {
         }
 
         TableDefinition tableDefinition = datasource.tableDefinition();
-        if (overwrite) {
-            tableDefinition.deleteTable(tableName);
-        }
         // else make sure table does not exist
-        else if (tableDefinition.tableExists(tableName)) {
+        if (tableDefinition.tableExists(tableName)) {
             log.error("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
             throw new Exception("The table \"" + tableName
@@ -144,13 +142,13 @@ public class LineImporter extends FormattedImporter {
         // will avoid huge memory consumption
         while ((line = reader.readLine()) != null) {
             // skip over non data lines and those too long lines as needed
-        	int len = line.trim().length();
+            int len = line.trim().length();
             if (len < columnWidths[0] && len > 0) {
                 v.add(line);
                 numRows++;
             }
         }// while file is not empty
-        
+
         String[] data = new String[v.size()];
         v.copyInto(data);
         datasource.getDataModifier().insertRow(tableName, data, columnTypes);
@@ -165,28 +163,28 @@ public class LineImporter extends FormattedImporter {
 
         return tableName;
     }
-    
+
     // TODO: pull this out into a factory
-    private FileColumnsMetadata getFileColumnsMetadata() throws Exception {
-    	FileColumnsMetadata details = new FileColumnsMetadata("", dbServer.getDataType());
-        
-    	/**
-    	 * Need to setup a generic DataFormat
-    	 */
-    	
-    	details.addColumnName(GenericNames.COLUMN_NAME);
+    private FileColumnsMetadata getFileColumnsMetadata() {
+        FileColumnsMetadata details = new FileColumnsMetadata("", dbServer.getDataType());
+
+        /**
+         * Need to setup a generic DataFormat
+         */
+
+        details.addColumnName(GenericNames.COLUMN_NAME);
         try {
             details.setType(GenericNames.COLUMN_NAME, GenericNames.COLUMN_TYPE);
             details.setWidth(GenericNames.COLUMN_NAME, String.valueOf(GenericNames.COLUMN_WIDTH));
         } catch (Exception e) {
         }
-        
+
         return details;
     }
 
-	protected String[] breakUpLine(String line, int[] widths) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    protected String[] breakUpLine(String line, int[] widths) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

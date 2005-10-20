@@ -7,6 +7,8 @@
 
 package gov.epa.emissions.commons.io.importer.external;
 
+import gov.epa.emissions.commons.io.DatasetType;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -14,8 +16,8 @@ import org.apache.commons.logging.LogFactory;
 public class ExternalFilesImporter extends AbstractExternalFilesImporter {
     private static Log log = LogFactory.getLog(ExternalFilesImporter.class);
 
-	public ExternalFilesImporter() {
-		super();
+	public ExternalFilesImporter(DatasetType datasetType) {
+		super(datasetType);
 		importerName = "External Files Importer";
 		log.debug("Default External (Other) Files importer created");
 	}

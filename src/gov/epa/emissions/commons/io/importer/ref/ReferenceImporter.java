@@ -37,8 +37,9 @@ public class ReferenceImporter extends FixedFormatImporter {
 
     private static final String REF_DIR_NAME = "refFiles";
 
-    public ReferenceImporter(DbServer dbServer, File fieldDefsFileName, File referenceFilesDir, boolean useTransactions) {
-        super(dbServer);
+    public ReferenceImporter(DbServer dbServer, File fieldDefsFileName, File referenceFilesDir,
+            boolean useTransactions, DatasetType datasetType) {
+        super(dbServer, datasetType);
         this.tableTypes = new ReferenceTableTypes();
         this.fieldDefsFile = fieldDefsFileName;
         this.referenceFilesDir = referenceFilesDir;
@@ -49,7 +50,7 @@ public class ReferenceImporter extends FixedFormatImporter {
      * Take a array of Files and put them database, overwriting existing
      * corresponding tables specified in dataset based on overwrite flag.
      */
-    public void run(File[] files, Dataset dataset, boolean overwrite) throws Exception {
+    public void run(Dataset dataset) throws Exception {
         super.dataset = dataset;
 
         files = verifyExpectedFiles(dataset.getDatasetType(), files);
@@ -59,7 +60,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         // import each file (--> database table) one by one..
         Datasource datasource = dbServer.getReferenceDatasource();
         for (int i = 0; i < files.length; i++) {
-            importFile(files[i], datasource, getDetails(files[i]), overwrite);
+            importFile(files[i], datasource, getDetails(files[i]));
         }
     }
 
@@ -122,8 +123,7 @@ public class ReferenceImporter extends FixedFormatImporter {
     /**
      * import a single file into the specified database
      */
-    private void importFile(File file, Datasource datasource, FileColumnsMetadata details, boolean overwrite)
-            throws Exception {
+    private void importFile(File file, Datasource datasource, FileColumnsMetadata details) throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String[] columnTypes = details.getColumnTypes();
         String fileName = file.getName();
@@ -143,11 +143,8 @@ public class ReferenceImporter extends FixedFormatImporter {
         }
 
         TableDefinition tableDefinition = datasource.tableDefinition();
-        if (overwrite) {
-            tableDefinition.deleteTable(tableName);
-        }
-        // else make sure table does not exist
-        else if (tableDefinition.tableExists(tableName)) {
+        tableDefinition.deleteTable(tableName);
+        if (tableDefinition.tableExists(tableName)) {
             throw new Exception("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
         }
@@ -213,7 +210,7 @@ public class ReferenceImporter extends FixedFormatImporter {
                 return false;
             }
         };
-        File[] files = file.listFiles(textFileFilter);
+        super.files = file.listFiles(textFileFilter);
 
         Dataset dataset = new SimpleDataset();
         ReferenceTableTypes refTableTypes = new ReferenceTableTypes();
@@ -233,7 +230,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         dataset.addTable(ReferenceTable.REF_TIME_ZONES);
         dataset.addTable(ReferenceTable.REF_TRIBAL_CODES);
 
-        run(files, dataset, true);
+        run(dataset);
     }
 
 }

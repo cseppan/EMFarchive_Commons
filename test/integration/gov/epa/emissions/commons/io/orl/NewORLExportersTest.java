@@ -5,10 +5,9 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.NewExporter;
-import gov.epa.emissions.commons.io.NewImporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
-import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -47,7 +46,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportOnRoad() throws Exception {
-        NewImporter importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-onroad.txt");
 
         NewExporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
@@ -64,7 +63,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportNonRoad() throws Exception {
-        NewImporter importer = new ORLNonRoadImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLNonRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
 
         NewExporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
@@ -81,7 +80,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportNonPoint() throws Exception {
-        NewImporter importer = new ORLNonPointImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLNonPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonpoint.txt");
 
         NewExporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
@@ -100,7 +99,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportPoint() throws Exception {
-        NewImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-point.txt");
 
         NewExporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
@@ -135,9 +134,10 @@ public class NewORLExportersTest extends DbTestCase {
         return file;
     }
 
-    private void doImport(NewImporter importer, String filename) throws ImporterException {
-        File file = new File("test/data/orl/nc", filename);
-        importer.run(file, dataset);
+    private void doImport(Importer importer, String filename) throws Exception {
+        File folder = new File("test/data/orl/nc");
+        importer.preCondition(folder, filename);
+        importer.run(dataset);
     }
 
     private List readData(File file) throws IOException {

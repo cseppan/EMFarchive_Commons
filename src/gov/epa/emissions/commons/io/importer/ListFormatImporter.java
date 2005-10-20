@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.io.DatasetType;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -38,8 +39,8 @@ public abstract class ListFormatImporter extends FormattedImporter {
 
     // private boolean firstLineHeader;
 
-    public ListFormatImporter(DbServer dbServer, String splitRegex, boolean useTransactions, boolean multipleOccurances) {
-        super(dbServer);
+    public ListFormatImporter(DbServer dbServer, DatasetType datasetType, String splitRegex, boolean useTransactions, boolean multipleOccurances) {
+        super(dbServer, datasetType);
         splitRegularExpression = splitRegex;
         this.useTransactions = useTransactions;
         // add quantifier to find regular expression one or more times

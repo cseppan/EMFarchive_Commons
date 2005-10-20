@@ -14,8 +14,9 @@ public abstract class CompleteORLImporterTest_FIXME extends ORLImporterTestCase 
     }
 
     protected void doImport(String filename, Dataset dataset) throws Exception {
-        Importer importer = new CompleteORLImporter(dbSetup.getDbServer(), true, super.types);
-        importer.run(new File[] { new File("test/data/orl/nc", filename) }, dataset, true);
+        Importer importer = new CompleteORLImporter(dbSetup.getDbServer(), true, super.types, dataset.getDatasetType());
+        importer.preCondition(new File("test/data/orl/nc"), filename);
+        importer.run(dataset);
     }
 
 }

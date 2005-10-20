@@ -7,6 +7,7 @@
 
 package gov.epa.emissions.commons.io.importer.shape;
 
+import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.external.AbstractExternalFilesImporter;
 
 import org.apache.commons.logging.Log;
@@ -15,8 +16,8 @@ import org.apache.commons.logging.LogFactory;
 public class ShapeFilesImporter extends AbstractExternalFilesImporter {
     private static Log log = LogFactory.getLog(ShapeFilesImporter.class);
 
-	public ShapeFilesImporter() {
-		super();
+	public ShapeFilesImporter(DatasetType datasetType) {
+		super(datasetType);
 		importerName = "Shape Files Importer";
 		log.debug("Default Shape Files importer created");
 	}

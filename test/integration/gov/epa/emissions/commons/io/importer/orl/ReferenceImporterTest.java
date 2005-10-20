@@ -7,7 +7,7 @@ public class ReferenceImporterTest extends DbTestCase {
 
     public void testImportReference() throws Exception {
         ReferenceImporter referenceImporter = new ReferenceImporter(dbSetup.getDbServer(), fieldDefsFile,
-                referenceFilesDir, false);
+                referenceFilesDir, false, null);
         referenceImporter.run();
     }
 
