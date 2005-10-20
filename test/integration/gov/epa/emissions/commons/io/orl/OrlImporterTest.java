@@ -102,9 +102,9 @@ public class OrlImporterTest extends DbTestCase {
         ORLNonPointImporter importer = new ORLNonPointImporter(datasource, sqlDataTypes);
         importer.run(file, dataset);
 
-        List sources = dataset.getInternalSources();
-        assertEquals(1, sources.size());
-        InternalSource source = (InternalSource) sources.get(0);
+        InternalSource[] sources = dataset.getInternalSources();
+        assertEquals(1, sources.length);
+        InternalSource source = sources[0];
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 

@@ -82,15 +82,15 @@ public interface Dataset extends Serializable {
     // Datasets for non-external files will have a list of 
     // Internal Source objects.  An internal source object will
     // contain details of each table name/table type/ source/ size
-    List getInternalSources();
-    void setInternalSources(List internalSources);
+    InternalSource[] getInternalSources();
+    void setInternalSources(InternalSource[] internalSources);
     void addInternalSource(InternalSource source);
 
     // Datasets for external files will have a list of 
     // External Source objects.  An external source object will
     // contain details of each source (sourcename etc)
-    List getExternalSources();
-    void setExternalSources(List externalSources);
+    ExternalSource[] getExternalSources();
+    void setExternalSources(ExternalSource[] externalSources);
     void addExternalSource(ExternalSource source);
 
     // convenience methods

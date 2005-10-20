@@ -67,7 +67,7 @@ public abstract class AbstractExternalFilesImporter implements Importer {
     		extSrc.setListindex(i);
     		dataset.addExternalSource(extSrc);
     	}
-    	log.debug("List contains " + dataset.getExternalSources().size() + " files to update");
+    	log.debug("List contains " + dataset.getExternalSources().length + " files to update");
     	
 	}
 

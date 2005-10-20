@@ -58,7 +58,7 @@ class NewORLExporter {
 
     private void writerData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         DataQuery q = datasource.query();
-        InternalSource source = (InternalSource) dataset.getInternalSources().get(0);
+        InternalSource source = dataset.getInternalSources()[0];
 
         ResultSet data = q.selectAll(source.getTable());
         Column[] cols = colsMetadata.cols();

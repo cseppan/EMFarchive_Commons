@@ -12,6 +12,7 @@ package gov.epa.emissions.commons.io;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,7 +61,9 @@ public class SimpleDataset implements Dataset {
      */
     public SimpleDataset() {
         tables = new ArrayList();
-        internalSources = new ArrayList();
+		internalSources = new ArrayList();
+		externalSources = new ArrayList();
+
     }
 
     public String getDatasetTypeName() {
@@ -224,30 +227,31 @@ public class SimpleDataset implements Dataset {
         return datasetType;
     }
 
-	public List getInternalSources() {
-		return this.internalSources;
+	public InternalSource[] getInternalSources() {
+		return (InternalSource[])this.internalSources.toArray(new InternalSource[0]);
 	}
 
-	public void setInternalSources(List internalSources) {
-		this.internalSources=internalSources;
+	public void setInternalSources(InternalSource[] internalSources) {
+		this.internalSources.clear();
+		this.internalSources.addAll(Arrays.asList(internalSources));
 	}
 
     public void addInternalSource(InternalSource source) {
-        internalSources.add(source);
+    	this.internalSources.add(source);
     }
 
-	public List getExternalSources() {
-		return this.externalSources;
+	public ExternalSource[] getExternalSources() {
+		return (ExternalSource[])this.externalSources.toArray(new ExternalSource[0]);
 	}
 
-	public void setExternalSources(List externalSources) {
-		this.externalSources=externalSources;
+	public void setExternalSources(ExternalSource[] externalSources) {
+		this.externalSources.clear();
+		this.externalSources.addAll(Arrays.asList(externalSources));
 	}
 
 	public void addExternalSource(ExternalSource source) {
-		externalSources.add(source);
+		this.externalSources.add(source);
 	}
-
     
 
 }
