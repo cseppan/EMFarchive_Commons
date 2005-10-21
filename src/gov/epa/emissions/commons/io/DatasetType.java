@@ -25,6 +25,8 @@ public class DatasetType implements Serializable {
     private int minColumns;
 
     private int maxColumns;
+    
+    private boolean external;
 
     /**
      * @return Returns the uid.
@@ -121,4 +123,12 @@ public class DatasetType implements Serializable {
     public int getMaxColumns() {
         return maxColumns;
     }
+
+	public boolean isExternal() {
+		return external;
+	}
+
+	public void setExternal(boolean external) {
+		this.external = external;
+	}
 }
