@@ -128,7 +128,6 @@ public abstract class AbstractExternalFilesImporter implements Importer {
     }
 
     private String createPattern(String inputString) {
-        System.out.println("INPUT STRING= " + inputString);
         String OPEN_QUOTE = "\\Q";
         String END_QUOTE = "\\E";
         String dotPattern = OPEN_QUOTE + "." + END_QUOTE;

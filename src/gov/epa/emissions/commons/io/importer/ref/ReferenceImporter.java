@@ -188,9 +188,6 @@ public class ReferenceImporter extends FixedFormatImporter {
         reader.close();
         if (writer != null)
             writer.close();
-
-        if (kickOutRows > 0)
-            System.out.println("Kicked out " + kickOutRows + " rows to file " + writerFileName);
     }
 
     private FileColumnsMetadata getDetails(File file) throws Exception {

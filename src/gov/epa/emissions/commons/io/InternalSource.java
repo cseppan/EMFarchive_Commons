@@ -1,90 +1,84 @@
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
-import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 public class InternalSource implements Serializable {
 
-	private final String INTERNALSOURCE_COL_DELIMITER=",";
-
 	private long listindex;
-	
-    private String source;
-    private String table;
-    private String type;
-    private String[] cols;
-	private String columns;
-    private long sourceSize;
 
-    /**
+	private String source;
+
+	private String table;
+
+	private String type;
+
+	private String[] cols;
+
+	private long sourceSize;
+
+	/**
 	 * @return Returns the columns.
 	 */
-	public String getColumns() {
-		columns="";
-		if (cols.length>0){
-			for (int i=0;i<cols.length;i++){
-				columns=columns + INTERNALSOURCE_COL_DELIMITER + cols[i]; 
-			}
-			
+	public String getColsList() {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < cols.length; i++) {
+			buf.append(cols[i]);
+			if ((i + 1) < cols.length)
+				buf.append(", ");
 		}
-		return columns;
+
+		return buf.toString();
 	}
 
 	/**
-	 * @param columns The columns to set.
+	 * @param colsList
+	 *            The columns to set.
 	 */
-	public void setColumns(String columns) {
-		this.columns = columns;
-		
-		StringTokenizer stk = new StringTokenizer(columns,INTERNALSOURCE_COL_DELIMITER);
-		if (columns.length()>0){
-			cols = new String[stk.countTokens()];
-			int i=0;
-			while (stk.hasMoreTokens()){
-				cols[i]=stk.nextToken();
-			}			
-		}
+	public void setColsList(String colsList) {
+		Pattern p = Pattern.compile(", ");
+		cols = p.split(colsList);
 	}
 
 	public String getTable() {
-        return table;
-    }
+		return table;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String[] getCols() {
-        return cols;
-    }
+	public String[] getCols() {
+		return cols;
+	}
 
-    public String getSource() {
-        return source;
-    }
+	public String getSource() {
+		return source;
+	}
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+	public void setSource(String source) {
+		this.source = source;
+	}
 
-    public void setTable(String table) {
-        this.table = table;
-    }
+	public void setTable(String table) {
+		this.table = table;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void setCols(String[] cols) {
-        this.cols = cols;
-    }
+	public void setCols(String[] cols) {
+		this.cols = cols;
+	}
 
-    public long getSourceSize() {
-        return sourceSize;
-    }
+	public long getSourceSize() {
+		return sourceSize;
+	}
 
-    public void setSourceSize(long sourceSize) {
-        this.sourceSize = sourceSize;
-    }
+	public void setSourceSize(long sourceSize) {
+		this.sourceSize = sourceSize;
+	}
 
 	/**
 	 * @return Returns the listindex.
@@ -94,11 +88,11 @@ public class InternalSource implements Serializable {
 	}
 
 	/**
-	 * @param listindex The listindex to set.
+	 * @param listindex
+	 *            The listindex to set.
 	 */
 	public void setListindex(long listindex) {
 		this.listindex = listindex;
 	}
-
 
 }
