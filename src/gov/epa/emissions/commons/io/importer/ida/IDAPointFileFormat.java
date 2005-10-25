@@ -6,17 +6,17 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class IDAPointColumnsMetadata implements ColumnsMetadata {
+public class IDAPointFileFormat implements FileFormat {
 
     private Column[] cols;
 
-    public IDAPointColumnsMetadata(String[] pollutants, SqlDataTypes types) {
+    public IDAPointFileFormat(String[] pollutants, SqlDataTypes types) {
         cols = createCols(types, pollutants);
     }
 

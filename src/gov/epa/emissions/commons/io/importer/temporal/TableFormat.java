@@ -4,19 +4,19 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TableColumnsMetadata implements ColumnsMetadata {
+public class TableFormat implements FileFormat {
 
-    private ColumnsMetadata base;
+    private FileFormat base;
 
     private SqlDataTypes types;
 
-    public TableColumnsMetadata(ColumnsMetadata base, SqlDataTypes types) {
+    public TableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
         this.types = types;
     }

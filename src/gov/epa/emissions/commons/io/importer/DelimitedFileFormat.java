@@ -7,13 +7,13 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DelimitedColumnsMetadata implements ColumnsMetadata {
+public class DelimitedFileFormat implements FileFormat {
 
     private String identifier;
 
     private Column[] columns;
 
-    public DelimitedColumnsMetadata(String identifier, int cols, SqlDataTypes typeMapper) {
+    public DelimitedFileFormat(String identifier, int cols, SqlDataTypes typeMapper) {
         columns = createCols(typeMapper, cols);
         this.identifier = identifier;
     }

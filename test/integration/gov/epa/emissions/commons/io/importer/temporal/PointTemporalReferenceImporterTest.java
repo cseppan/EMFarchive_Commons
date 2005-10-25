@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
-import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
+import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
@@ -31,8 +31,8 @@ public class PointTemporalReferenceImporterTest extends DbTestCase {
         dataset.setName("test");
         dataset.setDatasetid(new Random().nextLong());
 
-        PointTemporalReferenceColumnsMetadata base = new PointTemporalReferenceColumnsMetadata(sqlDataTypes);
-        OptionalColumnsTableMetadata cols = new OptionalColumnsTableMetadata(base, sqlDataTypes);
+        PointTemporalReferenceFileFormat base = new PointTemporalReferenceFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols cols = new TableFormatWithOptionalCols(base, sqlDataTypes);
         createTable("POINT_SOURCE", datasource, cols);
     }
 

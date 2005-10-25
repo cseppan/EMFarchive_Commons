@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
@@ -36,9 +36,9 @@ public class TemporalProfileImporter {
 
             while (!isEndOfFile(fileReader)) {
                 String header = readHeader(fileReader);
-                ColumnsMetadata cols = colsMetadata(header);
+                FileFormat cols = colsMetadata(header);
                 Reader reader = new FixedWidthPacketReader(fileReader, header, cols);
-                DataLoader loader = new FixedColumnsDataLoader(datasource, new TableColumnsMetadata(cols, sqlType));
+                DataLoader loader = new FixedColumnsDataLoader(datasource, new TableFormat(cols, sqlType));
 
                 // Note: header is the same as table name
                 loader.load(reader, dataset, table(header));
@@ -58,8 +58,8 @@ public class TemporalProfileImporter {
         return !fileReader.ready();
     }
 
-    private ColumnsMetadata colsMetadata(String header) throws ImporterException {
-        ColumnsMetadata meta = metadataFactory.get(header);
+    private FileFormat colsMetadata(String header) throws ImporterException {
+        FileFormat meta = metadataFactory.get(header);
         if (meta == null)
             throw new ImporterException("invalid header - " + header);
 

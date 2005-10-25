@@ -4,11 +4,11 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
-import gov.epa.emissions.commons.io.importer.temporal.TableColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 import java.io.BufferedReader;
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ public class IDAImporter {
 		this.datasource = datasource;
 	}
 
-	public void run(BufferedReader reader,ColumnsMetadata colsMetadata , List comments, Dataset dataset) throws Exception {
+	public void run(BufferedReader reader,FileFormat colsMetadata , List comments, Dataset dataset) throws Exception {
 		String table = table(dataset.getName());
 		try
 		{
@@ -37,10 +37,10 @@ public class IDAImporter {
 		}
 	}
 
-	private void doImport(BufferedReader reader,ColumnsMetadata colsMetadata , List comments, Dataset dataset, String table)
+	private void doImport(BufferedReader reader,FileFormat colsMetadata , List comments, Dataset dataset, String table)
 			throws Exception {
 		
-		TableColumnsMetadata tableColMetadata = new TableColumnsMetadata(
+		TableFormat tableColMetadata = new TableFormat(
 				colsMetadata, sqlDataTypes);
 
 		createTable(table, datasource, tableColMetadata);
@@ -88,7 +88,7 @@ public class IDAImporter {
 	}
 
 	private void createTable(String table, Datasource datasource,
-			ColumnsMetadata colsMetadata) throws SQLException {
+			FileFormat colsMetadata) throws SQLException {
 		TableDefinition tableDefinition = datasource.tableDefinition();
 		tableDefinition.createTable(table, colsMetadata.cols());
 	}

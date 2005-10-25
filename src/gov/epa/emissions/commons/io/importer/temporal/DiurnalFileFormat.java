@@ -3,13 +3,13 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 
-public class DiurnalColumnsMetadata implements ColumnsMetadata {
+public class DiurnalFileFormat implements FileFormat {
 
     private SqlDataTypes types;
 
-    public DiurnalColumnsMetadata(SqlDataTypes types) {
+    public DiurnalFileFormat(SqlDataTypes types) {
         this.types = types;
     }
 

@@ -3,20 +3,20 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.LongFormatter;
-import gov.epa.emissions.commons.io.OptionalColumnsMetadata;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.StringFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OptionalColumnsTableMetadata implements OptionalColumnsMetadata {
+public class TableFormatWithOptionalCols implements FileFormatWithOptionalCols {
 
-    private OptionalColumnsMetadata base;
+    private FileFormatWithOptionalCols base;
 
     private Column[] cols;
 
-    public OptionalColumnsTableMetadata(OptionalColumnsMetadata base, SqlDataTypes types) {
+    public TableFormatWithOptionalCols(FileFormatWithOptionalCols base, SqlDataTypes types) {
         this.base = base;
         cols = createCols(types);
     }

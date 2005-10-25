@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
-import gov.epa.emissions.commons.io.OptionalColumnsMetadata;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ORLOnRoadColumnsMetadata implements OptionalColumnsMetadata {
+public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
 
-    public ORLOnRoadColumnsMetadata(SqlDataTypes types) {
+    public ORLNonRoadFileFormat(SqlDataTypes types) {
         this.types = types;
     }
 
     public String identify() {
-        return "ORL OnRoad";
+        return "ORL NonRoad";
     }
 
     public Column[] cols() {
@@ -48,7 +48,11 @@ public class ORLOnRoadColumnsMetadata implements OptionalColumnsMetadata {
 
     public Column[] optionalCols() {
         List cols = new ArrayList();
+
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
+        cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
+        cols.add(new Column("REFF", types.realType(), new RealFormatter()));
+        cols.add(new Column("RPEN", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
     }

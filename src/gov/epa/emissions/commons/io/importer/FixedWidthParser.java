@@ -4,9 +4,9 @@ import gov.epa.emissions.commons.io.Column;
 
 public class FixedWidthParser implements Parser {
 
-    private ColumnsMetadata colsMetadata;
+    private FileFormat colsMetadata;
 
-    public FixedWidthParser(ColumnsMetadata colsMetadata) {
+    public FixedWidthParser(FileFormat colsMetadata) {
         this.colsMetadata = colsMetadata;
     }
 

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
@@ -18,9 +18,9 @@ public class IDAFileReader implements Reader {
 
     private List comments;
 
-    private ColumnsMetadata colsMetadata;
+    private FileFormat colsMetadata;
 
-    public IDAFileReader(BufferedReader reader, ColumnsMetadata colsMetadata, List comments) {
+    public IDAFileReader(BufferedReader reader, FileFormat colsMetadata, List comments) {
         fileReader = reader;
         this.colsMetadata = colsMetadata;
         this.comments = new ArrayList();

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.importer.Record;
@@ -26,7 +26,7 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
         Mock typeMapper = mock(SqlDataTypes.class);
         typeMapper.stubs().method(ANYTHING).will(returnValue("ANY"));
 
-        ColumnsMetadata cols = new DiurnalColumnsMetadata((SqlDataTypes) typeMapper.proxy());
+        FileFormat cols = new DiurnalFileFormat((SqlDataTypes) typeMapper.proxy());
         fileReader = new BufferedReader(new FileReader(file));
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), cols);
     }

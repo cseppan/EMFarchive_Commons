@@ -8,7 +8,7 @@ public class FixedWidthPacketReader implements PacketReader {
 
     private PacketReaderImpl delegate;
 
-    public FixedWidthPacketReader(BufferedReader reader, String headerLine, ColumnsMetadata cols) {
+    public FixedWidthPacketReader(BufferedReader reader, String headerLine, FileFormat cols) {
         delegate = new PacketReaderImpl(reader, headerLine, new FixedWidthParser(cols));
     }
 

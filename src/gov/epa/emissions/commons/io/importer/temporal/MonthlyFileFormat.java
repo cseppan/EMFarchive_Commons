@@ -3,13 +3,13 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 
-public class MonthlyColumnsMetadata implements ColumnsMetadata {
+public class MonthlyFileFormat implements FileFormat {
 
     private SqlDataTypes types;
 
-    public MonthlyColumnsMetadata(SqlDataTypes types) {
+    public MonthlyFileFormat(SqlDataTypes types) {
         this.types = types;
     }
 

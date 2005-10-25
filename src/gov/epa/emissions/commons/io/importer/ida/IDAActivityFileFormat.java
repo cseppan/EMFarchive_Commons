@@ -5,17 +5,17 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class IDAActivityColumnsMetadata implements ColumnsMetadata {
+public class IDAActivityFileFormat implements FileFormat {
 
     private Column[] cols;
 
-    public IDAActivityColumnsMetadata(String[] pollutants, SqlDataTypes types) {
+    public IDAActivityFileFormat(String[] pollutants, SqlDataTypes types) {
         cols = createCols(types, pollutants);
     }
 

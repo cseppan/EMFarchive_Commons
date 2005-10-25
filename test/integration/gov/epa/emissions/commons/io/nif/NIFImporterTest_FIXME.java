@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-//FIXME: Please do not check in tests that are broken !! - Parthee !#$%#$%#%#
 public class NIFImporterTest_FIXME extends DbTestCase{
 
     private Datasource datasource;
@@ -54,7 +53,7 @@ public class NIFImporterTest_FIXME extends DbTestCase{
     
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        dbUpdate.dropTable(datasource.getName(), tableCE);
+        //dbUpdate.dropTable(datasource.getName(), tableCE);
         dbUpdate.dropTable(datasource.getName(), tableEM);
         dbUpdate.dropTable(datasource.getName(), tableEP);
         dbUpdate.dropTable(datasource.getName(), tablePE);
@@ -64,7 +63,7 @@ public class NIFImporterTest_FIXME extends DbTestCase{
     	List sources = new ArrayList();
     	
     	String dir = "test/data/nif/nonpoint";
-        sources.add(internalSource(new File(dir, "ky_ce.txt"),tableCE));
+        //sources.add(internalSource(new File(dir, "ky_ce.txt"),tableCE));
 		sources.add(internalSource(new File(dir, "ky_em.txt"),tableEM));
         sources.add(internalSource(new File(dir, "ky_ep.txt"),tableEP));
         sources.add(internalSource(new File(dir, "ky_pe.txt"),tablePE));
@@ -89,12 +88,12 @@ public class NIFImporterTest_FIXME extends DbTestCase{
 
     public void FIXME_testShouldImportASmallAndSimpleNonPointFile() throws Exception {
 
-//        NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
-//        importer.run(dataset);
-//        assertEquals(0,  countRecords(tableCE));
-//        assertEquals(21, countRecords(tableEM));
-//        assertEquals(4,  countRecords(tableEP));
-//        assertEquals(4,  countRecords(tablePE));
+        NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
+        importer.run(dataset);
+        //assertEquals(0,  countRecords(tableCE));
+        assertEquals(21, countRecords(tableEM));
+        assertEquals(4,  countRecords(tableEP));
+        assertEquals(4,  countRecords(tablePE));
     }
     
 

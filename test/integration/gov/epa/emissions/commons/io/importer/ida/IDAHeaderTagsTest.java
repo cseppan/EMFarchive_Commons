@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.framework.db.DbUpdate;
 
@@ -43,7 +43,7 @@ public class IDAHeaderTagsTest extends DbTestCase {
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
 
-		ColumnsMetadata colsMetadata = new IDAAreaColumnsMetadata(headerReader
+		FileFormat colsMetadata = new IDAAreaFileFormat(headerReader
 				.polluntants(), sqlDataTypes);
 		IDAImporter importer = new IDAImporter(datasource, sqlDataTypes);
 		importer.run(reader, colsMetadata, headerReader.comments(), dataset);
@@ -55,7 +55,7 @@ public class IDAHeaderTagsTest extends DbTestCase {
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
 
-		ColumnsMetadata colsMetadata = new IDAAreaColumnsMetadata(headerReader
+		FileFormat colsMetadata = new IDAAreaFileFormat(headerReader
 				.polluntants(), sqlDataTypes);
 		IDAImporter importer = new IDAImporter(datasource, sqlDataTypes);
 		try {

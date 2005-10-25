@@ -13,7 +13,7 @@ public class ORLNonPointImporter implements Importer {
     private ORLImporter delegate;
 
     public ORLNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ORLNonPointColumnsMetadata cols = new ORLNonPointColumnsMetadata(sqlDataTypes);
+        ORLNonPointFileFormat cols = new ORLNonPointFileFormat(sqlDataTypes);
         delegate = new ORLImporter(datasource, cols, sqlDataTypes);
     }
 

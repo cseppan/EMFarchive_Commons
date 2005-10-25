@@ -28,6 +28,8 @@ public class DatasetType implements Serializable {
     
     private boolean external;
 
+	private TableFileMetadata[] tableFileMetadatas;
+
     /**
      * @return Returns the uid.
      */
@@ -50,10 +52,16 @@ public class DatasetType implements Serializable {
     public DatasetType() {
         super();
     }
-
+    
     public DatasetType(String name) {
         this.name = name;
     }
+    
+    public DatasetType(String name, TableFileMetadata [] tableFileMetadatas){
+    	this.name = name;
+    	this.tableFileMetadatas = tableFileMetadatas;
+    }
+    
 
     public String getName() {
         return name;
@@ -130,5 +138,9 @@ public class DatasetType implements Serializable {
 
 	public void setExternal(boolean external) {
 		this.external = external;
+	}
+
+	public TableFileMetadata[] getTableFileMetadatas() {
+		return tableFileMetadatas;
 	}
 }

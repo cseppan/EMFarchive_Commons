@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
@@ -26,9 +26,9 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private TableColumnsMetadata tableColsMetadata;
+    private TableFormat tableColsMetadata;
 
-    private ColumnsMetadata colsMetadata;
+    private FileFormat colsMetadata;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -37,8 +37,8 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
-        colsMetadata = new WeeklyColumnsMetadata(typeMapper);
-        tableColsMetadata = new TableColumnsMetadata(colsMetadata, typeMapper);
+        colsMetadata = new WeeklyFileFormat(typeMapper);
+        tableColsMetadata = new TableFormat(colsMetadata, typeMapper);
         createTable("Weekly", datasource, tableColsMetadata);
     }
 

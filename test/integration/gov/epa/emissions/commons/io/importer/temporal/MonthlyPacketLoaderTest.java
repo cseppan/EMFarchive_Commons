@@ -25,7 +25,7 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
 
     private SqlDataTypes typeMapper;
 
-    public TableColumnsMetadata tableColsMetadata;
+    public TableFormat tableColsMetadata;
 
     private BufferedReader fileReader;
 
@@ -37,8 +37,8 @@ public class MonthlyPacketLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/monthly.txt");
-        MonthlyColumnsMetadata colsMetadata = new MonthlyColumnsMetadata(typeMapper);
-        tableColsMetadata = new TableColumnsMetadata(colsMetadata, typeMapper);
+        MonthlyFileFormat colsMetadata = new MonthlyFileFormat(typeMapper);
+        tableColsMetadata = new TableFormat(colsMetadata, typeMapper);
         createTable("Monthly", datasource, tableColsMetadata);
         
         fileReader = new BufferedReader(new FileReader(file));

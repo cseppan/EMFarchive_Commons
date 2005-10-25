@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.OptionalColumnsTableMetadata;
+import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
@@ -19,13 +19,13 @@ public class PointTemporalReferenceImporter implements Importer {
 
     private Datasource datasource;
 
-    private OptionalColumnsTableMetadata colsMetadata;
+    private TableFormatWithOptionalCols colsMetadata;
 
     private File file;
 
     public PointTemporalReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
-        colsMetadata = new OptionalColumnsTableMetadata(new PointTemporalReferenceColumnsMetadata(sqlDataTypes),
+        colsMetadata = new TableFormatWithOptionalCols(new PointTemporalReferenceFileFormat(sqlDataTypes),
                 sqlDataTypes);
     }
 
@@ -45,7 +45,7 @@ public class PointTemporalReferenceImporter implements Importer {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, OptionalColumnsTableMetadata colsMetadata)
+    private void doImport(File file, Dataset dataset, String table, TableFormatWithOptionalCols colsMetadata)
             throws Exception {
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));

@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.NewExporter;
 import gov.epa.emissions.commons.io.exporter.orl.ExporterException;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ public class ORLPointExporter implements NewExporter {
     private NewORLExporter delegate;
 
     public ORLPointExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ColumnsMetadata colsMetadata = new ORLPointColumnsMetadata(sqlDataTypes);
+        FileFormat colsMetadata = new ORLPointFileFormat(sqlDataTypes);
         delegate = new NewORLExporter(dataset, datasource, colsMetadata);
     }
 

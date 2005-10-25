@@ -8,7 +8,7 @@ import java.io.FileReader;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
 public class IDAPointImporter {
@@ -28,7 +28,7 @@ public class IDAPointImporter {
 			reader = new BufferedReader(new FileReader(file));
 			IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 			headerReader.read();
-			ColumnsMetadata colsMetadata = new IDAPointColumnsMetadata(
+			FileFormat colsMetadata = new IDAPointFileFormat(
 					headerReader.polluntants(), sqlDataTypes);
 
 			delegate

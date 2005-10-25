@@ -12,9 +12,9 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private Datasource datasource;
 
-    private OptionalColumnsTableMetadata colsMetadata;
+    private TableFormatWithOptionalCols colsMetadata;
 
-    public OptionalColumnsDataLoader(Datasource datasource, OptionalColumnsTableMetadata cols) {
+    public OptionalColumnsDataLoader(Datasource datasource, TableFormatWithOptionalCols cols) {
         this.datasource = datasource;
         this.colsMetadata = cols;
     }
@@ -51,7 +51,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
         }
     }
 
-    private String[] data(Dataset dataset, Record record, OptionalColumnsTableMetadata colsMetadata) {
+    private String[] data(Dataset dataset, Record record, TableFormatWithOptionalCols colsMetadata) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
         data.addAll(record.tokens());

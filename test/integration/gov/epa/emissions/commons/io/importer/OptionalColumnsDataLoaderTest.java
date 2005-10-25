@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.temporal.PointTemporalReferenceColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.temporal.PointTemporalReferenceFileFormat;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -17,7 +17,7 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
 
     private SqlDataTypes dataTypes;
 
-    private OptionalColumnsTableMetadata colsMetadata;
+    private TableFormatWithOptionalCols colsMetadata;
 
     private String table;
 
@@ -28,7 +28,7 @@ public class OptionalColumnsDataLoaderTest extends DbTestCase {
         dataTypes = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
-        colsMetadata = new OptionalColumnsTableMetadata(new PointTemporalReferenceColumnsMetadata(dataTypes), dataTypes);
+        colsMetadata = new TableFormatWithOptionalCols(new PointTemporalReferenceFileFormat(dataTypes), dataTypes);
         table = "varying";
         createTable(table, datasource, colsMetadata);
     }

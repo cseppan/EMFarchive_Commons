@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.importer.ida;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.ColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.BufferedReader;
@@ -26,7 +26,7 @@ public class IDAAreaImporter {
 			reader = new BufferedReader(new FileReader(file));
 			IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 			headerReader.read();
-			ColumnsMetadata colsMetadata = new IDAAreaColumnsMetadata(
+			FileFormat colsMetadata = new IDAAreaFileFormat(
 					headerReader.polluntants(), sqlDataTypes);
 
 			delegate
