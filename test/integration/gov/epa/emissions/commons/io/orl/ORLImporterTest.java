@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
+import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -109,7 +109,7 @@ public class ORLImporterTest extends DbTestCase {
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
-        FileFormat colsMetadata = new TableFormat(new ORLNonPointFileFormat(sqlDataTypes),
+        FileFormat colsMetadata = new FixedColsTableFormat(new ORLNonPointFileFormat(sqlDataTypes),
                 sqlDataTypes);
         String[] actualCols = source.getCols();
         String[] expectedCols = colNames(colsMetadata.cols());

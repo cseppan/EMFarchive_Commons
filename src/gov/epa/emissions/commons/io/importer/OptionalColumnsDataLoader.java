@@ -12,11 +12,11 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private Datasource datasource;
 
-    private TableFormatWithOptionalCols colsMetadata;
+    private TableFormatWithOptionalCols tableFormat;
 
-    public OptionalColumnsDataLoader(Datasource datasource, TableFormatWithOptionalCols cols) {
+    public OptionalColumnsDataLoader(Datasource datasource, TableFormatWithOptionalCols tableFormat) {
         this.datasource = datasource;
-        this.colsMetadata = cols;
+        this.tableFormat = tableFormat;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -31,7 +31,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.getDataModifier();
-            String key = colsMetadata.key();
+            String key = tableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -42,12 +42,12 @@ public class OptionalColumnsDataLoader implements DataLoader {
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         DataModifier modifier = datasource.getDataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
-            if (record.size() < colsMetadata.minCols().length)
+            if (record.size() < tableFormat.minCols().length)
                 throw new ImporterException("Dataset - " + dataset.getName() + " has a record " + record
                         + " that has less than number of minimum columns");
 
-            String[] data = data(dataset, record, colsMetadata);
-            modifier.insertRow(table, data, colsMetadata.cols());
+            String[] data = data(dataset, record, tableFormat);
+            modifier.insertRow(table, data, tableFormat.cols());
         }
     }
 

@@ -10,19 +10,21 @@ import java.io.File;
 
 public class ORLNonPointImporter implements Importer {
 
-    private ORLImporter delegate;
+	private ORLImporter delegate;
 
-    public ORLNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        ORLNonPointFileFormat cols = new ORLNonPointFileFormat(sqlDataTypes);
-        delegate = new ORLImporter(datasource, cols, sqlDataTypes);
-    }
+	public ORLNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+		ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(
+				sqlDataTypes);
 
-    public void preCondition(File folder, String filePattern) {
-        delegate.preCondition(folder, filePattern);
-    }
+		delegate = new ORLImporter(datasource, fileFormat, sqlDataTypes);
+	}
 
-    public void run(Dataset dataset) throws ImporterException {
-        delegate.run(dataset);
-    }
+	public void preCondition(File folder, String filePattern) {
+		delegate.preCondition(folder, filePattern);
+	}
+
+	public void run(Dataset dataset) throws ImporterException {
+		delegate.run(dataset);
+	}
 
 }

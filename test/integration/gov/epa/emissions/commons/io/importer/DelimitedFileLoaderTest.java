@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
+import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -19,7 +19,7 @@ public class DelimitedFileLoaderTest extends DbTestCase {
 
     private SqlDataTypes dataType;
 
-    private TableFormat colsMetadata;
+    private FixedColsTableFormat colsMetadata;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -31,7 +31,7 @@ public class DelimitedFileLoaderTest extends DbTestCase {
         File file = new File("test/data/orl/SimpleDelimited.txt");
         reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
 
-        colsMetadata = new TableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
+        colsMetadata = new FixedColsTableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
         createTable("SimpleDelimited", datasource, colsMetadata);
     }
 

@@ -30,20 +30,20 @@ public class TemporalProfileImporterTest extends DbTestCase {
         typeMapper = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
 
-        TableFormat monthlyMeta = new TableFormat(new MonthlyFileFormat(typeMapper), typeMapper);
+        FixedColsTableFormat monthlyMeta = new FixedColsTableFormat(new MonthlyFileFormat(typeMapper), typeMapper);
         createTable("Monthly", datasource, monthlyMeta);
 
-        TableFormat weeklyMeta = new TableFormat(new WeeklyFileFormat(typeMapper), typeMapper);
+        FixedColsTableFormat weeklyMeta = new FixedColsTableFormat(new WeeklyFileFormat(typeMapper), typeMapper);
         createTable("Weekly", datasource, weeklyMeta);
 
-        TableFormat diurnalMeta = new TableFormat(new DiurnalFileFormat(typeMapper), typeMapper);
+        FixedColsTableFormat diurnalMeta = new FixedColsTableFormat(new DiurnalFileFormat(typeMapper), typeMapper);
         createTable("Diurnal_Weekday", datasource, diurnalMeta);
         createTable("Diurnal_Weekend", datasource, diurnalMeta);
 
         importer = new TemporalProfileImporter(datasource, typeMapper);
     }
 
-    private void createTable(String table, Datasource datasource, TableFormat colsMetadata)
+    private void createTable(String table, Datasource datasource, FixedColsTableFormat colsMetadata)
             throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
         tableDefinition.createTable(table, colsMetadata.cols());

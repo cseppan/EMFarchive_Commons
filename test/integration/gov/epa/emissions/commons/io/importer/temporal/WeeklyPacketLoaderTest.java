@@ -26,7 +26,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private TableFormat tableColsMetadata;
+    private FixedColsTableFormat tableColsMetadata;
 
     private FileFormat colsMetadata;
 
@@ -38,7 +38,7 @@ public class WeeklyPacketLoaderTest extends DbTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         colsMetadata = new WeeklyFileFormat(typeMapper);
-        tableColsMetadata = new TableFormat(colsMetadata, typeMapper);
+        tableColsMetadata = new FixedColsTableFormat(colsMetadata, typeMapper);
         createTable("Weekly", datasource, tableColsMetadata);
     }
 

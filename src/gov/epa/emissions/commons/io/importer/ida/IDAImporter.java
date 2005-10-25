@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
-import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
+import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 
 import java.io.BufferedReader;
 import java.sql.SQLException;
@@ -40,7 +40,7 @@ public class IDAImporter {
 	private void doImport(BufferedReader reader,FileFormat colsMetadata , List comments, Dataset dataset, String table)
 			throws Exception {
 		
-		TableFormat tableColMetadata = new TableFormat(
+		FixedColsTableFormat tableColMetadata = new FixedColsTableFormat(
 				colsMetadata, sqlDataTypes);
 
 		createTable(table, datasource, tableColMetadata);

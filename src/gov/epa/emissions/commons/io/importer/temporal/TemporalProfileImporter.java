@@ -38,7 +38,7 @@ public class TemporalProfileImporter {
                 String header = readHeader(fileReader);
                 FileFormat cols = colsMetadata(header);
                 Reader reader = new FixedWidthPacketReader(fileReader, header, cols);
-                DataLoader loader = new FixedColumnsDataLoader(datasource, new TableFormat(cols, sqlType));
+                DataLoader loader = new FixedColumnsDataLoader(datasource, new FixedColsTableFormat(cols, sqlType));
 
                 // Note: header is the same as table name
                 loader.load(reader, dataset, table(header));
