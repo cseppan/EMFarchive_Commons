@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer.temporal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
@@ -19,14 +20,15 @@ public class PointTemporalReferenceImporter implements Importer {
 
     private Datasource datasource;
 
-    private TableFormatWithOptionalCols colsMetadata;
-
     private File file;
+
+    private DatasetTypeUnitWithOptionalCols unit;
 
     public PointTemporalReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
-        colsMetadata = new TableFormatWithOptionalCols(new PointTemporalReferenceFileFormat(sqlDataTypes),
-                sqlDataTypes);
+        PointTemporalReferenceFileFormat fileFormat = new PointTemporalReferenceFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols tableFormat = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        unit = new DatasetTypeUnitWithOptionalCols(tableFormat, fileFormat);
     }
 
     /**
@@ -38,16 +40,16 @@ public class PointTemporalReferenceImporter implements Importer {
 
     public void run(Dataset dataset) throws ImporterException {
         try {
-            doImport(file, dataset, "POINT_SOURCE", colsMetadata);
+            doImport(file, dataset, "POINT_SOURCE", unit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, TableFormatWithOptionalCols colsMetadata)
+    private void doImport(File file, Dataset dataset, String table, TableFormatWithOptionalCols tableFormat)
             throws Exception {
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
         Reader reader = new PointTemporalReferenceReader(fileReader);
 

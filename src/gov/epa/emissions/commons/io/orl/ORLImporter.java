@@ -38,7 +38,7 @@ public class ORLImporter implements Importer {
     public ORLImporter(Datasource datasource, FileFormatWithOptionalCols fileFormat, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
         TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat, true);
+        unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
     }
 
     // TODO: verify if file exists
