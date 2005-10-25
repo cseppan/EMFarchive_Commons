@@ -11,6 +11,7 @@
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,10 +32,11 @@ public class Sector implements Serializable {
 	 */
 	public Sector() {
 		super();
+        this.sectorCriteria = new ArrayList();
 	}
 
 	public Sector(String description, String name) {
-		super();
+		this();
 		this.description = description;
 		this.name = name;
 	}
