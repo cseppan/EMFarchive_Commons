@@ -20,7 +20,7 @@ public class IDAActivityImporter {
 
     public IDAActivityImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.sqlDataTypes = sqlDataTypes;
-        delegate = new IDAImporter(datasource, sqlDataTypes);
+        delegate = new IDAImporter(datasource);
     }
 
     public void run(File file, Dataset dataset) throws ImporterException {

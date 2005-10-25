@@ -47,7 +47,7 @@ public class IDAHeaderTagsTest extends DbTestCase {
 
 		DatasetTypeUnit unit = createUnit(headerReader);
         
-		IDAImporter importer = new IDAImporter(datasource, sqlDataTypes);
+		IDAImporter importer = new IDAImporter(datasource);
 		importer.run(reader, unit, headerReader.comments(), dataset);
 	}
 
@@ -65,7 +65,7 @@ public class IDAHeaderTagsTest extends DbTestCase {
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
         DatasetTypeUnit unit = createUnit(headerReader);
-		IDAImporter importer = new IDAImporter(datasource, sqlDataTypes);
+		IDAImporter importer = new IDAImporter(datasource);
 		try {
 			importer
 					.run(reader, unit, headerReader.comments(), dataset);

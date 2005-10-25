@@ -28,7 +28,7 @@ public class DatasetType implements Serializable {
     
     private boolean external;
 
-	private DatasetTypeUnit[] tableFileMetadatas;
+	private DatasetTypeUnit[] units;
 
     /**
      * @return Returns the uid.
@@ -57,9 +57,9 @@ public class DatasetType implements Serializable {
         this.name = name;
     }
     
-    public DatasetType(String name, DatasetTypeUnit [] tableFileMetadatas){
+    public DatasetType(String name, DatasetTypeUnit [] units){
     	this.name = name;
-    	this.tableFileMetadatas = tableFileMetadatas;
+    	this.units = units;
     }
     
 
@@ -140,7 +140,7 @@ public class DatasetType implements Serializable {
 		this.external = external;
 	}
 
-	public DatasetTypeUnit[] getTableFileMetadatas() {
-		return tableFileMetadatas;
+	public DatasetTypeUnit[] units() {
+		return units;
 	}
 }
