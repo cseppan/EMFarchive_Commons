@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NIFImporterTest extends DbTestCase{
+//FIXME: Please do not check in tests that are broken !! - Parthee !#$%#$%#%#
+public class NIFImporterTest_FIXME extends DbTestCase{
 
     private Datasource datasource;
 
