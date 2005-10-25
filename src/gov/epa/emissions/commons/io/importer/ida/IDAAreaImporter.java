@@ -3,8 +3,10 @@ package gov.epa.emissions.commons.io.importer.ida;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,9 +28,12 @@ public class IDAAreaImporter {
             reader = new BufferedReader(new FileReader(file));
             IDAHeaderReader headerReader = new IDAHeaderReader(reader);
             headerReader.read();
+            
             FileFormat fileFormat = new IDAAreaFileFormat(headerReader.polluntants(), sqlDataTypes);
-
-            delegate.run(reader, fileFormat, headerReader.comments(), dataset);
+            FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+            DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
+            
+            delegate.run(reader, unit, headerReader.comments(), dataset);
 
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "

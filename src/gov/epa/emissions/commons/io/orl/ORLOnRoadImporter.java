@@ -14,18 +14,19 @@ import java.io.File;
 public class ORLOnRoadImporter implements Importer {
 
     private ORLImporter delegate;
+    private SqlDataTypes sqlDataTypes;
 
     public ORLOnRoadImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        FileFormatWithOptionalCols fileFormat = new ORLOnRoadFileFormat(sqlDataTypes);
-
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-
-        delegate = new ORLImporter(datasource, unit);
+        this.sqlDataTypes = sqlDataTypes;
+        delegate = new ORLImporter(datasource);
     }
 
     public void run(Dataset dataset) throws ImporterException {
-        delegate.run(dataset);
+        FileFormatWithOptionalCols fileFormat = new ORLOnRoadFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+
+        delegate.run(dataset,unit);
     }
 
     public void preCondition(File folder, String filePattern) {

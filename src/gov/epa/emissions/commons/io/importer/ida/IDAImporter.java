@@ -5,11 +5,9 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
-import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 import java.io.BufferedReader;
@@ -27,11 +25,8 @@ public class IDAImporter {
         this.datasource = datasource;
     }
 
-    public void run(BufferedReader reader, FileFormat fileFormat, List comments, Dataset dataset) throws Exception {
+    public void run(BufferedReader reader, DatasetTypeUnit unit, List comments, Dataset dataset) throws Exception {
         String table = table(dataset.getName());
-        FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
-        
         try {
             doImport(reader, unit, comments, dataset, table);
         } finally {

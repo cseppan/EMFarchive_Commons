@@ -13,14 +13,12 @@ import java.io.File;
 public class ORLNonPointImporter implements Importer {
 
 	private ORLImporter delegate;
-
+    
+    private SqlDataTypes sqlDataTypes;
+    
 	public ORLNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-		ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(
-				sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-
-		delegate = new ORLImporter(datasource, unit);
+		this.sqlDataTypes = sqlDataTypes;
+        delegate = new ORLImporter(datasource);
 	}
 
 	public void preCondition(File folder, String filePattern) {
@@ -28,7 +26,11 @@ public class ORLNonPointImporter implements Importer {
 	}
 
 	public void run(Dataset dataset) throws ImporterException {
-		delegate.run(dataset);
+        ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(
+                sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        
+		delegate.run(dataset,unit);
 	}
-
 }

@@ -3,9 +3,11 @@ package gov.epa.emissions.commons.io.importer.ida;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -43,24 +45,30 @@ public class IDAHeaderTagsTest extends DbTestCase {
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
 
-		FileFormat colsMetadata = new IDAAreaFileFormat(headerReader
-				.polluntants(), sqlDataTypes);
+		DatasetTypeUnit unit = createUnit(headerReader);
+        
 		IDAImporter importer = new IDAImporter(datasource, sqlDataTypes);
-		importer.run(reader, colsMetadata, headerReader.comments(), dataset);
+		importer.run(reader, unit, headerReader.comments(), dataset);
 	}
+
+    private DatasetTypeUnit createUnit(IDAHeaderReader headerReader) {
+        FileFormat fileFormat = new IDAAreaFileFormat(headerReader
+				.polluntants(), sqlDataTypes);
+        FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
+        return unit;
+    }
 
 	public void testShouldIdentifyNoIDATag() throws Exception {
 		File file = new File("test/data/ida/noIDATags.txt");
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
-
-		FileFormat colsMetadata = new IDAAreaFileFormat(headerReader
-				.polluntants(), sqlDataTypes);
+        DatasetTypeUnit unit = createUnit(headerReader);
 		IDAImporter importer = new IDAImporter(datasource, sqlDataTypes);
 		try {
 			importer
-					.run(reader, colsMetadata, headerReader.comments(), dataset);
+					.run(reader, unit, headerReader.comments(), dataset);
 			assertTrue(false);
 		} catch (Exception e) {
 			assertEquals("Could not find tag '#IDA'",e.getMessage());

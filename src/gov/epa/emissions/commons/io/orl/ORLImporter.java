@@ -32,11 +32,8 @@ public class ORLImporter implements Importer {
 
     private File file;
 
-    private DatasetTypeUnitWithOptionalCols unit;
-
-    public ORLImporter(Datasource datasource, DatasetTypeUnitWithOptionalCols unit) {
+    public ORLImporter(Datasource datasource) {
         this.datasource = datasource;
-        this.unit = unit;
     }
 
     // TODO: verify if file exists
@@ -44,22 +41,8 @@ public class ORLImporter implements Importer {
         this.file = new File(folder, filePattern);
     }
 
-    public void run(Dataset dataset) throws ImporterException {
-        String table = table(dataset.getName());
-
-        try {
-            createTable(table, datasource, unit.tableFormat());
-        } catch (SQLException e) {
-            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
-        }
-
-        try {
-            doImport(file, dataset, table, unit.fileFormat(), unit.tableFormat());
-        } catch (Exception e) {
-            dropTable(table, datasource);
-            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName());
-        }
+    public void run(Dataset dataset){
+        
     }
 
     private void dropTable(String table, Datasource datasource) throws ImporterException {
@@ -164,6 +147,25 @@ public class ORLImporter implements Importer {
     private void createTable(String table, Datasource datasource, TableFormat tableFormat) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
         tableDefinition.createTable(table, tableFormat.cols());
+    }
+
+    public void run(Dataset dataset, DatasetTypeUnitWithOptionalCols unit) throws ImporterException {
+
+        String table = table(dataset.getName());
+
+        try {
+            createTable(table, datasource, unit.tableFormat());
+        } catch (SQLException e) {
+            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
+        }
+
+        try {
+            doImport(file, dataset, table, unit.fileFormat(), unit.tableFormat());
+        } catch (Exception e) {
+            dropTable(table, datasource);
+            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
+                    + dataset.getName());
+        }
     }
 
 }

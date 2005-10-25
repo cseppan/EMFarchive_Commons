@@ -14,18 +14,19 @@ import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 public class ORLPointImporter implements Importer {
 
     private ORLImporter delegate;
+    private SqlDataTypes sqlDataTypes;
 
     public ORLPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
-
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-
-        delegate = new ORLImporter(datasource, unit);
+        this.sqlDataTypes = sqlDataTypes;
+        delegate = new ORLImporter(datasource);
     }
 
     public void run(Dataset dataset) throws ImporterException {
-        delegate.run(dataset);
+        FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+
+        delegate.run(dataset,unit);
     }
 
     public void preCondition(File folder, String filePattern) {
