@@ -88,12 +88,12 @@ public class NIFImporterTest extends DbTestCase{
 
     public void FIXME_testShouldImportASmallAndSimpleNonPointFile() throws Exception {
 
-        NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
-        importer.run(dataset);
-        assertEquals(0,  countRecords(tableCE));
-        assertEquals(21, countRecords(tableEM));
-        assertEquals(4,  countRecords(tableEP));
-        assertEquals(4,  countRecords(tablePE));
+//        NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
+//        importer.run(dataset);
+//        assertEquals(0,  countRecords(tableCE));
+//        assertEquals(21, countRecords(tableEM));
+//        assertEquals(4,  countRecords(tableEP));
+//        assertEquals(4,  countRecords(tablePE));
     }
     
 
