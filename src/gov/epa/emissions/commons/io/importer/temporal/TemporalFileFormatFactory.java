@@ -6,11 +6,11 @@ import gov.epa.emissions.commons.io.importer.FileFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TemporalColumnsMetadataFactory {
+public class TemporalFileFormatFactory {
 
     private Map map;
 
-    public TemporalColumnsMetadataFactory(SqlDataTypes sqlType) {
+    public TemporalFileFormatFactory(SqlDataTypes sqlType) {
         map = new HashMap();
         map.put("MONTHLY", new MonthlyFileFormat(sqlType));
         map.put("WEEKLY", new WeeklyFileFormat(sqlType));

@@ -5,29 +5,21 @@ import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 public class DatasetTypeUnit {
 
-	private TableFormat tableMetadata;
+    private TableFormat tableFormat;
 
-	private FileFormat fileMetadata;
+    private FileFormat fileFormat;
 
-	private boolean required;
+    public DatasetTypeUnit(TableFormat tableFormat, FileFormat fileFormat) {
+        this.tableFormat = tableFormat;
+        this.fileFormat = fileFormat;
+    }
 
-	public DatasetTypeUnit(TableFormat tableMetadata, FileFormat fileMetadata,
-			boolean required) {
-		this.tableMetadata = tableMetadata;
-		this.fileMetadata = fileMetadata;
-		this.required = required;
-	}
+    public FileFormat fileFormat() {
+        return fileFormat;
+    }
 
-	public boolean isRequired() {
-		return required;
-	}
-
-	public FileFormat getFileMetadata() {
-		return fileMetadata;
-	}
-
-	public TableFormat getTableMetadata() {
-		return tableMetadata;
-	}
+    public TableFormat tableFormat() {
+        return tableFormat;
+    }
 
 }

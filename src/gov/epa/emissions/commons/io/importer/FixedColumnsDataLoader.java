@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,11 +13,11 @@ public class FixedColumnsDataLoader implements DataLoader {
 
     private Datasource datasource;
 
-    private FixedColsTableFormat colsMetadata;
+    private TableFormat colsMetadata;
 
-    public FixedColumnsDataLoader(Datasource datasource, FixedColsTableFormat cols) {
+    public FixedColumnsDataLoader(Datasource datasource, TableFormat tableFormat) {
         this.datasource = datasource;
-        this.colsMetadata = cols;
+        this.colsMetadata = tableFormat;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
