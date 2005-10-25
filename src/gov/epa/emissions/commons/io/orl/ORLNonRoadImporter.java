@@ -3,9 +3,11 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.File;
 
@@ -14,8 +16,12 @@ public class ORLNonRoadImporter implements Importer {
     private ORLImporter delegate;
 
     public ORLNonRoadImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        FileFormatWithOptionalCols cols = new ORLNonRoadFileFormat(sqlDataTypes);
-        delegate = new ORLImporter(datasource, cols, sqlDataTypes);
+        FileFormatWithOptionalCols fileFormat = new ORLNonRoadFileFormat(sqlDataTypes);
+
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+
+        delegate = new ORLImporter(datasource, unit);
     }
 
     public void run(Dataset dataset) throws ImporterException {

@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
@@ -35,10 +34,9 @@ public class ORLImporter implements Importer {
 
     private DatasetTypeUnitWithOptionalCols unit;
 
-    public ORLImporter(Datasource datasource, FileFormatWithOptionalCols fileFormat, SqlDataTypes sqlDataTypes) {
+    public ORLImporter(Datasource datasource, DatasetTypeUnitWithOptionalCols unit) {
         this.datasource = datasource;
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        this.unit = unit;
     }
 
     // TODO: verify if file exists
