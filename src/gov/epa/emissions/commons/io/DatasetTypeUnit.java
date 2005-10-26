@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
-public class DatasetTypeUnit {
+public class DatasetTypeUnit implements FormatUnit {
 
     private TableFormat tableFormat;
 

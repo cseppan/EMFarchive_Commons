@@ -40,7 +40,7 @@ public class PointTemporalReferenceImporter implements Importer {
 
     public void run(Dataset dataset) throws ImporterException {
         try {
-            doImport(file, dataset, "POINT_SOURCE", unit.tableFormat());
+            doImport(file, dataset, "POINT_SOURCE", (TableFormatWithOptionalCols) unit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());

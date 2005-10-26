@@ -28,7 +28,7 @@ public class DatasetType implements Serializable {
     
     private boolean external;
 
-	private DatasetTypeUnit[] units;
+	private FormatUnit[] formatUnits;
 
     /**
      * @return Returns the uid.
@@ -57,9 +57,9 @@ public class DatasetType implements Serializable {
         this.name = name;
     }
     
-    public DatasetType(String name, DatasetTypeUnit [] units){
+    public DatasetType(String name, FormatUnit [] formatUnits){
     	this.name = name;
-    	this.units = units;
+    	this.formatUnits = formatUnits;
     }
     
 
@@ -140,7 +140,7 @@ public class DatasetType implements Serializable {
 		this.external = external;
 	}
 
-	public DatasetTypeUnit[] units() {
-		return units;
+	public FormatUnit[] getFormatUnits() {
+		return formatUnits;
 	}
 }

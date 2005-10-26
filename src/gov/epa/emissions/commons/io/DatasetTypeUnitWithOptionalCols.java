@@ -1,8 +1,10 @@
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
-public class DatasetTypeUnitWithOptionalCols {
+public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
 
     private TableFormatWithOptionalCols tableMetadata;
 
@@ -14,11 +16,11 @@ public class DatasetTypeUnitWithOptionalCols {
         this.fileMetadata = fileFormat;
     }
 
-    public FileFormatWithOptionalCols fileFormat() {
+    public FileFormat fileFormat() {
         return fileMetadata;
     }
 
-    public TableFormatWithOptionalCols tableFormat() {
+    public TableFormat tableFormat() {
         return tableMetadata;
     }
 

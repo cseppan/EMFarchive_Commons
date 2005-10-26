@@ -4,8 +4,8 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileFormat;
@@ -149,7 +149,7 @@ public class ORLImporter implements Importer {
         tableDefinition.createTable(table, tableFormat.cols());
     }
 
-    public void run(Dataset dataset, DatasetTypeUnitWithOptionalCols unit) throws ImporterException {
+    public void run(Dataset dataset, FormatUnit unit) throws ImporterException {
 
         String table = table(dataset.getName());
 
@@ -160,7 +160,8 @@ public class ORLImporter implements Importer {
         }
 
         try {
-            doImport(file, dataset, table, unit.fileFormat(), unit.tableFormat());
+            doImport(file, dataset, table, (FileFormatWithOptionalCols) unit.fileFormat(),
+                    (TableFormatWithOptionalCols) unit.tableFormat());
         } catch (Exception e) {
             dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "

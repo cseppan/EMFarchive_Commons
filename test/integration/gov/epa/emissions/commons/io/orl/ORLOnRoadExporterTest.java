@@ -4,10 +4,13 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
 import gov.epa.emissions.commons.io.NewExporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
+import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -47,9 +50,20 @@ public class ORLOnRoadExporterTest extends DbTestCase {
     }
 
     private void doImport() throws Exception {
-        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
+        dataset.setDatasetType(orlOnRoadDatasetType());
+        
+        Importer importer = new ORLOnRoadImporter(datasource);
         importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
         importer.run(dataset);
+    }
+    
+    private DatasetType orlOnRoadDatasetType() {
+        ORLOnRoadFileFormat fileFormat = new ORLOnRoadFileFormat(
+                sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        DatasetType datasetType = new DatasetType("ORL Onroad",new DatasetTypeUnitWithOptionalCols[]{unit});
+        return datasetType;
     }
 
     protected void tearDown() throws Exception {

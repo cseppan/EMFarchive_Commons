@@ -4,9 +4,13 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.orl.ORLPointImporter;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -34,6 +38,8 @@ public class OrlImporterErrorsTest extends DbTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingTokensInData() throws Exception {
+        dataset.setDatasetType(orlPointDatasetType());
+        
         ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
@@ -50,6 +56,8 @@ public class OrlImporterErrorsTest extends DbTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingORLTagInHeader() throws Exception {
+        dataset.setDatasetType(orlPointDatasetType());
+        
         ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
@@ -66,6 +74,8 @@ public class OrlImporterErrorsTest extends DbTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingCountryTagInHeader() throws Exception {
+        dataset.setDatasetType(orlPointDatasetType());
+        
         ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
@@ -82,6 +92,8 @@ public class OrlImporterErrorsTest extends DbTestCase {
     }
 
     public void testShouldDropTableOnEncounteringEmptyCountryTagInHeader() throws Exception {
+        dataset.setDatasetType(orlPointDatasetType());
+        
         ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
@@ -97,7 +109,16 @@ public class OrlImporterErrorsTest extends DbTestCase {
         fail("should have encountered an error due to empty 'COUNTRY' tag, and dropped the table");
     }
 
+    private DatasetType orlPointDatasetType() {
+        FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        DatasetType datasetType = new DatasetType("ORL Point",new DatasetTypeUnitWithOptionalCols[]{unit});
+        return datasetType;
+    }
+
     public void testShouldDropTableOnEncounteringMissingYearTagInHeader() throws Exception {
+        dataset.setDatasetType(orlPointDatasetType());
         ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {
@@ -114,6 +135,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     }
 
     public void testShouldDropTableOnEncounteringEmptyYearTagInHeader() throws Exception {
+        dataset.setDatasetType(orlPointDatasetType());
         ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         try {

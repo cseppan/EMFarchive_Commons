@@ -1,15 +1,14 @@
 package gov.epa.emissions.commons.io.orl;
 
-import java.io.File;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
-import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
+
+import java.io.File;
 
 public class ORLPointImporter implements Importer {
 
@@ -22,11 +21,10 @@ public class ORLPointImporter implements Importer {
     }
 
     public void run(Dataset dataset) throws ImporterException {
-        FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        DatasetType datasetType = dataset.getDatasetType();
+        FormatUnit [] units = datasetType.getFormatUnits();
 
-        delegate.run(dataset,unit);
+        delegate.run(dataset,units[0]);
     }
 
     public void preCondition(File folder, String filePattern) {
