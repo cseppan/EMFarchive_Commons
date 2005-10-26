@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.FormatUnit;
@@ -13,10 +12,8 @@ import java.io.File;
 public class ORLPointImporter implements Importer {
 
     private ORLImporter delegate;
-    private SqlDataTypes sqlDataTypes;
-
-    public ORLPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.sqlDataTypes = sqlDataTypes;
+    
+    public ORLPointImporter(Datasource datasource) {
         delegate = new ORLImporter(datasource);
     }
 

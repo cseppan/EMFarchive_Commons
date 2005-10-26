@@ -40,7 +40,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingTokensInData() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
         
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource);
 
         try {
             importer.preCondition(new File("test/data/orl/nc"), "BAD-point.txt");
@@ -58,7 +58,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingORLTagInHeader() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
         
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource);
 
         try {
             importer.preCondition(new File("test/data/orl/nc"), "MISSING-ORL-TAG-IN-HEADER-point.txt");
@@ -76,7 +76,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringMissingCountryTagInHeader() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
         
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource);
 
         try {
             importer.preCondition(new File("test/data/orl/nc"), "MISSING-COUNTRY-TAG-IN-HEADER-point.txt");            
@@ -94,7 +94,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
     public void testShouldDropTableOnEncounteringEmptyCountryTagInHeader() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
         
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource);
 
         try {
             importer.preCondition(new File("test/data/orl/nc"), "EMPTY-COUNTRY-TAG-IN-HEADER-point.txt");            
@@ -119,7 +119,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
 
     public void testShouldDropTableOnEncounteringMissingYearTagInHeader() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource);
 
         try {
             importer.preCondition(new File("test/data/orl/nc"), "MISSING-YEAR-TAG-IN-HEADER-point.txt");            
@@ -136,7 +136,7 @@ public class OrlImporterErrorsTest extends DbTestCase {
 
     public void testShouldDropTableOnEncounteringEmptyYearTagInHeader() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
+        ORLPointImporter importer = new ORLPointImporter(datasource);
 
         try {
             importer.preCondition(new File("test/data/orl/nc"), "EMPTY-YEAR-TAG-IN-HEADER-point.txt");            

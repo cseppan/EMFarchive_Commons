@@ -136,7 +136,7 @@ public class NewORLExportersTest extends DbTestCase {
 
     public void testShouldExportPoint() throws Exception {
         dataset.setDatasetType(orlPointDatasetType());
-        Importer importer = new ORLPointImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLPointImporter(datasource);
         doImport(importer, "small-point.txt");
 
         NewExporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
