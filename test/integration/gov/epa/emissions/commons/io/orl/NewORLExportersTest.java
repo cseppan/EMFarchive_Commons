@@ -4,14 +4,10 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetType;
-import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
-import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.NewExporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.BufferedReader;
@@ -50,8 +46,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportOnRoad() throws Exception {
-        dataset.setDatasetType(orlOnRoadDatasetType());
-        Importer importer = new ORLOnRoadImporter(datasource);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-onroad.txt");
 
         NewExporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
@@ -67,19 +62,8 @@ public class NewORLExportersTest extends DbTestCase {
         assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9", (String) data.get(1));
     }
     
-    private DatasetType orlOnRoadDatasetType() {
-        ORLOnRoadFileFormat fileFormat = new ORLOnRoadFileFormat(
-                sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Onroad",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     public void testShouldExportNonRoad() throws Exception {
-        dataset.setDatasetType(orlNonRoadDatasetType());
-        
-        Importer importer = new ORLNonRoadImporter(datasource);
+        Importer importer = new ORLNonRoadImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
 
         NewExporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
@@ -95,19 +79,8 @@ public class NewORLExportersTest extends DbTestCase {
         assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9", (String) data.get(1));
     }
     
-    private DatasetType orlNonRoadDatasetType() {
-        ORLNonRoadFileFormat fileFormat = new ORLNonRoadFileFormat(
-                sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Nonroad",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     public void testShouldExportNonPoint() throws Exception {
-        dataset.setDatasetType(orlNonPointDatasetType());
-        
-        Importer importer = new ORLNonPointImporter(datasource);
+        Importer importer = new ORLNonPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-nonpoint.txt");
 
         NewExporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
@@ -125,18 +98,8 @@ public class NewORLExportersTest extends DbTestCase {
                 (String) data.get(1));
     }
 
-    private DatasetType orlNonPointDatasetType() {
-        ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(
-                sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Nonpoint",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     public void testShouldExportPoint() throws Exception {
-        dataset.setDatasetType(orlPointDatasetType());
-        Importer importer = new ORLPointImporter(datasource);
+        Importer importer = new ORLPointImporter(datasource, sqlDataTypes);
         doImport(importer, "small-point.txt");
 
         NewExporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
@@ -157,14 +120,6 @@ public class NewORLExportersTest extends DbTestCase {
         assertEquals(expected, actual);
     }
     
-    private DatasetType orlPointDatasetType() {
-        FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Point",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     private void assertComments(File file) throws IOException {
         List comments = readComments(file);
         assertEquals(headers(dataset.getDescription()).size(), comments.size());

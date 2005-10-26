@@ -5,15 +5,11 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetType;
-import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
-import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.framework.db.DbUpdate;
@@ -55,9 +51,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
-        dataset.setDatasetType(orlPointDatasetType());
-        
-        ORLPointImporter importer = new ORLPointImporter(datasource);
+        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
 
         importer.preCondition(new File("test/data/orl/nc"), "small-point.txt");
         importer.run(dataset);
@@ -65,23 +59,13 @@ public class ORLImporterTest extends DbTestCase {
         assertEquals(10, countRecords());
     }
     
-    private DatasetType orlPointDatasetType() {
-        FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Point",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     private int countRecords() {
         TableReader tableReader = new TableReader(datasource.getConnection());
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 
     public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
-        dataset.setDatasetType(orlNonPointDatasetType());
-        
-        ORLNonPointImporter importer = new ORLNonPointImporter(datasource);
+        ORLNonPointImporter importer = new ORLNonPointImporter(datasource, sqlDataTypes);
 
         importer.preCondition(new File("test/data/orl/nc"), "small-nonpoint.txt");
         importer.run(dataset);
@@ -90,9 +74,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldImportNonPointFileWithVaryingCols() throws Exception {
-        dataset.setDatasetType(orlNonPointDatasetType());
-        
-        ORLNonPointImporter importer = new ORLNonPointImporter(datasource);
+        ORLNonPointImporter importer = new ORLNonPointImporter(datasource, sqlDataTypes);
 
         importer.preCondition(new File("test/data/orl/nc"), "varying-cols-nonpoint.txt");
         importer.run(dataset);
@@ -115,9 +97,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
-        dataset.setDatasetType(orlNonPointDatasetType());
-        
-        ORLNonPointImporter importer = new ORLNonPointImporter(datasource);
+        ORLNonPointImporter importer = new ORLNonPointImporter(datasource, sqlDataTypes);
         
         File fullpath = new File(new File("test/data/orl/nc"), "small-nonpoint.txt");
         importer.preCondition(new File("test/data/orl/nc"), "small-nonpoint.txt");
@@ -142,15 +122,6 @@ public class ORLImporterTest extends DbTestCase {
         assertEquals(fullpath.length(), source.getSourceSize());
     }
     
-    private DatasetType orlNonPointDatasetType() {
-        ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(
-                sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Nonpoint",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     private String[] colNames(Column[] cols) {
         List names = new ArrayList();
         for (int i = 0; i < cols.length; i++)
@@ -160,31 +131,18 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {
-        dataset.setDatasetType(orlNonRoadDatasetType());
-        
-        ORLNonRoadImporter importer = new ORLNonRoadImporter(datasource);
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(datasource, sqlDataTypes);
         importer.preCondition(new File("test/data/orl/nc"), "small-nonroad.txt");
         importer.run(dataset);
 
         assertEquals(16, countRecords());
     }
     
-    private DatasetType orlNonRoadDatasetType() {
-        ORLNonRoadFileFormat fileFormat = new ORLNonRoadFileFormat(
-                sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Nonroad",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
-    }
-
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
-        dataset.setDatasetType(orlOnRoadDatasetType());
-        
         File folder = new File("test/data/orl/nc");
         String filename = "small-onroad.txt";
 
-        Importer importer = new ORLOnRoadImporter(datasource);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         importer.preCondition(folder, filename);
         importer.run(dataset);
 
@@ -192,9 +150,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {
-        dataset.setDatasetType(orlOnRoadDatasetType());
-        
-        Importer importer = new ORLOnRoadImporter(datasource);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
         importer.run(dataset);
 
@@ -205,9 +161,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldLoadStartStopDateTimeIntoDatasetOnImport() throws Exception {
-        dataset.setDatasetType(orlOnRoadDatasetType());
-        
-        Importer importer = new ORLOnRoadImporter(datasource);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
         importer.run(dataset);
 
@@ -223,9 +177,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
-        dataset.setDatasetType(orlOnRoadDatasetType());
-        
-        Importer importer = new ORLOnRoadImporter(datasource);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
         importer.run(dataset);
 
@@ -235,9 +187,7 @@ public class ORLImporterTest extends DbTestCase {
     }
 
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
-        dataset.setDatasetType(orlOnRoadDatasetType());
-        
-        Importer importer = new ORLOnRoadImporter(datasource);
+        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
         importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
         importer.run(dataset);
 
@@ -248,15 +198,6 @@ public class ORLImporterTest extends DbTestCase {
                 + "#DESC North Carolina data extracted from original file using UNIX grep command.\n"
                 + "#DESC    paste commands. \n" + "#comment 1\n#comment 2\n#comment 3\n#comment 4\n";
         assertEquals(expected, dataset.getDescription());
-    }
-    
-    private DatasetType orlOnRoadDatasetType() {
-        ORLOnRoadFileFormat fileFormat = new ORLOnRoadFileFormat(
-                sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        DatasetType datasetType = new DatasetType("ORL Onroad",new DatasetTypeUnitWithOptionalCols[]{unit});
-        return datasetType;
     }
 
 }
