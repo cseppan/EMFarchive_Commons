@@ -1,6 +1,9 @@
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DatasetType implements Serializable {
 
@@ -25,43 +28,28 @@ public class DatasetType implements Serializable {
     private int minColumns;
 
     private int maxColumns;
-    
+
     private boolean external;
 
-	private FormatUnit[] formatUnits;
+    private List keywordsList;
 
-    /**
-     * @return Returns the uid.
-     */
     public String getUid() {
         return uid;
     }
 
-    /**
-     * @param uid
-     *            The uid to set.
-     */
     public void setUid(String uid) {
         this.uid = uid;
     }
 
-    /**
-     * No argument constructor needed for hibernate bean mapping
-     * 
-     */
     public DatasetType() {
         super();
+        this.keywordsList = new ArrayList();
     }
-    
+
     public DatasetType(String name) {
+        this();
         this.name = name;
     }
-    
-    public DatasetType(String name, FormatUnit [] formatUnits){
-    	this.name = name;
-    	this.formatUnits = formatUnits;
-    }
-    
 
     public String getName() {
         return name;
@@ -132,15 +120,25 @@ public class DatasetType implements Serializable {
         return maxColumns;
     }
 
-	public boolean isExternal() {
-		return external;
-	}
+    public boolean isExternal() {
+        return external;
+    }
 
-	public void setExternal(boolean external) {
-		this.external = external;
-	}
+    public void setExternal(boolean external) {
+        this.external = external;
+    }
 
-	public FormatUnit[] getFormatUnits() {
-		return formatUnits;
-	}
+    public void addKeyword(String keyword) {
+        keywordsList.add(keyword);
+    }
+
+    public String[] getKeywords() {
+        return (String[]) keywordsList.toArray(new String[0]);
+    }
+
+    public void setKeywords(String[] keywords) {
+        keywordsList.clear();
+        keywordsList.addAll(Arrays.asList(keywords));
+    }
+
 }
