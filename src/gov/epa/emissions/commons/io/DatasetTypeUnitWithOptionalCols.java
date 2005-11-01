@@ -10,10 +10,13 @@ public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
 
     private FileFormatWithOptionalCols fileMetadata;
 
+    private boolean required;
+
     public DatasetTypeUnitWithOptionalCols(TableFormatWithOptionalCols tableFormat,
             FileFormatWithOptionalCols fileFormat) {
         this.tableMetadata = tableFormat;
         this.fileMetadata = fileFormat;
+        this.required = false;
     }
 
     public FileFormat fileFormat() {
@@ -22,6 +25,10 @@ public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
 
     public TableFormat tableFormat() {
         return tableMetadata;
+    }
+    
+    public boolean isRequired(){
+        return required;
     }
 
 }

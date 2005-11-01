@@ -8,4 +8,6 @@ public interface FormatUnit {
     public FileFormat fileFormat();
 
     public TableFormat tableFormat();
+    
+    public boolean isRequired();
 }

@@ -18,11 +18,11 @@ public class IDAFileReader implements Reader {
 
     private List comments;
 
-    private FileFormat colsMetadata;
+    private FileFormat fileFormat;
 
-    public IDAFileReader(BufferedReader reader, FileFormat colsMetadata, List comments) {
+    public IDAFileReader(BufferedReader reader, FileFormat fileFormat, List comments) {
         fileReader = reader;
-        this.colsMetadata = colsMetadata;
+        this.fileFormat = fileFormat;
         this.comments = new ArrayList();
         this.comments.addAll(comments);
     }
@@ -57,7 +57,7 @@ public class IDAFileReader implements Reader {
     }
 
     private String[] tokenizer(String line) {
-        Column[] cols = colsMetadata.cols();
+        Column[] cols = fileFormat.cols();
         int startIndex = 0;
         String[] tokens = new String[cols.length];
         for (int i = 0; i < cols.length; i++) {

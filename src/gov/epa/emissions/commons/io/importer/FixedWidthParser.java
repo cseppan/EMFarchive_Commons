@@ -4,15 +4,15 @@ import gov.epa.emissions.commons.io.Column;
 
 public class FixedWidthParser implements Parser {
 
-    private FileFormat colsMetadata;
+    private FileFormat fileFormat;
 
-    public FixedWidthParser(FileFormat colsMetadata) {
-        this.colsMetadata = colsMetadata;
+    public FixedWidthParser(FileFormat fileFormat) {
+        this.fileFormat = fileFormat;
     }
 
     public Record parse(String line) {
         Record record = new Record();
-        addTokens(line, record, colsMetadata.cols());
+        addTokens(line, record, fileFormat.cols());
         return record;
     }
 

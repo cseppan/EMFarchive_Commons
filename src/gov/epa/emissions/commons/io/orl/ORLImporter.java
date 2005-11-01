@@ -40,7 +40,8 @@ public class ORLImporter implements Importer {
     public void preCondition(File folder, String filePattern) {
         this.file = new File(folder, filePattern);
     }
-
+    
+    //FIXME: remove the run()
     public void run(Dataset dataset){
         
     }
