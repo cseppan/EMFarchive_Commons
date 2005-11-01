@@ -10,10 +10,8 @@
 
 package gov.epa.emissions.commons.io;
 
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public interface Dataset extends Serializable {
@@ -53,7 +51,7 @@ public interface Dataset extends Serializable {
 
     void setCountry(String country);
 
-    //FIXME: use the TemporalResolution instead
+    // FIXME: use the TemporalResolution instead
     void setTemporalResolution(String name);
 
     String getTemporalResolution();
@@ -75,22 +73,22 @@ public interface Dataset extends Serializable {
     // FIXME: never used ?
     void setTablesMap(Map datatables);
 
-    void setDatasources(List datasources);
-
-    List getDatasources();
-
-    // Datasets for non-external files will have a list of 
-    // Internal Source objects.  An internal source object will
+    // Datasets for non-external files will have a list of
+    // Internal Source objects. An internal source object will
     // contain details of each table name/table type/ source/ size
     InternalSource[] getInternalSources();
+
     void setInternalSources(InternalSource[] internalSources);
+
     void addInternalSource(InternalSource source);
 
-    // Datasets for external files will have a list of 
-    // External Source objects.  An external source object will
+    // Datasets for external files will have a list of
+    // External Source objects. An external source object will
     // contain details of each source (sourcename etc)
     ExternalSource[] getExternalSources();
+
     void setExternalSources(ExternalSource[] externalSources);
+
     void addExternalSource(ExternalSource source);
 
     // convenience methods
