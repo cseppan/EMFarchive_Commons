@@ -128,15 +128,15 @@ public class DatasetType implements Serializable {
         this.external = external;
     }
 
-    public void addKeyword(String keyword) {
+    public void addKeyword(Keyword keyword) {
         keywordsList.add(keyword);
     }
 
-    public String[] getKeywords() {
-        return (String[]) keywordsList.toArray(new String[0]);
+    public Keyword[] getKeywords() {
+        return (Keyword[]) keywordsList.toArray(new Keyword[0]);
     }
 
-    public void setKeywords(String[] keywords) {
+    public void setKeywords(Keyword[] keywords) {
         keywordsList.clear();
         keywordsList.addAll(Arrays.asList(keywords));
     }
