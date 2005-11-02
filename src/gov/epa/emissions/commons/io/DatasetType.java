@@ -7,11 +7,6 @@ import java.util.List;
 
 public class DatasetType implements Serializable {
 
-    /**
-     * Generated serialVersionUID
-     */
-    private static final long serialVersionUID = 4694789007596096797L;
-
     private long datasettypeid;
 
     private String name;
@@ -22,8 +17,6 @@ public class DatasetType implements Serializable {
 
     private int maxfiles;
 
-    private String uid = null;
-
     // FIXME: add the min/max cols as cols in table
     private int minColumns;
 
@@ -32,14 +25,6 @@ public class DatasetType implements Serializable {
     private boolean external;
 
     private List keywordsList;
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
 
     public DatasetType() {
         super();
