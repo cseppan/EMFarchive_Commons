@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NIFImporterTest_FIXME extends DbTestCase{
+public class NIFImporterTest extends DbTestCase{
 
     private Datasource datasource;
 
@@ -41,13 +41,16 @@ public class NIFImporterTest_FIXME extends DbTestCase{
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(new Random().nextLong());
-        dataset.setInternalSources(createInternalSources());
         
         String name = dataset.getName();
-		tableCE = name+"_ce";
-		tableEM = name+"_em";
-		tableEP = name+"_ep";
-		tablePE = name+"_pe";
+        tableCE = name+"_ce";
+        tableEM = name+"_em";
+        tableEP = name+"_ep";
+        tablePE = name+"_pe";
+        dataset.setInternalSources(createInternalSources());
+        
+        
+		
 		
     }
     
@@ -63,7 +66,7 @@ public class NIFImporterTest_FIXME extends DbTestCase{
     	List sources = new ArrayList();
     	
     	String dir = "test/data/nif/nonpoint";
-        //sources.add(internalSource(new File(dir, "ky_ce.txt"),tableCE));
+        sources.add(internalSource(new File(dir, "ky_ce.txt"),tableCE));
 		sources.add(internalSource(new File(dir, "ky_em.txt"),tableEM));
         sources.add(internalSource(new File(dir, "ky_ep.txt"),tableEP));
         sources.add(internalSource(new File(dir, "ky_pe.txt"),tablePE));
@@ -86,7 +89,7 @@ public class NIFImporterTest_FIXME extends DbTestCase{
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    public void FIXME_testShouldImportASmallAndSimpleNonPointFile() throws Exception {
+    public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
 
         NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
         importer.run(dataset);
