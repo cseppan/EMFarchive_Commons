@@ -10,4 +10,8 @@ public interface FormatUnit {
     public TableFormat tableFormat();
     
     public boolean isRequired();
+    
+    public void setInternalSource(InternalSource internalSource);
+    
+    public InternalSource getInternalSource();
 }

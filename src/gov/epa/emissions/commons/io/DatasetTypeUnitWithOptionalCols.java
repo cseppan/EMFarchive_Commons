@@ -12,6 +12,8 @@ public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
 
     private boolean required;
 
+    private InternalSource internalSource;
+
     public DatasetTypeUnitWithOptionalCols(TableFormatWithOptionalCols tableFormat,
             FileFormatWithOptionalCols fileFormat) {
         this.tableMetadata = tableFormat;
@@ -29,6 +31,14 @@ public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
     
     public boolean isRequired(){
         return required;
+    }
+    
+    public void setInternalSource(InternalSource internalSource){
+        this.internalSource = internalSource;
+    }
+    
+    public InternalSource getInternalSource(){
+        return internalSource;
     }
 
 }
