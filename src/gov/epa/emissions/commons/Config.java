@@ -1,5 +1,8 @@
-package gov.epa.emissions.framework.db;
+package gov.epa.emissions.commons;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Properties;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -8,12 +11,15 @@ import org.apache.commons.configuration.SystemConfiguration;
 
 public class Config {
 
-    private CompositeConfiguration config;
+    protected CompositeConfiguration config;
+
+    private File file;
 
     public Config(String file) throws ConfigurationException {
+        this.file = new File(file);
         config = new CompositeConfiguration();
         config.addConfiguration(new SystemConfiguration());
-
+        
         try {
             PropertiesConfiguration propertiesConfig = new PropertiesConfiguration(file);
             config.addConfiguration(propertiesConfig);
@@ -25,23 +31,18 @@ public class Config {
         }
     }
 
-    public String driver() {
-        return "org.postgresql.Driver";
-    }
-
-    public String url() {
-        return "jdbc:postgresql://" + value("database.host") + "/" + value("database.name");
-    }
-
-    private String value(String name) {
+    public String value(String name) {
         return (String) config.getProperty(name);
     }
 
-    public String username() {
-        return value("database.username");
-    }
+    public Properties properties() {
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream(file));
+        } catch (Exception e) {
+            throw new RuntimeException("could not load from file: " + file.getAbsolutePath());
+        }
 
-    public String password() {
-        return value("database.password");
+        return props;
     }
 }
