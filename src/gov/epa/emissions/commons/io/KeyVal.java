@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class KeyVal implements Serializable {
 
     private long id;
-    private String keyword;
+    private Keyword keyword;
     private String value;
     
     /**
@@ -46,14 +46,14 @@ public class KeyVal implements Serializable {
     /**
      * @return Returns the keyword.
      */
-    public String getKeyword() {
+    public Keyword getKeyword() {
         return keyword;
     }
 
     /**
      * @param keyword The keyword to set.
      */
-    public void setKeyword(String keyword) {
+    public void setKeyword(Keyword keyword) {
         this.keyword = keyword;
     }
 
