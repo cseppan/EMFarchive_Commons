@@ -14,14 +14,18 @@ import java.io.Serializable;
 
 /**
  * @author Conrad F. D'Cruz
- *
+ * 
  */
 public class KeyVal implements Serializable {
 
     private long id;
+
     private Keyword keyword;
+
     private String value;
-    
+
+    private long listindex;
+
     /**
      * 
      */
@@ -37,7 +41,8 @@ public class KeyVal implements Serializable {
     }
 
     /**
-     * @param id The id to set.
+     * @param id
+     *            The id to set.
      */
     public void setId(long id) {
         this.id = id;
@@ -51,7 +56,8 @@ public class KeyVal implements Serializable {
     }
 
     /**
-     * @param keyword The keyword to set.
+     * @param keyword
+     *            The keyword to set.
      */
     public void setKeyword(Keyword keyword) {
         this.keyword = keyword;
@@ -65,10 +71,26 @@ public class KeyVal implements Serializable {
     }
 
     /**
-     * @param value The value to set.
+     * @param value
+     *            The value to set.
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * @return Returns the listindex.
+     */
+    public long getListindex() {
+        return listindex;
+    }
+
+    /**
+     * @param listindex
+     *            The listindex to set.
+     */
+    public void setListindex(long listindex) {
+        this.listindex = listindex;
     }
 
 }
