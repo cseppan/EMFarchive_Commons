@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.nif.nonpoint.NIFNonPointImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NIFImporterTest extends DbTestCase{
+public class NIFNonpointImporterTest extends DbTestCase{
 
     private Datasource datasource;
 
@@ -89,7 +90,7 @@ public class NIFImporterTest extends DbTestCase{
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
+    public void testShouldImportASmallAndSimpleNonPointFiles() throws Exception {
 
         NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
         importer.run(dataset);

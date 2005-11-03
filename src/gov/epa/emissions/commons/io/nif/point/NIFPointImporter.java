@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif;
+package gov.epa.emissions.commons.io.nif.point;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -6,16 +6,17 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.nif.NIFImporter;
 
-public class NIFNonPointImporter {
+public class NIFPointImporter {
 
     private NIFImporter delegate;
 
-    private NIFDatasetTypeUnits units;
+    private NIFPointDatasetTypeUnits units;
 
-    public NIFNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public NIFPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         delegate = new NIFImporter(datasource);
-        units = new NIFDatasetTypeUnits(sqlDataTypes);
+        units = new NIFPointDatasetTypeUnits(sqlDataTypes);
     }
 
     private void preImport(Dataset dataset) throws ImporterException {
@@ -28,17 +29,10 @@ public class NIFNonPointImporter {
     }
 
     private void doImport(Dataset dataset) throws ImporterException {
-        FormatUnit ceTypeUnit = units.controlEfficiencyUnit();
-        doImport(dataset, ceTypeUnit);
-
-        FormatUnit emTypeUnit = units.emissionsUnit();
-        doImport(dataset, emTypeUnit);
-
-        FormatUnit peTypeUnit = units.periodsUnit();
-        doImport(dataset, peTypeUnit);
-
-        FormatUnit epTypeUnit = units.emissionsProcessUnit();
-        doImport(dataset, epTypeUnit);
+        FormatUnit[] typeUnits = units.formatUnits();
+        for (int i = 0; i < typeUnits.length; i++) {
+            doImport(dataset, typeUnits[i]);
+        }
     }
 
     private void doImport(Dataset dataset, FormatUnit unit) throws ImporterException {

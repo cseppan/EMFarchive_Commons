@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif;
+package gov.epa.emissions.commons.io.nif.nonpoint;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
@@ -12,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class NIFDatasetTypeUnits {
+public class NIFNonPointDatasetTypeUnits {
 
     private FormatUnit ceDatasetTypeUnit;
 
@@ -22,20 +22,20 @@ public class NIFDatasetTypeUnits {
 
     private FormatUnit peDatasetTypeUnit;
 
-    public NIFDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
-        FileFormat ceFileFormat = new NIFAreaControlEfficiencyFileFormat(sqlDataTypes);
+    public NIFNonPointDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
+        FileFormat ceFileFormat = new NIFNonPointControlEfficiencyFileFormat(sqlDataTypes);
         ceDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(ceFileFormat, sqlDataTypes), ceFileFormat,
                 false);
 
-        FileFormat emFileFormat = new NIFAreaEmissionFileFormat(sqlDataTypes);
+        FileFormat emFileFormat = new NIFNonPointEmissionFileFormat(sqlDataTypes);
         emDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(emFileFormat, sqlDataTypes), emFileFormat,
                 false);
 
-        FileFormat epFileFormat = new NIFAreaEmissionsProcessFileFormat(sqlDataTypes);
+        FileFormat epFileFormat = new NIFNonpointEmissionsProcessFileFormat(sqlDataTypes);
         epDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(epFileFormat, sqlDataTypes), epFileFormat,
                 false);
 
-        FileFormat peFileFormat = new NIFAreaPeriodsFileFormat(sqlDataTypes);
+        FileFormat peFileFormat = new NIFNonpointPeriodsFileFormat(sqlDataTypes);
         peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
                 false);
     }

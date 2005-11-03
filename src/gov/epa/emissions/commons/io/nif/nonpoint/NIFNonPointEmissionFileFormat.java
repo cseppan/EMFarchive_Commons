@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif;
+package gov.epa.emissions.commons.io.nif.nonpoint;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
@@ -6,16 +6,16 @@ import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 
-public class NIFAreaEmissionFileFormat implements FileFormat {
+public class NIFNonPointEmissionFileFormat implements FileFormat {
 
 	private Column[] cols;
 
-	public NIFAreaEmissionFileFormat(SqlDataTypes types) {
+	public NIFNonPointEmissionFileFormat(SqlDataTypes types) {
 		cols = createCols(types);
 	}
 
 	public String identify() {
-		return "NIF Area Emissions";
+		return "NIF3.0 Nonpoint Emissions";
 	}
 
 	public Column[] cols() {
