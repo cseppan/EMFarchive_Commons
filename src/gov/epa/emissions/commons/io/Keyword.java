@@ -14,51 +14,48 @@ import java.io.Serializable;
 
 /**
  * @author Conrad F. D'Cruz
- *
+ * 
  */
 public class Keyword implements Serializable {
 
     private long id;
+
     private String name;
-    
-    /**
-     * 
-     */
+
     public Keyword() {
         super();
     }
 
     public Keyword(String name) {
         super();
-        this.name=name;
+        this.name = name;
     }
 
-    /**
-     * @return Returns the id.
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * @param id The id to set.
-     */
     public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * @return Returns the name.
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name The name to set.
-     */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof Keyword))
+            return false;
+
+        return name.equals(((Keyword) other).name);
+    }
+
+    public int hashCode() {
+        return (int) id;
     }
 
 }
