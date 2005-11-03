@@ -3,12 +3,13 @@ package gov.epa.emissions.commons.io.nif.point;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.nif.NIFFileFormat;
 
-public class NIFPointEmissionPeriondsFileFormat implements FileFormat {
+public class EmissionPeriodsFileFormat implements FileFormat {
 
     private Column[] cols;
 
-    public NIFPointEmissionPeriondsFileFormat(SqlDataTypes types) {
+    public EmissionPeriodsFileFormat(SqlDataTypes types) {
         cols = createCols(types);
     }
 
@@ -25,9 +26,7 @@ public class NIFPointEmissionPeriondsFileFormat implements FileFormat {
         String [] colTypes= {"C", "C", "C", "C", "C", "C", "C", "C", "N", "N", "C", "N", "C", "N", "C", "N", "N", "N", "N", "C", "C"};
         int [] widths= {2, 5, 15, 6, 6, 8, 8, 2, 4, 4, 10, 10, 10, 4, 10, 1, 2, 2, 4, 4, 4};
 
-        System.err.println("Emission Periods - names.length=" + names.length + ", colTypes.length=" + colTypes.length
-                + ", widths.length=" + widths.length);
-        NIFPointFileFormat format = new NIFPointFileFormat(types);
+        NIFFileFormat format = new NIFFileFormat(types);
         return format.createCols(names,colTypes,widths);
     }
     

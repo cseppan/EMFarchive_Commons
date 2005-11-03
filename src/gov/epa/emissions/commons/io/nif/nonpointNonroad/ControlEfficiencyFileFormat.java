@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif.nonpoint;
+package gov.epa.emissions.commons.io.nif.nonpointNonroad;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
@@ -6,17 +6,20 @@ import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 
-public class NIFNonPointControlEfficiencyFileFormat implements FileFormat {
+public class ControlEfficiencyFileFormat implements FileFormat {
 
 	private Column[] cols;
+    
+    private String identifier;
 
-	public NIFNonPointControlEfficiencyFileFormat(SqlDataTypes types) {
+	public ControlEfficiencyFileFormat(SqlDataTypes types, String identifier) {
         cols = createCols(types);
+        this.identifier = identifier;
     }
 	
 
 	public String identify() {
-		return "NIF3.0 Nonpoint Control Efficiency";
+		return identifier;
 	}
 
 	public Column[] cols() {

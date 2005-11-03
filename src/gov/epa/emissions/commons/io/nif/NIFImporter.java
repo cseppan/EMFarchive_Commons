@@ -26,12 +26,49 @@ public class NIFImporter {
 
     private List tableNames;
 
-    public NIFImporter(Datasource datasource) {
+    private NIFDatasetTypeUnits datasetTypeUnits;
+
+    public NIFImporter(Datasource datasource, NIFDatasetTypeUnits datasetTypeUnits) {
         this.datasource = datasource;
         this.tableNames = new ArrayList();
+        this.datasetTypeUnits = datasetTypeUnits;
     }
 
-    public void run(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
+    public void preImport(Dataset dataset) throws ImporterException {
+        datasetTypeUnits.processFiles(dataset.getInternalSources());
+    }
+
+    public void run(Dataset dataset) throws ImporterException {
+        FormatUnit[] units = datasetTypeUnits.formatUnits();
+        for (int i = 0; i < units.length; i++) {
+            doImport(dataset, units[i]);
+        }
+    }
+
+    private void doImport(Dataset dataset, FormatUnit unit) throws ImporterException {
+        InternalSource internalSource = unit.getInternalSource();
+        if (internalSource == null) {
+            return;
+        }
+        doImport(internalSource, unit, dataset);
+    }
+
+    private void createTable(String tableName, TableFormat tableFormat) throws SQLException {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(tableName, tableFormat.cols());
+    }
+
+    private void doImport(String fileName, Dataset dataset, String tableName, FileFormat fileFormat,
+            TableFormat tableFormat) throws ImporterException, IOException {
+        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        Reader fileReader = new DataReader(reader, new FixedWidthParser(fileFormat));
+        loader.load(fileReader, dataset, tableName);
+        reader.close();
+        // TODO: load dataset
+    }
+
+    private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
         try {
             String tableName = internalSource.getTable();
             createTable(tableName, unit.tableFormat());
@@ -55,21 +92,6 @@ public class NIFImporter {
                 throw new ImporterException("Could not drop table '" + tableName + "'\n" + e.getMessage());
             }
         }
-    }
-
-    private void createTable(String tableName, TableFormat tableFormat) throws SQLException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(tableName, tableFormat.cols());
-    }
-
-    private void doImport(String fileName, Dataset dataset, String tableName, FileFormat fileFormat,
-            TableFormat tableFormat) throws ImporterException, IOException {
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
-        Reader fileReader = new DataReader(reader, new FixedWidthParser(fileFormat));
-        loader.load(fileReader, dataset, tableName);
-        reader.close();
-        // TODO: load dataset
     }
 
 }

@@ -113,6 +113,28 @@ nei_area_em_names: record_type, state_county_fips, scc, pollutant_code, spacer1,
 nei_area_em_types: C, C, C, C, C, C, C, C, N, N, N, C, C, N, N, C, C, N, C, C, C, C, N, C, N, C, C
 nei_area_em_widths: 2, 5, 10, 9, 11, 8, 8, 2, 4, 4, 20, 10, 2, 5, 10, 10, 10, 4, 10, 5, 2, 5, 5, 2, 5, 4, 4
 
+# nei nonroad tables
+nei_nonroad_tr_names: record_type, state_county_fips, org_name, trans_type, inventory_year, inventory_type, trans_creation_date, incr_submittal_no, reliability_ind, trans_comments, contact_name, contact_phone, contact_phone_type, e_address, e_address_type, source_type, affiliation_type, format_version, tribal_code
+nei_nonroad_tr_types: C, C, C, C, N, C, N, N, N, C, C, C, C, C, C, C, C, N, C
+nei_nonroad_tr_widths: 2, 5, 80, 2, 4, 10, 8, 4, 5, 80, 70, 15, 10, 100, 10, 25, 40, 4, 4
+
+nei_nonroad_ep_names: record_type, state_county_fips, scc, mact_code, process_desc, sic_code, naics_code, winter_thruput_pct, spring_thruput_pct, summer_thruput_pct, fall_thruput_pct, avg_days_per_week, avg_weeks_per_year, avg_hours_per_day, avg_hours_per_year, heat_content, sulfur_content, ash_content, mact_compliance, submittal_flag, tribal_code
+nei_nonroad_ep_types: C, C, C, C, C, C, C, N, N, N, N, N, N, N, N, N, N, N, C, C, C
+nei_nonroad_ep_widths: 2, 5, 10, 6, 78, 4, 6, 3, 3, 3, 3, 1, 2, 2, 4, 8, 5, 5, 6, 4, 4
+
+nei_nonroad_pe_names: record_type, state_county_fips, scc, start_date, end_date, spacer1, start_time, end_time, thruput, thruput_units, material_code, material_io, days_per_week, weeks_per_period, hours_per_day, hours_per_period, submittal_flag, tribal_code
+nei_nonroad_pe_types: C, C, C, C, C, C, N, N, N, C, N, C, N, N, N, N, C, C
+nei_nonroad_pe_widths: 2, 5, 10, 8, 8, 2, 4, 4, 10, 10, 4, 10, 1, 2, 2, 4, 4, 4
+
+nei_nonroad_ce_names: record_type, state_county_fips, scc, pollutant_code, control_eff, capture_eff, total_eff, pri_device_type_code, sec_device_type_code, control_system_desc, submittal_flag, tribal_code
+nei_nonroad_ce_types: C, C, C, C, N, N, N, C, C, C, C, C
+nei_nonroad_ce_widths: 2, 5, 10, 9, 5, 5, 5, 4, 4, 40, 4, 4
+
+nei_nonroad_em_names: record_type, state_county_fips, scc, pollutant_code, spacer1, start_date, end_date, spacer2, start_time, end_time, emission_value, emission_units_code, emission_type, reliability_ind, factor_value, factor_units_num, factor_units_denom, material_code, material_io, spacer3, calc_method_code, ef_reliability_ind, rule_effect, rule_effect_method, rule_penetration, submittal_flag, tribal_code
+nei_nonroad_em_types: C, C, C, C, C, C, C, C, N, N, N, C, C, N, N, C, C, N, C, C, C, C, N, C, N, C, C
+nei_nonroad_em_widths: 2, 5, 10, 9, 11, 8, 8, 2, 4, 4, 20, 10, 2, 5, 10, 10, 10, 4, 10, 5, 2, 5, 5, 2, 5, 4, 4
+
+
 # nei point tables
 nei_point_tr_names: record_type, state_county_fips, org_name, trans_type, inventory_year, inventory_type, trans_creation_date, incr_submittal_no, reliability_ind, trans_comments, contact_name, contact_phone, contact_phone_type, e_address, e_address_type, source_type, affiliation_type, format_version, tribal_code
 nei_point_tr_types: C, C, C, C, N, C, C, N, N, C, C, C, C, C, C, C, C, N, C
@@ -145,6 +167,19 @@ nei_point_ce_widths: 2, 5, 15, 6, 6, 9, 11, 5, 5, 5, 4, 4, 25, 40, 4, 4, 4, 4
 nei_point_em_names: record_type, state_county_fips, state_facility_id, emission_unit_id, emission_process_id, pollutant_code, spacer1, emission_point_id, start_date, end_date, start_time, end_time, spacer2, emission_value, emission_units_code, emission_type, reliability_ind, factor_value, factor_units_num, factor_units_denom, material_code, material_io, spacer3, calc_method_code, ef_reliability_ind, rule_effect, rule_effect_method, spacer4, hap_emis_prf_lvl, control_status, emission_data_lvl, submittal_flag, tribal_code
 nei_point_em_types: C, C, C, C, C, C, C, C, C, C, N, N, C, N, C, C, N, N, C, C, N, C, C, C, C, N, C, C, C, C, C, C, C
 nei_point_em_widths: 2, 5, 15, 6, 6, 9, 7, 6, 8, 8, 4, 4, 10, 20, 10, 2, 5, 10, 10, 10, 4, 10, 5, 2, 5, 5, 2, 3, 2, 12, 10, 4, 4
+
+# nei onroad tables
+nei_onroad_tr_names: record_type, state_county_fips, org_name, trans_type, inventory_year, inventory_type, trans_creation_date, incr_submittal_no, reliability_ind, trans_comments, contact_name, contact_phone, contact_phone_type, e_address, e_address_type, source_type, affiliation_type, format_version, tribal_code
+nei_onroad_tr_types: C, C, C, C, N, C, N, N, N, C, C, C, C, C, C, C, C, N, C
+nei_onroad_tr_widths: 2, 5, 80, 2, 4, 10, 8, 4, 5, 80, 70, 15, 10, 100, 10, 25, 40, 4, 4
+
+nei_onroad_pe_names: record_type, state_county_fips, scc, start_date, end_date, spacer1, start_time, end_time, actual_throughput, throughput_unit, submital_flag, tribal_code
+nei_onroad_pe_types: C, C, C, C, C, C, C, C, N, C, C, C   
+nei_onroad_pe_widths: 2, 5, 10, 8, 8, 2, 4, 4, 12, 8, 4, 4  
+
+nei_onroad_em_names: record_type, state_county_fips, scc, spacer1, start_date, end_date, spacer2, start_time, end_time, pollutant_code, emission_desc, emission_value, emission_units_code, emission_type, reliability_ind, submittal_flag, tribal_code
+nei_onroad_em_types: C, C, C, C, C, C, C, C, C, C, C, N, C, C, N, C, C
+nei_onroad_em_widths: 2, 5, 10, 10, 8, 8, 2, 4, 4, 9, 81, 10, 13, 4, 6, 8, 4
 
 # Growth and Control tables
 

@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif.point;
+package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
@@ -9,11 +9,11 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NIFPointFileFormat {
+public class NIFFileFormat {
     
     private SqlDataTypes sqlDataTypes;
 
-    public NIFPointFileFormat(SqlDataTypes type){
+    public NIFFileFormat(SqlDataTypes type){
         this.sqlDataTypes = type;
     }
     

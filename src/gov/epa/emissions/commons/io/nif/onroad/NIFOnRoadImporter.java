@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif.point;
+package gov.epa.emissions.commons.io.nif.onroad;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -6,12 +6,12 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.NIFImporter;
 
-public class NIFPointImporter {
+public class NIFOnRoadImporter {
 
     private NIFImporter delegate;
 
-    public NIFPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        delegate = new NIFImporter(datasource,new NIFPointDatasetTypeUnits(sqlDataTypes));
+    public NIFOnRoadImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+        delegate = new NIFImporter(datasource, new NIFOnRoadDatasetTypeUnits(sqlDataTypes));
     }
 
     public void preImport(Dataset dataset) throws ImporterException {

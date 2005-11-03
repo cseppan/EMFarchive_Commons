@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.nif.nonpoint;
+package gov.epa.emissions.commons.io.nif.nonpointNonroad;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
@@ -7,12 +7,13 @@ import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class NIFNonPointDatasetTypeUnits {
+public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
 
     private FormatUnit ceDatasetTypeUnit;
 
@@ -23,19 +24,19 @@ public class NIFNonPointDatasetTypeUnits {
     private FormatUnit peDatasetTypeUnit;
 
     public NIFNonPointDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
-        FileFormat ceFileFormat = new NIFNonPointControlEfficiencyFileFormat(sqlDataTypes);
+        FileFormat ceFileFormat = new ControlEfficiencyFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Control Efficiency");
         ceDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(ceFileFormat, sqlDataTypes), ceFileFormat,
                 false);
 
-        FileFormat emFileFormat = new NIFNonPointEmissionFileFormat(sqlDataTypes);
+        FileFormat emFileFormat = new EmissionRecordsFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Records");
         emDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(emFileFormat, sqlDataTypes), emFileFormat,
                 false);
 
-        FileFormat epFileFormat = new NIFNonpointEmissionsProcessFileFormat(sqlDataTypes);
+        FileFormat epFileFormat = new EmissionProcessFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Process");
         epDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(epFileFormat, sqlDataTypes), epFileFormat,
                 false);
 
-        FileFormat peFileFormat = new NIFNonpointPeriodsFileFormat(sqlDataTypes);
+        FileFormat peFileFormat = new EmissionPeriodsFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Periods");
         peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
                 false);
     }
@@ -45,27 +46,8 @@ public class NIFNonPointDatasetTypeUnits {
         requiredExist();
     }
 
-    public FormatUnit controlEfficiencyUnit() {
-        return ceDatasetTypeUnit;
-    }
-
-    public FormatUnit emissionsUnit() {
-        return emDatasetTypeUnit;
-    }
-
-    public FormatUnit emissionsProcessUnit() {
-        return epDatasetTypeUnit;
-    }
-
-    public FormatUnit periodsUnit() {
-        return peDatasetTypeUnit;
-    }
-
-    private void requiredExist() throws ImporterException {
-        if (((DatasetTypeUnit) emDatasetTypeUnit).getInternalSource() == null)
-            throw new ImporterException("The emission file is required for importing NIF nonpoint");
-        if (((DatasetTypeUnit) epDatasetTypeUnit).getInternalSource() == null)
-            throw new ImporterException("The emission process is required for importing NIF nonpoint");
+    public FormatUnit[] formatUnits() {
+        return new FormatUnit[] { ceDatasetTypeUnit, emDatasetTypeUnit, epDatasetTypeUnit, peDatasetTypeUnit };
     }
 
     private void associateFileWithUnit(InternalSource[] internalSources) throws ImporterException {
@@ -76,21 +58,35 @@ public class NIFNonPointDatasetTypeUnits {
         }
     }
 
+    private void requiredExist() throws ImporterException {
+        FormatUnit[] reqUnits = { emDatasetTypeUnit, epDatasetTypeUnit };
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < reqUnits.length; i++) {
+            if (reqUnits[i].getInternalSource() == null) {
+                sb.append("\t" + reqUnits[i].fileFormat().identify() + "\n");
+            }
+        }
+
+        if (sb.length() > 0) {
+            throw new ImporterException("NIF nonpoint import requires following file types \n" + sb.toString());
+        }
+    }
+
     private void setFileToDatasetTypeUnit(InternalSource internalSource, String key) {
         if ("ce".equals(key)) {
-            ((DatasetTypeUnit) ceDatasetTypeUnit).setInternalSource(internalSource);
+            ceDatasetTypeUnit.setInternalSource(internalSource);
         }
 
         if ("em".equals(key)) {
-            ((DatasetTypeUnit) emDatasetTypeUnit).setInternalSource(internalSource);
+            emDatasetTypeUnit.setInternalSource(internalSource);
         }
 
         if ("ep".equals(key)) {
-            ((DatasetTypeUnit) epDatasetTypeUnit).setInternalSource(internalSource);
+            epDatasetTypeUnit.setInternalSource(internalSource);
         }
 
         if ("pe".equals(key)) {
-            ((DatasetTypeUnit) peDatasetTypeUnit).setInternalSource(internalSource);
+            peDatasetTypeUnit.setInternalSource(internalSource);
         }
     }
 
