@@ -111,17 +111,17 @@ public class ORLImporter implements Importer {
 
     private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
         if (!(tag("#ORL", comments) != null))
-            throw new ImporterException("The tag - 'ORL' is mandatory, and is invalid");
+            throw new ImporterException("The tag - 'ORL' is mandatory.");
 
         String country = tag("#COUNTRY", comments);
         if (country == null || country.length() == 0)
-            throw new ImporterException("The tag - 'COUNTRY' is mandatory, and is invalid");
+            throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
         dataset.setCountry(country);
         dataset.setRegion(country);
 
         String year = tag("#YEAR", comments);
         if (year == null || year.length() == 0)
-            throw new ImporterException("The tag - 'YEAR' is mandatory, and is invalid");
+            throw new ImporterException("The tag - 'YEAR' is mandatory.");
         dataset.setYear(Integer.parseInt(year));
         setStartStopDateTimes(dataset, Integer.parseInt(year));
 
@@ -181,8 +181,7 @@ public class ORLImporter implements Importer {
                     (TableFormatWithOptionalCols) unit.tableFormat());
         } catch (Exception e) {
             dropTable(table, datasource);
-            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName());
+            throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
         }
     }
 

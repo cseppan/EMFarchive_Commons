@@ -24,7 +24,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
             dropData(table, dataset);
-            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
+            throw new ImporterException(e.getMessage() + " could not load dataset - '" + dataset.getName() + "' into table - " + table);
         }
     }
 
