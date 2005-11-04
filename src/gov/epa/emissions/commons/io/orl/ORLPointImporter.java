@@ -30,7 +30,7 @@ public class ORLPointImporter implements Importer {
         delegate.run(dataset,unit);
     }
 
-    public void preCondition(File folder, String filePattern) {
+    public void preCondition(File folder, String filePattern) throws Exception {
         delegate.preCondition(folder, filePattern);
     }
 

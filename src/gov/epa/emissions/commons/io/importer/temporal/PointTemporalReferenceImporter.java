@@ -7,8 +7,8 @@ import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +16,11 @@ import java.io.FileReader;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class PointTemporalReferenceImporter implements Importer {
+    private static Log log = LogFactory.getLog(PointTemporalReferenceImporter.class);
 
     private Datasource datasource;
 
@@ -33,9 +37,23 @@ public class PointTemporalReferenceImporter implements Importer {
 
     /**
      * Expects table 'POINT_SOURCE' to be available in Datasource
+     * @throws Exception 
      */
-    public void preCondition(File folder, String filePattern) {
-        this.file = new File(folder, filePattern);
+    public void preCondition(File folder, String filePattern) throws Exception {
+        file = validateFile(folder, filePattern);
+    }
+
+    private File validateFile(File path, String fileName) throws ImporterException {
+        log.debug("check if file exists " + fileName);
+        File file = new File(path, fileName);
+        log.debug("File is: " + file.getAbsolutePath());
+        if (!file.exists() || !file.isFile()) {
+            log.error("File " + file.getAbsolutePath() + " not found");
+            throw new ImporterException("File not found");
+        }
+        log.debug("check if file exists " + fileName);
+
+        return file;
     }
 
     public void run(Dataset dataset) throws ImporterException {

@@ -22,7 +22,7 @@ public class ORLNonPointImporter implements Importer {
         delegate = new ORLImporter(datasource);
 	}
 
-	public void preCondition(File folder, String filePattern) {
+	public void preCondition(File folder, String filePattern) throws Exception {
 		delegate.preCondition(folder, filePattern);
 	}
 

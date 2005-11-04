@@ -26,7 +26,11 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class ORLImporter implements Importer {
+    private static Log log = LogFactory.getLog(ORLImporter.class);
 
     private Datasource datasource;
 
@@ -36,9 +40,21 @@ public class ORLImporter implements Importer {
         this.datasource = datasource;
     }
 
-    // TODO: verify if file exists
-    public void preCondition(File folder, String filePattern) {
-        this.file = new File(folder, filePattern);
+    public void preCondition(File folder, String filePattern) throws Exception {
+        file=validateFile(folder, filePattern);
+    }
+    
+    private File validateFile(File path, String fileName) throws ImporterException {
+        log.debug("check if file exists " + fileName);
+        File file = new File(path, fileName);
+        log.debug("File is: " + file.getAbsolutePath());
+        if (!file.exists() || !file.isFile()) {
+            log.error("File " + file.getAbsolutePath() + " not found");
+            throw new ImporterException("File not found");
+        }
+        log.debug("check if file exists " + fileName);
+
+        return file;
     }
     
     //FIXME: remove the run()

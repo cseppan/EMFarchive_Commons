@@ -15,11 +15,11 @@ public class ConfigTest extends TestCase {
     }
 
     public void testShouldLoadProperties() throws Exception {
-        assertEquals("test", config.value("database.name"));
+        assertEquals("EMF", config.value("database.name"));
     }
     
     public void testShouldReturnProperties() throws Exception {
         Properties p = config.properties();
-        assertEquals(5, p.size());
+        assertTrue(p.size()>5);
     }
 }

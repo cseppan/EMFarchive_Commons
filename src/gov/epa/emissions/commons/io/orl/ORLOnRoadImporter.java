@@ -31,7 +31,7 @@ public class ORLOnRoadImporter implements Importer {
     }
     
 
-    public void preCondition(File folder, String filePattern) {
+    public void preCondition(File folder, String filePattern) throws Exception {
         delegate.preCondition(folder, filePattern);
     }
 
