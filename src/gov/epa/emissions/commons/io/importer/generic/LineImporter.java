@@ -1,190 +1,114 @@
 package gov.epa.emissions.commons.io.importer.generic;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetType;
-import gov.epa.emissions.commons.io.Table;
-import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
-import gov.epa.emissions.commons.io.importer.FormattedImporter;
+import gov.epa.emissions.commons.io.DatasetTypeUnit;
+import gov.epa.emissions.commons.io.FormatUnit;
+import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.TableType;
+import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.util.Vector;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+public class LineImporter implements Importer {
 
-public class LineImporter extends FormattedImporter {
+    private Datasource datasource;
 
-    private static Log log = LogFactory.getLog(LineImporter.class);
+    private File file;
 
-    private final String[] basetypes = { "TextLines" };
+    private FormatUnit typeUnit;
 
-    private final String summary = "TextLinesSummary";
-
-    protected LineImporter(DbServer dbServer, DatasetType datasetType) {
-        super(dbServer, datasetType);
-        // TODO Auto-generated constructor stub
+    public LineImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+        this.datasource = datasource;
+        FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
+        TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
+        typeUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 
-    /**
-     * Take a array of Files and put them database, overwriting existing
-     * corresponding tables specified in dataset based on overwrite flag.
-     * 
-     * @param dataset -
-     *            Dataset specifying needed properties such as datasetType and
-     *            table name (table name look-up is based on file name)
-     * @param files -
-     *            an array of Files which are checked prior to import
-     */
-    public void run(Dataset dataset) throws Exception {
-        this.dataset = dataset;
-
-        // explicitly make sure only one valid file is returned
-        if (files.length != 1) {
-            throw new ImporterException("Can only import one valid input file at a time: " + files);
-        }
-
-        // import the file
-        Datasource datasource = dbServer.getEmissionsDatasource();
-        importFile(files[0], datasource);
+    // TODO: verify if file exists
+    public void preCondition(File folder, String filePattern) {
+        this.file = new File(folder, filePattern);
     }
 
-    /**
-     * import a single file into the specified database
-     * 
-     * @param file -
-     *            the file to be ingested in
-     * @param dbName -
-     *            the database into which the data is ingested from the file
-     * @param details -
-     *            the details with which to import the file
-     */
-    public void importFile(File file, Datasource datasource) throws Exception {
-        // get a bufferedreader for the file to be imported in
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+    public void run(Dataset dataset) throws ImporterException {
+        String table = table(dataset.getName());
 
-        long fileLength = file.length() + 1;
-        long lastModified = file.lastModified();
-        // if file is small enough, mark file read ahead limit from beginning
-        // so we can come back without having to close and reopen the file
-        if (fileLength < GenericNames.READ_AHEAD_LIMIT) {
-            reader.mark((int) fileLength);
-        }
-
-        // if able, go back to the file beginning
-        if (fileLength < GenericNames.READ_AHEAD_LIMIT) {
-            reader.reset();
-        }
-        // else close, reopen and check for modification
-        else {
-            // close the file
-            reader.close();
-            // reopen the file
-            reader = new BufferedReader(new FileReader(file));
-            // check the file for modification
-            long currentLastModified = file.lastModified();
-            if (lastModified != currentLastModified) {
-                reader.close();
-                throw new ImporterException("File " + file.getAbsolutePath()
-                        + " changed during import. Do not edit file while import is executing.");
-            }
-        }
-
-        FileColumnsMetadata metadata = getFileColumnsMetadata();
-        String[] columnNames = metadata.getColumnNames();
-        String[] columnTypes = metadata.getColumnTypes();
-        int[] columnWidths = metadata.getColumnWidths();
-
-        doImport(file, datasource, reader, columnNames, columnTypes, columnWidths);
-    }
-
-    private String doImport(File file, Datasource datasource, BufferedReader reader, String[] columnNames,
-            String[] columnTypes, int[] columnWidths) throws Exception {
-        String fileName = file.getName();
-        DatasetType datasetType = dataset.getDatasetType();
-        TableType tableType = new TableType(datasetType, basetypes, summary);
-        if (tableType == null) {
-            throw new Exception("Could not determine table type for file name: " + fileName);
-        }
-
-        // use the table type to get the table name
-        String baseTableType = tableType.baseTypes()[0];
-        Table table = dataset.getTable(baseTableType);
-        String tableName = table.getName().trim();
-
-        if (tableName == null) {
-            throw new Exception("The dataset did not specify the table name for file name: " + fileName);
-        } else if (tableName.length() == 0) {
-            throw new Exception("The table name must be at least one character long for file name: " + fileName);
-        }
-
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        // else make sure table does not exist
-        if (tableDefinition.tableExists(tableName)) {
-            log.error("The table \"" + tableName
-                    + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
-            throw new Exception("The table \"" + tableName
-                    + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");
-        }
-
-        tableDefinition.createTable(tableName, columnNames, columnTypes, null);
-        String line = null;
-        Vector v = new Vector();
-        int numRows = 0;
-
-        // read lines in one at a time and put the data into database.. this
-        // will avoid huge memory consumption
-        while ((line = reader.readLine()) != null) {
-            // skip over non data lines and those too long lines as needed
-            int len = line.trim().length();
-            if (len < columnWidths[0] && len > 0) {
-                v.add(line);
-                numRows++;
-            }
-        }// while file is not empty
-
-        String[] data = new String[v.size()];
-        v.copyInto(data);
-        datasource.getDataModifier().insertRow(tableName, data, columnTypes);
-
-        // perform capable table type specific processing
-        postProcess(datasource, tableName, baseTableType);
-
-        // when all the data is done ingesting..
-        // close the database connections by calling acceptor.finish..
-        // and close the reader & writer as well..
-        reader.close();
-
-        return tableName;
-    }
-
-    // TODO: pull this out into a factory
-    private FileColumnsMetadata getFileColumnsMetadata() {
-        FileColumnsMetadata details = new FileColumnsMetadata("", dbServer.getDataType());
-
-        /**
-         * Need to setup a generic DataFormat
-         */
-
-        details.addColumnName(GenericNames.COLUMN_NAME);
         try {
-            details.setType(GenericNames.COLUMN_NAME, GenericNames.COLUMN_TYPE);
-            details.setWidth(GenericNames.COLUMN_NAME, String.valueOf(GenericNames.COLUMN_WIDTH));
-        } catch (Exception e) {
+            createTable(table, datasource, typeUnit.tableFormat());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
+            
         }
 
-        return details;
+        try {
+            doImport(file, dataset, table, typeUnit.tableFormat());
+        } catch (Exception e) {
+            e.printStackTrace();
+            dropTable(table, datasource);
+            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
+                    + dataset.getName());
+        }
+
     }
 
-    protected String[] breakUpLine(String line, int[] widths) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+    private void dropTable(String table, Datasource datasource) throws ImporterException {
+        try {
+            TableDefinition def = datasource.tableDefinition();
+            def.deleteTable(table);
+        } catch (SQLException e) {
+            throw new ImporterException(
+                    "could not drop table " + table + " after encountering error importing dataset", e);
+        }
     }
 
+    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
+        LineLoader loader = new LineLoader(datasource, tableFormat);
+        Reader reader = new LineReader(file);
+
+        loader.load(reader, dataset, table);
+        loadDataset(file, table, tableFormat, dataset);
+    }
+
+    private void loadDataset(File file, String table, TableFormat colsMetadata, Dataset dataset) {
+        setInternalSource(file, table, colsMetadata, dataset);
+    }
+
+    // TODO: this applies to all the Importers. Needs to be pulled out
+    private void setInternalSource(File file, String table, TableFormat colsMetadata, Dataset dataset) {
+        InternalSource source = new InternalSource();
+        source.setTable(table);
+        source.setType(colsMetadata.identify());
+        source.setCols(colNames(colsMetadata.cols()));
+        source.setSource(file.getAbsolutePath());
+        source.setSourceSize(file.length());
+
+        dataset.addInternalSource(source);
+    }
+
+    private String[] colNames(Column[] cols) {
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++)
+            names.add(cols[i].name());
+
+        return (String[]) names.toArray(new String[0]);
+    }
+
+    private String table(String datasetName) {
+        return datasetName.trim().replaceAll(" ", "_");
+    }
+
+    private void createTable(String table, Datasource datasource, TableFormat tableFormat) throws SQLException {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(table, tableFormat.cols());
+    }
 }

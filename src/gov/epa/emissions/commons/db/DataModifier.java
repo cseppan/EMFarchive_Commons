@@ -161,7 +161,6 @@ public class DataModifier {
                 insert.append(',');
         }
         insert.append(')');// close parentheses around the query
-
         execute(insert.toString());
     }
 
