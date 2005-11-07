@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
+import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
@@ -34,21 +35,25 @@ public class IDAHeaderTagsTest extends DbTestCase {
 		dataset.setDatasetid(new Random().nextLong());
 	}
 
-	protected void tearDown() throws Exception {
+	private void dropTable() throws Exception {
 		DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
 		dbUpdate.dropTable(datasource.getName(), dataset.getName());
 	}
 
 	public void testShouldIdentifyAllRequiredTags() throws Exception {
-		File file = new File("test/data/ida/small-area.txt");
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+	    String source = "test/data/ida/small-area.txt";
+        InternalSource internalSource = internalSource(source);
+        dataset.setInternalSources(new InternalSource[] { internalSource });
+		BufferedReader reader = new BufferedReader(new FileReader(source));
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
 
 		DatasetTypeUnit unit = createUnit(headerReader);
+        unit.setInternalSource(internalSource);
         
 		IDAImporter importer = new IDAImporter(datasource);
 		importer.run(reader, unit, headerReader.comments(), dataset);
+        dropTable();
 	}
 
     private DatasetTypeUnit createUnit(IDAHeaderReader headerReader) {
@@ -60,11 +65,15 @@ public class IDAHeaderTagsTest extends DbTestCase {
     }
 
 	public void testShouldIdentifyNoIDATag() throws Exception {
-		File file = new File("test/data/ida/noIDATags.txt");
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String source = "test/data/ida/noIDATags.txt";
+        InternalSource internalSource = internalSource(source);
+        dataset.setInternalSources(new InternalSource[] { internalSource });
+        
+		BufferedReader reader = new BufferedReader(new FileReader(source));
 		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
 		headerReader.read();
         DatasetTypeUnit unit = createUnit(headerReader);
+        unit.setInternalSource(internalSource);
 		IDAImporter importer = new IDAImporter(datasource);
 		try {
 			importer
@@ -74,5 +83,15 @@ public class IDAHeaderTagsTest extends DbTestCase {
 			assertEquals("Could not find tag '#IDA'",e.getMessage());
 		}
 	}
+    
+    private InternalSource internalSource(String source) {
+        File file = new File(source);
+        
+        InternalSource internalSource = new InternalSource();
+        internalSource.setSource(file.getAbsolutePath());
+        internalSource.setTable(dataset.getName());
+        internalSource.setSourceSize(file.length());
+        return internalSource;
+    }
 
 }

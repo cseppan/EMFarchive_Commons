@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
@@ -22,18 +23,39 @@ public class IDAImporter {
     }
 
     public void run(BufferedReader reader, DatasetTypeUnit unit, List comments, Dataset dataset) throws Exception {
-        String table = table(dataset.getName());
+        String table = unit.getInternalSource().getTable();
+        try {
+            createTable(table, datasource, unit.tableFormat());
+        } catch (SQLException e) {
+            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
+        }
         try {
             doImport(reader, unit, comments, dataset, table);
-        } finally {
-            // TODO: drop the table
+        } 
+        catch(Exception e){
+            dropTable(table,datasource);
+            throw new ImporterException(e.getMessage());
+        }
+    }
+    
+    private void createTable(String table, Datasource datasource, TableFormat tableFormat) throws SQLException {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(table, tableFormat.cols());
+    }
+
+    private void dropTable(String table,Datasource datasource) throws ImporterException {
+        try {
+            TableDefinition def = datasource.tableDefinition();
+            def.deleteTable(table);
+        } catch (SQLException e) {
+            throw new ImporterException(
+                    "could not drop table " + table + " after encountering error importing dataset", e);
         }
     }
 
     private void doImport(BufferedReader reader, DatasetTypeUnit unit, List comments, Dataset dataset, String table)
             throws Exception {
-        createTable(table, datasource, unit.tableFormat());
-
+        
         Reader idaReader = new IDAFileReader(reader, unit.fileFormat(), comments);
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
 
@@ -70,15 +92,6 @@ public class IDAImporter {
                 return;
         }
         throw new Exception("Could not find tag '" + tag + "'");
-    }
-
-    private String table(String datasetName) {
-        return datasetName.trim().replaceAll(" ", "_");
-    }
-
-    private void createTable(String table, Datasource datasource, TableFormat tableFormat) throws SQLException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, tableFormat.cols());
     }
 
 }

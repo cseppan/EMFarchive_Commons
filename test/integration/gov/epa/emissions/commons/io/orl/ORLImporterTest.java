@@ -50,20 +50,6 @@ public class ORLImporterTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
     
-    public void testShouldImportBADPointFile() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes);
-
-        importer.preCondition(new File("test/data/orl/nc"), "BAD_ptinv.nti99_NC.txt");
-        try{
-                importer.run(dataset);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-
-        assertEquals(10, countRecords());
-    }
-
     
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {

@@ -27,7 +27,6 @@ public class ORLNonPointImporter implements Importer {
 	}
 
 	public void preCondition(File folder, String filePattern) throws Exception {
-        log.debug("folder= " + folder + " Filename= " + filePattern);
 		delegate.preCondition(folder, filePattern);
         log.debug("folder= " + folder + " Filename= " + filePattern);
     }

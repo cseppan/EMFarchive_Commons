@@ -22,12 +22,12 @@ class NewORLExporter {
 
     private Datasource datasource;
 
-    private FileFormat colsMetadata;
+    private FileFormat fileFormat;
 
-    public NewORLExporter(Dataset dataset, Datasource datasource, FileFormat colsMetadata) {
+    public NewORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
         this.dataset = dataset;
         this.datasource = datasource;
-        this.colsMetadata = colsMetadata;
+        this.fileFormat = fileFormat;
     }
 
     public void export(File file) throws ExporterException {
@@ -61,7 +61,7 @@ class NewORLExporter {
         InternalSource source = dataset.getInternalSources()[0];
 
         ResultSet data = q.selectAll(source.getTable());
-        Column[] cols = colsMetadata.cols();
+        Column[] cols = fileFormat.cols();
         while (data.next())
             writeRecord(cols, data, writer);
     }
