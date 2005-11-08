@@ -53,8 +53,8 @@ public class NIFNonPointImporterTest extends DbTestCase{
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         dataset.setInternalSources(createAllInternalSources());
-        NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
-        importer.preImport(dataset);
+        NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(null,null);
         importer.run(dataset);
         assertEquals(1,  countRecords(tableCE));
         assertEquals(21, countRecords(tableEM));
@@ -65,9 +65,9 @@ public class NIFNonPointImporterTest extends DbTestCase{
     
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         dataset.setInternalSources(create_CE_EP_InternalSources());
-        NIFNonPointImporter importer = new NIFNonPointImporter(datasource, sqlDataTypes);
+        NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
         try{
-            importer.preImport(dataset);
+            importer.preCondition(null,null);
             assertTrue(false);
         }catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following file types"));

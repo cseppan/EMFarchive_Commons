@@ -6,18 +6,23 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class IDAPointFileFormat implements FileFormat {
+public class IDAPointFileFormat implements IDAFileFormat {
 
-    private Column[] cols;
+    private List cols;
+    
+    private SqlDataTypes sqlTypes;
 
-    public IDAPointFileFormat(String[] pollutants, SqlDataTypes types) {
-        cols = createCols(types, pollutants);
+    public IDAPointFileFormat(SqlDataTypes types) {
+        sqlTypes= types;
+        cols = createCols(types);
+    }
+    
+    public void addPollutantCols(String[] pollutants) {
+      cols.addAll(pollutantsBasedCols(sqlTypes, pollutants));
     }
 
     public String identify() {
@@ -25,34 +30,30 @@ public class IDAPointFileFormat implements FileFormat {
     }
 
     public Column[] cols() {
-        return cols;
-    }
-
-    private Column[] createCols(SqlDataTypes types, String[] pollutants) {
-        List cols = new ArrayList();
-
-        Column[] mandatory = createMandatoryCols(types);
-        cols.addAll(Arrays.asList(mandatory));
-        addPollutantsBasedCols(types, pollutants, cols);
-
         return (Column[]) cols.toArray(new Column[0]);
     }
 
-    private void addPollutantsBasedCols(SqlDataTypes types, String[] pollutants, List cols) {
-        for (int i = 0; i < pollutants.length; i++) {
-            Column ann = new Column("ANN_" + pollutants[i], types.realType(), 13, new RealFormatter());
-            Column avd = new Column("AVD_" + pollutants[i], types.realType(), 13, new RealFormatter());
-            Column ce = new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter());
-            Column re = new Column("RE_" + pollutants[i], types.realType(), 3, new RealFormatter());
-            Column emf = new Column("EMF_" + pollutants[i], types.realType(), 10, new RealFormatter());
-            Column cpri = new Column("CPRI_" + pollutants[i], types.realType(), 3, new RealFormatter());
-            Column csec = new Column("CSEC_" + pollutants[i], types.realType(), 3, new RealFormatter());
-
-            cols.addAll(Arrays.asList(new Column[] { ann, avd, ce, re, emf, cpri, csec }));
-        }
+    private List createCols(SqlDataTypes types) {
+        List cols = new ArrayList();
+        cols.addAll(createMandatoryCols(types));
+        return cols;
     }
 
-    private Column[] createMandatoryCols(SqlDataTypes types) {
+    private List pollutantsBasedCols(SqlDataTypes types, String[] pollutants) {
+        List pollCols = new ArrayList();
+        for (int i = 0; i < pollutants.length; i++) {
+            pollCols.add( new Column("ANN_" + pollutants[i], types.realType(), 13, new RealFormatter()));
+            pollCols.add( new Column("AVD_" + pollutants[i], types.realType(), 13, new RealFormatter()));
+            pollCols.add( new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter()));
+            pollCols.add( new Column("RE_" + pollutants[i], types.realType(), 3, new RealFormatter()));
+            pollCols.add( new Column("EMF_" + pollutants[i], types.realType(), 10, new RealFormatter()));
+            pollCols.add( new Column("CPRI_" + pollutants[i], types.realType(), 3, new RealFormatter()));
+            pollCols.add( new Column("CSEC_" + pollutants[i], types.realType(), 3, new RealFormatter()));
+        }
+        return pollCols;
+    }
+
+    private List createMandatoryCols(SqlDataTypes types) {
         List cols = new ArrayList();
 
         cols.add(new Column("STID", types.intType(), 2, new IntegerFormatter()));
@@ -93,6 +94,8 @@ public class IDAPointFileFormat implements FileFormat {
         cols.add(new Column("LONC", types.realType(), 9, new RealFormatter()));
         cols.add(new Column("OFFSHORE", types.stringType(1), 1, new StringFormatter(1)));
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols;
     }
+
+    
 }

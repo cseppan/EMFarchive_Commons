@@ -40,8 +40,14 @@ public class IDAImporterTest extends DbTestCase {
     public void testShouldImportASmallAreaFile() throws Exception {
         String source = "test/data/ida/small-area.txt";
         setInternalSource(source);
-        IDAAreaImporter importer = new IDAAreaImporter(datasource, sqlDataTypes);
-        importer.run(dataset);
+        IDANonPointImporter importer = new IDANonPointImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(null, null);
+        try{
+          importer.run(dataset);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
@@ -52,7 +58,8 @@ public class IDAImporterTest extends DbTestCase {
         String source = "test/data/ida/small-point.txt";
         setInternalSource(source);
 
-        IDAPointImporter importer = new IDAPointImporter(datasource, sqlDataTypes);
+        IDAPointImporter importer = new IDAPointImporter(dataset,datasource, sqlDataTypes);
+        importer.preCondition(null,null);
         importer.run(dataset);
 
         // assert
@@ -63,7 +70,9 @@ public class IDAImporterTest extends DbTestCase {
     public void testShouldImportASmallMobileFile() throws Exception {
         String source = "test/data/ida/small-mobile.txt";
         setInternalSource(source);
-        IDAMobileImporter importer = new IDAMobileImporter(datasource, sqlDataTypes);
+        IDAMobileImporter importer = new IDAMobileImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(null, null);
+       
         importer.run(dataset);
 
         // assert
@@ -75,7 +84,7 @@ public class IDAImporterTest extends DbTestCase {
         String source = "test/data/ida/small-activity.txt";
         setInternalSource(source);
 
-        IDAActivityImporter importer = new IDAActivityImporter(datasource, sqlDataTypes);
+        IDAActivityImporter importer = new IDAActivityImporter(dataset, datasource, sqlDataTypes);
         importer.run(dataset);
 
         // assert

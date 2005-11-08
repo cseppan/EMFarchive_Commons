@@ -5,18 +5,23 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class IDAActivityFileFormat implements FileFormat {
+public class IDAActivityFileFormat implements IDAFileFormat {
 
-    private Column[] cols;
+    private List cols;
 
-    public IDAActivityFileFormat(String[] pollutants, SqlDataTypes types) {
-        cols = createCols(types, pollutants);
+    private SqlDataTypes sqlDataTypes;
+
+    public IDAActivityFileFormat(SqlDataTypes types) {
+        cols = createCols(types);
+        sqlDataTypes = types;
+    }
+
+    public void addPollutantCols(String[] pollutants) {
+        cols.addAll(pollutantCols(pollutants, sqlDataTypes));
     }
 
     public String identify() {
@@ -24,24 +29,25 @@ public class IDAActivityFileFormat implements FileFormat {
     }
 
     public Column[] cols() {
+        return (Column[]) cols.toArray(new Column[0]);
+    }
+
+    private List createCols(SqlDataTypes types) {
+        List cols = new ArrayList();
+
+        cols.add(new Column("STID", types.intType(), new IntegerFormatter()));
+        cols.add(new Column("CYID", types.intType(), new IntegerFormatter()));
+        cols.add(new Column("LINK_ID", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
         return cols;
     }
 
-    private Column[] createCols(SqlDataTypes types, String[] pollutants) {
-        Column stid = new Column("STID", types.intType(), new IntegerFormatter());
-        Column cyid = new Column("CYID", types.intType(), new IntegerFormatter());
-        Column linkId = new Column("LINK_ID", types.stringType(10), new StringFormatter(10));
-        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
-
+    private List pollutantCols(String[] pollutants, SqlDataTypes types) {
         List cols = new ArrayList();
-        cols.addAll(Arrays.asList(new Column[] { stid, cyid, linkId, scc }));
-
         for (int i = 0; i < pollutants.length; i++) {
             Column col = new Column(pollutants[i], types.realType(), new RealFormatter());
             cols.add(col);
         }
-
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols;
     }
-
 }

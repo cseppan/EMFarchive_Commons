@@ -8,25 +8,22 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;
 
-public class IDAPointImporter implements Importer {
+public class IDANonPointImporter implements Importer {
 
     private IDAImporter delegate;
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDAPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public IDANonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.sqlDataTypes = sqlDataTypes;
         delegate = new IDAImporter(dataset, datasource, sqlDataTypes);
     }
 
-    public void preCondition(File folder, String filePattern) throws Exception {
-        IDAFileFormat fileFormat = new IDAPointFileFormat(sqlDataTypes);
-        delegate.preImport(fileFormat);
+    public void preCondition(File folder, String filePattern) throws ImporterException {
+        delegate.preImport(new IDANonPointFileFormat(sqlDataTypes));
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run(Dataset dataset2) throws ImporterException {
         delegate.run();
-
     }
-
 }
