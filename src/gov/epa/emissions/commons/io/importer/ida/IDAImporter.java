@@ -1,28 +1,66 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
-import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
+import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class IDAImporter {
 
     private Datasource datasource;
+    
+    private Dataset dataset;
 
-    public IDAImporter(Datasource datasource) {
+    private BufferedReader reader;
+
+    private SqlDataTypes sqlDataTypes;
+
+    private DatasetTypeUnit unit;
+
+    private List comments;
+
+    public IDAImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        this.dataset = dataset;
         this.datasource = datasource;
+        this.sqlDataTypes = sqlDataTypes;
+        this.comments = new ArrayList();
+    }
+    
+    public void preImport(IDAFileFormat fileFormat)throws ImporterException{
+        InternalSource internalSource = dataset.getInternalSources()[0];
+        String source = internalSource.getSource();
+        try {
+            reader = new BufferedReader(new FileReader(source));
+        } catch (FileNotFoundException e) {
+            throw new ImporterException("Could not find a file - " + e.getMessage());
+        }
+        IDAHeaderReader headerReader = new IDAHeaderReader(reader);
+        headerReader.read();
+        
+        fileFormat.addPollutantCols(headerReader.polluntants());
+        FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+
+        unit = new DatasetTypeUnit(tableFormat, fileFormat);
+        unit.setInternalSource(internalSource);
+        comments.addAll(headerReader.comments());
     }
 
-    public void run(BufferedReader reader, DatasetTypeUnit unit, List comments, Dataset dataset) throws Exception {
+    public void run() throws ImporterException{
         String table = unit.getInternalSource().getTable();
         try {
             createTable(table, datasource, unit.tableFormat());
@@ -34,7 +72,9 @@ public class IDAImporter {
         } 
         catch(Exception e){
             dropTable(table,datasource);
-            throw new ImporterException(e.getMessage());
+            throw new ImporterException("could not import File - " + unit.getInternalSource().getSource()+ " into Dataset - "
+                    + dataset.getName()+"\n"+e.getMessage());
+            
         }
     }
     
