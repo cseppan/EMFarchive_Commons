@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;

@@ -1,10 +1,10 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.PacketReader;
-import gov.epa.emissions.commons.io.importer.Record;
 
 import java.io.BufferedReader;
 import java.io.File;

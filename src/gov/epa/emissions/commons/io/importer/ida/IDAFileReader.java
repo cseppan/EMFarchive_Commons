@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
 
 import java.io.BufferedReader;

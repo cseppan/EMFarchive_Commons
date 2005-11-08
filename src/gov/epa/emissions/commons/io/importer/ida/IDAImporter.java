@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer.ida;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
@@ -7,7 +8,6 @@ import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 import java.io.BufferedReader;

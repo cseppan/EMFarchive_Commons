@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,6 @@ public class Record {
         return tokens;
     }
 
-    
     public String toString() {
         return tokens.toString();
     }

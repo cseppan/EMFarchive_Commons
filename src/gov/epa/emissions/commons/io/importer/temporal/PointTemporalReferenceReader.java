@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.io.importer.temporal;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedParser;
 
 import java.io.BufferedReader;

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer.generic;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
 
 import java.io.BufferedReader;

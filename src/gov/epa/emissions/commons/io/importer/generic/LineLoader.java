@@ -1,12 +1,12 @@
 package gov.epa.emissions.commons.io.importer.generic;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.Record;
 import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
 
 import java.sql.SQLException;
