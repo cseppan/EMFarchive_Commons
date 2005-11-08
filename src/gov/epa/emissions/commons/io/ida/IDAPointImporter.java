@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer.ida;
+package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -8,22 +8,25 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;
 
-public class IDAActivityImporter implements Importer {
+public class IDAPointImporter implements Importer {
 
     private IDAImporter delegate;
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDAActivityImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        delegate = new IDAImporter(dataset, datasource, sqlDataTypes);
+    public IDAPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.sqlDataTypes = sqlDataTypes;
+        delegate = new IDAImporter(dataset, datasource, sqlDataTypes);
     }
 
     public void preCondition(File folder, String filePattern) throws Exception {
-        delegate.preImport(new IDAActivityFileFormat(sqlDataTypes));
+        IDAFileFormat fileFormat = new IDAPointFileFormat(sqlDataTypes);
+        delegate.preImport(fileFormat);
     }
 
     public void run(Dataset dataset) throws ImporterException {
         delegate.run();
+
     }
+
 }

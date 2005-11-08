@@ -11,22 +11,18 @@ import gov.epa.emissions.commons.io.nif.NIFImporter;
 
 public class NIFNonPointImporter implements Importer{
 
-    private Dataset dataset;
-    
     private NIFImporter delegate;
-    
 
     public NIFNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.dataset = dataset;
-        delegate = new NIFImporter(datasource, new NIFNonPointDatasetTypeUnits(sqlDataTypes));
+        delegate = new NIFImporter(dataset, new NIFNonPointDatasetTypeUnits(sqlDataTypes), datasource);
     }
     
     public void preCondition(File folder, String filePattern) throws Exception {
-        delegate.preImport(dataset);
+        delegate.preImport();
     }
 
-    public void run(Dataset dataset) throws ImporterException {
-        delegate.run(dataset);
+    public void run(Dataset dataset2) throws ImporterException {
+        delegate.run();
     }
 
     

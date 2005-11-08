@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer.ida;
+package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
@@ -9,24 +9,23 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IDAMobileFileFormat implements IDAFileFormat {
+public class IDAActivityFileFormat implements IDAFileFormat {
 
     private List cols;
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDAMobileFileFormat(SqlDataTypes types) {
+    public IDAActivityFileFormat(SqlDataTypes types) {
         cols = createCols(types);
-        this.sqlDataTypes = types;
+        sqlDataTypes = types;
     }
 
     public void addPollutantCols(String[] pollutants) {
         cols.addAll(pollutantCols(pollutants, sqlDataTypes));
-
     }
 
     public String identify() {
-        return "IDA Mobile";
+        return "IDA Activity";
     }
 
     public Column[] cols() {
@@ -35,22 +34,20 @@ public class IDAMobileFileFormat implements IDAFileFormat {
 
     private List createCols(SqlDataTypes types) {
         List cols = new ArrayList();
-        cols.add(new Column("STID", types.intType(), 2, new IntegerFormatter()));
-        cols.add(new Column("CYID", types.intType(), 3, new IntegerFormatter()));
-        cols.add(new Column("LINK_ID", types.stringType(10), 10, new StringFormatter(10)));
-        cols.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
 
+        cols.add(new Column("STID", types.intType(), new IntegerFormatter()));
+        cols.add(new Column("CYID", types.intType(), new IntegerFormatter()));
+        cols.add(new Column("LINK_ID", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
         return cols;
     }
 
     private List pollutantCols(String[] pollutants, SqlDataTypes types) {
         List cols = new ArrayList();
         for (int i = 0; i < pollutants.length; i++) {
-            cols.add(new Column("ANN_" + pollutants[i], types.realType(), 10, new RealFormatter()));
-            cols.add(new Column("AVD_" + pollutants[i], types.realType(), 10, new RealFormatter()));
+            Column col = new Column(pollutants[i], types.realType(), new RealFormatter());
+            cols.add(col);
         }
         return cols;
-
     }
-
 }

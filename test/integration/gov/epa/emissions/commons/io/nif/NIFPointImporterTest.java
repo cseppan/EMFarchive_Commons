@@ -63,8 +63,8 @@ public class NIFPointImporterTest extends DbTestCase {
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         dataset.setInternalSources(createAllInternalSources());
         
-        NIFPointImporter importer = new NIFPointImporter(datasource, sqlDataTypes);
-        importer.preImport(dataset);
+        NIFPointImporter importer = new NIFPointImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(null,null);
         importer.run(dataset);
         assertEquals(92, countRecords(tableCE));
         assertEquals(143, countRecords(tableEM));
@@ -79,9 +79,9 @@ public class NIFPointImporterTest extends DbTestCase {
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         dataset.setInternalSources(create_CE_EP_InternalSources());
         
-        NIFPointImporter importer = new NIFPointImporter(datasource, sqlDataTypes);
+        NIFPointImporter importer = new NIFPointImporter(dataset, datasource, sqlDataTypes);
         try {
-            importer.preImport(dataset);
+            importer.preCondition(null,null);
             assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF point import requires following file types"));

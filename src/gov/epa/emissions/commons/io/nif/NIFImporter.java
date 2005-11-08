@@ -22,23 +22,26 @@ import java.util.List;
 
 public class NIFImporter {
 
+    private Dataset dataset;
+    
+    private NIFDatasetTypeUnits datasetTypeUnits;
+    
     private Datasource datasource;
 
     private List tableNames;
 
-    private NIFDatasetTypeUnits datasetTypeUnits;
-
-    public NIFImporter(Datasource datasource, NIFDatasetTypeUnits datasetTypeUnits) {
+    public NIFImporter(Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource) {
+        this.dataset = dataset;
+        this.datasetTypeUnits = datasetTypeUnits;
         this.datasource = datasource;
         this.tableNames = new ArrayList();
-        this.datasetTypeUnits = datasetTypeUnits;
     }
 
-    public void preImport(Dataset dataset) throws ImporterException {
+    public void preImport() throws ImporterException {
         datasetTypeUnits.processFiles(dataset.getInternalSources());
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         FormatUnit[] units = datasetTypeUnits.formatUnits();
         for (int i = 0; i < units.length; i++) {
             doImport(dataset, units[i]);

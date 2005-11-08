@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.importer.ida;
+package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;

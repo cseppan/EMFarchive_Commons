@@ -53,8 +53,8 @@ public class NIFNonRoadImporterTest extends DbTestCase {
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         dataset.setInternalSources(createEM_EP_PE_InternalSources());
-        NIFNonRoadImporter importer = new NIFNonRoadImporter(datasource, sqlDataTypes);
-        importer.preImport(dataset);
+        NIFNonRoadImporter importer = new NIFNonRoadImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(null,null);
         importer.run(dataset);
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tableEP));
@@ -64,9 +64,9 @@ public class NIFNonRoadImporterTest extends DbTestCase {
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         dataset.setInternalSources(create_EP_PE_InternalSources());
-        NIFNonRoadImporter importer = new NIFNonRoadImporter(datasource, sqlDataTypes);
+        NIFNonRoadImporter importer = new NIFNonRoadImporter(dataset, datasource, sqlDataTypes);
         try {
-            importer.preImport(dataset);
+            importer.preCondition(null,null);
             assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonroad import requires following file types"));
