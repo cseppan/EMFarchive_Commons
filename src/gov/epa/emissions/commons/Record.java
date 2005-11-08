@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Record {
@@ -37,6 +38,15 @@ public class Record {
 
     public String toString() {
         return tokens.toString();
+    }
+
+    public String[] getTokens() {
+        return (String[]) tokens.toArray(new String[0]);
+    }
+
+    public void setTokens(String[] tokensList) {
+        tokens.clear();
+        tokens.addAll(Arrays.asList(tokensList));
     }
 
 }
