@@ -14,7 +14,7 @@ import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.File;
 import java.sql.SQLException;

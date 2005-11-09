@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 

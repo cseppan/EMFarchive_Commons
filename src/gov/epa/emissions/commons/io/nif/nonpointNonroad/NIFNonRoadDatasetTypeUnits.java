@@ -6,8 +6,8 @@ import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
+import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

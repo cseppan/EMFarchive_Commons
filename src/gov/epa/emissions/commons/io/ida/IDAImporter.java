@@ -10,8 +10,8 @@ import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.Record;
-import gov.epa.emissions.commons.io.importer.temporal.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

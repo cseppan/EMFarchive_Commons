@@ -1,24 +1,25 @@
-package gov.epa.emissions.commons.io.importer;
+package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FixedColumnsDataLoader implements DataLoader {
-
+public class LineLoader implements DataLoader{
     private Datasource datasource;
+    private TableFormat tableFormat;
 
-    private TableFormat colsMetadata;
-
-    public FixedColumnsDataLoader(Datasource datasource, TableFormat tableFormat) {
+    public LineLoader(Datasource datasource, TableFormat tableFormat) {
         this.datasource = datasource;
-        this.colsMetadata = tableFormat;
+        this.tableFormat = tableFormat;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -30,17 +31,10 @@ public class FixedColumnsDataLoader implements DataLoader {
         }
     }
 
-    public void insertRow(Record record, Dataset dataset, String table) throws Exception {
-        DataModifier modifier = datasource.getDataModifier();
-        if (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
-        }
-    }
-
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.getDataModifier();
-            String key = colsMetadata.key();
+            String key = tableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -49,19 +43,17 @@ public class FixedColumnsDataLoader implements DataLoader {
     }
 
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
-        Record record = reader.read();
         DataModifier modifier = datasource.getDataModifier();
-        while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
-            record = reader.read();
+        for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
+            String[] data = data(dataset, record);
+            modifier.insertRow(table, data, tableFormat.cols());
         }
     }
 
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
-        for (int i = 0; i < record.size(); i++)
-            data.add(record.token(i));
+        data.addAll(record.tokens());
 
         return (String[]) data.toArray(new String[0]);
     }

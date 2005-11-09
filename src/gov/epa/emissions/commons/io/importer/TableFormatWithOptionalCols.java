@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
