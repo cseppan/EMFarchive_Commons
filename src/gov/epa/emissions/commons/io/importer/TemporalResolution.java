@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.Enum;
+
 import java.util.List;
 
 /**

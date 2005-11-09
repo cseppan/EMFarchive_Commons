@@ -122,22 +122,11 @@
             <classpath refid="classpath" />
             <formatter type="xml" />
 
-            <test name="gov.epa.emissions.commons.io.importer.orl.ReferenceImporterTest"
+            <test name="gov.epa.emissions.commons.io.legacy.ReferenceImporterTest"
                   fork="yes"
                   todir="${reports.integrationtests.dir}"
             />
-            <test name="gov.epa.emissions.commons.io.importer.orl.ReferenceTablesCreatorTest"
-                  fork="yes"
-                  todir="${reports.integrationtests.dir}"
-            />
-            <!-- Run Complete ORL before Base ORL as only Base is needed by rest of EMF -->
-            <!-- FIXME: fix the Complete ORL Importer
-            <test name="gov.epa.emissions.commons.io.importer.orl.CompleteORLImporterTest"
-                  fork="yes"
-                  todir="${reports.integrationtests.dir}"
-            />
-            -->
-            <test name="gov.epa.emissions.commons.io.importer.orl.BaseORLImporterTest"
+            <test name="gov.epa.emissions.commons.io.ref.ReferenceTablesCreatorTest"
                   fork="yes"
                   todir="${reports.integrationtests.dir}"
             />

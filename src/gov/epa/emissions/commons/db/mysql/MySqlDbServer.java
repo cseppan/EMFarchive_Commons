@@ -3,8 +3,8 @@ package gov.epa.emissions.commons.db.mysql;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.ref.ReferenceImporter;
-import gov.epa.emissions.commons.io.importer.ref.ReferenceTablesCreator;
+import gov.epa.emissions.commons.io.legacy.ReferenceImporter;
+import gov.epa.emissions.commons.io.ref.ReferenceTablesCreator;
 
 import java.io.File;
 import java.sql.Connection;
