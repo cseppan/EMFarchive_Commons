@@ -2,16 +2,13 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 
 public class IDAHeaderReaderTest extends DbTestCase {
 
 	public void testShouldIdentifyPollutants() throws Exception {
 		File file = new File("test/data/ida/small-area.txt");
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
+		IDAHeaderReader headerReader = new IDAHeaderReader(file);
 		headerReader.read();
 
 		// assert
@@ -28,8 +25,7 @@ public class IDAHeaderReaderTest extends DbTestCase {
 	
 	public void testShouldIdentifyNoPollutantsSpecified() throws Exception {
 		File file = new File("test/data/ida/no-pollutants.txt");
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		IDAHeaderReader headerReader = new IDAHeaderReader(reader);
+		IDAHeaderReader headerReader = new IDAHeaderReader(file);
 		try
 		{
 			headerReader.read();

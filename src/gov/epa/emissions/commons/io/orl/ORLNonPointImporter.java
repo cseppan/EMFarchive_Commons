@@ -17,26 +17,23 @@ import org.apache.commons.logging.LogFactory;
 public class ORLNonPointImporter implements Importer {
     private static Log log = LogFactory.getLog(ORLNonPointImporter.class);
 
-	private ORLImporter delegate;
-    
-	public ORLNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        
+    private ORLImporter delegate;
+
+    public ORLNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+
         FileFormatWithOptionalCols fileFormat = new ORLNonPointFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
         DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-        
-        delegate = new ORLImporter(dataset, formatUnit, datasource);
-	}
 
-	public void preCondition(File folder, String filePattern) throws Exception {
-		delegate.preCondition(folder, filePattern);
+        delegate = new ORLImporter(dataset, formatUnit, datasource);
     }
 
-	public void run(Dataset dataset) throws ImporterException {
-        log.debug("Dataset Name = " +dataset.getName());
+    public void preCondition(File folder, String filePattern) throws Exception {
+        delegate.preCondition(folder, filePattern);
+    }
 
-        
-
+    public void run(Dataset dataset) throws ImporterException {
+        log.debug("Dataset Name = " + dataset.getName());
         delegate.run();
         log.debug("-- END --");
 

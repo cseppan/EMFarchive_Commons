@@ -1,12 +1,15 @@
 package gov.epa.emissions.commons.io.ida;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +23,14 @@ public class IDAFileReader implements Reader {
 
     private FileFormat fileFormat;
 
-    public IDAFileReader(BufferedReader reader, FileFormat fileFormat, List comments) {
-        fileReader = reader;
+    public IDAFileReader(String source, FileFormat fileFormat) throws ImporterException {
+        try {
+            fileReader = new BufferedReader(new FileReader(source));
+        } catch (FileNotFoundException e) {
+            throw new ImporterException("File not found",e);
+        }
         this.fileFormat = fileFormat;
         this.comments = new ArrayList();
-        this.comments.addAll(comments);
     }
 
     public void close() throws IOException {

@@ -1,35 +1,27 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.TableDefinition;
-import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ORLImporter  {
-    private static Log log = LogFactory.getLog(ORLImporter.class);
 
     private Dataset dataset;
     
@@ -38,58 +30,37 @@ public class ORLImporter  {
     private File file;
 
     private FormatUnit formatUnit;
+    
+    private HelpImporter delegate;
 
     public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
+        this.delegate = new HelpImporter();
     }
 
     public void preCondition(File folder, String filePattern) throws Exception {
-        file=validateFile(folder, filePattern);
+        File file = new File(folder, filePattern);
+        validateORLFile(file);
+        this.file = file;
     }
     
     public void run() throws ImporterException {
-        String table = table(dataset.getName());
-        try {
-            createTable(table, datasource, formatUnit.tableFormat());
-        } catch (SQLException e) {
-            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
-        }
-
+        String table = delegate.tableName(dataset.getName());
+        delegate.createTable(table,datasource, formatUnit.tableFormat(),dataset.getName());
+                
         try {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(),
                     (TableFormatWithOptionalCols) formatUnit.tableFormat());
         } catch (Exception e) {
-            dropTable(table, datasource);
+            delegate.dropTable(table, datasource);
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
         }
     }
-
     
-    private File validateFile(File path, String fileName) throws ImporterException {
-        log.debug("check if file exists " + fileName);
-        File file = new File(path, fileName);
-        log.debug("File is: " + file.getAbsolutePath());
-        if (!file.exists() || !file.isFile()) {
-            log.error("File " + file.getAbsolutePath() + " not found");
-            throw new ImporterException("File not found");
-        }
-        log.debug("check if file exists " + fileName);
-
-        return file;
-    }
     
 
-    private void dropTable(String table, Datasource datasource) throws ImporterException {
-        try {
-            TableDefinition def = datasource.tableDefinition();
-            def.deleteTable(table);
-        } catch (SQLException e) {
-            throw new ImporterException(
-                    "could not drop table " + table + " after encountering error importing dataset", e);
-        }
-    }
 
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat,
             TableFormatWithOptionalCols tableFormat) throws Exception {
@@ -100,32 +71,26 @@ public class ORLImporter  {
         loadDataset(file, table, tableFormat, reader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, FileFormat colsMetadata, List comments, Dataset dataset)
-            throws ImporterException {
-        setInternalSource(file, table, colsMetadata, dataset);
-        addAttributesExtractedFromComments(comments, dataset);
+    private void loadDataset(File file, String table, FileFormat colsMetadata, List comments, Dataset dataset) {
+        delegate.setInternalSource(file, table, colsMetadata, dataset);
         dataset.setUnits("short tons/year");
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
+        dataset.setDescription(delegate.descriptions(comments));
     }
-
-    // TODO: this applies to all the Importers. Needs to be pulled out
-    private void setInternalSource(File file, String table, FileFormat colsMetadata, Dataset dataset) {
-        InternalSource source = new InternalSource();
-        source.setTable(table);
-        source.setType(colsMetadata.identify());
-        source.setCols(colNames(colsMetadata.cols()));
-        source.setSource(file.getAbsolutePath());
-        source.setSourceSize(file.length());
-
-        dataset.addInternalSource(source);
-    }
-
-    private String[] colNames(Column[] cols) {
-        List names = new ArrayList();
-        for (int i = 0; i < cols.length; i++)
-            names.add(cols[i].name());
-
-        return (String[]) names.toArray(new String[0]);
+    
+    private void validateORLFile(File file) throws ImporterException {
+        delegate.validateFile(file);
+        Reader reader = null;
+        try {
+            reader = new DelimiterIdentifyingFileReader(file, ((FileFormatWithOptionalCols) formatUnit.fileFormat())
+                    .minCols().length);
+            reader.read();
+            reader.close();
+        } catch (IOException e) {
+            throw new ImporterException(e.getMessage());
+        }
+        List comments = reader.comments();
+        addAttributesExtractedFromComments(comments, dataset);
     }
 
     private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
@@ -144,16 +109,7 @@ public class ORLImporter  {
         dataset.setYear(Integer.parseInt(year));
         setStartStopDateTimes(dataset, Integer.parseInt(year));
 
-        // TODO: this probably applies to all importers
-        dataset.setDescription(descriptions(comments));
-    }
-
-    private String descriptions(List comments) {
-        StringBuffer description = new StringBuffer();
-        for (Iterator iter = comments.iterator(); iter.hasNext();)
-            description.append(iter.next() + "\n");
-
-        return description.toString();
+        
     }
 
     private String tag(String tag, List comments) {
@@ -175,15 +131,5 @@ public class ORLImporter  {
         endCal.set(Calendar.MILLISECOND, 999);
         dataset.setStopDateTime(endCal.getTime());
     }
-
-    private String table(String datasetName) {
-        return datasetName.trim().replaceAll(" ", "_");
-    }
-
-    private void createTable(String table, Datasource datasource, TableFormat tableFormat) throws SQLException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, tableFormat.cols());
-    }
-
 
 }

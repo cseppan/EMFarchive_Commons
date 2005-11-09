@@ -58,7 +58,8 @@ public class IDAHeaderTagsTest extends DbTestCase {
             importer.run();
             assertTrue(false);
         } catch (Exception e) {
-            assertTrue(e.getMessage().endsWith("Could not find tag '#IDA'"));
+            System.err.println(e.getMessage());
+            assertTrue(e.getMessage().startsWith("The tag - 'IDA' is mandatory"));
         }
     }
 

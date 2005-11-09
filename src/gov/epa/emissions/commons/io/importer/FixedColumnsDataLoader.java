@@ -30,13 +30,6 @@ public class FixedColumnsDataLoader implements DataLoader {
         }
     }
 
-    public void insertRow(Record record, Dataset dataset, String table) throws Exception {
-        DataModifier modifier = datasource.getDataModifier();
-        if (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
-        }
-    }
-
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.getDataModifier();
