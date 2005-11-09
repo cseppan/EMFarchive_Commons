@@ -47,7 +47,7 @@ public class ORLOnRoadExporterTest extends DbTestCase {
     }
 
     private void doImport() throws Exception {
-        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
         importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
         importer.run(dataset);
     }

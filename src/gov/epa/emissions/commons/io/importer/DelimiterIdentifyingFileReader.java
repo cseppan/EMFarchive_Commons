@@ -26,5 +26,9 @@ public class DelimiterIdentifyingFileReader implements Reader {
     public List comments() {
         return reader.comments();
     }
+    
+    public int lineNumber(){
+        return reader.lineNumber();
+    }
 
 }

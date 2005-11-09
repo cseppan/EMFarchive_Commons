@@ -19,26 +19,25 @@ public class ORLNonPointImporter implements Importer {
 
 	private ORLImporter delegate;
     
-    private SqlDataTypes sqlDataTypes;
+	public ORLNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         
-	public ORLNonPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.sqlDataTypes =sqlDataTypes;
-        delegate = new ORLImporter(datasource);
+        FileFormatWithOptionalCols fileFormat = new ORLNonPointFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        
+        delegate = new ORLImporter(dataset, formatUnit, datasource);
 	}
 
 	public void preCondition(File folder, String filePattern) throws Exception {
 		delegate.preCondition(folder, filePattern);
-        log.debug("folder= " + folder + " Filename= " + filePattern);
     }
 
 	public void run(Dataset dataset) throws ImporterException {
         log.debug("Dataset Name = " +dataset.getName());
 
-        FileFormatWithOptionalCols fileFormat = new ORLNonPointFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        
 
-        delegate.run(dataset,unit);
+        delegate.run();
         log.debug("-- END --");
 
     }

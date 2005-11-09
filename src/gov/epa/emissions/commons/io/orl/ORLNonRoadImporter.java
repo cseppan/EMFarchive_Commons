@@ -15,19 +15,16 @@ public class ORLNonRoadImporter implements Importer {
 
     private ORLImporter delegate;
     
-    private SqlDataTypes sqlDataTypes;
-
-    public ORLNonRoadImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.sqlDataTypes = sqlDataTypes;
-        delegate = new ORLImporter(datasource);
+    public ORLNonRoadImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        FileFormatWithOptionalCols fileFormat = new ORLNonRoadFileFormat(sqlDataTypes);
+        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
+        
+        delegate = new ORLImporter(dataset, formatUnit, datasource);
     }
 
     public void run(Dataset dataset) throws ImporterException {
-        FileFormatWithOptionalCols fileFormat = new ORLNonRoadFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
-        DatasetTypeUnitWithOptionalCols unit = new DatasetTypeUnitWithOptionalCols(tableColsMetadata, fileFormat);
-
-        delegate.run(dataset,unit);
+        delegate.run();
     }
 
     public void preCondition(File folder, String filePattern) throws Exception {

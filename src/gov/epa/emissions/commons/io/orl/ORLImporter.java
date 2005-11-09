@@ -9,7 +9,6 @@ import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileFormat;
-import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -29,20 +28,44 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class ORLImporter implements Importer {
+public class ORLImporter  {
     private static Log log = LogFactory.getLog(ORLImporter.class);
 
+    private Dataset dataset;
+    
     private Datasource datasource;
 
     private File file;
 
-    public ORLImporter(Datasource datasource) {
+    private FormatUnit formatUnit;
+
+    public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
+        this.dataset = dataset;
+        this.formatUnit = formatUnit;
         this.datasource = datasource;
     }
 
     public void preCondition(File folder, String filePattern) throws Exception {
         file=validateFile(folder, filePattern);
     }
+    
+    public void run() throws ImporterException {
+        String table = table(dataset.getName());
+        try {
+            createTable(table, datasource, formatUnit.tableFormat());
+        } catch (SQLException e) {
+            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
+        }
+
+        try {
+            doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(),
+                    (TableFormatWithOptionalCols) formatUnit.tableFormat());
+        } catch (Exception e) {
+            dropTable(table, datasource);
+            throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
+        }
+    }
+
     
     private File validateFile(File path, String fileName) throws ImporterException {
         log.debug("check if file exists " + fileName);
@@ -57,10 +80,6 @@ public class ORLImporter implements Importer {
         return file;
     }
     
-    //FIXME: remove the run()
-    public void run(Dataset dataset){
-        
-    }
 
     private void dropTable(String table, Datasource datasource) throws ImporterException {
         try {
@@ -166,23 +185,5 @@ public class ORLImporter implements Importer {
         tableDefinition.createTable(table, tableFormat.cols());
     }
 
-    public void run(Dataset dataset, FormatUnit unit) throws ImporterException {
-
-        String table = table(dataset.getName());
-
-        try {
-            createTable(table, datasource, unit.tableFormat());
-        } catch (SQLException e) {
-            throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
-        }
-
-        try {
-            doImport(file, dataset, table, (FileFormatWithOptionalCols) unit.fileFormat(),
-                    (TableFormatWithOptionalCols) unit.tableFormat());
-        } catch (Exception e) {
-            dropTable(table, datasource);
-            throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
-        }
-    }
 
 }

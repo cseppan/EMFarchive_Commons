@@ -25,7 +25,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
             dropData(table, dataset);
-            throw new ImporterException(e.getMessage() + " could not load dataset - '" + dataset.getName() + "' into table - " + table);
+            throw new ImporterException(e.getMessage() + " could not load dataset - '" + dataset.getName()
+                    + "' into table - " + table);
         }
     }
 
@@ -43,12 +44,19 @@ public class OptionalColumnsDataLoader implements DataLoader {
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         DataModifier modifier = datasource.getDataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
-            if (record.size() < tableFormat.minCols().length)
-                throw new ImporterException("Dataset - " + dataset.getName() + " has a record " + record
-                        + " that has less than number of minimum columns");
+            int minColsSize = tableFormat.minCols().length;
+            if (record.size() < minColsSize)
+                throw new ImporterException("Line number " + ((DelimitedFileReader) reader).lineNumber()
+                        + ": The number of tokens in the line are " + record.size()
+                        + ", It's less than minimum number of columns expected(" + minColsSize + ")");
 
             String[] data = data(dataset, record, tableFormat);
-            modifier.insertRow(table, data, tableFormat.cols());
+            try {
+                modifier.insertRow(table, data, tableFormat.cols());
+            } catch (SQLException e) {
+                throw new ImporterException("Line number " + ((DelimitedFileReader) reader).lineNumber()
+                        + "Error in inserting query\n" + e.getMessage());
+            }
         }
     }
 

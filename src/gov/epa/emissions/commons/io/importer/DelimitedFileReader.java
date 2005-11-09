@@ -19,12 +19,15 @@ public class DelimitedFileReader implements Reader {
 
     private Tokenizer tokenizer;
 
+    private int lineNumber;
+
     public DelimitedFileReader(File file, Tokenizer tokenizer) throws FileNotFoundException {
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
         this.tokenizer = tokenizer;
+        this.lineNumber = 0;
     }
-
+    
     public void close() throws IOException {
         fileReader.close();
     }
@@ -33,6 +36,9 @@ public class DelimitedFileReader implements Reader {
         String line = fileReader.readLine();
 
         while (line != null) {
+            
+            lineNumber++;
+            
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
@@ -62,6 +68,10 @@ public class DelimitedFileReader implements Reader {
 
     public List comments() {
         return comments;
+    }
+    
+    public int lineNumber(){
+        return lineNumber;
     }
 
 }

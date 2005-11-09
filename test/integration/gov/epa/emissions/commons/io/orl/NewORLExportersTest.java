@@ -46,7 +46,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportOnRoad() throws Exception {
-        Importer importer = new ORLOnRoadImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-onroad.txt");
 
         NewExporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
@@ -63,7 +63,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
     
     public void testShouldExportNonRoad() throws Exception {
-        Importer importer = new ORLNonRoadImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLNonRoadImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
 
         NewExporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
@@ -80,7 +80,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
     
     public void testShouldExportNonPoint() throws Exception {
-        Importer importer = new ORLNonPointImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLNonPointImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-nonpoint.txt");
 
         NewExporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
@@ -99,7 +99,7 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     public void testShouldExportPoint() throws Exception {
-        Importer importer = new ORLPointImporter(datasource, sqlDataTypes);
+        Importer importer = new ORLPointImporter(datasource, sqlDataTypes, dataset);
         doImport(importer, "small-point.txt");
 
         NewExporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
