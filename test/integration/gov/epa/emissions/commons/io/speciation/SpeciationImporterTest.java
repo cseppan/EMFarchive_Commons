@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
-import gov.epa.emissions.commons.io.speciation.ProfileImporter;
+import gov.epa.emissions.commons.io.speciation.SpeciationProfileImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
@@ -39,7 +39,7 @@ public class SpeciationImporterTest extends DbTestCase {
     }
 
     public void testImportChemicalSpeciationData() throws Exception {
-        ProfileImporter importer = new ProfileImporter(datasource, sqlDataTypes, "Chem Spec");
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(datasource, sqlDataTypes, "Chem Spec");
         importer.preCondition(new File("test/data/speciation"), "gspro-speciation.txt");
         importer.run(dataset);
 

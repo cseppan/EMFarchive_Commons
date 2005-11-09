@@ -21,16 +21,16 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class ORLImporter  {
+public class ORLImporter {
 
     private Dataset dataset;
-    
+
     private Datasource datasource;
 
     private File file;
 
     private FormatUnit formatUnit;
-    
+
     private HelpImporter delegate;
 
     public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
@@ -45,11 +45,11 @@ public class ORLImporter  {
         validateORLFile(file);
         this.file = file;
     }
-    
+
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table,datasource, formatUnit.tableFormat(),dataset.getName());
-                
+        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+
         try {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(),
                     (TableFormatWithOptionalCols) formatUnit.tableFormat());
@@ -58,9 +58,6 @@ public class ORLImporter  {
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
         }
     }
-    
-    
-
 
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat,
             TableFormatWithOptionalCols tableFormat) throws Exception {
@@ -77,7 +74,7 @@ public class ORLImporter  {
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
         dataset.setDescription(delegate.descriptions(comments));
     }
-    
+
     private void validateORLFile(File file) throws ImporterException {
         delegate.validateFile(file);
         Reader reader = null;
@@ -109,7 +106,6 @@ public class ORLImporter  {
         dataset.setYear(Integer.parseInt(year));
         setStartStopDateTimes(dataset, Integer.parseInt(year));
 
-        
     }
 
     private String tag(String tag, List comments) {
