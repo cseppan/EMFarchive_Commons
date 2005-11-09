@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 
 public class ExImCompatibilityTest extends TestCase {
 
-    public void testExportShouldMatchImportForValidFiles() throws Exception {
+    public void testExportedImportedFilesMatchForValidNonPointFiles() throws Exception {
         String expectedMessage = "Status: success";
         String type = "ORLNonpoint";
         String importFile = "data\\imported-non-point.txt";
@@ -19,9 +19,17 @@ public class ExImCompatibilityTest extends TestCase {
 
         run(expectedMessage, type, importFile, exportFile);
     }
+    
+    public void testExportedImportedFilesMatchForValidOnRoadFiles() throws Exception {
+        String expectedMessage = "Status: success";
+        String type = "ORLOnroad";
+        String importFile = "data\\imported-small-onroad.orl";
+        String exportFile = "data\\exported-small-onroad.orl";
+        
+        run(expectedMessage, type, importFile, exportFile);
+    }
 
-    // FIXME: why is this test idled ?
-    public void FIXME_testExportShouldFailToMatchImportForUnmatchedData() throws Exception {
+    public void testExportShouldFailToMatchImportForUnmatchedNonPointFiles() throws Exception {
         String expectedMessage = "Status: failure";
 
         String type = "ORLNonpoint";
@@ -51,9 +59,14 @@ public class ExImCompatibilityTest extends TestCase {
         assertEquals(expectedMessage, status);
     }
 
+    /**
+     * Ignore errors from the ErrorStream. Capture the status message (the last
+     * line) from the InputStream.
+     */
     private String captureStatus(Process p) throws IOException {
+        p.getErrorStream().close();// ignore errors
         InputStreamReader isReader = new InputStreamReader(p.getInputStream());
-        BufferedReader reader = new BufferedReader(isReader, 2048);
+        BufferedReader reader = new BufferedReader(isReader, 204800);
 
         List lines = new ArrayList();
         String line = null;

@@ -51,7 +51,7 @@ public class NewORLExportersTest extends DbTestCase {
 
         NewExporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
-
+System.out.println("import - small-onroad.txt. export - " + file.getAbsolutePath());
         // assert headers
         assertComments(file);
 
@@ -126,8 +126,8 @@ public class NewORLExportersTest extends DbTestCase {
     }
 
     private File doExport(NewExporter exporter) throws Exception {
-        File file = File.createTempFile("exported", "orl");
-        file.deleteOnExit();
+        File file = File.createTempFile("exported", ".orl");
+//        file.deleteOnExit();
 
         exporter.export(file);
 
