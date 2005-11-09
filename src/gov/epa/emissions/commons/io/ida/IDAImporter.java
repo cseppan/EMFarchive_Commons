@@ -64,10 +64,8 @@ public class IDAImporter {
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {
-            e.printStackTrace();
             delegate.dropTable(table, datasource);
-            throw new ImporterException("could not import File - " + unit.getInternalSource().getSource()
-                    + " into Dataset - " + dataset.getName() + "\n" + e.getMessage());
+            throw new ImporterException("Filename: " +file.getAbsolutePath()+ ", "+ e.getMessage());
         }
     }
 

@@ -25,8 +25,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
             dropData(table, dataset);
-            throw new ImporterException(e.getMessage() + " could not load dataset - '" + dataset.getName()
-                    + "' into table - " + table);
+            throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
+                    + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         }
     }
 
@@ -37,7 +37,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
-            throw new ImporterException("could not drop data from table " + table, e);
+            throw new ImporterException("could not drop data from table " + table+"\n"+e.getMessage(), e);
         }
     }
 
@@ -46,16 +46,14 @@ public class OptionalColumnsDataLoader implements DataLoader {
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
             int minColsSize = tableFormat.minCols().length;
             if (record.size() < minColsSize)
-                throw new ImporterException("Line number " + ((DelimitedFileReader) reader).lineNumber()
-                        + ": The number of tokens in the line are " + record.size()
+                throw new ImporterException("The number of tokens in the line are " + record.size()
                         + ", It's less than minimum number of columns expected(" + minColsSize + ")");
 
             String[] data = data(dataset, record, tableFormat);
             try {
                 modifier.insertRow(table, data, tableFormat.cols());
             } catch (SQLException e) {
-                throw new ImporterException("Line number " + reader.lineNumber() + "Error in inserting query\n"
-                        + e.getMessage());
+                throw new ImporterException("Error in inserting query\n" + e.getMessage());
             }
         }
     }

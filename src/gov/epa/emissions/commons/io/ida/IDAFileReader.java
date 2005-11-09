@@ -23,6 +23,8 @@ public class IDAFileReader implements Reader {
 
     private FileFormat fileFormat;
 
+    private int lineNumber;
+
     public IDAFileReader(String source, FileFormat fileFormat) throws ImporterException {
         try {
             fileReader = new BufferedReader(new FileReader(source));
@@ -31,6 +33,7 @@ public class IDAFileReader implements Reader {
         }
         this.fileFormat = fileFormat;
         this.comments = new ArrayList();
+        lineNumber = 0;
     }
 
     public void close() throws IOException {
@@ -40,6 +43,7 @@ public class IDAFileReader implements Reader {
     public Record read() throws IOException {
         String line = fileReader.readLine();
         while (line != null) {
+            lineNumber++;
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
@@ -82,8 +86,7 @@ public class IDAFileReader implements Reader {
     }
 
     public int lineNumber() {
-        // TODO Auto-generated method stub
-        return 0;
+        return lineNumber;
     }
 
 }

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -9,14 +9,15 @@ import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
+import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,16 +31,24 @@ public class NIFImporter {
 
     private List tableNames;
 
+    private HelpImporter delegate;
+
     public NIFImporter(Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource) {
         this.dataset = dataset;
         this.datasetTypeUnits = datasetTypeUnits;
         this.datasource = datasource;
         this.tableNames = new ArrayList();
+        this.delegate = new HelpImporter();
     }
 
     public void preImport() throws ImporterException {
-        datasetTypeUnits.processFiles(dataset.getInternalSources());
+        InternalSource[] internalSources = dataset.getInternalSources();
+        for(int i=0; i< internalSources.length; i++){
+            delegate.validateFile(new File(internalSources[i].getSource()));
+        }
+        datasetTypeUnits.processFiles(internalSources);
     }
+
 
     public void run() throws ImporterException {
         FormatUnit[] units = datasetTypeUnits.formatUnits();
@@ -55,10 +64,18 @@ public class NIFImporter {
         }
         doImport(internalSource, unit, dataset);
     }
-
-    private void createTable(String tableName, TableFormat tableFormat) throws SQLException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(tableName, tableFormat.cols());
+    
+    private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
+        String tableName = internalSource.getTable();
+        String source = internalSource.getSource();
+        delegate.createTable(tableName,datasource, unit.tableFormat(), dataset.getName());
+        tableNames.add(tableName);
+        try {
+            doImport(source, dataset, tableName, unit.fileFormat(), unit.tableFormat());
+        } catch (Exception e) {
+            dropTables(tableNames);
+            throw new ImporterException("Filename: " + source +", "+ e.getMessage());
+        }
     }
 
     private void doImport(String fileName, Dataset dataset, String tableName, FileFormat fileFormat,
@@ -68,31 +85,36 @@ public class NIFImporter {
         Reader fileReader = new DataReader(reader, new FixedWidthParser(fileFormat));
         loader.load(fileReader, dataset, tableName);
         reader.close();
-        // TODO: load dataset
+        loadDataset(fileFormat,fileReader.comments(),dataset);
     }
 
-    private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
-        try {
-            String tableName = internalSource.getTable();
-            createTable(tableName, unit.tableFormat());
-            tableNames.add(tableName);
-            doImport(internalSource.getSource(), dataset, tableName, unit.fileFormat(), unit.tableFormat());
-        } catch (Exception e) {
-            dropTables(tableNames);
-            throw new ImporterException("could not import File - " + internalSource + " into Dataset - "
-                    + dataset.getName());
+
+    //TODO: load starttime, endtime
+    private void loadDataset(FileFormat fileFormat, List comments, Dataset dataset) {
+        updateInternalSources(fileFormat,dataset);
+        dataset.setDescription(delegate.descriptions(comments));
+        
+    }
+    
+    private void updateInternalSources(FileFormat fileFormat, Dataset dataset) {
+        InternalSource[] internalSources = dataset.getInternalSources();
+        for(int i=0; i< internalSources.length; i++){
+            internalSources[i].setType(fileFormat.identify());
+            internalSources[i].setCols(colNames(fileFormat.cols()));
         }
+    }
+    
+    private String[] colNames(Column[] cols) {
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++)
+            names.add(cols[i].name());
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     private void dropTables(List tableNames) throws ImporterException {
-        String tableName = null;
         for (int i = 0; i < tableNames.size(); i++) {
-            try {
-                tableName = (String) tableNames.get(i);
-                datasource.tableDefinition().deleteTable(tableName);
-            } catch (SQLException e) {
-                throw new ImporterException("Could not drop table '" + tableName + "'\n" + e.getMessage());
-            }
+            delegate.dropTable((String) tableNames.get(i),datasource);
         }
     }
 

@@ -50,8 +50,6 @@ public class ORLImporterTest extends DbTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
     
-    
-
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
         ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
 

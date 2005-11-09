@@ -6,7 +6,7 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
 
     private Tokenizer commaTokenizer;
 
-    private SemiColonDelimitedTokenizer semiColonTokenizer;
+    private Tokenizer semiColonTokenizer;
 
     public DelimiterIdentifyingTokenizer(int minTokens) {
         this.minTokens = minTokens;
