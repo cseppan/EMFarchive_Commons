@@ -21,12 +21,12 @@ public abstract class DbTestCase extends TestCase {
     protected File referenceFilesDir;
 
     protected void setUp() throws Exception {
-        String folder = "test/integration";
-        File conf = new File(folder, "commons.conf");
+        String folder = "test";
+        File conf = new File(folder, "test.conf");
 
         if (!conf.exists() || !conf.isFile()) {
             String error = "File: " + conf + " does not exist. Please copy either of the two TEMPLATE files "
-                    + "(from " + folder + "), name it commons.conf, configure " + "it as needed, and rerun.";
+                    + "(from " + folder + "), name it test.conf, configure " + "it as needed, and rerun.";
             throw new RuntimeException(error);
         }
 

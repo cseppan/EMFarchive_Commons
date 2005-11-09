@@ -11,7 +11,7 @@ public class ConfigTest extends TestCase {
     private Config config;
 
     protected void setUp() throws ConfigurationException {
-        config = new Config("test/integration/gov/epa/emissions/commons/test.conf");
+        config = new Config("test/integration/gov/epa/emissions/commons/config-test.conf");
     }
 
     public void testShouldLoadProperties() throws Exception {
