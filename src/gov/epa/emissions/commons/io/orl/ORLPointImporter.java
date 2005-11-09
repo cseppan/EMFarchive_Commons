@@ -15,7 +15,7 @@ public class ORLPointImporter implements Importer {
 
     private ORLImporter delegate;
     
-    public ORLPointImporter(Datasource datasource, SqlDataTypes sqlDataTypes, Dataset dataset) {
+    public ORLPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         
         FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableColsMetadata = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);

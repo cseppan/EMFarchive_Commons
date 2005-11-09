@@ -42,12 +42,7 @@ public class IDAImporterTest extends DbTestCase {
         setInternalSource(source);
         IDANonPointImporter importer = new IDANonPointImporter(dataset, datasource, sqlDataTypes);
         importer.preCondition(null, null);
-        try{
-          importer.run(dataset);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        
+        importer.run(dataset);
 
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
@@ -58,8 +53,8 @@ public class IDAImporterTest extends DbTestCase {
         String source = "test/data/ida/small-point.txt";
         setInternalSource(source);
 
-        IDAPointImporter importer = new IDAPointImporter(dataset,datasource, sqlDataTypes);
-        importer.preCondition(null,null);
+        IDAPointImporter importer = new IDAPointImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(null, null);
         importer.run(dataset);
 
         // assert
@@ -72,7 +67,7 @@ public class IDAImporterTest extends DbTestCase {
         setInternalSource(source);
         IDAMobileImporter importer = new IDAMobileImporter(dataset, datasource, sqlDataTypes);
         importer.preCondition(null, null);
-       
+
         importer.run(dataset);
 
         // assert
@@ -94,7 +89,7 @@ public class IDAImporterTest extends DbTestCase {
 
     private void setInternalSource(String source) {
         File file = new File(source);
-        
+
         InternalSource internalSource = new InternalSource();
         internalSource.setSource(file.getAbsolutePath());
         internalSource.setTable(dataset.getName());

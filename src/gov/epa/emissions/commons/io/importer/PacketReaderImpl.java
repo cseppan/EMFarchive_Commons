@@ -71,4 +71,9 @@ public class PacketReaderImpl implements PacketReader {
         // no op
     }
 
+    public int lineNumber() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

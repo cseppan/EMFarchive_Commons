@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.NewExporter;
+import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -28,7 +28,7 @@ public class ORLOnRoadExporterTest extends DbTestCase {
 
     private Dataset dataset;
 
-    private NewExporter exporter;
+    private Exporter exporter;
 
     protected void setUp() throws Exception {
         super.setUp();

@@ -54,8 +54,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
             try {
                 modifier.insertRow(table, data, tableFormat.cols());
             } catch (SQLException e) {
-                throw new ImporterException("Line number " + ((DelimitedFileReader) reader).lineNumber()
-                        + "Error in inserting query\n" + e.getMessage());
+                throw new ImporterException("Line number " + reader.lineNumber() + "Error in inserting query\n"
+                        + e.getMessage());
             }
         }
     }

@@ -36,7 +36,6 @@ public class DelimitedFileReader implements Reader {
         String line = fileReader.readLine();
 
         while (line != null) {
-            
             lineNumber++;
             
             if (isData(line))

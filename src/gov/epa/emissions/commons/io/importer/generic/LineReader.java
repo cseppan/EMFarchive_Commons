@@ -41,4 +41,9 @@ public class LineReader implements Reader {
     public List comments() {
         return comments;
     }
+
+    public int lineNumber() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

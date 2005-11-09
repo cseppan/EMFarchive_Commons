@@ -27,4 +27,9 @@ public class WhitespaceDelimitedFileReader implements Reader {
         return reader.comments();
     }
 
+    public int lineNumber() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

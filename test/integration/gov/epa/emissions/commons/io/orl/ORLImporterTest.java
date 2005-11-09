@@ -53,7 +53,7 @@ public class ORLImporterTest extends DbTestCase {
     
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(datasource, sqlDataTypes, dataset);
+        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
 
         importer.preCondition(new File("test/data/orl/nc"), "small-point.txt");
         importer.run(dataset);

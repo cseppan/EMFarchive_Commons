@@ -75,4 +75,9 @@ public class IDAFileReader implements Reader {
         return comments;
     }
 
+    public int lineNumber() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

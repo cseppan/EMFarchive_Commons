@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.NewExporter;
+import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DbTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-public class NewORLExportersTest extends DbTestCase {
+public class ORLExportersTest extends DbTestCase {
 
     private Datasource datasource;
 
@@ -49,9 +49,9 @@ public class NewORLExportersTest extends DbTestCase {
         Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-onroad.txt");
 
-        NewExporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
-System.out.println("import - small-onroad.txt. export - " + file.getAbsolutePath());
+
         // assert headers
         assertComments(file);
 
@@ -66,7 +66,7 @@ System.out.println("import - small-onroad.txt. export - " + file.getAbsolutePath
         Importer importer = new ORLNonRoadImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
 
-        NewExporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers
@@ -83,7 +83,7 @@ System.out.println("import - small-onroad.txt. export - " + file.getAbsolutePath
         Importer importer = new ORLNonPointImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-nonpoint.txt");
 
-        NewExporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers
@@ -99,10 +99,10 @@ System.out.println("import - small-onroad.txt. export - " + file.getAbsolutePath
     }
 
     public void testShouldExportPoint() throws Exception {
-        Importer importer = new ORLPointImporter(datasource, sqlDataTypes, dataset);
+        Importer importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-point.txt");
 
-        NewExporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers
@@ -125,7 +125,7 @@ System.out.println("import - small-onroad.txt. export - " + file.getAbsolutePath
         assertEquals(headers(dataset.getDescription()).size(), comments.size());
     }
 
-    private File doExport(NewExporter exporter) throws Exception {
+    private File doExport(Exporter exporter) throws Exception {
         File file = File.createTempFile("exported", ".orl");
 //        file.deleteOnExit();
 

@@ -13,4 +13,5 @@ public interface Reader {
 
     void close() throws IOException;
 
+    int lineNumber();
 }

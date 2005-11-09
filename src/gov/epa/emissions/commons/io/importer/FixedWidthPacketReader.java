@@ -29,4 +29,9 @@ public class FixedWidthPacketReader implements PacketReader {
     public void close() {
         delegate.close();
     }
+
+    public int lineNumber() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

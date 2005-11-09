@@ -52,4 +52,9 @@ public class DataReader implements Reader {
         // no op
     }
 
+    public int lineNumber() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

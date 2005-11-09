@@ -45,15 +45,12 @@ public class LineImporter implements Importer {
         try {
             createTable(table, datasource, typeUnit.tableFormat());
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new ImporterException("could not create table for dataset - " + dataset.getName(), e);
-            
         }
 
         try {
             doImport(file, dataset, table, typeUnit.tableFormat());
         } catch (Exception e) {
-            e.printStackTrace();
             dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());

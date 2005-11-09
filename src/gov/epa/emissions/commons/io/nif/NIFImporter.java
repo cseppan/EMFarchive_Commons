@@ -78,7 +78,6 @@ public class NIFImporter {
             tableNames.add(tableName);
             doImport(internalSource.getSource(), dataset, tableName, unit.fileFormat(), unit.tableFormat());
         } catch (Exception e) {
-            e.printStackTrace();
             dropTables(tableNames);
             throw new ImporterException("could not import File - " + internalSource + " into Dataset - "
                     + dataset.getName());

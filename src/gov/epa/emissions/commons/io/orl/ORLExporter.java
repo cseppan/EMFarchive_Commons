@@ -4,8 +4,8 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.exporter.orl.ExporterException;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.io.BufferedWriter;
@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-class NewORLExporter {
+class ORLExporter {
 
     private Dataset dataset;
 
@@ -24,7 +24,7 @@ class NewORLExporter {
 
     private FileFormat fileFormat;
 
-    public NewORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.fileFormat = fileFormat;
