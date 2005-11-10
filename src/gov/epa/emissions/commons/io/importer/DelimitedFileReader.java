@@ -73,4 +73,9 @@ public class DelimitedFileReader implements Reader {
         return lineNumber;
     }
 
+    public String line() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

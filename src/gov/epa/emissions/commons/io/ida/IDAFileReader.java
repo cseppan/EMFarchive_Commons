@@ -25,6 +25,8 @@ public class IDAFileReader implements Reader {
 
     private int lineNumber;
 
+    private String line;
+
     public IDAFileReader(String source, FileFormat fileFormat) throws ImporterException {
         try {
             fileReader = new BufferedReader(new FileReader(source));
@@ -44,6 +46,7 @@ public class IDAFileReader implements Reader {
         String line = fileReader.readLine();
         while (line != null) {
             lineNumber++;
+            this.line = line;
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
@@ -87,6 +90,10 @@ public class IDAFileReader implements Reader {
 
     public int lineNumber() {
         return lineNumber;
+    }
+
+    public String line() {
+        return line;
     }
 
 }

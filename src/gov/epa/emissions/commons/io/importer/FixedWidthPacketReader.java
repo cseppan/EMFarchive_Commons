@@ -34,4 +34,8 @@ public class FixedWidthPacketReader implements PacketReader {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    public String line() {
+        return delegate.line();
+    }
 }

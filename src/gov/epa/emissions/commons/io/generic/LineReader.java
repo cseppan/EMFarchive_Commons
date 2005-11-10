@@ -18,6 +18,10 @@ public class LineReader implements Reader {
 
     private List comments;
 
+    private String line;
+
+    private int lineNumber;
+
     public LineReader(File file) throws FileNotFoundException {
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
@@ -31,6 +35,8 @@ public class LineReader implements Reader {
         String line = fileReader.readLine();
 
         if (line != null) {
+            this.line = line;
+            this.lineNumber++;
             Record record = new Record();
             record.add(line);
             return record;
@@ -43,7 +49,10 @@ public class LineReader implements Reader {
     }
 
     public int lineNumber() {
-        // TODO Auto-generated method stub
-        return 0;
+        return lineNumber;
+    }
+
+    public String line() {
+        return line;
     }
 }

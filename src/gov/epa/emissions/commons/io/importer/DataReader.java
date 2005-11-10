@@ -48,13 +48,20 @@ public class DataReader implements Reader {
         return comments;
     }
 
+    
+
     public void close() {
         // no op
     }
-
+    
     public int lineNumber() {
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    public String line() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

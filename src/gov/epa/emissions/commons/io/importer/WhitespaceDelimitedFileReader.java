@@ -32,4 +32,8 @@ public class WhitespaceDelimitedFileReader implements Reader {
         return 0;
     }
 
+    public String line() {
+        return reader.line();
+    }
+
 }

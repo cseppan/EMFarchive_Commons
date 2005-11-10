@@ -31,4 +31,8 @@ public class DelimiterIdentifyingFileReader implements Reader {
         return reader.lineNumber();
     }
 
+    public String line() {
+        return reader.line();
+    }
+
 }

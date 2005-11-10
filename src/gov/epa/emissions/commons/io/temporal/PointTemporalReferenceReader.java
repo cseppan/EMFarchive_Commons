@@ -52,4 +52,9 @@ public class PointTemporalReferenceReader implements Reader {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    public String line() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

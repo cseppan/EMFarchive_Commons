@@ -65,12 +65,11 @@ public class IDAImporter {
             doImport(unit, dataset, table);
         } catch (Exception e) {
             delegate.dropTable(table, datasource);
-            throw new ImporterException("Filename: " +file.getAbsolutePath()+ ", "+ e.getMessage());
+            throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }
 
-    private void doImport(DatasetTypeUnit unit, Dataset dataset, String table)
-            throws Exception {
+    private void doImport(DatasetTypeUnit unit, Dataset dataset, String table) throws Exception {
 
         Reader idaReader = new IDAFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
@@ -97,6 +96,9 @@ public class IDAImporter {
         String country = tag("#COUNTRY", comments);
         if (country == null || country.length() == 0)
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
+        // TODO:Support all countries, Currently only files from US is supported
+        if(!country.toLowerCase().equals("us"))
+            throw new ImporterException("Currently the IDA importer supports files for US not for '"+country+"'");
         dataset.setCountry(country);
         dataset.setRegion(country);
 
