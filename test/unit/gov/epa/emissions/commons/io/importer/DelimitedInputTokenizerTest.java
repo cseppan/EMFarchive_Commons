@@ -144,4 +144,21 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("0001", tokens[1]);
         assertEquals("! EPA Derived", tokens[2]);
     }
+    
+    public void FIXME_testTokenizeWithTwoSingleQuotedStrings(){
+        String input = "37001 'ES1801f1207' 1 1 1 'Roche Biomedical' 2601020000";
+        Tokenizer tokenizer = new WhitespaceDelimitedTokenizer();
+        String[] tokens = tokenizer.tokens(input);
+        for(int i=0;i<tokens.length; i++){
+            System.out.println("*"+tokens[i]+"*");
+        }
+        assertEquals(7, tokens.length);
+        assertEquals("37001", tokens[0]);
+        assertEquals("ES1801f1207", tokens[1]);
+        assertEquals("1", tokens[2]);
+        assertEquals("1", tokens[3]);
+        assertEquals("1", tokens[4]);
+        assertEquals("1", tokens[4]);
+        assertEquals("Roche Biomedical", tokens[5]);
+    }
 }
