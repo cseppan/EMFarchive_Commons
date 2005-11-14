@@ -1,22 +1,10 @@
-/*
- * Creation on Aug 29, 2005
- * Eclipse Project Name: EMF
- * File Name: Dataset.java
- * Author: Conrad F. D'Cruz
- */
-/**
- * 
- */
-
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
-public interface Dataset extends Serializable {
+public interface NewDataset extends Serializable {
 
-    // unique id needed for hibernate persistence
     public long getDatasetid();
 
     public void setDatasetid(long datasetid);
@@ -25,12 +13,9 @@ public interface Dataset extends Serializable {
 
     public void setName(String name);
 
-    // bean-style properties
     void setCreator(String creator);// TODO: use User instead
 
     String getCreator();
-
-    String getDatasetTypeName();
 
     void setDatasetType(DatasetType datasetType);
 
@@ -44,16 +29,12 @@ public interface Dataset extends Serializable {
 
     String getRegion();
 
-    void setYear(int year);
-
-    int getYear();
-
     String getCountry();
 
     void setCountry(String country);
-
-    // FIXME: use the TemporalResolution instead
-    void setTemporalResolution(String name);
+    
+    //TODO: use TemporalResolution
+    void setTemporalResolution(String resolution);
 
     String getTemporalResolution();
 
@@ -68,12 +49,6 @@ public interface Dataset extends Serializable {
     String getDescription();
 
     void setDescription(String description);
-
-    // FIXME: legacy code
-    Map getTablesMap();
-
-    // FIXME: never used ?
-    void setTablesMap(Map datatables);
 
     // Datasets for non-external files will have a list of
     // Internal Source objects. An internal source object will
@@ -92,14 +67,5 @@ public interface Dataset extends Serializable {
     void setExternalSources(ExternalSource[] externalSources);
 
     void addExternalSource(ExternalSource source);
-
-    // FIXME: used in legacy code - convenience methods
-    Table getTable(String tableType);
-
-    // FIXME: used in legacy code
-    void addTable(Table importedTable);
-    
-    // FIXME: used in legacy code
-    public Table[] getTables();
 
 }
