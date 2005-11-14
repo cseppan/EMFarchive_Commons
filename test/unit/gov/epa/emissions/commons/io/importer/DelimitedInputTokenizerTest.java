@@ -149,9 +149,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         String input = "37001 'ES1801f1207' 1 1 1 'Roche Biomedical' 2601020000";
         Tokenizer tokenizer = new WhitespaceDelimitedTokenizer();
         String[] tokens = tokenizer.tokens(input);
-        for(int i=0;i<tokens.length; i++){
-            System.out.println("*"+tokens[i]+"*");
-        }
+
         assertEquals(7, tokens.length);
         assertEquals("37001", tokens[0]);
         assertEquals("ES1801f1207", tokens[1]);
