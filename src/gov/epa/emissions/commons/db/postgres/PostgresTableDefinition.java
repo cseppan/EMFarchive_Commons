@@ -147,7 +147,6 @@ public class PostgresTableDefinition implements TableDefinition {
         queryString += clean(cols[cols.length - 1].name()) + " " + cols[cols.length - 1].sqlType();
 
         queryString = queryString + ")";
-
         execute(queryString);
     }
 
