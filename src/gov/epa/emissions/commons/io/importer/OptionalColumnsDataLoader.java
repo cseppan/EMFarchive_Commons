@@ -26,6 +26,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
         } catch (Exception e) {
             dropData(table, dataset);
             throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
+                    + "\nLine: " + reader.line()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         }
     }

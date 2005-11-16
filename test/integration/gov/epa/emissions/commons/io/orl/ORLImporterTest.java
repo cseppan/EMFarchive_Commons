@@ -49,7 +49,7 @@ public class ORLImporterTest extends DbTestCase {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
-    
+
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
         ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
 
@@ -58,10 +58,20 @@ public class ORLImporterTest extends DbTestCase {
 
         assertEquals(10, countRecords());
     }
-    
-    private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        return tableReader.count(datasource.getName(), dataset.getName());
+
+    // FIXME: the parser is not working properly
+    public void FIXME_testShouldImportASmallAndSimpleExtendedPointFile() throws Exception {
+        try {
+            ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
+
+            importer.preCondition(new File("test/data/orl/extended"), "orl-extended-point.txt");
+
+            importer.run(dataset);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(200, countRecords());
     }
 
     public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
@@ -71,6 +81,19 @@ public class ORLImporterTest extends DbTestCase {
         importer.run(dataset);
 
         assertEquals(6, countRecords());
+    }
+
+    // FIXME: the parser is not working properly
+    public void FIXME_testShouldImportASmallAndSimpleExtendedNonPointFile() throws Exception {
+        try {
+            ORLNonPointImporter importer = new ORLNonPointImporter(dataset, datasource, sqlDataTypes);
+
+            importer.preCondition(new File("test/data/orl/extended"), "orl-extended-nonpoint.txt");
+            importer.run(dataset);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(200, countRecords());
     }
 
     public void testShouldImportNonPointFileWithVaryingCols() throws Exception {
@@ -98,7 +121,7 @@ public class ORLImporterTest extends DbTestCase {
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
         ORLNonPointImporter importer = new ORLNonPointImporter(dataset, datasource, sqlDataTypes);
-        
+
         File fullpath = new File(new File("test/data/orl/nc"), "small-nonpoint.txt");
         importer.preCondition(new File("test/data/orl/nc"), "small-nonpoint.txt");
         importer.run(dataset);
@@ -109,8 +132,7 @@ public class ORLImporterTest extends DbTestCase {
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
-        FileFormat colsMetadata = new FixedColsTableFormat(new ORLNonPointFileFormat(sqlDataTypes),
-                sqlDataTypes);
+        FileFormat colsMetadata = new FixedColsTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
         String[] actualCols = source.getCols();
         String[] expectedCols = colNames(colsMetadata.cols());
         assertEquals(expectedCols.length, actualCols.length);
@@ -121,7 +143,7 @@ public class ORLImporterTest extends DbTestCase {
         assertEquals(fullpath.getAbsolutePath(), source.getSource());
         assertEquals(fullpath.length(), source.getSourceSize());
     }
-    
+
     private String[] colNames(Column[] cols) {
         List names = new ArrayList();
         for (int i = 0; i < cols.length; i++)
@@ -137,7 +159,16 @@ public class ORLImporterTest extends DbTestCase {
 
         assertEquals(16, countRecords());
     }
-    
+
+    // FIXME: the parser is not working properly
+    public void FIXME_testShouldImportASmallAndSimpleExtendedNonRoadFile() throws Exception {
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(new File("test/data/orl/extended"), "orl-extended-nonroad.txt");
+        importer.run(dataset);
+
+        assertEquals(200, countRecords());
+    }
+
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
         File folder = new File("test/data/orl/nc");
         String filename = "small-onroad.txt";
@@ -198,6 +229,11 @@ public class ORLImporterTest extends DbTestCase {
                 + "#DESC North Carolina data extracted from original file using UNIX grep command.\n"
                 + "#DESC    paste commands. \n" + "#comment 1\n#comment 2\n#comment 3\n#comment 4\n";
         assertEquals(expected, dataset.getDescription());
+    }
+
+    private int countRecords() {
+        TableReader tableReader = new TableReader(datasource.getConnection());
+        return tableReader.count(datasource.getName(), dataset.getName());
     }
 
 }

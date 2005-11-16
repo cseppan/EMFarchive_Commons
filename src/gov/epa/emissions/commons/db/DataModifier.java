@@ -120,7 +120,7 @@ public class DataModifier {
         return concat.toString();
     }
 
-    // FIXME: remove, once Importers/Exporters are complete
+    // FIXME: remove, once Importers/Exporters are complete, used by legacy code
     public void insertRow(String table, String[] data, String[] colTypes) throws SQLException {
         StringBuffer insert = new StringBuffer();
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
@@ -160,7 +160,9 @@ public class DataModifier {
             if (i < (data.length - 1))
                 insert.append(',');
         }
+     
         insert.append(')');// close parentheses around the query
+//        System.out.println("query- "+insert.toString());           
         execute(insert.toString());
     }
 

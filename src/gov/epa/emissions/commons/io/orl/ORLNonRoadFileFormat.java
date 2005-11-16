@@ -53,7 +53,12 @@ public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
         cols.add(new Column("RPEN", types.realType(), new RealFormatter()));
-
+        //extended orl columns
+        cols.add(new Column("SRCTYPE", types.stringType(2), new StringFormatter(2)));
+        cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
+        cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
+                
         return (Column[]) cols.toArray(new Column[0]);
     }
 

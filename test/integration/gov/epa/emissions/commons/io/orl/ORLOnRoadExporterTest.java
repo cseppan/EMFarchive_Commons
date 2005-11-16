@@ -68,6 +68,7 @@ public class ORLOnRoadExporterTest extends DbTestCase {
         assertEquals(headers(dataset.getDescription()).size(), lines.size());
     }
 
+    //FIXME: ORL import: convert -9 to null?? export convert null -> -9 or emptyspace?
     public void testShouldExportTableRowsAsRecords() throws Exception {
         File file = File.createTempFile("onroad", ".orl");
         file.deleteOnExit();
@@ -78,11 +79,12 @@ public class ORLOnRoadExporterTest extends DbTestCase {
         List lines = readData(file);
         assertEquals(18, lines.size());
         String line = (String) lines.get(0);
+        System.out.println("line="+line);
         // FIXME: revisit once 'comments' is moved from Table to specific
         // ColumnsMetadata
         // assertEquals("37001, 2201001150, 100414, 1.0626200e+000, -9, !
         // EPA-derived", line);
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9", line);
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, , , , ", line);
     }
 
     private List readData(File file) throws IOException {

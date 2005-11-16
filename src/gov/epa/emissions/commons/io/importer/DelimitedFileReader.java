@@ -21,6 +21,8 @@ public class DelimitedFileReader implements Reader {
 
     private int lineNumber;
 
+    private String line;
+
     public DelimitedFileReader(File file, Tokenizer tokenizer) throws FileNotFoundException {
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
@@ -37,7 +39,7 @@ public class DelimitedFileReader implements Reader {
 
         while (line != null) {
             lineNumber++;
-            
+            this.line = line;
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
@@ -74,8 +76,7 @@ public class DelimitedFileReader implements Reader {
     }
 
     public String line() {
-        // TODO Auto-generated method stub
-        return null;
+        return line;
     }
 
 }

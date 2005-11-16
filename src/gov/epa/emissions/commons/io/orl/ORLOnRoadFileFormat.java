@@ -49,7 +49,13 @@ public class ORLOnRoadFileFormat implements FileFormatWithOptionalCols {
     public Column[] optionalCols() {
         List cols = new ArrayList();
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
-
+        
+        //extended orl columns
+        cols.add(new Column("SRCTYPE", types.stringType(2), new StringFormatter(2)));
+        cols.add(new Column("DATA_SOURCE", types.stringType(6), new StringFormatter(6)));
+        cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
+        cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
+        
         return (Column[]) cols.toArray(new Column[0]);
     }
 
