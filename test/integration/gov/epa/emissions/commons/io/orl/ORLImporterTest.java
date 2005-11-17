@@ -63,9 +63,7 @@ public class ORLImporterTest extends DbTestCase {
     public void FIXME_testShouldImportASmallAndSimpleExtendedPointFile() throws Exception {
         try {
             ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
             importer.preCondition(new File("test/data/orl/extended"), "orl-extended-point.txt");
-
             importer.run(dataset);
         } catch (Exception e) {
             e.printStackTrace();

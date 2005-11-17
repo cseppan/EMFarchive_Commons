@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.db.mysql;
 
+import gov.epa.emissions.commons.db.ConnectionFactory;
 import gov.epa.emissions.commons.db.ConnectionParams;
-import gov.epa.emissions.commons.db.postgres.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
