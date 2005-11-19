@@ -5,18 +5,13 @@ import javax.swing.JTextArea;
 public class TextArea extends JTextArea {
 
     public TextArea(String name, String value) {
-        super.setName(name);
-        super.setText(value);
-        super.setRows(2);
-        super.setLineWrap(true);
-        super.setCaretPosition(0);
-        super.setColumns(40);
+        this(name, value, 40);
     }
     
     public TextArea(String name, String value, int width) {
         super.setName(name);
         super.setText(value);
-        super.setRows(2);
+        super.setRows(4);
         super.setLineWrap(true);
         super.setCaretPosition(0);
         super.setColumns(width);
