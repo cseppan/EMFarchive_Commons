@@ -54,7 +54,11 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
         for (int i = 0; i < internalSources.length; i++) {
             InternalSource internalSource = internalSources[i];
             String key = notation(internalSource);
-            setFileToDatasetTypeUnit(internalSource, key);
+            FormatUnit formatUnit = fileToDatasetTypeUnit(key);
+            if(formatUnit!=null){
+                formatUnit.setInternalSource(internalSource);
+                internalSource.setType(formatUnit.fileFormat().identify());
+            }
         }
     }
 
@@ -72,22 +76,23 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
         }
     }
 
-    private void setFileToDatasetTypeUnit(InternalSource internalSource, String key) {
+    private FormatUnit fileToDatasetTypeUnit(String key) {
         if ("ce".equals(key)) {
-            ceDatasetTypeUnit.setInternalSource(internalSource);
+            return ceDatasetTypeUnit;
         }
 
         if ("em".equals(key)) {
-            emDatasetTypeUnit.setInternalSource(internalSource);
+            return emDatasetTypeUnit;
         }
 
         if ("ep".equals(key)) {
-            epDatasetTypeUnit.setInternalSource(internalSource);
+            return epDatasetTypeUnit;
         }
 
         if ("pe".equals(key)) {
-            peDatasetTypeUnit.setInternalSource(internalSource);
+            return peDatasetTypeUnit;
         }
+        return null;
     }
 
     private String notation(InternalSource internalSource) throws ImporterException {

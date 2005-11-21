@@ -1,15 +1,16 @@
 package gov.epa.emissions.commons.io.nif.nonpointNonroad;
 
-import java.io.File;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.importer.Importer;
+import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NewImporter;
 import gov.epa.emissions.commons.io.nif.NIFImporter;
 
-public class NIFNonPointImporter implements Importer{
+import java.io.File;
+
+public class NIFNonPointImporter implements NewImporter{
 
     private NIFImporter delegate;
 
@@ -21,8 +22,12 @@ public class NIFNonPointImporter implements Importer{
         delegate.preImport();
     }
 
-    public void run(Dataset dataset2) throws ImporterException {
+    public void run(Dataset dataset) throws ImporterException {
         delegate.run();
+    }
+
+    public InternalSource[] internalSources() {
+        return delegate.internalSources();
     }
 
     

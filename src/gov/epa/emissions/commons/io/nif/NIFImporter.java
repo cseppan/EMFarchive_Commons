@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -47,6 +46,7 @@ public class NIFImporter {
             delegate.validateFile(new File(internalSources[i].getSource()));
         }
         datasetTypeUnits.processFiles(internalSources);
+        updateInternalSources(datasetTypeUnits.formatUnits(),dataset);
     }
 
 
@@ -85,37 +85,36 @@ public class NIFImporter {
         Reader fileReader = new DataReader(reader, new FixedWidthParser(fileFormat));
         loader.load(fileReader, dataset, tableName);
         reader.close();
-        loadDataset(fileFormat,fileReader.comments(),dataset);
+        loadDataset(fileReader.comments(),dataset);
     }
 
 
     //TODO: load starttime, endtime
-    private void loadDataset(FileFormat fileFormat, List comments, Dataset dataset) {
-        updateInternalSources(fileFormat,dataset);
+    private void loadDataset(List comments, Dataset dataset) {
+       
         dataset.setDescription(delegate.descriptions(comments));
         
     }
     
-    private void updateInternalSources(FileFormat fileFormat, Dataset dataset) {
-        InternalSource[] internalSources = dataset.getInternalSources();
-        for(int i=0; i< internalSources.length; i++){
-            internalSources[i].setType(fileFormat.identify());
-            internalSources[i].setCols(colNames(fileFormat.cols()));
+    private void updateInternalSources(FormatUnit[] formatUnits, Dataset dataset) {
+        List sources = new ArrayList();
+        for(int i=0; i< formatUnits.length; i++){
+            InternalSource source = formatUnits[i].getInternalSource();
+            if(source !=null){
+                sources.add(source);
+            }
         }
+        dataset.setInternalSources((InternalSource[]) sources.toArray(new InternalSource[0]));
     }
     
-    private String[] colNames(Column[] cols) {
-        List names = new ArrayList();
-        for (int i = 0; i < cols.length; i++)
-            names.add(cols[i].name());
-
-        return (String[]) names.toArray(new String[0]);
-    }
-
     private void dropTables(List tableNames) throws ImporterException {
         for (int i = 0; i < tableNames.size(); i++) {
             delegate.dropTable((String) tableNames.get(i),datasource);
         }
+    }
+
+    public InternalSource[] internalSources() {
+        return dataset.getInternalSources();
     }
 
 }
