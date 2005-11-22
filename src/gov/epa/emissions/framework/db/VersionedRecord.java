@@ -6,6 +6,8 @@ public class VersionedRecord {
 
     private int datasetId;
 
+    private int recordId;
+
     public int getVersion() {
         return version;
     }
@@ -20,6 +22,14 @@ public class VersionedRecord {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public int getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(int recordId) {
+        this.recordId = recordId;
     }
 
 }

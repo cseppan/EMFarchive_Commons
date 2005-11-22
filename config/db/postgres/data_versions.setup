@@ -6,7 +6,7 @@ CREATE TABLE emissions.data
   record_id serial NOT NULL,
   dataset_id int4 NOT NULL,
   version int4 NOT NULL,
-  delete_version int4,
+  delete_version int4 DEFAULT -999,
   param1 text,
   param2 text,
   CONSTRAINT data_record_id_key UNIQUE (record_id)

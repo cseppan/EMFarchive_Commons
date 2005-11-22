@@ -132,7 +132,7 @@ public class DataModifier {
                 insert.append("'" + cellWithSingleQuotesEscaped + "'");
             } else {
                 if (data[i].trim().length() == 0)
-                    data[i] = "NULL";
+                    data[i] = "DEFAULT";
                 insert.append(data[i]);
             }
             if (i < (data.length - 1))
@@ -153,8 +153,8 @@ public class DataModifier {
                 String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
                 insert.append("'" + cellWithSingleQuotesEscaped + "'");
             } else {
-                if (data[i].trim().length() == 0)
-                    data[i] = "NULL";
+                if (data[i] == null || (data[i].trim().length() == 0))
+                    data[i] = "DEFAULT";
                 insert.append(data[i]);
             }
             if (i < (data.length - 1))
