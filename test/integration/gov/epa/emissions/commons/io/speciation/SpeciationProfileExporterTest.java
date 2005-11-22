@@ -43,9 +43,11 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         
         SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, 
                 datasource, new ProfileFileFormat("Chem Speciation Profile", sqlDataTypes));
-        exporter.export(new File("C:\\awork\\exported\\speciatiationprofileexported.txt"));
-
+        File file = new File("test/data/speciation","speciatiationprofileexported.txt");
+        exporter.export(file);
+        //FIXME: compare the original file and the exported file.
         assertEquals(88, countRecords());
+        file.delete();
     }
     
     private int countRecords() {

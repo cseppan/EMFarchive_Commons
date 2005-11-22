@@ -36,6 +36,8 @@ public class LineExporterTest extends PersistenceTestCase {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
+    
+    
 
     public void testExportSmallLineFile() throws Exception {
         LineImporter importer = new LineImporter(datasource, sqlDataTypes);
@@ -43,9 +45,11 @@ public class LineExporterTest extends PersistenceTestCase {
         importer.run(dataset);
         
         LineExporter exporter = new LineExporter (dataset, datasource, new LineFileFormat(sqlDataTypes));
-        exporter.export(new File("C:\\awork\\exported\\lineexporter.txt"));
-
+        File file = new File("test/data/orl/nc","lineexporter.txt");
+        exporter.export(file);
+        //FIXME: run the comparison tool, look at other exporter test
         assertEquals(22, countRecords());
+        file.delete();
     }
     
     private int countRecords() {
