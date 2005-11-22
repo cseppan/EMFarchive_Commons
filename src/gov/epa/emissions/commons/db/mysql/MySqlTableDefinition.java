@@ -2,37 +2,25 @@ package gov.epa.emissions.commons.db.mysql;
 
 import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.db.TableDefinitionDelegate;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlTableDefinition implements TableDefinition {
 
-    private Connection connection;
-
     private String schema;
+
+    private TableDefinitionDelegate delegate;
 
     public MySqlTableDefinition(String schema, Connection connection) {
         this.schema = schema;
-        this.connection = connection;
+        this.delegate = new TableDefinitionDelegate(connection);
     }
 
     public List getTableNames() throws SQLException {
-        List tableNames = new ArrayList();
-
-        DatabaseMetaData metaData = connection.getMetaData();
-        ResultSet tables = metaData.getTables(null, null, null, new String[] { "TABLE" });
-        while (tables.next()) {
-            String tableName = tables.getString("TABLE_NAME");
-            tableNames.add(tableName);
-        }
-
-        return tableNames;
+        return delegate.getTableNames();
     }
 
     public void createTableWithOverwrite(String table, String[] colNames, String[] colTypes, String[] primaryCols)
@@ -98,14 +86,7 @@ public class MySqlTableDefinition implements TableDefinition {
     }
 
     public boolean tableExists(String table) throws SQLException {
-        // if SHOW TABLES query returns one or more rows, the table exists
-        Statement statement = connection.createStatement();
-        try {
-            statement.execute("SHOW TABLES FROM " + schema + " LIKE '" + qualified(table) + "'");
-            return statement.getResultSet().getRow() > 0;
-        } finally {
-            statement.close();
-        }
+        return delegate.tableExist(table);
     }
 
     public void addIndex(String table, String indexName, String[] indexColumnNames) throws SQLException {
@@ -140,14 +121,7 @@ public class MySqlTableDefinition implements TableDefinition {
     }
 
     private void execute(final String query) throws SQLException {
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
-            statement.execute(query);
-        } finally {
-            if (statement != null)
-                statement.close();
-        }
+        delegate.execute(query);
     }
 
     public void createTable(String table, DbColumn[] cols) throws SQLException {

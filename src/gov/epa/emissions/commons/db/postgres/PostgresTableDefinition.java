@@ -2,37 +2,25 @@ package gov.epa.emissions.commons.db.postgres;
 
 import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.db.TableDefinitionDelegate;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PostgresTableDefinition implements TableDefinition {
 
-    private Connection connection;
-
     private String schema;
+
+    private TableDefinitionDelegate delegate;
 
     protected PostgresTableDefinition(String schema, Connection connection) {
         this.schema = schema;
-        this.connection = connection;
+        this.delegate = new TableDefinitionDelegate(connection);
     }
 
     public List getTableNames() throws SQLException {
-        List tableNames = new ArrayList();
-
-        DatabaseMetaData metaData = connection.getMetaData();
-        ResultSet tables = metaData.getTables(null, null, null, new String[] { "TABLE" });
-        while (tables.next()) {
-            String tableName = tables.getString("TABLE_NAME");
-            tableNames.add(tableName);
-        }
-
-        return tableNames;
+        return delegate.getTableNames();
     }
 
     /**
@@ -102,7 +90,7 @@ public class PostgresTableDefinition implements TableDefinition {
     }
 
     public boolean tableExists(String table) throws Exception {
-        return false;// TODO: use JDBC to query tables
+        return delegate.tableExist(table);
     }
 
     public void addIndex(String table, String indexName, String[] indexColumnNames) throws SQLException {
@@ -124,14 +112,7 @@ public class PostgresTableDefinition implements TableDefinition {
     }
 
     private void execute(final String query) throws SQLException {
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
-            statement.execute(query);
-        } finally {
-            if (statement != null)
-                statement.close();
-        }
+        delegate.execute(query);
     }
 
     private String clean(String data) {
