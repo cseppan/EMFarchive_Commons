@@ -7,7 +7,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
@@ -25,7 +25,7 @@ import java.util.Random;
 
 import org.dbunit.dataset.ITable;
 
-public class ORLImporterTest extends DbTestCase {
+public class ORLImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 

@@ -4,9 +4,9 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
-public abstract class ORLImporterTestCase extends DbTestCase {
+public abstract class ORLImporterTestCase extends PersistenceTestCase {
 
     protected ORLDatasetTypesFactory types;
 

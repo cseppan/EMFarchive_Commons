@@ -12,7 +12,7 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-public abstract class DbTestCase extends TestCase {
+public abstract class PersistenceTestCase extends TestCase {
 
     protected DatabaseSetup dbSetup;
 

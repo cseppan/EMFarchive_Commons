@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NIFNonPointImporterTest extends DbTestCase{
+public class NIFNonPointImporterTest extends PersistenceTestCase{
 
     private Datasource datasource;
 

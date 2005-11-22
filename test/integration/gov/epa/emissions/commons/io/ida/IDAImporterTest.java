@@ -6,14 +6,14 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 import java.util.Random;
 
-public class IDAImporterTest extends DbTestCase {
+public class IDAImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 

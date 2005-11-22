@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.legacy;
 
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.legacy.ReferenceImporter;
 
-public class ReferenceImporterTest extends DbTestCase {
+public class ReferenceImporterTest extends PersistenceTestCase {
 
     public void testImportReference() throws Exception {
         ReferenceImporter referenceImporter = new ReferenceImporter(dbSetup.getDbServer(), fieldDefsFile,

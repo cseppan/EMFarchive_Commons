@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.speciation.SpeciationProfileImporter;
 import gov.epa.emissions.framework.db.DbUpdate;
 import gov.epa.emissions.framework.db.TableReader;
@@ -13,7 +13,7 @@ import gov.epa.emissions.framework.db.TableReader;
 import java.io.File;
 import java.util.Random;
 
-public class SpeciationImporterTest extends DbTestCase {
+public class SpeciationImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 

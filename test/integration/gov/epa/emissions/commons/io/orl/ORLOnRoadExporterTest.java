@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.framework.db.DbUpdate;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-public class ORLOnRoadExporterTest extends DbTestCase {
+public class ORLOnRoadExporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 

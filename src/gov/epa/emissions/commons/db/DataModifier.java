@@ -160,9 +160,9 @@ public class DataModifier {
             if (i < (data.length - 1))
                 insert.append(',');
         }
-     
+
         insert.append(')');// close parentheses around the query
-//        System.out.println("query- "+insert.toString());           
+
         execute(insert.toString());
     }
 
@@ -172,6 +172,10 @@ public class DataModifier {
 
     private String qualified(String table) {
         return schema + "." + table;
+    }
+
+    public void dropAll(String table) throws SQLException {
+        execute("DELETE FROM " + qualified(table));
     }
 
 }

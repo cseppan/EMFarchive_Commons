@@ -5,13 +5,13 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.File;
 import java.util.Random;
 
-public class IDAHeaderTagsTest extends DbTestCase {
+public class IDAHeaderTagsTest extends PersistenceTestCase {
 
     private SqlDataTypes sqlDataTypes;
 

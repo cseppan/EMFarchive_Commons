@@ -11,7 +11,7 @@ import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 
-public class DelimitedFileLoaderTest extends DbTestCase {
+public class DelimitedFileLoaderTest extends PersistenceTestCase {
 
     private Reader reader;
 

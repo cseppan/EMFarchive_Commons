@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.temporal.DiurnalFileFormat;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
@@ -20,7 +20,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Random;
 
-public class TemporalProfileImporterTest extends DbTestCase {
+public class TemporalProfileImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 

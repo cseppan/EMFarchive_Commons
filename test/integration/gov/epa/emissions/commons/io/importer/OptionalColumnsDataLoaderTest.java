@@ -11,7 +11,7 @@ import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 
-public class OptionalColumnsDataLoaderTest extends DbTestCase {
+public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
     private Datasource datasource;
 

@@ -1,10 +1,10 @@
 package gov.epa.emissions.commons.io.ida;
 
-import gov.epa.emissions.commons.io.importer.DbTestCase;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.File;
 
-public class IDAHeaderReaderTest extends DbTestCase {
+public class IDAHeaderReaderTest extends PersistenceTestCase {
 
 	public void testShouldIdentifyPollutants() throws Exception {
 		File file = new File("test/data/ida/small-area.txt");

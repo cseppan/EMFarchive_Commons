@@ -1,0 +1,27 @@
+-- Table: emissions.data
+
+DROP TABLE emissions.data;
+CREATE TABLE emissions.data
+(
+  record_id serial NOT NULL,
+  dataset_id int4 NOT NULL,
+  param1 text,
+  param2 varchar(255),
+  version int4 NOT NULL,
+  delete_version int4,
+  CONSTRAINT data_record_id_key UNIQUE (record_id)
+) 
+WITHOUT OIDS;
+
+
+-- Table: emissions.versions
+
+DROP TABLE emissions.versions;
+CREATE TABLE emissions.versions
+(
+  dataset_id int4 NOT NULL,
+  version int4 NOT NULL,
+  parent_versions text NOT NULL
+) 
+WITHOUT OIDS;
+
