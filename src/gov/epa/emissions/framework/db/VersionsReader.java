@@ -21,10 +21,7 @@ public class VersionsReader {
     }
 
     public Version[] fetchSequence(int datasetId, int finalVersion) throws SQLException {
-        DataQuery query = datasource.query();
-        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".versions WHERE dataset_id = "
-                + datasetId + " AND version = " + finalVersion);
-
+        ResultSet rs = queryVersion(datasetId, finalVersion);
         if (!rs.next())
             return new Version[0];
 
@@ -45,14 +42,19 @@ public class VersionsReader {
     }
 
     private Version fetchVersion(int datasetId, int version) throws SQLException {
-        DataQuery query = datasource.query();
-        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".versions WHERE dataset_id = "
-                + datasetId + " AND version = " + version);
-
+        ResultSet rs = queryVersion(datasetId, version);
         if (!rs.next())
             return null;
 
         return extractVersion(rs);
+    }
+
+    private ResultSet queryVersion(int datasetId, int version) throws SQLException {
+        DataQuery query = datasource.query();
+        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".versions WHERE dataset_id = "
+                + datasetId + " AND version = " + version);
+
+        return rs;
     }
 
     private Version extractVersion(ResultSet rs) throws SQLException {
