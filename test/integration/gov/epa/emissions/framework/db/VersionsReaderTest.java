@@ -1,14 +1,13 @@
 package gov.epa.emissions.framework.db;
 
-import java.sql.SQLException;
-
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+
+import java.sql.SQLException;
 
 public class VersionsReaderTest extends PersistenceTestCase {
 
@@ -25,6 +24,7 @@ public class VersionsReaderTest extends PersistenceTestCase {
         types = dbServer.getDataType();
         datasource = dbServer.getEmissionsDatasource();
         versionsTable = "versions";
+        
         setupData(datasource, versionsTable);
     }
 
@@ -34,9 +34,7 @@ public class VersionsReaderTest extends PersistenceTestCase {
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {
-        DbColumn[] cols = createVersionsCols();
-        String[] data = { "1", "0", "" };
-        addRecord(datasource, table, cols, data);
+        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "" });
     }
 
     private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
@@ -45,12 +43,7 @@ public class VersionsReaderTest extends PersistenceTestCase {
     }
 
     private DbColumn[] createVersionsCols() {
-        DbColumn datasetId = new Column("dataset_id", types.intType(), null);
-        DbColumn version = new Column("version", types.intType(), null);
-        DbColumn parentVersions = new Column("parent_versions", types.stringType(255), null);
-        DbColumn[] cols = { datasetId, version, parentVersions };
-
-        return cols;
+        return new VersionsColumns(types).get();
     }
 
     public void testFetchVersionZero() throws Exception {
