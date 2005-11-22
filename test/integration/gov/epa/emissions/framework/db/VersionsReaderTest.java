@@ -28,11 +28,18 @@ public class VersionsReaderTest extends PersistenceTestCase {
         setupData(datasource, versionsTable);
     }
 
+    protected void tearDown() throws Exception {
+        DataModifier modifier = datasource.getDataModifier();
+        modifier.dropAll(versionsTable);
+    }
+
     private void setupData(Datasource datasource, String table) throws SQLException {
         DbColumn[] cols = createVersionsCols();
-
         String[] data = { "1", "0", "" };
+        addRecord(datasource, table, cols, data);
+    }
 
+    private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
         DataModifier modifier = datasource.getDataModifier();
         modifier.insertRow(table, data, cols);
     }
@@ -46,17 +53,32 @@ public class VersionsReaderTest extends PersistenceTestCase {
         return cols;
     }
 
-    protected void tearDown() throws Exception {
-        DataModifier modifier = datasource.getDataModifier();
-        modifier.dropAll(versionsTable);
-    }
-
-    public void testFetchVersionZero() {
+    public void testFetchVersionZero() throws Exception {
         VersionsReader reader = new VersionsReader(datasource);
 
-        int[] versions = reader.fetch(1, 0);
+        Version[] versions = reader.fetchSequence(1, 0);
 
         assertEquals(1, versions.length);
-        assertEquals(0, versions[0]);
+        assertEquals(0, versions[0].getVersion());
+        assertEquals(1, versions[0].getDatasetId());
+    }
+
+    public void testVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
+        DbColumn[] cols = createVersionsCols();
+
+        String[] versionOneData = { "1", "1", "0" };
+        addRecord(datasource, versionsTable, cols, versionOneData);
+
+        String[] versionFourData = { "1", "4", "0,1" };
+        addRecord(datasource, versionsTable, cols, versionFourData);
+
+        VersionsReader reader = new VersionsReader(datasource);
+
+        Version[] versions = reader.fetchSequence(1, 4);
+
+        assertEquals(3, versions.length);
+        assertEquals(0, versions[0].getVersion());
+        assertEquals(1, versions[1].getVersion());
+        assertEquals(4, versions[2].getVersion());
     }
 }
