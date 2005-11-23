@@ -1,4 +1,4 @@
-package gov.epa.emissions.framework.db;
+package gov.epa.emissions.commons.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;

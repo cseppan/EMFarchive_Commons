@@ -2,12 +2,12 @@ package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.framework.db.DbUpdate;
-import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 import java.util.Random;

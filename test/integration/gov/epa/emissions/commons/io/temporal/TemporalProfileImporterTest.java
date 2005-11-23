@@ -2,8 +2,10 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -13,8 +15,6 @@ import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.MonthlyFileFormat;
 import gov.epa.emissions.commons.io.temporal.TemporalProfileImporter;
 import gov.epa.emissions.commons.io.temporal.WeeklyFileFormat;
-import gov.epa.emissions.framework.db.DbUpdate;
-import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 import java.sql.SQLException;

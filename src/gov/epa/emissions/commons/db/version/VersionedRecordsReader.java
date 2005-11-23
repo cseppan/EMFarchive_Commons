@@ -1,4 +1,4 @@
-package gov.epa.emissions.framework.db;
+package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class VersionedDataReader {
+public class VersionedRecordsReader {
 
     private Datasource datasource;
 
     private VersionsReader versionsReader;
 
-    public VersionedDataReader(Datasource datasource) {
+    public VersionedRecordsReader(Datasource datasource) {
         this.datasource = datasource;
         this.versionsReader = new VersionsReader(datasource);
     }

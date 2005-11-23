@@ -2,7 +2,9 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -12,8 +14,6 @@ import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
-import gov.epa.emissions.framework.db.DbUpdate;
-import gov.epa.emissions.framework.db.TableReader;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package gov.epa.emissions.framework.db;
+package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;

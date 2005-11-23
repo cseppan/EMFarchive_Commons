@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.DatabaseSetup;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.TableDefinition;
-import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.io.File;
 import java.io.FileInputStream;

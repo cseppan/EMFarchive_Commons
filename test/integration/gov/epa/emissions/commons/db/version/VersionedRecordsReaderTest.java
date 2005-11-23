@@ -1,48 +1,21 @@
-package gov.epa.emissions.framework.db;
+package gov.epa.emissions.commons.db.version;
 
-import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbColumn;
-import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.db.version.VersionDataColumns;
+import gov.epa.emissions.commons.db.version.VersionedRecord;
+import gov.epa.emissions.commons.db.version.VersionedRecordsReader;
 
 import java.sql.SQLException;
 
-public class VersionedDataReaderTest extends PersistenceTestCase {
-
-    private Datasource datasource;
-
-    private SqlDataTypes types;
-
-    private String versionsTable;
-
-    private String dataTable;
+public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
-        types = dbServer.getDataType();
-
-        datasource = dbServer.getEmissionsDatasource();
-        versionsTable = "versions";
-        dataTable = "data";
-
-        clean();
-
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
-    }
-
-    protected void tearDown() throws Exception {
-        clean();
-    }
-
-    private void clean() throws SQLException {
-        DataModifier modifier = datasource.getDataModifier();
-        modifier.dropAll(versionsTable);
-        modifier.dropAll(dataTable);
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
@@ -59,21 +32,12 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         addRecord(datasource, table, cols, new String[] { "5", "1", "0", null, "p51", "p52" });
     }
 
-    private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
-        DataModifier modifier = datasource.getDataModifier();
-        modifier.insertRow(table, data, cols);
-    }
-
-    private DbColumn[] createVersionsCols() {
-        return new VersionsColumns(types).get();
-    }
-
     public void testFetchVersionZero() throws Exception {
         Version versionZero = new Version();
         versionZero.setDatasetId(1);
         versionZero.setVersion(0);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
 
         VersionedRecord[] records = reader.fetch(versionZero);
 
@@ -97,7 +61,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         versionTwo.setDatasetId(1);
         versionTwo.setVersion(2);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(versionTwo);
 
         assertEquals(5, records.length);
@@ -142,7 +106,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         version.setDatasetId(1);
         version.setVersion(3);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
 
         assertEquals(6, records.length);
@@ -160,7 +124,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
 
         assertEquals(10, records.length);
@@ -182,7 +146,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         version.setDatasetId(1);
         version.setVersion(4);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
 
         assertEquals(8, records.length);
@@ -229,7 +193,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         version.setDatasetId(1);
         version.setVersion(3);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
 
         assertEquals(6, records.length);
@@ -247,7 +211,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         version.setDatasetId(1);
         version.setVersion(5);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
 
         assertEquals(10, records.length);
@@ -269,7 +233,7 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
 
         assertEquals(6, records.length);

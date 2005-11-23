@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.db;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.framework.db.DbUpdate;
 
 import java.sql.SQLException;
 import java.util.List;
