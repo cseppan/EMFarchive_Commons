@@ -52,8 +52,7 @@ public class CountryStateCountyDataImporter implements Importer {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
 
             while (!isEndOfFile(fileReader)) {
-                String header = readHeader(fileReader);
-                System.out.println(header);
+                String header = readHeader(dataset, fileReader);
                 FileFormat fileFormat = fileFormat(header);
                 FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
@@ -73,6 +72,7 @@ public class CountryStateCountyDataImporter implements Importer {
         DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
+        loadDataset(file, table(header), unit.fileFormat(), dataset);
     }
 
     // TODO: revisit ?
@@ -92,15 +92,28 @@ public class CountryStateCountyDataImporter implements Importer {
         return meta;
     }
 
-    private String readHeader(BufferedReader fileReader) throws IOException {
+    private String readHeader(Dataset dataset, BufferedReader fileReader) throws IOException {
         String line = fileReader.readLine();
-        System.out.println(line);
+        String descrptn = "";
+        String datasetdesc = dataset.getDescription();
+        if(datasetdesc != null)
+            descrptn += datasetdesc;
+
         //In case first line is not a beginning of a packet, esp. when called the
         //first time
-        while (!line.trim().startsWith("/")) 
+        while (!line.trim().startsWith("/")){
+            descrptn += line;
             line = fileReader.readLine();
+        }
+        
+        if(!descrptn.equalsIgnoreCase(""))
+            dataset.setDescription(descrptn);
         
         return line.trim().replaceAll("/", "");
+    }
+    
+    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
+        delegate.setInternalSource(file, table, fileFormat, dataset);
     }
 
 }

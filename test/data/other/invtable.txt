@@ -140,11 +140,11 @@ EXR__CO                        Y                   tons/hr
 EXR__NOX                       Y                   tons/hr
 EXR__VOC                       Y                   tons/hr
 EXR__SO4                       Y                   tons/hr
-EXR__OCARB25                   Y                   tons/hr
-EXR__OCARBPMC                  Y                   tons/hr
-EXR__ECARB25                   Y                   tons/hr
-EXR__ECARBPMC                  Y                   tons/hr
-EXR__GASPM25                   Y                   tons/hr
+EXR__OCARB2                    Y                   tons/hr
+EXR__OCARBP                    Y                   tons/hr
+EXR__ECARB2                    Y                   tons/hr
+EXR__ECARBP                    Y                   tons/hr
+EXR__GASPM2                    Y                   tons/hr
 EXR__GASPMC                    Y                   tons/hr
 EXR__SO2                       Y                   tons/hr
 EXR__NH3                       Y                   tons/hr
@@ -159,7 +159,7 @@ RST__VOC                       Y                   tons/hr
 EVR__VOC                       Y                   tons/hr
 CRC__VOC                       Y                   tons/hr
 RFL__VOC                       Y                   tons/hr
-BRK__BRAKE25                   Y                   tons/hr
-BRK__BRAKEPMC                  Y                   tons/hr
+BRK__BRAKE2                    Y                   tons/hr
+BRK__BRAKEP                    Y                   tons/hr
 TIR__TIRE25                    Y                   tons/hr
-TIR__TIREPMC                   Y                   tons/hr
+TIR__TIREPM                    Y                   tons/hr

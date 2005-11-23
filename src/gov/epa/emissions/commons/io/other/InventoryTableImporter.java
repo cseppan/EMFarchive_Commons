@@ -18,6 +18,7 @@ import gov.epa.emissions.commons.io.temporal.TableFormat;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
 
 public class InventoryTableImporter implements Importer {
     private Datasource datasource;
@@ -68,10 +69,11 @@ public class InventoryTableImporter implements Importer {
         Reader fileReader = new DataReader(reader, new InventoryTableParser(formatUnit.fileFormat()));
 
         loader.load(fileReader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset);
+        loadDataset(file, table, formatUnit.fileFormat(), dataset, fileReader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
+    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
         delegate.setInternalSource(file, table, fileFormat, dataset);
+        dataset.setDescription(delegate.descriptions(comments));
     }
 }

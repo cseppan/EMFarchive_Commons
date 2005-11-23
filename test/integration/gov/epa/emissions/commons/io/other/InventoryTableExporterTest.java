@@ -12,7 +12,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import java.io.File;
 import java.util.Random;
 
-public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
+public class InventoryTableExporterTest extends PersistenceTestCase {
     private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
@@ -33,15 +33,21 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
 
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        dbUpdate.dropTable(datasource.getName(), "country");
-        dbUpdate.dropTable(datasource.getName(), "state");
-        dbUpdate.dropTable(datasource.getName(), "county");
+        dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void testCountryStateCountyData() throws Exception {
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/other"), "costcy.txt");
+    public void testExportChemicalSpeciationData() throws Exception {
+        InventoryTableImporter importer = new InventoryTableImporter(datasource, sqlDataTypes);
+        importer.preCondition(new File("test/data/other"), "invtable.txt");
         importer.run(dataset);
+        
+        InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
+                datasource, new InventoryTableFileFormat(sqlDataTypes, 1));
+        File file = new File("test/data/other","inventorytableexported.txt");
+        exporter.export(file);
+        //FIXME: compare the original file and the exported file.
+        assertEquals(164, countRecords());
+        file.delete();
     }
     
     private int countRecords() {

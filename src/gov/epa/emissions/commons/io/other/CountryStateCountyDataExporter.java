@@ -1,12 +1,12 @@
-package gov.epa.emissions.commons.io.speciation;
+package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,17 +17,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
-public class SpeciationProfileExporter {
+public class CountryStateCountyDataExporter {
     private Dataset dataset;
 
     private Datasource datasource;
 
-    private FileFormat fileFormat;
+    private CountryStateCountyFileFormatFactory factory;
 
-    public SpeciationProfileExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+    public CountryStateCountyDataExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.datasource = datasource;
-        this.fileFormat = fileFormat;
+        factory = new CountryStateCountyFileFormatFactory(sqlDataTypes);
     }
 
     public void export(File file) throws ExporterException {
@@ -65,12 +65,17 @@ public class SpeciationProfileExporter {
 
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         DataQuery q = datasource.query();
-        InternalSource source = dataset.getInternalSources()[0];
+        InternalSource[] sources = dataset.getInternalSources();
 
-        ResultSet data = q.selectAll(source.getTable());
-        Column[] cols = fileFormat.cols();
-        while (data.next())
-            writeRecord(cols, data, writer);
+        for(int i = 0; i < sources.length; i++){
+            String table = sources[i].getTable();
+            ResultSet data = q.selectAll(table);
+            Column[] cols = factory.get(table).cols();
+            writer.println("/" + table + "/");
+
+            while (data.next())
+                writeRecord(cols, data, writer);
+        }
     }
 
     private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
@@ -81,5 +86,4 @@ public class SpeciationProfileExporter {
         }
         writer.println();
     }
-
 }
