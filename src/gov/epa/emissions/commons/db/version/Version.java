@@ -5,6 +5,8 @@ public class Version {
     private int datasetId;
 
     private int version;
+    
+    private String parentVersions;
 
     public int getVersion() {
         return version;
@@ -22,4 +24,11 @@ public class Version {
         return datasetId;
     }
 
+    public String getParentVersions() {
+        return parentVersions;
+    }
+
+    public void setParentVersions(String parentVers){
+        parentVersions=parentVers;
+    }
 }

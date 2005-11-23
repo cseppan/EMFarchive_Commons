@@ -8,6 +8,8 @@ public class ChangeSet {
 
     private List records;
 
+    private Version baseVersion;
+    
     public ChangeSet() {
         this.records = new ArrayList();
     }
@@ -20,9 +22,12 @@ public class ChangeSet {
         return (VersionedRecord[]) records.toArray(new VersionedRecord[0]);
     }
 
-    public Version getParentVersion() {
-        // TODO Auto-generated method stub
-        return null;
+    public Version getBaseVersion() {
+        return baseVersion;
+    }
+
+    public void setBaseVersion(Version baseVersion) {
+        this.baseVersion = baseVersion;
     }
 
 }
