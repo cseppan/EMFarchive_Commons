@@ -27,7 +27,7 @@ public class VersionedRecordsReader {
         String deleteClause = createDeleteClause(versions);
 
         ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".data WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN ( " + versions + ") AND " + deleteClause + ")");
+                + version.getDatasetId() + " AND version IN ( " + versions + ") AND " + deleteClause + ") ORDER BY version");
 
         return doFetch(rs);
     } // TODO: how does ScrollableRecords fit in here?

@@ -9,29 +9,27 @@ import java.sql.SQLException;
 
 public class VersionedRecordsWriter {
 
-    private Datasource datasource;
-
     private PreparedStatement dataInsertStatement;
 
     private PreparedStatement versionsInsertStatement;
 
     private PreparedStatement versionNumberStatement;
 
-    public VersionedRecordsWriter(Datasource datasource) throws SQLException {
-        this.datasource = datasource;
-        createPreparedStatments(datasource);
-    }
+    private PreparedStatement dataDeleteStatement;
 
-    private void createPreparedStatments(Datasource datasource) throws SQLException {
+    public VersionedRecordsWriter(Datasource datasource) throws SQLException {
         Connection connection = datasource.getConnection();
 
         String dataInsert = "INSERT INTO emissions.data (record_id,dataset_id,version) VALUES (default,?,?)";
         dataInsertStatement = connection.prepareStatement(dataInsert);
 
+        String dataDelete = "UPDATE emissions.data SET delete_version=? WHERE record_id=?";
+        dataDeleteStatement = connection.prepareStatement(dataDelete);
+
         String versionsInsert = "INSERT INTO emissions.versions (dataset_id,version,parent_versions) VALUES (?,?,?)";
         versionsInsertStatement = connection.prepareStatement(versionsInsert);
 
-        String selectVersionNumber = "select version from emissions.versions where dataset_id=? order by version";
+        String selectVersionNumber = "SELECT version FROM emissions.versions WHERE dataset_id=? ORDER BY version";
         versionNumberStatement = connection.prepareStatement(selectVersionNumber, ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
 
@@ -39,7 +37,8 @@ public class VersionedRecordsWriter {
 
     public Version write(ChangeSet changeset) throws Exception {
         Version version = insertNewVersion(changeset.getBaseVersion());
-        insertNewData(changeset.getRecords(), version);
+        insertNewData(changeset.getNew(), version);
+        deleteData(changeset.getDeleted(), version);
 
         return version;
     }
@@ -49,6 +48,14 @@ public class VersionedRecordsWriter {
             dataInsertStatement.setInt(1, records[i].getDatasetId());
             dataInsertStatement.setInt(2, version.getVersion());
             dataInsertStatement.execute();
+        }
+    }
+
+    private void deleteData(VersionedRecord[] records, Version version) throws SQLException {
+        for (int i = 0; i < records.length; i++) {
+            dataDeleteStatement.setString(1, version.getVersion() + "");
+            dataDeleteStatement.setInt(2, records[i].getRecordId());
+            dataDeleteStatement.execute();
         }
     }
 

@@ -48,11 +48,11 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         VersionedRecord record6 = new VersionedRecord();
         record6.setDatasetId(1);
-        changeset.add(record6);
+        changeset.addNew(record6);
 
         VersionedRecord record7 = new VersionedRecord();
         record7.setDatasetId(1);
-        changeset.add(record7);
+        changeset.addNew(record7);
 
         Version version = writer.write(changeset);
         assertNotNull("Should return version of changeset", version);
@@ -61,6 +61,37 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
         assertEquals(7, records.length);
+        int init = records[0].getRecordId();
+        for (int i = 1; i < records.length; i++) {
+            assertEquals(++init, records[i].getRecordId());
+        }
+    }
+
+    public void testChangeSetWithRecordsDeleteShouldResultInNewVersionWithoutThoseRecords() throws Exception {
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+
+        Version versionZero = new Version();
+        versionZero.setDatasetId(1);
+        versionZero.setVersion(0);
+        versionZero.setParentVersions("");
+
+        ChangeSet changeset = new ChangeSet();
+        changeset.setBaseVersion(versionZero);
+
+        VersionedRecord[] records = reader.fetch(versionZero);
+        changeset.addDeleted(records[1]);// record 2
+
+        Version version = writer.write(changeset);
+        assertNotNull("Should return version of changeset", version);
+        assertEquals(1, version.getVersion());
+
+        VersionedRecord[] versionOneRecords = reader.fetch(version);
+        assertEquals(4, versionOneRecords.length);
+        // deleted record 2
+        int init = versionOneRecords[0].getRecordId();
+        assertEquals(init + 2, versionOneRecords[1].getRecordId());
+        assertEquals(init + 3, versionOneRecords[2].getRecordId());
+        assertEquals(init + 4, versionOneRecords[3].getRecordId());
     }
 
 }
