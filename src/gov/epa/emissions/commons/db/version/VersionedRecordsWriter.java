@@ -91,6 +91,8 @@ public class VersionedRecordsWriter {
     public void close() throws SQLException {
         dataInsertStatement.close();
         versionsInsertStatement.close();
+        versionNumberStatement.close();
+        dataDeleteStatement.close();
     }
 
 }

@@ -79,12 +79,44 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeset.setBaseVersion(versionZero);
 
         VersionedRecord[] records = reader.fetch(versionZero);
-        changeset.addDeleted(records[1]);// record 2
+        changeset.addDeleted(records[1]);// delete record 2
+        
+        VersionedRecord record6 = new VersionedRecord();
+        record6.setDatasetId(1);
+        changeset.addNew(record6); // add record 6
 
         Version version = writer.write(changeset);
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
+        VersionedRecord[] versionOneRecords = reader.fetch(version);
+        assertEquals(5, versionOneRecords.length);
+        // deleted record 2
+        int init = versionOneRecords[0].getRecordId();
+        assertEquals(init + 2, versionOneRecords[1].getRecordId());
+        assertEquals(init + 3, versionOneRecords[2].getRecordId());
+        assertEquals(init + 4, versionOneRecords[3].getRecordId());
+        assertEquals(init + 5, versionOneRecords[4].getRecordId());
+    }
+    
+    public void testChangeSetWithAddedAndDeletedRecords() throws Exception {
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        
+        Version versionZero = new Version();
+        versionZero.setDatasetId(1);
+        versionZero.setVersion(0);
+        versionZero.setParentVersions("");
+        
+        ChangeSet changeset = new ChangeSet();
+        changeset.setBaseVersion(versionZero);
+        
+        VersionedRecord[] records = reader.fetch(versionZero);
+        changeset.addDeleted(records[1]);// record 2
+        
+        Version version = writer.write(changeset);
+        assertNotNull("Should return version of changeset", version);
+        assertEquals(1, version.getVersion());
+        
         VersionedRecord[] versionOneRecords = reader.fetch(version);
         assertEquals(4, versionOneRecords.length);
         // deleted record 2
