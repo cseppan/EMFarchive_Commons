@@ -29,11 +29,17 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         versionsTable = "versions";
         dataTable = "data";
 
+        clean();
+
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
     }
 
     protected void tearDown() throws Exception {
+        clean();
+    }
+
+    private void clean() throws SQLException {
         DataModifier modifier = datasource.getDataModifier();
         modifier.dropAll(versionsTable);
         modifier.dropAll(dataTable);
@@ -103,6 +109,94 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         assertEquals(7, records[4].getRecordId());
     }
 
+    public void testFetchWhenARecordIsRemovedFromMultipleVersionsInDifferentNonLinearSequences() throws Exception {
+        DbColumn[] cols = new VersionDataColumns(types).get();
+
+        // mark record 6 as deleted from version 2 & 3
+        addRecord(datasource, dataTable, cols, new String[] { "6", "1", "0", "3", "p61", "p62" });
+        addRecord(datasource, dataTable, cols, new String[] { "7", "1", "1", null, "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "8", "1", "4", null, "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "9", "1", "2", "4", "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "10", "1", "2", "5", "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "11", "1", "1", "3,4", "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "12", "1", "1", "2,3", "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "13", "1", "2", "4,5", "p1", "p2" });
+        addRecord(datasource, dataTable, cols, new String[] { "14", "1", "0", "2,3,7", "p1", "p2" });
+
+        // setup version sequence
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "1", "0" });
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "2", "0,1" });
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "3", "0,1" });
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "4", "0,1,2" });
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "5", "0,1,2" });
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "6", "0,1,2,5" });
+        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "7", "0" });
+
+        verifyVersionThreeForRemoveMultipleVersionsInNonLinearSequence();
+        verifyVersionTwoForRemoveMultipleVersionsInNonLinearSequence();
+        verifyVersionFourForRemoveMultipleVersionsInNonLinearSequence();
+    }
+
+    private void verifyVersionThreeForRemoveMultipleVersionsInNonLinearSequence() throws SQLException {
+        Version version = new Version();
+        version.setDatasetId(1);
+        version.setVersion(3);
+
+        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecord[] records = reader.fetch(version);
+
+        assertEquals(6, records.length);
+
+        assertEquals(1, records[0].getRecordId());
+        assertEquals(2, records[1].getRecordId());
+        assertEquals(3, records[2].getRecordId());
+        assertEquals(4, records[3].getRecordId());
+        assertEquals(5, records[4].getRecordId());
+        assertEquals(7, records[5].getRecordId());
+    }
+
+    private void verifyVersionTwoForRemoveMultipleVersionsInNonLinearSequence() throws SQLException {
+        Version version = new Version();
+        version.setDatasetId(1);
+        version.setVersion(2);
+
+        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecord[] records = reader.fetch(version);
+
+        assertEquals(10, records.length);
+
+        assertEquals(1, records[0].getRecordId());
+        assertEquals(2, records[1].getRecordId());
+        assertEquals(4, records[2].getRecordId());
+        assertEquals(5, records[3].getRecordId());
+        assertEquals(6, records[4].getRecordId());
+        assertEquals(7, records[5].getRecordId());
+        assertEquals(9, records[6].getRecordId());
+        assertEquals(10, records[7].getRecordId());
+        assertEquals(11, records[8].getRecordId());
+        assertEquals(13, records[9].getRecordId());
+    }
+
+    private void verifyVersionFourForRemoveMultipleVersionsInNonLinearSequence() throws SQLException {
+        Version version = new Version();
+        version.setDatasetId(1);
+        version.setVersion(4);
+
+        VersionedDataReader reader = new VersionedDataReader(datasource);
+        VersionedRecord[] records = reader.fetch(version);
+
+        assertEquals(8, records.length);
+
+        assertEquals(1, records[0].getRecordId());
+        assertEquals(2, records[1].getRecordId());
+        assertEquals(4, records[2].getRecordId());
+        assertEquals(5, records[3].getRecordId());
+        assertEquals(6, records[4].getRecordId());
+        assertEquals(7, records[5].getRecordId());
+        assertEquals(8, records[6].getRecordId());
+        assertEquals(10, records[7].getRecordId());
+    }
+
     public void testFetchWithDeletesAcrossMultipleVersions() throws Exception {
         // mark record 6 as deleted from version 2
         DbColumn[] cols = new VersionDataColumns(types).get();
@@ -125,12 +219,12 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         addRecord(datasource, versionsTable, versionCols, new String[] { "1", "5", "0,1,4" });
         addRecord(datasource, versionsTable, versionCols, new String[] { "1", "6", "0,1" });
 
-        verifyVersionThree();
-        verifyVersionFive();
-        verifyVersionTwo();
+        verifyVersionThreeForDeletesAcrossMultipleVersions();
+        verifyVersionFiveForDeletesAcrossMultipleVersions();
+        verifyVersionTwoForDeletesAcrossMultipleVersions();
     }
 
-    private void verifyVersionThree() throws SQLException {
+    private void verifyVersionThreeForDeletesAcrossMultipleVersions() throws SQLException {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(3);
@@ -147,17 +241,17 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         assertEquals(7, records[4].getRecordId());
         assertEquals(9, records[5].getRecordId());
     }
-    
-    private void verifyVersionFive() throws SQLException {
+
+    private void verifyVersionFiveForDeletesAcrossMultipleVersions() throws SQLException {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(5);
-        
+
         VersionedDataReader reader = new VersionedDataReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
-        
+
         assertEquals(10, records.length);
-        
+
         assertEquals(1, records[0].getRecordId());
         assertEquals(2, records[1].getRecordId());
         assertEquals(3, records[2].getRecordId());
@@ -169,17 +263,17 @@ public class VersionedDataReaderTest extends PersistenceTestCase {
         assertEquals(12, records[8].getRecordId());
         assertEquals(13, records[9].getRecordId());
     }
-    
-    private void verifyVersionTwo() throws SQLException {
+
+    private void verifyVersionTwoForDeletesAcrossMultipleVersions() throws SQLException {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(2);
-        
+
         VersionedDataReader reader = new VersionedDataReader(datasource);
         VersionedRecord[] records = reader.fetch(version);
-        
+
         assertEquals(6, records.length);
-        
+
         assertEquals(1, records[0].getRecordId());
         assertEquals(2, records[1].getRecordId());
         assertEquals(4, records[2].getRecordId());

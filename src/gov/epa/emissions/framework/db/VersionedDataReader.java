@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class VersionedDataReader {
 
@@ -23,12 +24,30 @@ public class VersionedDataReader {
         DataQuery query = datasource.query();
 
         String versions = fetchCommaSeparatedVersionSequence(version);
+        String deleteClause = createDeleteClause(versions);
+
         ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".data WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN ( " + versions + ") AND " + "delete_version NOT IN ("
-                + versions + ")");
+                + version.getDatasetId() + " AND version IN ( " + versions + ") AND " + deleteClause + ")");
 
         return doFetch(rs);
     } // TODO: how does ScrollableRecords fit in here?
+
+    private String createDeleteClause(String versions) {
+        StringBuffer buffer = new StringBuffer();
+
+        StringTokenizer tokenizer = new StringTokenizer(versions, ",");
+        // delete_version NOT SIMILAR TO '(6|6,%|%,6,%|%,6)'
+        while (tokenizer.hasMoreTokens()) {
+            String version = tokenizer.nextToken();
+            String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
+            buffer.append(" delete_version NOT SIMILAR TO '" + regex + "'");
+
+            if(tokenizer.hasMoreTokens())
+                buffer.append(" AND ");
+        }
+
+        return buffer.toString();
+    }
 
     private String fetchCommaSeparatedVersionSequence(Version finalVersion) throws SQLException {
         Version[] versions = versionsReader.fetchSequence(finalVersion.getDatasetId(), finalVersion.getVersion());

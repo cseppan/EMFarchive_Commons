@@ -148,22 +148,36 @@ public class DataModifier {
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
         for (int i = 0; i < data.length; i++) {
-            if (cols[i].sqlType().startsWith("VARCHAR")) {
-                String cleanedCell = data[i].replace('-', '_');
-                String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
-                insert.append("'" + cellWithSingleQuotesEscaped + "'");
-            } else {
-                if (data[i] == null || (data[i].trim().length() == 0))
-                    data[i] = "DEFAULT";
-                insert.append(data[i]);
+            if ((data[i] == null || (data[i].trim().length() == 0)) && (!isTypeString(cols[i])))
+                data[i] = "DEFAULT";
+            if (isTypeString(cols[i])) {
+                data[i] = escapeAndDelimitStringValue(data[i]);
             }
+
+            insert.append(data[i]);
+
             if (i < (data.length - 1))
                 insert.append(',');
         }
 
         insert.append(')');// close parentheses around the query
-
+        
         execute(insert.toString());
+    }
+
+    private boolean isTypeString(DbColumn column) {
+        return column.sqlType().startsWith("VARCHAR");
+    }
+
+    private String escapeAndDelimitStringValue(String val) {
+        if (val == null)
+            return "''";
+
+        val = val.trim();
+        String cleanedCell = val.replace('-', '_');
+        String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
+
+        return "'" + cellWithSingleQuotesEscaped + "'";
     }
 
     public void dropData(String table, String key, long value) throws SQLException {
