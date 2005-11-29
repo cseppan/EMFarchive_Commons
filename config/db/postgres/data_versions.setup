@@ -21,7 +21,8 @@ CREATE TABLE emissions.versions
 (
   dataset_id int4 NOT NULL,
   version int4 NOT NULL,
-  parent_versions text NOT NULL
+  parent_versions text NOT NULL,
+  finalversion bool NOT NULL DEFAULT false
 ) 
 WITHOUT OIDS;
 
