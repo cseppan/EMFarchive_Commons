@@ -7,6 +7,22 @@ public class Version {
     private int version;
     
     private String parentVersions;
+    
+    private boolean finalVersion=false;
+
+    /**
+     * @return Returns the finalVersion.
+     */
+    public boolean isFinalVersion() {
+        return finalVersion;
+    }
+
+    /**
+     * @param finalVersion The finalVersion to set.
+     */
+    public void setFinalVersion(boolean finalVersion) {
+        this.finalVersion = finalVersion;
+    }
 
     public int getVersion() {
         return version;
