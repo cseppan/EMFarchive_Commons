@@ -10,10 +10,13 @@ public class ChangeSet {
     private Version baseVersion;
 
     private List deletedRecords;
+    
+    private List updatedRecords;
 
     public ChangeSet() {
         this.newRecords = new ArrayList();
         this.deletedRecords = new ArrayList();
+        this.updatedRecords = new ArrayList();
     }
 
     public void addNew(VersionedRecord record) {
@@ -38,6 +41,14 @@ public class ChangeSet {
 
     public VersionedRecord[] getDeleted() {
         return (VersionedRecord[]) deletedRecords.toArray(new VersionedRecord[0]);
+    }
+
+    public void addUpdated(VersionedRecord record) {
+        updatedRecords.add(record);
+    }
+
+    public VersionedRecord[] getUpdated() {
+        return (VersionedRecord[]) updatedRecords.toArray(new VersionedRecord[0]);
     }
 
 }
