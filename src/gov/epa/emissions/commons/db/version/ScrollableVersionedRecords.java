@@ -67,8 +67,14 @@ public class ScrollableVersionedRecords {
         if (!resultSet.next())
             return null;// TODO: is NullRecord better?
 
-        VersionedRecord record = new VersionedRecord(position());
-        for (int i = 1; i <= columnCount(); i++)
+        VersionedRecord record = new VersionedRecord();
+        record.setRecordId(resultSet.getInt("record_id"));
+        record.setDatasetId(resultSet.getInt("dataset_id"));
+        record.setVersion(resultSet.getInt("version"));
+        record.setDeleteVersions(resultSet.getString("delete_versions"));
+                
+        for (int i = 5; i <= columnCount(); i++)
+            
             record.add(resultSet.getString(i));
 
         return record;

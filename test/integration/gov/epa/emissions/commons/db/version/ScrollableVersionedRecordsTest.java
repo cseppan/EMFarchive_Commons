@@ -1,10 +1,14 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.db.DataModifier;
+import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbColumn;
+import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.orl.ORLNonPointImporter;
 
-import java.io.File;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
@@ -12,35 +16,61 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     private ScrollableVersionedRecords results;
 
     private SimpleDataset dataset;
+    protected SqlDataTypes types;
+    protected Datasource datasource;
+    protected String dataTable;
 
     protected void setUp() throws Exception {
         super.setUp();
-        importNonPoint();
 
-        results = new ScrollableVersionedRecords(emissions(), "SELECT * from emissions.test");
+        importTestData();
+        
+        results = new ScrollableVersionedRecords(emissions(), "SELECT * from emissions.data");
         results.execute();
+        
+        
+    }
+
+    private void clean() throws SQLException {
+        DataModifier modifier = datasource.getDataModifier();
+        modifier.dropAll(dataTable);
+    }
+
+    private void importTestData() throws Exception {
+        DbServer dbServer = dbSetup.getDbServer();
+        types = dbServer.getDataType();
+
+        datasource = dbServer.getEmissionsDatasource();
+        dataTable = "data";
+
+        clean();
+        
+        DbColumn[] cols = new VersionDataColumns(types).get();
+
+        Random rando = new Random();
+        
+        for (int i = 1; i <= 394; i++) {
+            
+            String data1 = "P1_" + i;  
+            String data2 = "P2_" + i;
+            addRecord(datasource, dataTable, cols, new String[] { i+"", "1", "5", "3,4", data1, data2 });            
+        }
+
+    }
+
+    protected void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
+        DataModifier modifier = datasource.getDataModifier();
+        modifier.insertRow(table, data, cols);
+    }
+
+    protected DbColumn[] createVersionsCols() {
+        return new VersionsColumns(types).get();
     }
 
     protected void tearDown() throws Exception {
         results.close();
-
-        dropNonPoint();
+        clean();
         super.tearDown();
-    }
-
-    private void importNonPoint() throws Exception {
-        dataset = new SimpleDataset();
-        dataset.setName("test");
-        dataset.setDatasetid(new Random().nextLong());
-
-        ORLNonPointImporter importer = new ORLNonPointImporter(dataset, emissions(), dataTypes());
-
-        importer.preCondition(new File("test/data/orl/nc"), "arinv.nonpoint.nti99_NC.txt");
-        importer.run(dataset);
-    }
-
-    private void dropNonPoint() throws Exception {
-        super.dropTable("test", emissions());
     }
 
     public void testRowCount() throws Exception {
@@ -88,35 +118,31 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     }
 
     public void testIterate() throws Exception {
-        for (int i = 0; i < 394; i++) {
+        VersionedRecord record = results.next();
+        assertNotNull("Should be able to iterate through records", record);
+        
+        int firstIndex = record.getRecordId();
+        for (int i = 1; i < 394; i++) {
             assertTrue("Should have more records", results.available());
-            VersionedRecord record = results.next();
-            assertNotNull("Should be able to iterate through records", record);
-            assertEquals(i + 1, record.getRecordId());
+            record = results.next();
+            assertEquals(firstIndex + i, record.getRecordId());
         }
     }
 
     public void testFetchFirstRecord() throws Exception {
         VersionedRecord record = results.next();
-        assertEquals(1, record.getRecordId());
-
-        assertEquals(19, record.size());
         assertNotNull("Should be able to fetch first record", record);
+        assertEquals(2, record.size());
 
-        assertEquals(dataset.getDatasetid() + "", record.token(0));
-        assertEquals("37001", record.token(1));
-        assertEquals("10201302", record.token(2));
-        assertEquals("0", record.token(3));
-        assertEquals("0107", record.token(4));
-        assertEquals("2", record.token(5));
-        assertEquals("0", record.token(6));
-        assertEquals("246", record.token(7));
-        assertEquals("0.000387296", record.token(8));
-        assertNull(record.token(9));
-        assertNull(record.token(10));
-        assertNull(record.token(11));
-        assertNull(record.token(12));
-        assertEquals("", record.token(13));
+        assertEquals(1, record.getRecordId());
+        assertEquals(1, record.getDatasetId());
+        assertEquals(5, record.getVersion());
+        assertEquals("3,4", record.getDeleteVersions());
+        assertEquals("P1_1", record.token(0));
+        assertEquals("P2_1", record.token(1));
     }
 
+    
+    
+    
 }

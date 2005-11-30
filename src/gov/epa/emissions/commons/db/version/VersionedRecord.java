@@ -21,11 +21,6 @@ public class VersionedRecord {
         data = new Record();
     }
 
-    public VersionedRecord(int recordId) {
-        this();
-        this.setRecordId(recordId);
-    }
-
     /**
      * @return Returns the deleteVersions.
      */
