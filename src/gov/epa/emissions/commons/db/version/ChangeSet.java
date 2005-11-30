@@ -6,11 +6,10 @@ import java.util.List;
 public class ChangeSet {
 
     private List newRecords;
-
     private Version baseVersion;
-
     private List deletedRecords;
-    
+
+    //is this really needed?
     private List updatedRecords;
 
     public ChangeSet() {

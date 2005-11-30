@@ -35,6 +35,31 @@ public class VersionedRecordsWriter {
 
     }
 
+    public Version update(ChangeSet changeset) throws Exception {
+        // the changeset will have updates in addition to deletes and new
+        // records.  We need to process the update records.
+        
+        // convert all records in the updated records list to a pair of
+        // inserts and deletes with suitable changes made to their record data
+        // then call write() with the changeset
+        VersionedRecord[] updatedRecords = changeset.getUpdated();
+        
+        for (int i = 0; i < updatedRecords.length; i++) {
+            VersionedRecord deleteRec = updatedRecords[i];
+            String delVersList = "";
+            
+            if (deleteRec.getDeleteVersions()!= null){
+                delVersList = deleteRec.getDeleteVersions();
+            }
+
+            deleteRec.setDeleteVersions(delVersList + changeset.getBaseVersion().getVersion());
+            VersionedRecord insertRec = updatedRecords[i];
+            changeset.addNew(insertRec);
+            changeset.addDeleted(deleteRec);
+        }
+        return write(changeset);
+    }
+    
     public Version write(ChangeSet changeset) throws Exception {
         Version version = insertNewVersion(changeset.getBaseVersion());
         insertNewData(changeset.getNew(), version);

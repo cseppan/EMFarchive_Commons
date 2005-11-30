@@ -61,6 +61,8 @@ public class VersionsReader {
         Version version = new Version();
         version.setDatasetId(rs.getInt(1));
         version.setVersion(rs.getInt(2));
+        version.setParentVersions(rs.getString("parent_versions"));
+        version.setFinalVersion(rs.getBoolean("final_version"));
 
         return version;
     }

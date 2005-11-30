@@ -2,11 +2,28 @@ package gov.epa.emissions.commons.db.version;
 
 public class VersionedRecord {
 
-    private int version;
-
-    private int datasetId;
-
     private int recordId;
+    private int datasetId;
+    private int version;
+    private String deleteVersions;
+    
+    // other data record specific parameters will be defined below
+    // private String param1;
+    //private String param2;
+
+    /**
+     * @return Returns the deleteVersions.
+     */
+    public String getDeleteVersions() {
+        return deleteVersions;
+    }
+
+    /**
+     * @param deleteVersions The deleteVersions to set.
+     */
+    public void setDeleteVersions(String deleteVersions) {
+        this.deleteVersions = deleteVersions;
+    }
 
     public int getVersion() {
         return version;

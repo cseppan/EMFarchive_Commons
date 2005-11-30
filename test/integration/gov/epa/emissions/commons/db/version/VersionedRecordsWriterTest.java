@@ -19,7 +19,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
     protected void tearDown() throws Exception {
         writer.close();
-        super.tearDown();
+        //super.tearDown();
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
@@ -36,7 +36,53 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         addRecord(datasource, table, cols, new String[] { null, "1", "0", null, "p51", "p52" });// 5
     }
 
-    public void testChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
+    public void testChangeSetWithTwoUpdatesInGivenVersion() throws Exception {
+        ChangeSet changeset = new ChangeSet();
+        Version baseVersion = new Version();
+        baseVersion.setDatasetId(1);
+        baseVersion.setVersion(0);
+        baseVersion.setParentVersions("");
+
+        changeset.setBaseVersion(baseVersion);
+
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecord[] records = reader.fetch(baseVersion);
+        assertTrue(records.length == 5);
+
+        changeset.addUpdated(records[0]);
+        changeset.addUpdated(records[1]);
+        
+        Version version = writer.update(changeset);
+
+        System.out.println("Old Version: " + baseVersion.getVersion());
+        System.out.println("New Version: " + version.getVersion());
+    }
+
+    public void xtestChangeSetWithAllUpdatesInGivenVersion() throws Exception {
+        ChangeSet changeset = new ChangeSet();
+        Version baseVersion = new Version();
+        baseVersion.setDatasetId(1);
+        baseVersion.setVersion(0);
+        baseVersion.setParentVersions("");
+
+        changeset.setBaseVersion(baseVersion);
+
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecord[] records = reader.fetch(baseVersion);
+        assertTrue(records.length == 5);
+        
+        //update all records in the base version
+        for (int i = 0; i < records.length; i++) {
+            changeset.addUpdated(records[i]);            
+        }
+
+        Version version = writer.update(changeset);
+
+        System.out.println("Old Version: " + baseVersion.getVersion());
+        System.out.println("New Version: " + version.getVersion());
+    }
+    
+    public void xtestChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
         Version baseVersion = new Version();
@@ -67,7 +113,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         }
     }
 
-    public void testChangeSetWithRecordsDeleteShouldResultInNewVersionWithoutThoseRecords() throws Exception {
+    public void xtestChangeSetWithRecordsDeleteShouldResultInNewVersionWithoutThoseRecords() throws Exception {
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
 
         Version versionZero = new Version();
@@ -99,7 +145,8 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         assertEquals(init + 5, versionOneRecords[4].getRecordId());
     }
     
-    public void testChangeSetWithAddedAndDeletedRecords() throws Exception {
+    
+    public void xtestChangeSetWithAddedAndDeletedRecords() throws Exception {
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
         
         Version versionZero = new Version();
