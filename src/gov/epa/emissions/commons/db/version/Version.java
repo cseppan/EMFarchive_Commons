@@ -6,7 +6,7 @@ public class Version {
 
     private int version;
 
-    private String parentVersions;
+    private String path;
 
     private boolean finalVersion = false;
 
@@ -14,8 +14,8 @@ public class Version {
         return finalVersion;
     }
 
-    public void setFinalVersion(boolean finalVersion) {
-        this.finalVersion = finalVersion;
+    public void setAsFinal() {
+        this.finalVersion = true;
     }
 
     public int getVersion() {
@@ -34,11 +34,11 @@ public class Version {
         return datasetId;
     }
 
-    public String getParentVersions() {
-        return parentVersions;
+    public String getPath() {
+        return path;
     }
 
-    public void setParentVersions(String parentVers) {
-        parentVersions = parentVers;
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -50,7 +50,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
     public void testFetchVersionTwoThatHasARecordDeleteFromVersionOne() throws Exception {
         DbColumn[] cols = new VersionDataColumns(types).get();
 
-        // mark record 6 as deleted from version 2
+        // mark record 6 deleted from version 2
         addRecord(datasource, dataTable, cols, new String[] { "6", "1", "1", "2", "p61", "p62" });
         addRecord(datasource, dataTable, cols, new String[] { "7", "1", "1", null, "p71", "p72" });
         // setup version sequence
@@ -76,7 +76,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
     public void testFetchWhenARecordIsRemovedFromMultipleVersionsInDifferentNonLinearSequences() throws Exception {
         DbColumn[] cols = new VersionDataColumns(types).get();
 
-        // mark record 6 as deleted from version 2 & 3
+        // add records
         addRecord(datasource, dataTable, cols, new String[] { "6", "1", "0", "3", "p61", "p62" });
         addRecord(datasource, dataTable, cols, new String[] { "7", "1", "1", null, "p1", "p2" });
         addRecord(datasource, dataTable, cols, new String[] { "8", "1", "4", null, "p1", "p2" });
@@ -135,9 +135,9 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         assertEquals(5, records[3].getRecordId());
         assertEquals(6, records[4].getRecordId());
         assertEquals(7, records[5].getRecordId());
-        assertEquals(9, records[6].getRecordId());
-        assertEquals(10, records[7].getRecordId());
-        assertEquals(11, records[8].getRecordId());
+        assertEquals(11, records[6].getRecordId());
+        assertEquals(9, records[7].getRecordId());
+        assertEquals(10, records[8].getRecordId());
         assertEquals(13, records[9].getRecordId());
     }
 
@@ -157,8 +157,8 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         assertEquals(5, records[3].getRecordId());
         assertEquals(6, records[4].getRecordId());
         assertEquals(7, records[5].getRecordId());
-        assertEquals(8, records[6].getRecordId());
-        assertEquals(10, records[7].getRecordId());
+        assertEquals(10, records[6].getRecordId());
+        assertEquals(8, records[7].getRecordId());
     }
 
     public void testFetchWithDeletesAcrossMultipleVersions() throws Exception {

@@ -23,10 +23,10 @@ public class VersionedRecordsWriter {
         String dataInsert = "INSERT INTO emissions.data (record_id,dataset_id,version) VALUES (default,?,?)";
         dataInsertStatement = connection.prepareStatement(dataInsert);
 
-        String dataDelete = "UPDATE emissions.data SET delete_version=? WHERE record_id=?";
+        String dataDelete = "UPDATE emissions.data SET delete_versions=? WHERE record_id=?";
         dataDeleteStatement = connection.prepareStatement(dataDelete);
 
-        String versionsInsert = "INSERT INTO emissions.versions (dataset_id,version,parent_versions) VALUES (?,?,?)";
+        String versionsInsert = "INSERT INTO emissions.versions (dataset_id,version,path) VALUES (?,?,?)";
         versionsInsertStatement = connection.prepareStatement(versionsInsert);
 
         String selectVersionNumber = "SELECT version FROM emissions.versions WHERE dataset_id=? ORDER BY version";
@@ -35,32 +35,27 @@ public class VersionedRecordsWriter {
 
     }
 
-    public Version update(ChangeSet changeset) throws Exception {
-        // the changeset will have updates in addition to deletes and new
-        // records.  We need to process the update records.
-        
-        // convert all records in the updated records list to a pair of
-        // inserts and deletes with suitable changes made to their record data
-        // then call write() with the changeset
+    /**
+     * ChangeSet contains adds, deletes, and updates. An update is treated as a
+     * combination of 'delete' and 'add'. In effect, the ChangeSet is written as
+     * a list of 'delete' and 'add' operations.
+     */
+    public Version write(ChangeSet changeset) throws Exception {
         VersionedRecord[] updatedRecords = changeset.getUpdated();
-        
+
         for (int i = 0; i < updatedRecords.length; i++) {
             VersionedRecord deleteRec = updatedRecords[i];
-            String delVersList = "";
+            deleteRec.setDeleteVersions(deleteRec.getDeleteVersions() + "," + changeset.getBaseVersion().getVersion());
+            changeset.addDeleted(deleteRec);
             
-            if (deleteRec.getDeleteVersions()!= null){
-                delVersList = deleteRec.getDeleteVersions();
-            }
-
-            deleteRec.setDeleteVersions(delVersList + changeset.getBaseVersion().getVersion());
             VersionedRecord insertRec = updatedRecords[i];
             changeset.addNew(insertRec);
-            changeset.addDeleted(deleteRec);
         }
-        return write(changeset);
+
+        return doWrite(changeset);
     }
-    
-    public Version write(ChangeSet changeset) throws Exception {
+
+    private Version doWrite(ChangeSet changeset) throws Exception {
         Version version = insertNewVersion(changeset.getBaseVersion());
         insertNewData(changeset.getNew(), version);
         deleteData(changeset.getDeleted(), version);
@@ -89,17 +84,17 @@ public class VersionedRecordsWriter {
 
         // get the last version number for this dataset
         int newVersionNum = getNextVersionNumber(baseVersion.getDatasetId());
-        if (baseVersion.getParentVersions().length() == 0)
-            version.setParentVersions(baseVersion.getVersion() + "");
+        if (baseVersion.getPath().length() == 0)
+            version.setPath(baseVersion.getVersion() + "");
         else
-            version.setParentVersions(baseVersion.getParentVersions() + "," + baseVersion.getVersion());
+            version.setPath(baseVersion.getPath() + "," + baseVersion.getVersion());
 
         version.setDatasetId(baseVersion.getDatasetId());
         version.setVersion(newVersionNum);
 
         versionsInsertStatement.setInt(1, baseVersion.getDatasetId());
         versionsInsertStatement.setInt(2, newVersionNum);
-        versionsInsertStatement.setString(3, version.getParentVersions());
+        versionsInsertStatement.setString(3, version.getPath());
         versionsInsertStatement.executeUpdate();
 
         return version;

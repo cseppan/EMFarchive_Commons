@@ -15,7 +15,7 @@ public class VersionsColumns {
     public DbColumn[] get() {
         DbColumn datasetId = new Column("dataset_id", types.intType(), null);
         DbColumn version = new Column("version", types.intType(), null);
-        DbColumn parentVersions = new Column("parent_versions", types.stringType(255), null);
+        DbColumn parentVersions = new Column("path", types.stringType(255), null);
 
         return new DbColumn[] { datasetId, version, parentVersions };
     }

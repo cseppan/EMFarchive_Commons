@@ -26,8 +26,10 @@ public class VersionedRecordsReader {
         String versions = fetchCommaSeparatedVersionSequence(version);
         String deleteClause = createDeleteClause(versions);
 
-        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".data WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN ( " + versions + ") AND " + deleteClause + ") ORDER BY version");
+        String queryString = "SELECT * FROM " + datasource.getName() + ".data WHERE dataset_id = "
+                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " " +
+                        "ORDER BY version, record_id";
+        ResultSet rs = query.executeQuery(queryString);
 
         return doFetch(rs);
     } // TODO: how does ScrollableRecords fit in here?
@@ -40,7 +42,7 @@ public class VersionedRecordsReader {
         while (tokenizer.hasMoreTokens()) {
             String version = tokenizer.nextToken();
             String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
-            buffer.append(" delete_version NOT SIMILAR TO '" + regex + "'");
+            buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
 
             if(tokenizer.hasMoreTokens())
                 buffer.append(" AND ");
@@ -66,9 +68,10 @@ public class VersionedRecordsReader {
 
         while (rs.next()) {
             VersionedRecord record = new VersionedRecord();
-            record.setRecordId(rs.getInt(1));
-            record.setDatasetId(rs.getInt(2));
-            record.setVersion(rs.getInt(3));
+            record.setRecordId(rs.getInt("record_id"));
+            record.setDatasetId(rs.getInt("dataset_id"));
+            record.setVersion(rs.getInt("version"));
+            record.setDeleteVersions(rs.getString("delete_versions"));
 
             records.add(record);
         }
