@@ -8,7 +8,6 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NewImporter;
 import gov.epa.emissions.commons.io.nif.NIFImporter;
 
-import java.io.File;
 
 public class NIFNonPointImporter implements NewImporter{
 
@@ -18,11 +17,11 @@ public class NIFNonPointImporter implements NewImporter{
         delegate = new NIFImporter(dataset, new NIFNonPointDatasetTypeUnits(sqlDataTypes), datasource);
     }
     
-    public void preCondition(File folder, String filePattern) throws Exception {
+    public void preImport() throws Exception {
         delegate.preImport();
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         delegate.run();
     }
 

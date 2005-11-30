@@ -64,8 +64,8 @@ public class NIFPointImporterTest extends PersistenceTestCase {
         dataset.setInternalSources(createAllInternalSources());
         
         NIFPointImporter importer = new NIFPointImporter(dataset, datasource, sqlDataTypes);
-        importer.preCondition(null,null);
-        importer.run(dataset);
+        importer.preImport();
+        importer.run();
         assertEquals(92, countRecords(tableCE));
         assertEquals(143, countRecords(tableEM));
         assertEquals(26, countRecords(tableEP));
@@ -81,7 +81,7 @@ public class NIFPointImporterTest extends PersistenceTestCase {
         
         NIFPointImporter importer = new NIFPointImporter(dataset, datasource, sqlDataTypes);
         try {
-            importer.preCondition(null,null);
+            importer.preImport();
             assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF point import requires following file types"));

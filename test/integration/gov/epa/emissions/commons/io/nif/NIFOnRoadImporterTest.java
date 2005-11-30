@@ -53,8 +53,8 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
         dataset.setInternalSources(createAllInternalSources());
 
         NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
-        importer.preCondition(null,null);
-        importer.run(dataset);
+        importer.preImport();
+        importer.run();
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tablePE));
         assertEquals(8, countRecords(tableTR));
@@ -66,7 +66,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
 
         NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
         try {
-            importer.preCondition(null,null);
+            importer.preImport();
             assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF onroad import requires following file types"));

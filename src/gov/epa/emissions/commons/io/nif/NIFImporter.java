@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -123,9 +124,19 @@ public class NIFImporter {
             InternalSource source = formatUnits[i].getInternalSource();
             if (source != null) {
                 sources.add(source);
+                source.setCols(colNames(formatUnits[i].fileFormat().cols()));
             }
         }
+        
         dataset.setInternalSources((InternalSource[]) sources.toArray(new InternalSource[0]));
+    }
+    //TODO: use HelpImporter
+    private String[] colNames(Column[] cols) {
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++)
+            names.add(cols[i].name());
+
+        return (String[]) names.toArray(new String[0]);
     }
 
     private void dropTables(List tableNames) throws ImporterException {
