@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.Record;
+
 public class VersionedRecord {
 
     private int recordId;
@@ -11,6 +13,18 @@ public class VersionedRecord {
     private String deleteVersions;
 
     // Record - containing the 'data' columns
+    private Record data;
+    
+
+    // For Axis
+    public VersionedRecord() {    
+        data = new Record();
+    }
+
+    public VersionedRecord(int recordId) {
+        this();
+        this.setRecordId(recordId);
+    }
 
     /**
      * @return Returns the deleteVersions.
@@ -49,6 +63,18 @@ public class VersionedRecord {
 
     public void setRecordId(int recordId) {
         this.recordId = recordId;
+    }
+
+    public void add(String token) {
+        data.add(token);     
+    }
+
+    public int size() {
+        return data.size();
+    }
+
+    public String token(int position) {
+        return data.token(position);
     }
 
 }
