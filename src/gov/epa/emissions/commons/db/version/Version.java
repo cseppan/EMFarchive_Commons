@@ -5,21 +5,15 @@ public class Version {
     private int datasetId;
 
     private int version;
-    
-    private String parentVersions;
-    
-    private boolean finalVersion=false;
 
-    /**
-     * @return Returns the finalVersion.
-     */
+    private String parentVersions;
+
+    private boolean finalVersion = false;
+
     public boolean isFinalVersion() {
         return finalVersion;
     }
 
-    /**
-     * @param finalVersion The finalVersion to set.
-     */
     public void setFinalVersion(boolean finalVersion) {
         this.finalVersion = finalVersion;
     }
@@ -44,7 +38,7 @@ public class Version {
         return parentVersions;
     }
 
-    public void setParentVersions(String parentVers){
-        parentVersions=parentVers;
+    public void setParentVersions(String parentVers) {
+        parentVersions = parentVers;
     }
 }

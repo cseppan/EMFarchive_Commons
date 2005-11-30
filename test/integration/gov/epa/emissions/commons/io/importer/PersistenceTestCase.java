@@ -2,7 +2,9 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.DatabaseSetup;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.io.File;
@@ -43,6 +45,18 @@ public abstract class PersistenceTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         dbSetup.tearDown();
+    }
+
+    protected Datasource emissions() {
+        return dbServer().getEmissionsDatasource();
+    }
+
+    private DbServer dbServer() {
+        return dbSetup.getDbServer();
+    }
+
+    protected SqlDataTypes dataTypes() {
+        return dbServer().getDataType();
     }
 
     protected void createTable(String table, Datasource datasource, FileFormat cols) throws SQLException {

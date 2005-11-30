@@ -79,7 +79,6 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         List lines = readData(file);
         assertEquals(18, lines.size());
         String line = (String) lines.get(0);
-        System.out.println("line="+line);
         // FIXME: revisit once 'comments' is moved from Table to specific
         // ColumnsMetadata
         // assertEquals("37001, 2201001150, 100414, 1.0626200e+000, -9, !
