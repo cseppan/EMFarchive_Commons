@@ -25,9 +25,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
             dropData(table, dataset);
-            throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
-                    + "\nLine: " + reader.line()
-                    + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
+            throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage() + "\nLine: "
+                    + reader.line() + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         }
     }
 
@@ -38,7 +37,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
-            throw new ImporterException("could not drop data from table " + table+"\n"+e.getMessage(), e);
+            throw new ImporterException("could not drop data from table " + table + "\n" + e.getMessage(), e);
         }
     }
 
@@ -59,13 +58,13 @@ public class OptionalColumnsDataLoader implements DataLoader {
         }
     }
 
-    private String[] data(Dataset dataset, Record record, TableFormatWithOptionalCols colsMetadata) {
+    private String[] data(Dataset dataset, Record record, TableFormatWithOptionalCols tableFormat) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
         data.addAll(record.tokens());
 
-        if (data.size() < colsMetadata.cols().length)
-            colsMetadata.addDefaultValuesForOptionals(data);
+        tableFormat.addDefaultValuesForOptionals(data);
+        
         massageNullMarkers(data);
 
         return (String[]) data.toArray(new String[0]);

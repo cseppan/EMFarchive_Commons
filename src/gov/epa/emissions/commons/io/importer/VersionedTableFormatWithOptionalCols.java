@@ -24,7 +24,7 @@ public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptio
     }
 
     public String key() {
-        return "Dataset_Id";
+        return "Record_Id";
     }
 
     public Column[] cols() {
@@ -34,18 +34,8 @@ public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptio
     private Column[] createCols(SqlDataTypes types) {
         List cols = new ArrayList();
 
-        Column recordId = new Column("Record_Id", types.autoIncrement(), new NullFormatter());
-        cols.add(0, recordId);
-
-        Column datasetId = new Column(key(), types.longType(), new LongFormatter());
-        cols.add(datasetId);
-        
-        Column version = new Column("Version", types.longType(), new NullFormatter());
-        cols.add(version);
-        
-        Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter());
-        cols.add(deleteVersions);
-
+        cols.addAll(Arrays.asList(versionCols(types)));
+        // sandwich data b/w version cols and Comments
         cols.addAll(Arrays.asList(base.cols()));
 
         Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
@@ -54,15 +44,37 @@ public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptio
         return (Column[]) cols.toArray(new Column[0]);
     }
 
-    // FIXME: rework this mess
-    public void addDefaultValuesForOptionals(List data) {
-        if (!includesComment(data))
-            addDefaultValuesWithComment(data);
-        else
-            addDefaultValues(data);
+    private Column[] versionCols(SqlDataTypes types) {
+        Column recordId = new Column(key(), types.autoIncrement(), new NullFormatter());
+        Column datasetId = new Column("Dataset_Id", types.longType(), new LongFormatter());
+        Column version = new Column("Version", types.longType(), new NullFormatter());
+        Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter());
+        
+        return new Column[]{ recordId, datasetId, version, deleteVersions };
     }
 
-    private void addDefaultValues(List data) {
+    // FIXME: rework this mess
+    public void fill(List data, long datasetId) {
+        addVersionData(data, datasetId);
+        addComments(data);
+
+        addDefaultValuesForOptionalCols(data);
+    }
+
+    private void addComments(List data) {
+        String last = (String) data.get(data.size() - 1);
+        if (!last.startsWith("!"))
+            data.add(data.size(), "");// empty comment
+    }
+
+    private void addVersionData(List data, long datasetId) {
+        data.add(0, "");// record id
+        data.add(1, datasetId + "");
+        data.add(2, "0");// version
+        data.add(3, "");// delete versions
+    }
+
+    private void addDefaultValuesForOptionalCols(List data) {
         int optionalCount = optionalCount(data);
         int toAdd = toAdd(optionalCount);
         int insertAt = insertAt(optionalCount);
@@ -72,7 +84,11 @@ public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptio
     }
 
     private int insertAt(int optionalCount) {
-        return base.minCols().length + 1 + optionalCount;
+        return numVersionCols() + base.minCols().length + optionalCount;
+    }
+
+    private int numVersionCols() {
+        return 4;
     }
 
     private int toAdd(int optionalCount) {
@@ -80,21 +96,11 @@ public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptio
     }
 
     private int optionalCount(List data) {
-        return data.size() - (2 + base.minCols().length);
+        return data.size() - numFixedCols();
     }
 
-    private void addDefaultValuesWithComment(List data) {
-        Column[] optionalCols = base.optionalCols();
-        int toAdd = cols().length - data.size() - 1;
-
-        for (int i = optionalCols.length - toAdd; i < optionalCols.length; i++)
-            data.add("");
-        data.add("");// comment
-    }
-
-    private boolean includesComment(List data) {
-        String last = (String) data.get(data.size() - 1);
-        return last.startsWith("!");
+    private int numFixedCols() {
+        return numVersionCols() + base.minCols().length + 1;// 1 - comments
     }
 
     public String identify() {
