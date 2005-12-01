@@ -21,23 +21,14 @@ public class FixedColsTableFormat implements FileFormat, TableFormat {
         this.types = types;
     }
 
-    /* (non-Javadoc)
-	 * @see gov.epa.emissions.commons.io.importer.temporal.TableFormat#key()
-	 */
     public String key() {
         return "Dataset_Id";
     }
 
-    /* (non-Javadoc)
-	 * @see gov.epa.emissions.commons.io.importer.temporal.TableFormat#identify()
-	 */
     public String identify() {
         return base.identify();
     }
 
-    /* (non-Javadoc)
-	 * @see gov.epa.emissions.commons.io.importer.temporal.TableFormat#cols()
-	 */
     public Column[] cols() {
         List cols = new ArrayList();
         cols.addAll(Arrays.asList(base.cols()));

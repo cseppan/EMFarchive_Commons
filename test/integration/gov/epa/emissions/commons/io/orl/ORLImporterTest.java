@@ -9,11 +9,11 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,6 +79,26 @@ public class ORLImporterTest extends PersistenceTestCase {
         importer.run(dataset);
 
         assertEquals(6, countRecords());
+
+        // assert
+        TableReader tableReader = new TableReader(datasource.getConnection());
+
+        String table = dataset.getName();
+        assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
+        int rows = tableReader.count(datasource.getName(), table);
+        assertEquals(6, rows);
+
+        ITable tableRef = tableReader.table(datasource.getName(), table);
+        for (int i = 0; i < rows; i++) {
+            Object recordId = tableRef.getValue(i, "Record_Id");
+            assertEquals((i + 1) + "", recordId.toString());
+
+            Object version = tableRef.getValue(i, "Version");
+            assertEquals("0", version.toString());
+
+            Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
+            assertNull("Delete Versions should be undefined on initial load", deleteVersions);
+        }
     }
 
     // FIXME: the parser is not working properly
@@ -120,8 +140,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
         ORLNonPointImporter importer = new ORLNonPointImporter(dataset, datasource, sqlDataTypes);
 
-        File fullpath = new File(new File("test/data/orl/nc"), "small-nonpoint.txt");
-        importer.preCondition(new File("test/data/orl/nc"), "small-nonpoint.txt");
+        File folder = new File("test/data/orl/nc");
+        String filename = "small-nonpoint.txt";
+        importer.preCondition(folder, filename);
         importer.run(dataset);
 
         InternalSource[] sources = dataset.getInternalSources();
@@ -130,16 +151,18 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
-        FileFormat colsMetadata = new FixedColsTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
+        FileFormat fileFormat = new VersionedTableFormatWithOptionalCols(new ORLNonPointFileFormat(sqlDataTypes),
+                sqlDataTypes);
         String[] actualCols = source.getCols();
-        String[] expectedCols = colNames(colsMetadata.cols());
+        String[] expectedCols = colNames(fileFormat.cols());
         assertEquals(expectedCols.length, actualCols.length);
         for (int i = 0; i < actualCols.length; i++) {
             assertEquals(expectedCols[i], actualCols[i]);
         }
 
-        assertEquals(fullpath.getAbsolutePath(), source.getSource());
-        assertEquals(fullpath.length(), source.getSourceSize());
+        File file = new File(folder, filename);
+        assertEquals(file.getAbsolutePath(), source.getSource());
+        assertEquals(file.length(), source.getSourceSize());
     }
 
     private String[] colNames(Column[] cols) {

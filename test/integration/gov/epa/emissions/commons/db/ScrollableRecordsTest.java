@@ -100,23 +100,27 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         DbRecord record = results.next();
         assertEquals(1, record.getId());
 
-        assertEquals(19, record.size());
+        assertEquals(22, record.size());
         assertNotNull("Should be able to fetch first record", record);
 
-        assertEquals(dataset.getDatasetid() + "", record.token(0));
-        assertEquals("37001", record.token(1));
-        assertEquals("10201302", record.token(2));
-        assertEquals("0", record.token(3));
-        assertEquals("0107", record.token(4));
-        assertEquals("2", record.token(5));
+        assertEquals("1", record.token(0));// record id
+        assertEquals(dataset.getDatasetid() + "", record.token(1));
+        assertEquals("0", record.token(2));// version
+        assertNull("Should have not value", record.token(3));// delete
+                                                                // versions
+        assertEquals("37001", record.token(4));
+        assertEquals("10201302", record.token(5));
         assertEquals("0", record.token(6));
-        assertEquals("246", record.token(7));
-        assertEquals("0.000387296", record.token(8));
-        assertNull(record.token(9));
-        assertNull(record.token(10));
-        assertNull(record.token(11));
+        assertEquals("0107", record.token(7));
+        assertEquals("2", record.token(8));
+        assertEquals("0", record.token(9));
+        assertEquals("246", record.token(10));
+        assertEquals("0.000387296", record.token(11));
         assertNull(record.token(12));
-        assertEquals("", record.token(13));
+        assertNull(record.token(13));
+        assertNull(record.token(14));
+        assertNull(record.token(15));
+        assertEquals("", record.token(16));
     }
 
 }
