@@ -8,17 +8,9 @@ import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 public class SpeciationCrossReferenceExporter extends SpeciationProfileExporter {
-    private Dataset dataset;
-
-    private Datasource datasource;
-
-    private FileFormat fileFormat;
     
     public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
         super(dataset, datasource, fileFormat);
-        this.dataset = dataset;
-        this.datasource = datasource;
-        this.fileFormat = fileFormat;
     }
     
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {
