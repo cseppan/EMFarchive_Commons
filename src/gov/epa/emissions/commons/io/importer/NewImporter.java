@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.io.InternalSource;
 
 
 public interface NewImporter {
@@ -26,7 +25,5 @@ public interface NewImporter {
      */
     // TODO: have a separate method for overwrite & non-overwrite
     void run() throws Exception;
-    
-    InternalSource[] internalSources();
 
 }
