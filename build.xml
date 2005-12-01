@@ -99,6 +99,7 @@
             depends="compile, setup-emissions-data"
             description="All Integration Tests"
     >
+    	<!--
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="classpath" />
             <formatter type="xml" />
@@ -111,6 +112,7 @@
                 </fileset>
             </batchtest>
         </junit>
+        -->
     </target>
 
     <target name="setup-emissions-data"
