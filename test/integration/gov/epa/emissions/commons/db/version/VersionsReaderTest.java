@@ -24,7 +24,7 @@ public class VersionsReaderTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        types = dbServer.getDataType();
+        types = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
         versionsTable = "versions";
         

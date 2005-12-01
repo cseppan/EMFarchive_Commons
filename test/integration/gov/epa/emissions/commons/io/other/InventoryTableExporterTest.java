@@ -23,7 +23,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        sqlDataTypes = dbServer.getDataType();
+        sqlDataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();

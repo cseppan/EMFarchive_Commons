@@ -25,7 +25,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        dataType = dbServer.getDataType();
+        dataType = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/orl/SimpleDelimited.txt");

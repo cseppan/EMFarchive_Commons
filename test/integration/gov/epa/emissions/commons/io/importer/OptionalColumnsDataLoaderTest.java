@@ -25,7 +25,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        dataTypes = dbServer.getDataType();
+        dataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
         colsMetadata = new TableFormatWithOptionalCols(new PointTemporalReferenceFileFormat(dataTypes), dataTypes);

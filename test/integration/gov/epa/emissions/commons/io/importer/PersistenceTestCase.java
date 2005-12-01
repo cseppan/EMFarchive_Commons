@@ -56,7 +56,7 @@ public abstract class PersistenceTestCase extends TestCase {
     }
 
     protected SqlDataTypes dataTypes() {
-        return dbServer().getDataType();
+        return dbServer().getSqlDataTypes();
     }
 
     protected void createTable(String table, Datasource datasource, FileFormat cols) throws SQLException {

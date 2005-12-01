@@ -35,7 +35,7 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getDataType();
+        typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/monthly.txt");

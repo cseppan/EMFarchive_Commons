@@ -5,7 +5,7 @@ CREATE TABLE emissions.data
 (
   record_id serial NOT NULL,
   dataset_id int4 NOT NULL,
-  version int4 NOT NULL,
+  version int4 NULL DEFAULT 0,
   delete_versions text DEFAULT ''::text,
   param1 text,
   param2 text,

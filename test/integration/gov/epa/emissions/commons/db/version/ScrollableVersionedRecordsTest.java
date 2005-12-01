@@ -38,7 +38,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
 
     private void importTestData() throws Exception {
         DbServer dbServer = dbSetup.getDbServer();
-        types = dbServer.getDataType();
+        types = dbServer.getSqlDataTypes();
 
         datasource = dbServer.getEmissionsDatasource();
         dataTable = "data";

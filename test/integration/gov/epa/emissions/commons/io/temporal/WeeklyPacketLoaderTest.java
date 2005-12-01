@@ -36,7 +36,7 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getDataType();
+        typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
         colsMetadata = new WeeklyFileFormat(typeMapper);

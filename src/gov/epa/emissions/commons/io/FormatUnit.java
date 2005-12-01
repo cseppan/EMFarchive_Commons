@@ -5,13 +5,13 @@ import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 public interface FormatUnit {
 
-    public FileFormat fileFormat();
+    FileFormat fileFormat();
 
-    public TableFormat tableFormat();
-    
-    public boolean isRequired();
-    
-    public void setInternalSource(InternalSource internalSource);
-    
-    public InternalSource getInternalSource();
+    TableFormat tableFormat();
+
+    boolean isRequired();
+
+    void setInternalSource(InternalSource internalSource);
+
+    InternalSource getInternalSource();
 }

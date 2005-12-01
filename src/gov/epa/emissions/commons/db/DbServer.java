@@ -8,7 +8,7 @@ public interface DbServer {
 
     Datasource getReferenceDatasource();
 
-    SqlDataTypes getDataType();
+    SqlDataTypes getSqlDataTypes();
 
     /**
      * @return wraps a db-specific function around ascii column to convert it to

@@ -58,7 +58,7 @@ public class MySqlDbServer implements DbServer {
             ReferenceImporter importer = new ReferenceImporter(this, fieldDefsFile, referenceFilesDir, false, null);
             importer.run();
 
-            ReferenceTablesCreator tables = new ReferenceTablesCreator(null, getDataType());
+            ReferenceTablesCreator tables = new ReferenceTablesCreator(null, getSqlDataTypes());
             tables.createAdditionalRefTables(referenceDatasource);
         } catch (Exception e) {
             throw new SQLException("could not create reference tables. Reason: " + e.getMessage());
@@ -102,7 +102,7 @@ public class MySqlDbServer implements DbServer {
         return false;
     }
 
-    public SqlDataTypes getDataType() {
+    public SqlDataTypes getSqlDataTypes() {
         return typeMapper;
     }
 

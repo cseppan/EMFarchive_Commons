@@ -32,7 +32,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getDataType();
+        typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
         FixedColsTableFormat monthlyMeta = new FixedColsTableFormat(new MonthlyFileFormat(typeMapper), typeMapper);

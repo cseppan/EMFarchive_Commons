@@ -53,7 +53,7 @@ public class ReferenceImporter extends FixedFormatImporter {
 
         files = verifyExpectedFiles(dataset.getDatasetType(), files);
 
-        fieldDefsReader = new FieldDefinitionsFileReader(fieldDefsFile, dbServer.getDataType());
+        fieldDefsReader = new FieldDefinitionsFileReader(fieldDefsFile, dbServer.getSqlDataTypes());
 
         // import each file (--> database table) one by one..
         Datasource datasource = dbServer.getReferenceDatasource();

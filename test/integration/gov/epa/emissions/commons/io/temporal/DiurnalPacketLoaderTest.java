@@ -37,7 +37,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
-        typeMapper = dbServer.getDataType();
+        typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
         DiurnalFileFormat colsMetadata = new DiurnalFileFormat(typeMapper);
         tableColsMetadata = new FixedColsTableFormat(colsMetadata, typeMapper);

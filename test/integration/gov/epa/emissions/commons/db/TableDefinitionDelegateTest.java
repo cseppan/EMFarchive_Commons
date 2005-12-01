@@ -15,7 +15,7 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase{
     protected void setUp() throws Exception {
         super.setUp();
         DbServer dbServer = dbSetup.getDbServer();
-        sqlDataTypes = dbServer.getDataType();
+        sqlDataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
     }
     
