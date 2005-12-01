@@ -172,7 +172,7 @@ public class ReferenceImporter extends FixedFormatImporter {
             // skip over non data lines as needed
             if (!line.startsWith("#") && line.trim().length() > 0) {
                 data = breakUpLine(line, details.getColumnWidths());
-                datasource.getDataModifier().insertRow(tableName, data, columnTypes);
+                datasource.dataModifier().insertRow(tableName, data, columnTypes);
                 numRows++;
             }
         }// while file is not empty

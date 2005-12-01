@@ -33,7 +33,7 @@ public class LineLoader implements DataLoader{
 
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
-            DataModifier modifier = datasource.getDataModifier();
+            DataModifier modifier = datasource.dataModifier();
             String key = tableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
@@ -43,7 +43,7 @@ public class LineLoader implements DataLoader{
     }
 
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
-        DataModifier modifier = datasource.getDataModifier();
+        DataModifier modifier = datasource.dataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
             String[] data = data(dataset, record);
             modifier.insertRow(table, data, tableFormat.cols());

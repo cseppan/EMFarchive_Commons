@@ -12,5 +12,5 @@ public interface Datasource {
 
     Connection getConnection();
 
-    DataModifier getDataModifier();
+    DataModifier dataModifier();
 }

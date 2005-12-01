@@ -21,4 +21,6 @@ public interface SqlDataTypes {
 
     String autoIncrement();
 
+    String booleanType();
+
 }

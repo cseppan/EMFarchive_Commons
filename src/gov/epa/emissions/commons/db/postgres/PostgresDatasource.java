@@ -29,7 +29,7 @@ public class PostgresDatasource implements Datasource {
         return connection;
     }
 
-    public DataModifier getDataModifier() {
+    public DataModifier dataModifier() {
         return dataAcceptor;
     }
 

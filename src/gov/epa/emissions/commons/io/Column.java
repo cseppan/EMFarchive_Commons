@@ -26,7 +26,11 @@ public class Column implements DbColumn {
         this(name, sqlType, formatter);
         this.width = width;
     }
-    
+
+    public Column(String name, String sqlType) {
+        this(name, sqlType, new NullFormatter());
+    }
+
     public String format(ResultSet data) throws SQLException {
         return formatter.format(name, data);
     }

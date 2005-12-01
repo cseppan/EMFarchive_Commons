@@ -32,7 +32,7 @@ public class VersionsReaderTest extends PersistenceTestCase {
     }
 
     protected void tearDown() throws Exception {
-        DataModifier modifier = datasource.getDataModifier();
+        DataModifier modifier = datasource.dataModifier();
         modifier.dropAll(versionsTable);
     }
 
@@ -41,7 +41,7 @@ public class VersionsReaderTest extends PersistenceTestCase {
     }
 
     private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
-        DataModifier modifier = datasource.getDataModifier();
+        DataModifier modifier = datasource.dataModifier();
         modifier.insertRow(table, data, cols);
     }
 

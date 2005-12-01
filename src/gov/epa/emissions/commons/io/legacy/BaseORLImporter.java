@@ -387,7 +387,7 @@ public class BaseORLImporter extends FormattedImporter {
             // skip over non data lines as needed
             if (!line.startsWith("#") && line.trim().length() > 0) {
                 data = breakUpLine(line, columnWidths);
-                datasource.getDataModifier().insertRow(tableName, data, columnTypes);
+                datasource.dataModifier().insertRow(tableName, data, columnTypes);
                 numRows++;
             }
         }// while file is not empty
@@ -631,7 +631,7 @@ public class BaseORLImporter extends FormattedImporter {
      */
     private void postImport() throws Exception {
         Datasource emissionsDatasource = dbServer.getEmissionsDatasource();
-        DataModifier emissionsAcceptor = emissionsDatasource.getDataModifier();
+        DataModifier emissionsAcceptor = emissionsDatasource.dataModifier();
         ORLTableType tableType = tableTypes.type(dataset.getDatasetType());
         Table table = dataset.getTable(tableType.base());
         String tableName = table.getName();

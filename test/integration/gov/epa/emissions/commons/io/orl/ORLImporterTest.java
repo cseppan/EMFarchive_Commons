@@ -23,7 +23,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 
 public class ORLImporterTest extends PersistenceTestCase {
@@ -49,6 +48,8 @@ public class ORLImporterTest extends PersistenceTestCase {
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        
+        dbUpdate.deleteAll(datasource.getName(), "versions");
     }
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
@@ -60,17 +61,14 @@ public class ORLImporterTest extends PersistenceTestCase {
         int rows = countRecords();
         assertEquals(10, rows);
         verifyVersionCols(dataset.getName(), rows);
+        verifyVersionZeroEntryInVersionsTable();
     }
 
     // FIXME: the parser is not working properly
     public void FIXME_testShouldImportASmallAndSimpleExtendedPointFile() throws Exception {
-        try {
-            ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-            importer.preCondition(new File("test/data/orl/extended"), "orl-extended-point.txt");
-            importer.run(dataset);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
+        importer.preCondition(new File("test/data/orl/extended"), "orl-extended-point.txt");
+        importer.run(dataset);
 
         assertEquals(200, countRecords());
     }
@@ -94,7 +92,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         verifyVersionCols(table, rows);
     }
 
-    private void verifyVersionCols(String table, int rows) throws DataSetException {
+    private void verifyVersionCols(String table, int rows) throws Exception {
         TableReader tableReader = new TableReader(datasource.getConnection());
 
         ITable tableRef = tableReader.table(datasource.getName(), table);
@@ -108,6 +106,22 @@ public class ORLImporterTest extends PersistenceTestCase {
             Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
             assertNull("Delete Versions should be undefined on initial load", deleteVersions);
         }
+    }
+
+    private void verifyVersionZeroEntryInVersionsTable() throws Exception {
+        TableReader tableReader = new TableReader(datasource.getConnection());
+        ITable table = tableReader.table(datasource.getName(), "versions");
+
+        assertEquals(1, table.getRowCount());
+        
+        Object version = table.getValue(0, "version");
+        assertEquals("0", version.toString());
+
+        Object path = table.getValue(0, "path");
+        assertEquals("", path.toString());
+
+        Object finalVersion = table.getValue(0, "final_version");
+        assertFalse(((Boolean) finalVersion).booleanValue());
     }
 
     // FIXME: the parser is not working properly

@@ -22,7 +22,7 @@ public class ORLPointImporter implements Importer {
         TableFormatWithOptionalCols tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
         DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableFormat, fileFormat);
 
-        delegate = new ORLImporter(dataset, formatUnit, datasource);
+        delegate = new ORLImporter(dataset, formatUnit, datasource, sqlDataTypes);
     }
 
     public void preCondition(File folder, String filePattern) throws Exception {

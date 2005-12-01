@@ -33,7 +33,7 @@ public class FixedColumnsDataLoader implements DataLoader {
 
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
-            DataModifier modifier = datasource.getDataModifier();
+            DataModifier modifier = datasource.dataModifier();
             String key = colsMetadata.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
@@ -44,7 +44,7 @@ public class FixedColumnsDataLoader implements DataLoader {
 
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         Record record = reader.read();
-        DataModifier modifier = datasource.getDataModifier();
+        DataModifier modifier = datasource.dataModifier();
         while (!record.isEnd()) {
             modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
             record = reader.read();

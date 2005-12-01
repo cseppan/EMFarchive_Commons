@@ -32,7 +32,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     }
 
     private void clean() throws SQLException {
-        DataModifier modifier = datasource.getDataModifier();
+        DataModifier modifier = datasource.dataModifier();
         modifier.dropAll(dataTable);
     }
 
@@ -59,7 +59,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     }
 
     protected void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
-        DataModifier modifier = datasource.getDataModifier();
+        DataModifier modifier = datasource.dataModifier();
         modifier.insertRow(table, data, cols);
     }
 

@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 
 public class PostgresSqlDataType implements SqlDataTypes {
 
-    //TODO: get rid of this
+    // TODO: get rid of this
     public String type(String name, String genericType, int width) {
         if (genericType.equals("C"))
             return "VARCHAR(" + width + ")";
@@ -57,6 +57,10 @@ public class PostgresSqlDataType implements SqlDataTypes {
 
     public String autoIncrement() {
         return "SERIAL";
+    }
+
+    public String booleanType() {
+        return "BOOL";
     }
 
 }

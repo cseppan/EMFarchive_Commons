@@ -37,7 +37,7 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
         statement.execute(query);
     }
 
-    public DataModifier getDataModifier() {
+    public DataModifier dataModifier() {
         return dataAcceptor;
     }
 

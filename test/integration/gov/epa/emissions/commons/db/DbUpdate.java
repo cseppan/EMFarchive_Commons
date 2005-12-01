@@ -17,14 +17,13 @@ public class DbUpdate extends DbOperation {
         super(jdbcConnection);
     }
 
-    public void deleteAll(String table) throws DatabaseUnitException, SQLException {
-        IDataSet dataset = dataset(table);
+    public void deleteAll(String schema, String table) throws DatabaseUnitException, SQLException {
+        IDataSet dataset = dataset(qualifiedTable(schema, table));
         DatabaseOperation.DELETE_ALL.execute(connection, dataset);
     }
 
     private IDataSet dataset(String table) {
-        IDataSet dataset = new DefaultDataSet(new DefaultTable(table));
-        return dataset;
+        return new DefaultDataSet(new DefaultTable(table));
     }
 
     protected void doDelete(IDataSet dataset) throws DatabaseUnitException, SQLException {
@@ -46,9 +45,14 @@ public class DbUpdate extends DbOperation {
     public void dropTable(String schema, String table) throws SQLException {
         Connection jdbcConnection = connection.getConnection();
         Statement stmt = jdbcConnection.createStatement();
-        stmt.execute("DROP TABLE " + schema + "." + table);
+        stmt.execute("DROP TABLE " + qualifiedTable(schema, table));
 
         // FIXME: use dbUnit to drop table
+    }
+
+    private String qualifiedTable(String schema, String table) {
+        String qualifiedTable = schema + "." + table;
+        return qualifiedTable;
     }
 
 }

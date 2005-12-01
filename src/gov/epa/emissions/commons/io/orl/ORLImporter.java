@@ -1,6 +1,10 @@
 package gov.epa.emissions.commons.io.orl;
 
+import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbColumn;
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
@@ -15,6 +19,7 @@ import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -33,11 +38,14 @@ public class ORLImporter {
 
     private HelpImporter delegate;
 
-    public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
+    private SqlDataTypes sqlDataTypes;
+
+    public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
         this.delegate = new HelpImporter();
+        this.sqlDataTypes = sqlDataTypes;
     }
 
     public void preCondition(File folder, String filePattern) throws Exception {
@@ -63,13 +71,25 @@ public class ORLImporter {
             TableFormatWithOptionalCols tableFormat) throws Exception {
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
         Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
-
         loader.load(reader, dataset, table);
+
+        addVersionZeroEntryToVersionsTable(datasource, dataset);
         loadDataset(file, table, tableFormat, reader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, FileFormat colsMetadata, List comments, Dataset dataset) {
-        delegate.setInternalSource(file, table, colsMetadata, dataset);
+    private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
+        DataModifier modifier = datasource.dataModifier();
+        String[] data = { dataset.getDatasetid() + "", "0", "", "false" };
+        DbColumn[] cols = { new Column("dataset_id", sqlDataTypes.longType()),
+                new Column("version", sqlDataTypes.intType()), new Column("path", sqlDataTypes.text()),
+                new Column("final_version", sqlDataTypes.booleanType()) };
+
+        // TODO: where should the 'versions' table name be defined?
+        modifier.insertRow("versions", data, cols);
+    }
+
+    private void loadDataset(File file, String table, FileFormat fileFormat, List comments, Dataset dataset) {
+        delegate.setInternalSource(file, table, fileFormat, dataset);
         dataset.setUnits("short tons/year");
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
         dataset.setDescription(delegate.descriptions(comments));
