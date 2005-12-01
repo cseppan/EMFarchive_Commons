@@ -16,5 +16,9 @@ public interface SqlDataTypes {
     String smallInt();
 
     String charType();
-    
+
+    String text();
+
+    String autoIncrement();
+
 }

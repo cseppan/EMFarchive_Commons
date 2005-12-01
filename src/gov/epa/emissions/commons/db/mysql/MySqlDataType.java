@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 
 public class MySqlDataType implements SqlDataTypes {
 
+    //TODO: get rid of this
     public String type(String name, String genericType, int width) {
         if (genericType.equals("C"))
             return "VARCHAR(" + width + ")";
@@ -47,6 +48,14 @@ public class MySqlDataType implements SqlDataTypes {
 
     public String charType() {
         return stringType(1);
+    }
+
+    public String text() {
+        return "TEXT";
+    }
+
+    public String autoIncrement() {
+        return "INT AUTO_INCREMENT";
     }
 
 }
