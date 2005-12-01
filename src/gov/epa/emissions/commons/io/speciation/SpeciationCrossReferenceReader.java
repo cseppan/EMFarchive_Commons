@@ -76,8 +76,6 @@ public class SpeciationCrossReferenceReader implements Reader {
                 newTokens[i] = tokens[i].trim();
             else
                 newTokens[i] = null;
-            
-            System.out.println("newTokens:" + newTokens[i]);
         }
         
         if(lastToken.startsWith("!")){

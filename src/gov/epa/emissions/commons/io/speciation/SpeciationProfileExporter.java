@@ -41,7 +41,7 @@ public class SpeciationProfileExporter {
         write(file, writer);
     }
 
-    private void write(File file, PrintWriter writer) throws ExporterException {
+    protected void write(File file, PrintWriter writer) throws ExporterException {
         try {
             writeHeaders(writer, dataset);
             writeData(writer, dataset, datasource);
@@ -52,7 +52,7 @@ public class SpeciationProfileExporter {
         }
     }
 
-    private void writeHeaders(PrintWriter writer, Dataset dataset) {
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
         String header = dataset.getDescription();
 
         if(header != null){
@@ -63,7 +63,7 @@ public class SpeciationProfileExporter {
         }
     }
 
-    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         DataQuery q = datasource.query();
         InternalSource source = dataset.getInternalSources()[0];
 
@@ -73,7 +73,7 @@ public class SpeciationProfileExporter {
             writeRecord(cols, data, writer);
     }
 
-    private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+    protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
             writer.print(cols[i].format(data));
             if (i + 1 < cols.length)
