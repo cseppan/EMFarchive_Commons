@@ -17,7 +17,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes dataTypes;
 
-    private TableFormatWithOptionalCols colsMetadata;
+    private TableFormatWithOptionalCols tableFormat;
 
     private String table;
 
@@ -28,9 +28,9 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         dataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
-        colsMetadata = new TableFormatWithOptionalCols(new PointTemporalReferenceFileFormat(dataTypes), dataTypes);
+        tableFormat = new SimpleTableFormatWithOptionalCols(new PointTemporalReferenceFileFormat(dataTypes), dataTypes);
         table = "varying";
-        createTable(table, datasource, colsMetadata);
+        createTable(table, datasource, tableFormat);
     }
 
     protected void tearDown() throws Exception {
@@ -39,7 +39,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadRecordsFromFileWithVariableColsIntoTable() throws Exception {
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
@@ -61,14 +61,14 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
         File file = new File("test/data/variable-cols-with-errors.txt");
         Reader reader = new WhitespaceDelimitedFileReader(file);
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, colsMetadata);
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
 
         try {
             loader.load(reader, dataset, table);
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertEquals(0, tableReader.count(datasource.getName(), table));
-            
+
             return;
         }
 

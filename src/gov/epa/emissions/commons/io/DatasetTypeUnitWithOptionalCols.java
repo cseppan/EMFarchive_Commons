@@ -4,11 +4,11 @@ import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
 
-public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
+public class DatasetTypeUnitWithOptionalCols implements FormatUnit {
 
-    private TableFormatWithOptionalCols tableMetadata;
+    private TableFormatWithOptionalCols tableFormat;
 
-    private FileFormatWithOptionalCols fileMetadata;
+    private FileFormatWithOptionalCols fileFormat;
 
     private boolean required;
 
@@ -16,28 +16,28 @@ public class DatasetTypeUnitWithOptionalCols implements FormatUnit{
 
     public DatasetTypeUnitWithOptionalCols(TableFormatWithOptionalCols tableFormat,
             FileFormatWithOptionalCols fileFormat) {
-        this.tableMetadata = tableFormat;
-        this.fileMetadata = fileFormat;
+        this.tableFormat = tableFormat;
+        this.fileFormat = fileFormat;
         this.required = false;
     }
 
     public FileFormat fileFormat() {
-        return fileMetadata;
+        return fileFormat;
     }
 
     public TableFormat tableFormat() {
-        return tableMetadata;
+        return tableFormat;
     }
-    
-    public boolean isRequired(){
+
+    public boolean isRequired() {
         return required;
     }
-    
-    public void setInternalSource(InternalSource internalSource){
+
+    public void setInternalSource(InternalSource internalSource) {
         this.internalSource = internalSource;
     }
-    
-    public InternalSource getInternalSource(){
+
+    public InternalSource getInternalSource() {
         return internalSource;
     }
 

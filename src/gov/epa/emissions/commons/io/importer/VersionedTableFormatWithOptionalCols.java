@@ -6,13 +6,12 @@ import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.NullFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptionalCols, TableFormat {
+public class VersionedTableFormatWithOptionalCols implements TableFormatWithOptionalCols {
 
     private FileFormatWithOptionalCols base;
 
@@ -49,8 +48,8 @@ public class VersionedTableFormatWithOptionalCols implements FileFormatWithOptio
         Column datasetId = new Column("Dataset_Id", types.longType(), new LongFormatter());
         Column version = new Column("Version", types.longType(), new NullFormatter());
         Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter());
-        
-        return new Column[]{ recordId, datasetId, version, deleteVersions };
+
+        return new Column[] { recordId, datasetId, version, deleteVersions };
     }
 
     // FIXME: rework this mess

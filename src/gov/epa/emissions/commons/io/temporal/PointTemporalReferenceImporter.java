@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.io.importer.SimpleTableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.BufferedReader;
@@ -31,7 +32,7 @@ public class PointTemporalReferenceImporter implements Importer {
     public PointTemporalReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.datasource = datasource;
         PointTemporalReferenceFileFormat fileFormat = new PointTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat = new TableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+        TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnitWithOptionalCols(tableFormat, fileFormat);
     }
 
