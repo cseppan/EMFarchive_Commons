@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.Record;
 
-public class VersionedRecord {
+public class VersionedRecord extends Record {
 
     private int recordId;
 
