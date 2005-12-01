@@ -23,6 +23,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 
 public class ORLImporterTest extends PersistenceTestCase {
@@ -56,7 +57,9 @@ public class ORLImporterTest extends PersistenceTestCase {
         importer.preCondition(new File("test/data/orl/nc"), "small-point.txt");
         importer.run(dataset);
 
-        assertEquals(10, countRecords());
+        int rows = countRecords();
+        assertEquals(10, rows);
+        verifyVersionCols(dataset.getName(), rows);
     }
 
     // FIXME: the parser is not working properly
@@ -85,8 +88,14 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         String table = dataset.getName();
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
+
         int rows = tableReader.count(datasource.getName(), table);
         assertEquals(6, rows);
+        verifyVersionCols(table, rows);
+    }
+
+    private void verifyVersionCols(String table, int rows) throws DataSetException {
+        TableReader tableReader = new TableReader(datasource.getConnection());
 
         ITable tableRef = tableReader.table(datasource.getName(), table);
         for (int i = 0; i < rows; i++) {
@@ -122,7 +131,8 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         TableReader tableReader = new TableReader(datasource.getConnection());
 
-        assertEquals(6, tableReader.count(datasource.getName(), dataset.getName()));
+        int rows = tableReader.count(datasource.getName(), dataset.getName());
+        assertEquals(6, rows);
         ITable table = tableReader.table(datasource.getName(), dataset.getName());
         assertNull(table.getValue(0, "CEFF"));
         assertNull(table.getValue(0, "REFF"));
@@ -135,6 +145,8 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertNull(table.getValue(2, "CEFF"));
         assertNull(table.getValue(2, "REFF"));
         assertNull(table.getValue(2, "RPEN"));
+
+        verifyVersionCols(dataset.getName(), rows);
     }
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
@@ -178,7 +190,9 @@ public class ORLImporterTest extends PersistenceTestCase {
         importer.preCondition(new File("test/data/orl/nc"), "small-nonroad.txt");
         importer.run(dataset);
 
-        assertEquals(16, countRecords());
+        int rows = countRecords();
+        assertEquals(16, rows);
+        verifyVersionCols(dataset.getName(), rows);
     }
 
     // FIXME: the parser is not working properly
@@ -198,7 +212,9 @@ public class ORLImporterTest extends PersistenceTestCase {
         importer.preCondition(folder, filename);
         importer.run(dataset);
 
-        assertEquals(18, countRecords());
+        int rows = countRecords();
+        assertEquals(18, rows);
+        verifyVersionCols(dataset.getName(), rows);
     }
 
     public void testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {

@@ -44,7 +44,7 @@ class ORLExporter {
     private void write(File file, PrintWriter writer) throws ExporterException {
         try {
             writeHeaders(writer, dataset);
-            writerData(writer, dataset, datasource);
+            writeData(writer, dataset, datasource);
         } catch (SQLException e) {
             throw new ExporterException("could not export file - " + file, e);
         } finally {
@@ -56,7 +56,7 @@ class ORLExporter {
         writer.println(dataset.getDescription());
     }
 
-    private void writerData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         DataQuery q = datasource.query();
         InternalSource source = dataset.getInternalSources()[0];
 
