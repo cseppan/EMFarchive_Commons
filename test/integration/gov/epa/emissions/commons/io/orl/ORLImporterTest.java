@@ -42,7 +42,7 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(new Random().nextLong());
+        dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
     protected void tearDown() throws Exception {

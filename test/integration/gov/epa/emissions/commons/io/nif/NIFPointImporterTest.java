@@ -48,7 +48,7 @@ public class NIFPointImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(new Random().nextLong());
+        dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         String name = dataset.getName();
         tableCE = name + "_ce";

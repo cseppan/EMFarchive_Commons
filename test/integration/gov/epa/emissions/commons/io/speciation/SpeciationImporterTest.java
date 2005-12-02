@@ -30,7 +30,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(new Random().nextLong());
+        dataset.setDatasetid(new Random().nextInt());
     }
 
     protected void tearDown() throws Exception {

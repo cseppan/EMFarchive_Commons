@@ -30,7 +30,7 @@ public class PointTemporalReferenceImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(new Random().nextLong());
+        dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         PointTemporalReferenceFileFormat base = new PointTemporalReferenceFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(base, sqlDataTypes);
