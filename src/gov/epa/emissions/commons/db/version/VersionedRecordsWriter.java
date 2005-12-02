@@ -12,8 +12,6 @@ public class VersionedRecordsWriter {
 
     private PreparedStatement dataDeleteStatement;
 
-    private Versions versions;
-
     public VersionedRecordsWriter(Datasource datasource) throws SQLException {
         Connection connection = datasource.getConnection();
 
@@ -23,8 +21,6 @@ public class VersionedRecordsWriter {
 
         String dataDelete = "UPDATE " + datasource.getName() + ".data SET delete_versions=? WHERE record_id=?";
         dataDeleteStatement = connection.prepareStatement(dataDelete);
-
-        versions = new Versions(datasource);
     }
 
     /**
@@ -37,21 +33,9 @@ public class VersionedRecordsWriter {
         writeData(changeset, changeset.getVersion());
     }
 
-    /**
-     * Inserts the ChangeSet and marks the 'version' as Final
-     */
-    public Version writeFinal(ChangeSet changeset) throws Exception {
-        update(changeset);
-        Version version = changeset.getVersion();
-        versions.markFinal(version);
-        
-        return versions.get(version.getDatasetId(), version.getVersion());
-    }
-
     public void close() throws SQLException {
         dataInsertStatement.close();
         dataDeleteStatement.close();
-        versions.close();
     }
 
     private void convertUpdatedRecords(ChangeSet changeset) {

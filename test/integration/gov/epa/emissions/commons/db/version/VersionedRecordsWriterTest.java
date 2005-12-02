@@ -115,7 +115,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeSetForVersionTwo.addNew(record8);
 
         // Verify update of 3 -> delete 3, add (new)9. Verify 8 added.
-        writer.writeFinal(changeSetForVersionTwo);
+        writer.update(changeSetForVersionTwo);
 
         VersionedRecord[] versionTwoRecords = reader.fetch(versionTwo);
         assertEquals(6, versionTwoRecords.length);
