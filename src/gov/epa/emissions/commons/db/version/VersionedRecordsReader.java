@@ -13,11 +13,15 @@ public class VersionedRecordsReader {
 
     private Datasource datasource;
 
-    private VersionsReader versionsReader;
+    private Versions versions;
 
-    public VersionedRecordsReader(Datasource datasource) {
+    public VersionedRecordsReader(Datasource datasource) throws SQLException {
         this.datasource = datasource;
-        this.versionsReader = new VersionsReader(datasource);
+        versions = new Versions(datasource);
+    }
+
+    public void close() throws SQLException {
+        versions.close();
     }
 
     public VersionedRecord[] fetch(Version version) throws SQLException {
@@ -27,8 +31,8 @@ public class VersionedRecordsReader {
         String deleteClause = createDeleteClause(versions);
 
         String queryString = "SELECT * FROM " + datasource.getName() + ".data WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " " +
-                        "ORDER BY version, record_id";
+                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
+                + "ORDER BY version, record_id";
         ResultSet rs = query.executeQuery(queryString);
 
         return doFetch(rs);
@@ -44,7 +48,7 @@ public class VersionedRecordsReader {
             String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
             buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
 
-            if(tokenizer.hasMoreTokens())
+            if (tokenizer.hasMoreTokens())
                 buffer.append(" AND ");
         }
 
@@ -52,12 +56,12 @@ public class VersionedRecordsReader {
     }
 
     private String fetchCommaSeparatedVersionSequence(Version finalVersion) throws SQLException {
-        Version[] versions = versionsReader.fetchSequence(finalVersion.getDatasetId(), finalVersion.getVersion());
+        Version[] path = versions.getPath(finalVersion.getDatasetId(), finalVersion.getVersion());
 
         StringBuffer result = new StringBuffer();
-        for (int i = 0; i < versions.length; i++) {
-            result.append(versions[i].getVersion());
-            if ((i + 1) < versions.length)
+        for (int i = 0; i < path.length; i++) {
+            result.append(path[i].getVersion());
+            if ((i + 1) < path.length)
                 result.append(",");
         }
         return result.toString();

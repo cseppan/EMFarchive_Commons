@@ -58,6 +58,29 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         assertEquals(1, version.getVersion());
     }
 
+    public void testWriteChangeSetAndMarkVersionAsFinal() throws Exception {
+        ChangeSet changeset = new ChangeSet();
+
+        Version baseVersion = new Version();
+        baseVersion.setDatasetId(1);
+        baseVersion.setVersion(0);
+        baseVersion.setPath("");
+
+        changeset.setBaseVersion(baseVersion);
+
+        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecord[] records = reader.fetch(baseVersion);
+        assertEquals(5, records.length);
+
+        changeset.addUpdated(records[0]);
+        changeset.addUpdated(records[1]);
+
+        Version version = writer.writeAsFinal(changeset);
+
+        assertEquals(1, version.getVersion());
+        assertTrue("Should me marked as Final", version.isFinalVersion());
+    }
+
     public void testShouldDeleteExistingRecordAndAddNewRecordOnUpdate() throws Exception {
         // version one (based on version zero): 4 deleted, add new 6 & 7
         ChangeSet changeSetForVersionOne = new ChangeSet();
@@ -83,22 +106,22 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         Version versionOne = writer.write(changeSetForVersionOne);
         assertEquals(1, versionOne.getVersion());
-        
+
         // version two (based on version zero): update 3, add (new) 8
         ChangeSet changeSetForVersionTwo = new ChangeSet();
         changeSetForVersionTwo.setBaseVersion(versionZero);
-        
+
         VersionedRecord record3 = versionZeroRecords[2];
-        changeSetForVersionTwo.addUpdated(record3);//update 3
-        
+        changeSetForVersionTwo.addUpdated(record3);// update 3
+
         VersionedRecord record8 = new VersionedRecord();
         record8.setDatasetId(1);
         changeSetForVersionTwo.addNew(record8);
-        
-        //Verify update of 3 -> delete 3, add (new)9. Verify 8 added.
+
+        // Verify update of 3 -> delete 3, add (new)9. Verify 8 added.
         Version versionTwo = writer.write(changeSetForVersionTwo);
         assertEquals(2, versionTwo.getVersion());
-        
+
         VersionedRecord[] versionTwoRecords = reader.fetch(versionTwo);
         assertEquals(6, versionTwoRecords.length);
 
@@ -108,7 +131,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         assertEquals(7 + start, versionTwoRecords[4].getRecordId());
         assertEquals("", versionTwoRecords[4].getDeleteVersions());
-        
+
         assertEquals(8 + start, versionTwoRecords[5].getRecordId());
         assertEquals("", versionTwoRecords[5].getDeleteVersions());
     }

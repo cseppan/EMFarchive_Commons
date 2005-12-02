@@ -4,35 +4,27 @@ import gov.epa.emissions.commons.db.Datasource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class VersionedRecordsWriter {
 
     private PreparedStatement dataInsertStatement;
 
-    private PreparedStatement versionsInsertStatement;
-
-    private PreparedStatement versionNumberStatement;
-
     private PreparedStatement dataDeleteStatement;
+
+    private Versions versions;
 
     public VersionedRecordsWriter(Datasource datasource) throws SQLException {
         Connection connection = datasource.getConnection();
 
-        String dataInsert = "INSERT INTO emissions.data (record_id,dataset_id,version) VALUES (default,?,?)";
+        String dataInsert = "INSERT INTO " + datasource.getName()
+                + ".data (record_id,dataset_id,version) VALUES (default,?,?)";
         dataInsertStatement = connection.prepareStatement(dataInsert);
 
-        String dataDelete = "UPDATE emissions.data SET delete_versions=? WHERE record_id=?";
+        String dataDelete = "UPDATE " + datasource.getName() + ".data SET delete_versions=? WHERE record_id=?";
         dataDeleteStatement = connection.prepareStatement(dataDelete);
 
-        String versionsInsert = "INSERT INTO emissions.versions (dataset_id,version,path) VALUES (?,?,?)";
-        versionsInsertStatement = connection.prepareStatement(versionsInsert);
-
-        String selectVersionNumber = "SELECT version FROM emissions.versions WHERE dataset_id=? ORDER BY version";
-        versionNumberStatement = connection.prepareStatement(selectVersionNumber, ResultSet.TYPE_SCROLL_SENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-
+        versions = new Versions(datasource);
     }
 
     /**
@@ -41,29 +33,49 @@ public class VersionedRecordsWriter {
      * a list of 'delete' and 'add' operations.
      */
     public Version write(ChangeSet changeset) throws Exception {
+        convertUpdatedRecords(changeset);
+
+        Version version = versions.insertVersion(changeset.getBaseVersion());
+        writeData(changeset, version);
+
+        return version;
+    }
+
+    public Version writeAsFinal(ChangeSet changeset) throws Exception {
+        convertUpdatedRecords(changeset);
+
+        // TODO: write as final
+        Version version = versions.insertFinalVersion(changeset.getBaseVersion());
+        writeData(changeset, version);
+
+        return version;
+    }
+
+    public void close() throws SQLException {
+        dataInsertStatement.close();
+        dataDeleteStatement.close();
+        versions.close();
+    }
+
+    private void convertUpdatedRecords(ChangeSet changeset) {
         VersionedRecord[] updatedRecords = changeset.getUpdated();
 
         for (int i = 0; i < updatedRecords.length; i++) {
             VersionedRecord deleteRec = updatedRecords[i];
             deleteRec.setDeleteVersions(deleteRec.getDeleteVersions() + "," + changeset.getBaseVersion().getVersion());
             changeset.addDeleted(deleteRec);
-            
+
             VersionedRecord insertRec = updatedRecords[i];
             changeset.addNew(insertRec);
         }
-
-        return doWrite(changeset);
     }
 
-    private Version doWrite(ChangeSet changeset) throws Exception {
-        Version version = insertNewVersion(changeset.getBaseVersion());
-        insertNewData(changeset.getNew(), version);
+    private void writeData(ChangeSet changeset, Version version) throws Exception {
+        insertData(changeset.getNew(), version);
         deleteData(changeset.getDeleted(), version);
-
-        return version;
     }
 
-    private void insertNewData(VersionedRecord[] records, Version version) throws Exception {
+    private void insertData(VersionedRecord[] records, Version version) throws Exception {
         for (int i = 0; i < records.length; i++) {
             dataInsertStatement.setInt(1, records[i].getDatasetId());
             dataInsertStatement.setInt(2, version.getVersion());
@@ -77,42 +89,6 @@ public class VersionedRecordsWriter {
             dataDeleteStatement.setInt(2, records[i].getRecordId());
             dataDeleteStatement.execute();
         }
-    }
-
-    private Version insertNewVersion(Version baseVersion) throws Exception {
-        Version version = new Version();
-
-        // get the last version number for this dataset
-        int newVersionNum = getNextVersionNumber(baseVersion.getDatasetId());
-        if (baseVersion.getPath().length() == 0)
-            version.setPath(baseVersion.getVersion() + "");
-        else
-            version.setPath(baseVersion.getPath() + "," + baseVersion.getVersion());
-
-        version.setDatasetId(baseVersion.getDatasetId());
-        version.setVersion(newVersionNum);
-
-        versionsInsertStatement.setInt(1, baseVersion.getDatasetId());
-        versionsInsertStatement.setInt(2, newVersionNum);
-        versionsInsertStatement.setString(3, version.getPath());
-        versionsInsertStatement.executeUpdate();
-
-        return version;
-    }
-
-    private int getNextVersionNumber(int datasetId) throws Exception {
-        versionNumberStatement.setInt(1, datasetId);
-        ResultSet rs = versionNumberStatement.executeQuery();
-        rs.last();
-
-        return rs.getInt("version") + 1;
-    }
-
-    public void close() throws SQLException {
-        dataInsertStatement.close();
-        versionsInsertStatement.close();
-        versionNumberStatement.close();
-        dataDeleteStatement.close();
     }
 
 }
