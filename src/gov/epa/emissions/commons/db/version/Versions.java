@@ -89,9 +89,9 @@ public class Versions {
         version.setDatasetId(rs.getInt(1));
         version.setVersion(rs.getInt(2));
         version.setPath(rs.getString("path"));
-        if(rs.getBoolean("final_version"))
+        if (rs.getBoolean("final_version"))
             version.markFinal();
-        
+
         return version;
     }
 
@@ -119,23 +119,6 @@ public class Versions {
         insertStatement.setInt(2, version.getVersion());
         insertStatement.setString(3, version.getPath());
         insertStatement.executeUpdate();
-
-        return version;
-    }
-
-    public Version insertFinalVersion(Version base) throws SQLException {
-        Version version = new Version();
-        int newVersionNum = getNextVersionNumber(base.getDatasetId());
-        version.setVersion(newVersionNum);
-
-        version.setPath(path(base));
-        version.setDatasetId(base.getDatasetId());
-        version.markFinal();
-
-        insertFinalStatement.setInt(1, base.getDatasetId());
-        insertFinalStatement.setInt(2, newVersionNum);
-        insertFinalStatement.setString(3, version.getPath());
-        insertFinalStatement.executeUpdate();
 
         return version;
     }

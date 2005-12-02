@@ -42,7 +42,10 @@ public class VersionedRecordsWriter {
      */
     public Version writeFinal(ChangeSet changeset) throws Exception {
         update(changeset);
-        return versions.insertFinalVersion(changeset.getVersion());
+        Version version = changeset.getVersion();
+        versions.markFinal(version);
+        
+        return versions.get(version.getDatasetId(), version.getVersion());
     }
 
     public void close() throws SQLException {
