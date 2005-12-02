@@ -7,8 +7,6 @@ public class ChangeSet {
 
     private List newRecords;
 
-    private Version baseVersion;
-
     private List deletedRecords;
 
     private List updatedRecords;
@@ -27,14 +25,6 @@ public class ChangeSet {
 
     public VersionedRecord[] getNew() {
         return (VersionedRecord[]) newRecords.toArray(new VersionedRecord[0]);
-    }
-
-    public Version getBaseVersion() {
-        return baseVersion;
-    }
-
-    public void setBaseVersion(Version baseVersion) {
-        this.baseVersion = baseVersion;
     }
 
     public void addDeleted(VersionedRecord record) {
