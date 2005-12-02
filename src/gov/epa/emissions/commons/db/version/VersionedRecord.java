@@ -12,15 +12,6 @@ public class VersionedRecord extends Record {
 
     private String deleteVersions;
 
-    // Record - containing the 'data' columns
-    private Record data;
-    
-
-    // For Axis
-    public VersionedRecord() {    
-        data = new Record();
-    }
-
     /**
      * @return Returns the deleteVersions.
      */
@@ -59,17 +50,4 @@ public class VersionedRecord extends Record {
     public void setRecordId(int recordId) {
         this.recordId = recordId;
     }
-
-    public void add(String token) {
-        data.add(token);     
-    }
-
-    public int size() {
-        return data.size();
-    }
-
-    public String token(int position) {
-        return data.token(position);
-    }
-
 }
