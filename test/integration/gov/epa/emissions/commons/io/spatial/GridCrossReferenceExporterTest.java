@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.speciation;
+package gov.epa.emissions.commons.io.spatial;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -12,7 +12,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import java.io.File;
 import java.util.Random;
 
-public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
+public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
@@ -36,18 +36,17 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void testExportChemicalSpeciationData() throws Exception {
-        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(datasource, sqlDataTypes, "Speciation Cross Ref");
-        importer.preCondition(new File("test/data/speciation"), "gsref-point.txt");
+    public void testExportGridCrossRefData() throws Exception {
+        GridCrossReferenceImporter importer = new GridCrossReferenceImporter(datasource, sqlDataTypes);
+        importer.preCondition(new File("test/data/spatial"), "amgref.txt");
         importer.run(dataset);
         
-        SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, 
-                datasource, new SpeciationCrossRefFileFormat("Speciation Cross Ref", sqlDataTypes),
-                sqlDataTypes);
-        File file = new File("test/data/speciation","SpeciatiationCrossRefExported.txt");
+        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, 
+                datasource, new GridCrossRefFileFormat(sqlDataTypes));
+        File file = new File("test/data/spatial","GridCrossRefExported.txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
-        assertEquals(153, countRecords());
+        assertEquals(22, countRecords());
         file.delete();
     }
     
