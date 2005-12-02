@@ -43,7 +43,7 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "" });
+        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "", "true" });
     }
 
     private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
@@ -75,6 +75,19 @@ public class VersionsTest extends PersistenceTestCase {
         assertFalse("Derived version should be non-final", derived.isFinalVersion());
     }
 
+    public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
+        Version base = versions.get(1, 0);
+
+        Version derived = versions.derive(base);
+        try {
+            versions.derive(derived);
+        } catch (Exception e) {
+            return;
+        }
+
+        fail("Should failed to derive from a non-final version");
+    }
+
     public void testShouldBeAbleToMarkADerivedVersionAsFinal() throws Exception {
         Version base = versions.get(1, 0);
         Version derived = versions.derive(base);
@@ -86,7 +99,7 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(derived.getVersion(), finalVersion.getVersion());
         assertEquals("0", finalVersion.getPath());
         assertTrue("Derived version should be final on being marked 'final'", finalVersion.isFinalVersion());
-        
+
         Version results = versions.get(1, derived.getVersion());
         assertEquals(derived.getDatasetId(), results.getDatasetId());
         assertEquals(derived.getVersion(), results.getVersion());

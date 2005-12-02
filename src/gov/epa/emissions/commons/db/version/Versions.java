@@ -22,8 +22,6 @@ public class Versions {
 
     private PreparedStatement nextVersionStatement;
 
-    private PreparedStatement insertFinalStatement;
-
     private PreparedStatement updateStatement;
 
     public Versions(Datasource datasource) throws SQLException {
@@ -36,10 +34,6 @@ public class Versions {
 
         String update = "UPDATE " + datasource.getName() + ".versions set final_version=true WHERE dataset_id=?";
         updateStatement = connection.prepareStatement(update);
-
-        String insertFinal = "INSERT INTO " + datasource.getName()
-                + ".versions (dataset_id,version,path,final_version) VALUES (?,?,?,true)";
-        insertFinalStatement = connection.prepareStatement(insertFinal);
 
         String selectVersionNumber = "SELECT version FROM " + datasource.getName()
                 + ".versions WHERE dataset_id=? ORDER BY version";
@@ -108,6 +102,9 @@ public class Versions {
     }
 
     public Version derive(Version base) throws SQLException {
+        if (!base.isFinalVersion())
+            throw new RuntimeException("cannot derive a new version from a non-final version");
+
         Version version = new Version();
         int newVersionNum = getNextVersionNumber(base.getDatasetId());
 
@@ -148,7 +145,6 @@ public class Versions {
     public void close() throws SQLException {
         insertStatement.close();
         nextVersionStatement.close();
-        insertFinalStatement.close();
         updateStatement.close();
     }
 

@@ -26,7 +26,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "" });
+        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "", "true" });
     }
 
     private void setupVersionZeroData(Datasource datasource, String table) throws SQLException {

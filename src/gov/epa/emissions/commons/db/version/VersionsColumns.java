@@ -13,11 +13,12 @@ public class VersionsColumns {
     }
 
     public DbColumn[] get() {
-        DbColumn datasetId = new Column("dataset_id", types.intType(), null);
-        DbColumn version = new Column("version", types.intType(), null);
-        DbColumn parentVersions = new Column("path", types.stringType(255), null);
+        DbColumn datasetId = new Column("dataset_id", types.intType());
+        DbColumn version = new Column("version", types.intType());
+        DbColumn parentVersions = new Column("path", types.stringType(255));
+        DbColumn isFinal = new Column("final_version", types.booleanType());
 
-        return new DbColumn[] { datasetId, version, parentVersions };
+        return new DbColumn[] { datasetId, version, parentVersions, isFinal };
     }
 
 }
