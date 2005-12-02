@@ -6,11 +6,14 @@ import java.util.List;
 public class ChangeSet {
 
     private List newRecords;
+
     private Version baseVersion;
+
     private List deletedRecords;
 
-    //is this really needed?
     private List updatedRecords;
+
+    private Version version;
 
     public ChangeSet() {
         this.newRecords = new ArrayList();
@@ -48,6 +51,14 @@ public class ChangeSet {
 
     public VersionedRecord[] getUpdated() {
         return (VersionedRecord[]) updatedRecords.toArray(new VersionedRecord[0]);
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
     }
 
 }

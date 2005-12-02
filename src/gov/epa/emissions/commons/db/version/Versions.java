@@ -24,14 +24,18 @@ public class Versions {
 
     private PreparedStatement insertFinalStatement;
 
+    private PreparedStatement updateStatement;
+
     public Versions(Datasource datasource) throws SQLException {
         this.datasource = datasource;
 
         Connection connection = datasource.getConnection();
 
-        String versionsInsert = "INSERT INTO " + datasource.getName()
-                + ".versions (dataset_id,version,path) VALUES (?,?,?)";
-        insertStatement = connection.prepareStatement(versionsInsert);
+        String insert = "INSERT INTO " + datasource.getName() + ".versions (dataset_id,version,path) VALUES (?,?,?)";
+        insertStatement = connection.prepareStatement(insert);
+
+        String update = "UPDATE " + datasource.getName() + ".versions set final_version=true WHERE dataset_id=?";
+        updateStatement = connection.prepareStatement(update);
 
         String insertFinal = "INSERT INTO " + datasource.getName()
                 + ".versions (dataset_id,version,path,final_version) VALUES (?,?,?,true)";
@@ -55,16 +59,16 @@ public class Versions {
         int[] parentVersions = parseParentVersions(rs.getString(3));
         List versions = new ArrayList();
         for (int i = 0; i < parentVersions.length; i++) {
-            Version parent = fetchVersion(datasetId, parentVersions[i]);
+            Version parent = get(datasetId, parentVersions[i]);
             versions.add(parent);
         }
 
-        versions.add(extractVersion(rs));// final version
+        versions.add(extractVersion(rs));
 
         return (Version[]) versions.toArray(new Version[0]);
     }
 
-    private Version fetchVersion(int datasetId, int version) throws SQLException {
+    public Version get(int datasetId, int version) throws SQLException {
         ResultSet rs = queryVersion(datasetId, version);
         if (!rs.next())
             return null;
@@ -85,8 +89,9 @@ public class Versions {
         version.setDatasetId(rs.getInt(1));
         version.setVersion(rs.getInt(2));
         version.setPath(rs.getString("path"));
-        version.setAsFinal();
-
+        if(rs.getBoolean("final_version"))
+            version.markFinal();
+        
         return version;
     }
 
@@ -102,16 +107,16 @@ public class Versions {
         return versions.toArray();
     }
 
-    public Version insertVersion(Version base) throws SQLException {
+    public Version derive(Version base) throws SQLException {
         Version version = new Version();
         int newVersionNum = getNextVersionNumber(base.getDatasetId());
-        version.setVersion(newVersionNum);
 
+        version.setVersion(newVersionNum);
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
 
-        insertStatement.setInt(1, base.getDatasetId());
-        insertStatement.setInt(2, newVersionNum);
+        insertStatement.setInt(1, version.getDatasetId());
+        insertStatement.setInt(2, version.getVersion());
         insertStatement.setString(3, version.getPath());
         insertStatement.executeUpdate();
 
@@ -125,7 +130,7 @@ public class Versions {
 
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
-        version.setAsFinal();
+        version.markFinal();
 
         insertFinalStatement.setInt(1, base.getDatasetId());
         insertFinalStatement.setInt(2, newVersionNum);
@@ -133,6 +138,14 @@ public class Versions {
         insertFinalStatement.executeUpdate();
 
         return version;
+    }
+
+    public Version markFinal(Version derived) throws SQLException {
+        derived.markFinal();
+        updateStatement.setInt(1, derived.getDatasetId());
+        updateStatement.executeUpdate();
+
+        return derived;
     }
 
     private String path(Version base) {
@@ -152,6 +165,8 @@ public class Versions {
     public void close() throws SQLException {
         insertStatement.close();
         nextVersionStatement.close();
+        insertFinalStatement.close();
+        updateStatement.close();
     }
 
 }

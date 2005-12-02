@@ -32,23 +32,17 @@ public class VersionedRecordsWriter {
      * combination of 'delete' and 'add'. In effect, the ChangeSet is written as
      * a list of 'delete' and 'add' operations.
      */
-    public Version write(ChangeSet changeset) throws Exception {
+    public void update(ChangeSet changeset) throws Exception {
         convertUpdatedRecords(changeset);
-
-        Version version = versions.insertVersion(changeset.getBaseVersion());
-        writeData(changeset, version);
-
-        return version;
+        writeData(changeset, changeset.getVersion());
     }
 
-    public Version writeAsFinal(ChangeSet changeset) throws Exception {
-        convertUpdatedRecords(changeset);
-
-        // TODO: write as final
-        Version version = versions.insertFinalVersion(changeset.getBaseVersion());
-        writeData(changeset, version);
-
-        return version;
+    /**
+     * Inserts the ChangeSet and marks the 'version' as Final
+     */
+    public Version writeFinal(ChangeSet changeset) throws Exception {
+        update(changeset);
+        return versions.insertFinalVersion(changeset.getVersion());
     }
 
     public void close() throws SQLException {
@@ -62,7 +56,7 @@ public class VersionedRecordsWriter {
 
         for (int i = 0; i < updatedRecords.length; i++) {
             VersionedRecord deleteRec = updatedRecords[i];
-            deleteRec.setDeleteVersions(deleteRec.getDeleteVersions() + "," + changeset.getBaseVersion().getVersion());
+            deleteRec.setDeleteVersions(deleteRec.getDeleteVersions() + "," + changeset.getVersion().getVersion());
             changeset.addDeleted(deleteRec);
 
             VersionedRecord insertRec = updatedRecords[i];

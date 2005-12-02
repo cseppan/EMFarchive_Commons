@@ -14,7 +14,7 @@ public class Version {
         return finalVersion;
     }
 
-    public void setAsFinal() {
+    public void markFinal() {
         this.finalVersion = true;
     }
 

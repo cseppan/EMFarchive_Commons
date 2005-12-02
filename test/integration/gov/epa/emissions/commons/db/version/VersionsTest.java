@@ -63,6 +63,37 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(1, path[0].getDatasetId());
     }
 
+    public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
+        Version base = versions.get(1, 0);
+
+        Version derived = versions.derive(base);
+
+        assertNotNull("Should be able to derive from a Final version", derived);
+        assertEquals(1, derived.getDatasetId());
+        assertEquals(1, derived.getVersion());
+        assertEquals("0", derived.getPath());
+        assertFalse("Derived version should be non-final", derived.isFinalVersion());
+    }
+
+    public void testShouldBeAbleToMarkADerivedVersionAsFinal() throws Exception {
+        Version base = versions.get(1, 0);
+        Version derived = versions.derive(base);
+
+        Version finalVersion = versions.markFinal(derived);
+
+        assertNotNull("Should be able to mark a 'derived' as a Final version", derived);
+        assertEquals(derived.getDatasetId(), finalVersion.getDatasetId());
+        assertEquals(derived.getVersion(), finalVersion.getVersion());
+        assertEquals("0", finalVersion.getPath());
+        assertTrue("Derived version should be final on being marked 'final'", finalVersion.isFinalVersion());
+        
+        Version results = versions.get(1, derived.getVersion());
+        assertEquals(derived.getDatasetId(), results.getDatasetId());
+        assertEquals(derived.getVersion(), results.getVersion());
+        assertEquals(derived.getPath(), results.getPath());
+        assertTrue("Derived version should be marked final in db", results.isFinalVersion());
+    }
+
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
         DbColumn[] cols = createVersionsCols();
 
