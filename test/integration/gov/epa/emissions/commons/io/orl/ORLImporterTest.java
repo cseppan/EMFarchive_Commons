@@ -48,7 +48,7 @@ public class ORLImporterTest extends PersistenceTestCase {
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
-        
+
         dbUpdate.deleteAll(datasource.getName(), "versions");
     }
 
@@ -60,7 +60,12 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         int rows = countRecords();
         assertEquals(10, rows);
-        verifyVersionCols(dataset.getName(), rows);
+
+        assertVersionInfo(dataset.getName(), rows);
+    }
+
+    private void assertVersionInfo(String name, int rows) throws Exception {
+        verifyVersionCols(name, rows);
         verifyVersionZeroEntryInVersionsTable();
     }
 
@@ -89,7 +94,7 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         int rows = tableReader.count(datasource.getName(), table);
         assertEquals(6, rows);
-        verifyVersionCols(table, rows);
+        assertVersionInfo(table, rows);
     }
 
     private void verifyVersionCols(String table, int rows) throws Exception {
@@ -113,7 +118,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         ITable table = tableReader.table(datasource.getName(), "versions");
 
         assertEquals(1, table.getRowCount());
-        
+
         Object version = table.getValue(0, "version");
         assertEquals("0", version.toString());
 
@@ -160,7 +165,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertNull(table.getValue(2, "REFF"));
         assertNull(table.getValue(2, "RPEN"));
 
-        verifyVersionCols(dataset.getName(), rows);
+        assertVersionInfo(dataset.getName(), rows);
     }
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
@@ -206,7 +211,7 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         int rows = countRecords();
         assertEquals(16, rows);
-        verifyVersionCols(dataset.getName(), rows);
+        assertVersionInfo(dataset.getName(), rows);
     }
 
     // FIXME: the parser is not working properly
@@ -228,7 +233,7 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         int rows = countRecords();
         assertEquals(18, rows);
-        verifyVersionCols(dataset.getName(), rows);
+        assertVersionInfo(dataset.getName(), rows);
     }
 
     public void testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {

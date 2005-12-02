@@ -22,4 +22,8 @@ public class ORLPointExporter implements Exporter {
         delegate.export(file);
     }
 
+    public void export(int version, File file) throws ExporterException {
+        delegate.export(version, file);
+    }
+
 }

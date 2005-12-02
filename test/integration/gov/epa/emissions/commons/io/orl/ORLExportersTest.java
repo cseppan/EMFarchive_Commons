@@ -62,6 +62,23 @@ public class ORLExportersTest extends PersistenceTestCase {
         assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, , , , ", (String) data.get(1));
     }
 
+    public void testShouldExportOnRoadVersionZero() throws Exception {
+        Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
+        doImport(importer, "small-onroad.txt");
+
+        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
+        File file = doExport(exporter, 0);
+
+        // assert headers
+        assertComments(file);
+
+        // assert data
+        List data = readData(file);
+        assertEquals(18, data.size());
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, , , , ", (String) data.get(0));
+        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, , , , ", (String) data.get(1));
+    }
+
     public void testShouldExportNonRoad() throws Exception {
         Importer importer = new ORLNonRoadImporter(dataset, datasource, sqlDataTypes);
         doImport(importer, "small-nonroad.txt");
@@ -137,6 +154,15 @@ public class ORLExportersTest extends PersistenceTestCase {
         file.deleteOnExit();
 
         exporter.export(file);
+
+        return file;
+    }
+
+    private File doExport(Exporter exporter, int version) throws Exception {
+        File file = File.createTempFile("exported", ".orl");
+        file.deleteOnExit();
+
+        exporter.export(version, file);
 
         return file;
     }
