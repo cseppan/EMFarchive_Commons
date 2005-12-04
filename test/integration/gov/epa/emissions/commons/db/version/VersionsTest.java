@@ -75,6 +75,18 @@ public class VersionsTest extends PersistenceTestCase {
         assertFalse("Derived version should be non-final", derived.isFinalVersion());
     }
 
+    public void testShouldGetAllVersionsOfADataset() throws Exception {
+        Version base = versions.get(1, 0);
+        Version derived = versions.derive(base);
+
+        Version[] allVersions = versions.get(1);
+        
+        assertNotNull("Should get all versions of a Dataset", allVersions);
+        assertEquals(2, allVersions.length);
+        assertEquals(base.getVersion(), allVersions[0].getVersion());
+        assertEquals(derived.getVersion(), allVersions[1].getVersion());
+    }
+
     public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
         Version base = versions.get(1, 0);
 

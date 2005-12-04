@@ -5,6 +5,8 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -109,24 +111,20 @@ public class ORLImporterTest extends PersistenceTestCase {
             assertEquals("0", version.toString());
 
             Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
-            assertNull("Delete Versions should be undefined on initial load", deleteVersions);
+            assertEquals("", deleteVersions);
         }
     }
 
     private void verifyVersionZeroEntryInVersionsTable() throws Exception {
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        ITable table = tableReader.table(datasource.getName(), "versions");
-
-        assertEquals(1, table.getRowCount());
-
-        Object version = table.getValue(0, "version");
-        assertEquals("0", version.toString());
-
-        Object path = table.getValue(0, "path");
-        assertEquals("", path.toString());
-
-        Object finalVersion = table.getValue(0, "final_version");
-        assertFalse(((Boolean) finalVersion).booleanValue());
+        Versions versions = new Versions(datasource);
+        Version[] onRoadVersions = versions.get(dataset.getDatasetid());
+        assertEquals(1, onRoadVersions.length);
+        
+        Version versionZero = onRoadVersions[0];
+        assertEquals(0, versionZero.getVersion());
+        assertEquals(dataset.getDatasetid(), versionZero.getDatasetId());
+        assertEquals("", versionZero.getPath());
+        assertTrue("Version Zero should be zero upon import", versionZero.isFinalVersion());
     }
 
     // FIXME: the parser is not working properly

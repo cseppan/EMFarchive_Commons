@@ -24,6 +24,8 @@ public class Versions {
 
     private PreparedStatement updateStatement;
 
+    private PreparedStatement versionsStatement;
+
     public Versions(Datasource datasource) throws SQLException {
         this.datasource = datasource;
 
@@ -38,6 +40,11 @@ public class Versions {
         String selectVersionNumber = "SELECT version FROM " + datasource.getName()
                 + ".versions WHERE dataset_id=? ORDER BY version";
         nextVersionStatement = connection.prepareStatement(selectVersionNumber, ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+
+        String selectVersions = "SELECT * FROM " + datasource.getName()
+                + ".versions WHERE dataset_id=? ORDER BY version";
+        versionsStatement = connection.prepareStatement(selectVersions, ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
     }
 
@@ -101,6 +108,26 @@ public class Versions {
         return versions.toArray();
     }
 
+    public Version[] get(long datasetId) throws SQLException {
+        // FIXME: convert to long
+        versionsStatement.setInt(1, (int) datasetId);
+        ResultSet rs = versionsStatement.executeQuery();
+
+        List versions = new ArrayList();
+        while (rs.next()) {
+            Version version = new Version();
+            version.setDatasetId(rs.getInt("Dataset_Id"));
+            version.setVersion(rs.getInt("Version"));
+            version.setPath(rs.getString("Path"));
+            if (rs.getBoolean("final_version"))
+                version.markFinal();
+
+            versions.add(version);
+        }
+
+        return (Version[]) versions.toArray(new Version[0]);
+    }
+
     public Version derive(Version base) throws SQLException {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
@@ -146,6 +173,7 @@ public class Versions {
         insertStatement.close();
         nextVersionStatement.close();
         updateStatement.close();
+        versionsStatement.close();
     }
 
 }

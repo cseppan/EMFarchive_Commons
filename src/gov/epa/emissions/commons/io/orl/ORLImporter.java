@@ -79,7 +79,7 @@ public class ORLImporter {
 
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        String[] data = { dataset.getDatasetid() + "", "0", "", "false" };
+        String[] data = { dataset.getDatasetid() + "", "0", "", "true" };
         DbColumn[] cols = { new Column("dataset_id", sqlDataTypes.longType()),
                 new Column("version", sqlDataTypes.intType()), new Column("path", sqlDataTypes.text()),
                 new Column("final_version", sqlDataTypes.booleanType()) };
