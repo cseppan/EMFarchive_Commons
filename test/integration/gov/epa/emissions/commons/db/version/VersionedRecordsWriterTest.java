@@ -16,11 +16,13 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
-        writer = new VersionedRecordsWriter(datasource);
+
+        writer = new VersionedRecordsWriter(datasource, dataTable);
         versions = new Versions(datasource);
     }
 
     protected void tearDown() throws Exception {
+        versions.close();
         writer.close();
         super.tearDown();
     }
@@ -47,7 +49,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
-        VersionedRecord[] records = reader.fetch(baseVersion);
+        VersionedRecord[] records = reader.fetch(baseVersion, dataTable);
         assertEquals(5, records.length);
 
         changeset.addUpdated(records[0]);
@@ -67,7 +69,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
-        VersionedRecord[] records = reader.fetch(versionZero);
+        VersionedRecord[] records = reader.fetch(versionZero, dataTable);
         assertEquals(5, records.length);
 
         changeset.addUpdated(records[0]);
@@ -89,7 +91,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeSetForVersionOne.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
-        VersionedRecord[] versionZeroRecords = reader.fetch(versionZero);
+        VersionedRecord[] versionZeroRecords = reader.fetch(versionZero, dataTable);
 
         changeSetForVersionOne.addDeleted(versionZeroRecords[3]);// delete 4
         VersionedRecord record6 = new VersionedRecord();
@@ -101,6 +103,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeSetForVersionOne.addNew(record7);
 
         writer.update(changeSetForVersionOne);
+        versions.markFinal(versionOne);
 
         // version two (based on version zero): update 3, add (new) 8
         ChangeSet changeSetForVersionTwo = new ChangeSet();
@@ -117,7 +120,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         // Verify update of 3 -> delete 3, add (new)9. Verify 8 added.
         writer.update(changeSetForVersionTwo);
 
-        VersionedRecord[] versionTwoRecords = reader.fetch(versionTwo);
+        VersionedRecord[] versionTwoRecords = reader.fetch(versionTwo, dataTable);
         assertEquals(6, versionTwoRecords.length);
 
         int start = versionTwoRecords[0].getRecordId();
@@ -139,7 +142,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
-        VersionedRecord[] records = reader.fetch(versionZero);
+        VersionedRecord[] records = reader.fetch(versionZero, dataTable);
         assertTrue(records.length == 5);
 
         // update all records in the base version
@@ -173,7 +176,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         assertEquals(1, version.getVersion());
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
-        VersionedRecord[] records = reader.fetch(version);
+        VersionedRecord[] records = reader.fetch(version, dataTable);
         assertEquals(7, records.length);
         int init = records[0].getRecordId();
         for (int i = 1; i < records.length; i++) {
@@ -186,11 +189,11 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         Version versionZero = versions.get(1, 0);
         Version versionOne = versions.derive(versionZero);
-        
+
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
-        
-        VersionedRecord[] records = reader.fetch(versionZero);
+
+        VersionedRecord[] records = reader.fetch(versionZero, dataTable);
         changeset.addDeleted(records[1]);// delete record 2
 
         VersionedRecord record6 = new VersionedRecord();
@@ -198,12 +201,12 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         changeset.addNew(record6); // add record 6
 
         writer.update(changeset);
-        
+
         Version version = versions.get(1, versionOne.getVersion());
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
-        VersionedRecord[] versionOneRecords = reader.fetch(version);
+        VersionedRecord[] versionOneRecords = reader.fetch(version, dataTable);
         assertEquals(5, versionOneRecords.length);
         // deleted record 2
         int init = versionOneRecords[0].getRecordId();
@@ -218,20 +221,20 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         Version versionZero = versions.get(1, 0);
         Version versionOne = versions.derive(versionZero);
-        
+
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
 
-        VersionedRecord[] records = reader.fetch(versionZero);
+        VersionedRecord[] records = reader.fetch(versionZero, dataTable);
         changeset.addDeleted(records[1]);// record 2
 
         writer.update(changeset);
-        
+
         Version version = versions.get(1, versionOne.getVersion());
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
-        VersionedRecord[] versionOneRecords = reader.fetch(version);
+        VersionedRecord[] versionOneRecords = reader.fetch(version, dataTable);
         assertEquals(4, versionOneRecords.length);
         // deleted record 2
         int init = versionOneRecords[0].getRecordId();

@@ -369,7 +369,7 @@ public class BaseORLImporter extends FormattedImporter {
         }
 
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.deleteTable(tableName);
+        tableDefinition.dropTable(tableName);
         if (tableDefinition.tableExists(tableName)) {
             log.error("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");

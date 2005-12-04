@@ -6,4 +6,8 @@ public interface DbColumn {
 
     String sqlType();
 
+    String constraints();
+
+    boolean hasConstraints();
+
 }

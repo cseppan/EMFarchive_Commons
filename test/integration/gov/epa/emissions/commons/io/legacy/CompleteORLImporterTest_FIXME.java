@@ -11,7 +11,7 @@ public abstract class CompleteORLImporterTest_FIXME extends ORLImporterTestCase 
 
     protected void tearDown() throws Exception {
         Datasource ds = super.dbSetup.getDbServer().getEmissionsDatasource();
-        ds.tableDefinition().deleteTable("arinv_nonpoint_nti99_nc_summary");
+        ds.tableDefinition().dropTable("arinv_nonpoint_nti99_nc_summary");
     }
 
     protected void doImport(String filename, Dataset dataset) throws Exception {

@@ -31,7 +31,7 @@ public class MySqlTableDefinition implements TableDefinition {
         if (length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        deleteTable(table);
+        dropTable(table);
 
         String queryString = "CREATE TABLE " + qualified(table) + " (";
 
@@ -81,7 +81,7 @@ public class MySqlTableDefinition implements TableDefinition {
         }
     }
 
-    public void deleteTable(String table) throws SQLException {
+    public void dropTable(String table) throws SQLException {
         execute("DROP TABLE " + qualified(table));
     }
 

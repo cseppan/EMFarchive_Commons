@@ -15,20 +15,26 @@ public class Column implements DbColumn {
 
     private int width;
 
+    private String constraints;
+
     public Column(String name, String sqlType, ColumnFormatter formatter) {
-        this.name = name;
-        this.sqlType = sqlType;
-        this.formatter = formatter;
-        this.width = -999;
+        this(name, sqlType, -999, formatter);
     }
 
     public Column(String name, String sqlType, int width, ColumnFormatter formatter) {
-        this(name, sqlType, formatter);
+        this.name = name;
+        this.sqlType = sqlType;
+        this.formatter = formatter;
         this.width = width;
     }
 
     public Column(String name, String sqlType) {
         this(name, sqlType, new NullFormatter());
+    }
+
+    public Column(String name, String sqlType, String constraints) {
+        this(name, sqlType);
+        this.constraints = constraints;
     }
 
     public String format(ResultSet data) throws SQLException {
@@ -45,6 +51,14 @@ public class Column implements DbColumn {
 
     public int width() {
         return width;
+    }
+
+    public String constraints() {
+        return constraints;
+    }
+
+    public boolean hasConstraints() {
+        return constraints != null;
     }
 
 }

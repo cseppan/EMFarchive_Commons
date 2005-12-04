@@ -24,13 +24,13 @@ public class VersionedRecordsReader {
         versions.close();
     }
 
-    public VersionedRecord[] fetch(Version version) throws SQLException {
+    public VersionedRecord[] fetch(Version version, String table) throws SQLException {
         DataQuery query = datasource.query();
 
         String versions = fetchCommaSeparatedVersionSequence(version);
         String deleteClause = createDeleteClause(versions);
 
-        String queryString = "SELECT * FROM " + datasource.getName() + ".data WHERE dataset_id = "
+        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
                 + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
                 + "ORDER BY version, record_id";
         ResultSet rs = query.executeQuery(queryString);

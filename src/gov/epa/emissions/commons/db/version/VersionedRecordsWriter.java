@@ -12,14 +12,16 @@ public class VersionedRecordsWriter {
 
     private PreparedStatement dataDeleteStatement;
 
-    public VersionedRecordsWriter(Datasource datasource) throws SQLException {
+    public VersionedRecordsWriter(Datasource datasource, String table) throws SQLException {
         Connection connection = datasource.getConnection();
 
-        String dataInsert = "INSERT INTO " + datasource.getName()
-                + ".data (record_id,dataset_id,version) VALUES (default,?,?)";
+        String qualifiedTable = datasource.getName() + "." + table;
+
+        String dataInsert = "INSERT INTO " + qualifiedTable
+                + " (record_id,dataset_id,version) VALUES (default,?,?)";
         dataInsertStatement = connection.prepareStatement(dataInsert);
 
-        String dataDelete = "UPDATE " + datasource.getName() + ".data SET delete_versions=? WHERE record_id=?";
+        String dataDelete = "UPDATE " + qualifiedTable + " SET delete_versions=? WHERE record_id=?";
         dataDeleteStatement = connection.prepareStatement(dataDelete);
     }
 
@@ -30,7 +32,7 @@ public class VersionedRecordsWriter {
      */
     public void update(ChangeSet changeset) throws Exception {
         convertUpdatedRecords(changeset);
-        writeData(changeset, changeset.getVersion());
+        writeData(changeset);
     }
 
     public void close() throws SQLException {
@@ -51,9 +53,9 @@ public class VersionedRecordsWriter {
         }
     }
 
-    private void writeData(ChangeSet changeset, Version version) throws Exception {
-        insertData(changeset.getNew(), version);
-        deleteData(changeset.getDeleted(), version);
+    private void writeData(ChangeSet changeset) throws Exception {
+        insertData(changeset.getNew(), changeset.getVersion());
+        deleteData(changeset.getDeleted(), changeset.getVersion());
     }
 
     private void insertData(VersionedRecord[] records, Version version) throws Exception {

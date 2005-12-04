@@ -424,10 +424,10 @@ public class SummaryTableCreator {
         emissionsQuery.execute(query);
 
         // drop the temp tables, if needed
-        tableDefinition.deleteTable(qualifiedOrlTable);
+        tableDefinition.dropTable(qualifiedOrlTable);
         if (tempTableNames != null) {
             for (int i = 0; i < tempTableNames.length; i++) {
-                tableDefinition.deleteTable(tempTableNames[i]);
+                tableDefinition.dropTable(tempTableNames[i]);
             }
         }
 

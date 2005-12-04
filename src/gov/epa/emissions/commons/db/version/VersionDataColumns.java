@@ -13,12 +13,12 @@ public class VersionDataColumns {
     }
 
     public DbColumn[] get() {
-        DbColumn recordId = new Column("record_id", types.intType(), null);
-        DbColumn datasetId = new Column("dataset_id", types.intType(), null);
-        DbColumn version = new Column("version", types.intType(), null);
-        DbColumn deleteVersion = new Column("  delete_versions", types.stringType(255), null);
-        DbColumn param1 = new Column("param1", types.stringType(255), null);
-        DbColumn param2 = new Column("param2", types.stringType(255), null);
+        DbColumn recordId = new Column("record_id", types.intType());
+        DbColumn datasetId = new Column("dataset_id", types.intType());
+        DbColumn version = new Column("version", types.intType());
+        DbColumn deleteVersion = new Column("  delete_versions", types.stringType(255));
+        DbColumn param1 = new Column("param1", types.stringType(255));
+        DbColumn param2 = new Column("param2", types.stringType(255));
 
         return new DbColumn[] { recordId, datasetId, version, deleteVersion, param1, param2 };
     }

@@ -52,7 +52,7 @@ public class HelpImporter {
     public void dropTable(String table, Datasource datasource) throws ImporterException {
         try {
             TableDefinition def = datasource.tableDefinition();
-            def.deleteTable(table);
+            def.dropTable(table);
         } catch (SQLException e) {
             throw new ImporterException(
                     "could not drop table " + table + " after encountering error importing dataset", e);

@@ -141,7 +141,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         }
 
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.deleteTable(tableName);
+        tableDefinition.dropTable(tableName);
         if (tableDefinition.tableExists(tableName)) {
             throw new Exception("The table \"" + tableName
                     + "\" already exists. Please select 'overwrite tables if exist' or choose a new table name.");

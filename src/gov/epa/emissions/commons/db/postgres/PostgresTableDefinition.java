@@ -34,7 +34,7 @@ public class PostgresTableDefinition implements TableDefinition {
         if (length != colTypes.length)
             throw new SQLException("There are different numbers of column names and types");
 
-        deleteTable(table);
+        dropTable(table);
 
         String queryString = "CREATE TABLE " + qualified(table) + " (";
 
@@ -77,7 +77,7 @@ public class PostgresTableDefinition implements TableDefinition {
         execute(ddlStatement);
     }
 
-    public void deleteTable(String table) {
+    public void dropTable(String table) {
         try {
             execute("DROP TABLE " + qualified(table));
         } catch (SQLException e) {
@@ -123,7 +123,10 @@ public class PostgresTableDefinition implements TableDefinition {
         String queryString = "CREATE TABLE " + qualified(table) + " (";
 
         for (int i = 0; i < cols.length - 1; i++) {
-            queryString += clean(cols[i].name()) + " " + cols[i].sqlType() + ", ";
+            queryString += clean(cols[i].name()) + " " + cols[i].sqlType();
+            if (cols[i].hasConstraints())
+                queryString += " " + cols[i].constraints();
+            queryString += ", ";
         }// for i
         queryString += clean(cols[cols.length - 1].name()) + " " + cols[cols.length - 1].sqlType();
 
