@@ -11,7 +11,7 @@ import java.util.List;
 
 public class VersionedRecordsWriter {
 
-    private PreparedStatement dataDeleteStatement;
+    private PreparedStatement updateStatement;
 
     private String table;
 
@@ -25,9 +25,9 @@ public class VersionedRecordsWriter {
         this.tableFormat = tableFormat;
         this.table = table;
 
-        String dataDelete = "UPDATE " + datasource.getName() + "." + table + " SET delete_versions=? WHERE record_id=?";
+        String dataUpdate = "UPDATE " + datasource.getName() + "." + table + " SET delete_versions=? WHERE record_id=?";
         Connection connection = datasource.getConnection();
-        dataDeleteStatement = connection.prepareStatement(dataDelete);
+        updateStatement = connection.prepareStatement(dataUpdate);
     }
 
     /**
@@ -41,7 +41,7 @@ public class VersionedRecordsWriter {
     }
 
     public void close() throws SQLException {
-        dataDeleteStatement.close();
+        updateStatement.close();
     }
 
     private void convertUpdatedRecords(ChangeSet changeset) {
@@ -74,9 +74,9 @@ public class VersionedRecordsWriter {
 
     private void deleteData(VersionedRecord[] records, Version version) throws SQLException {
         for (int i = 0; i < records.length; i++) {
-            dataDeleteStatement.setString(1, version.getVersion() + "");
-            dataDeleteStatement.setInt(2, records[i].getRecordId());
-            dataDeleteStatement.execute();
+            updateStatement.setString(1, version.getVersion() + "");
+            updateStatement.setInt(2, records[i].getRecordId());
+            updateStatement.execute();
         }
     }
 

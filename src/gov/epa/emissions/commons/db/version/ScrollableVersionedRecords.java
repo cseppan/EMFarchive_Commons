@@ -101,4 +101,8 @@ public class ScrollableVersionedRecords {
         return (VersionedRecord[]) range.toArray(new VersionedRecord[0]);
     }
 
+    public VersionedRecord[] all() throws SQLException {
+        return range(0, total());
+    }
+
 }

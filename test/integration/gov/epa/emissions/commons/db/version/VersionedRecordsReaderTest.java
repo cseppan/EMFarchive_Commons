@@ -46,7 +46,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         versionZero.setDatasetId(1);
         versionZero.setVersion(0);
 
-        VersionedRecord[] records = reader.fetch(versionZero, dataTable);
+        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable);
 
         assertEquals(5, records.length);
 
@@ -68,7 +68,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         versionTwo.setDatasetId(1);
         versionTwo.setVersion(2);
 
-        VersionedRecord[] records = reader.fetch(versionTwo, dataTable);
+        VersionedRecord[] records = reader.fetchAll(versionTwo, dataTable);
 
         assertEquals(5, records.length);
 
@@ -112,7 +112,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(3);
 
-        VersionedRecord[] records = reader.fetch(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable);
 
         assertEquals(6, records.length);
 
@@ -129,7 +129,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedRecord[] records = reader.fetch(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable);
 
         assertEquals(10, records.length);
 
@@ -150,7 +150,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(4);
 
-        VersionedRecord[] records = reader.fetch(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable);
 
         assertEquals(8, records.length);
 
@@ -196,7 +196,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(3);
 
-        VersionedRecord[] records = reader.fetch(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable);
 
         assertEquals(6, records.length);
 
@@ -213,7 +213,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(5);
 
-        VersionedRecord[] records = reader.fetch(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable);
 
         assertEquals(10, records.length);
 
@@ -234,7 +234,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedRecord[] records = reader.fetch(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable);
 
         assertEquals(6, records.length);
 

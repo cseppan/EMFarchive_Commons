@@ -1,16 +1,10 @@
 package gov.epa.emissions.commons.db.version;
 
-import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
-//FIXME: modify it to be encapsulated within ScrollableVersionedRecords
 public class VersionedRecordsReader {
 
     private Datasource datasource;
@@ -26,19 +20,23 @@ public class VersionedRecordsReader {
         versions.close();
     }
 
-    public VersionedRecord[] fetch(Version version, String table) throws SQLException {
-        DataQuery query = datasource.query();
+    public VersionedRecord[] fetchAll(Version version, String table) throws SQLException {
+        return fetch(version, table).all();
+    }
 
+    public ScrollableVersionedRecords fetch(Version version, String table) throws SQLException {
         String versions = fetchCommaSeparatedVersionSequence(version);
         String deleteClause = createDeleteClause(versions);
 
         String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
                 + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
                 + "ORDER BY version, record_id";
-        ResultSet rs = query.executeQuery(queryString);
 
-        return doFetch(rs);
-    } // TODO: how does ScrollableRecords fit in here?
+        ScrollableVersionedRecords records = new ScrollableVersionedRecords(datasource, queryString);
+        records.execute();
+
+        return records;
+    }
 
     private String createDeleteClause(String versions) {
         StringBuffer buffer = new StringBuffer();
@@ -67,27 +65,6 @@ public class VersionedRecordsReader {
                 result.append(",");
         }
         return result.toString();
-    }
-
-    private VersionedRecord[] doFetch(ResultSet rs) throws SQLException {
-        ResultSetMetaData metadata = rs.getMetaData();
-        int columns = metadata.getColumnCount();
-
-        List records = new ArrayList();
-
-        while (rs.next()) {
-            VersionedRecord record = new VersionedRecord();
-            record.setRecordId(rs.getInt("record_id"));
-            record.setDatasetId(rs.getInt("dataset_id"));
-            record.setVersion(rs.getInt("version"));
-            record.setDeleteVersions(rs.getString("delete_versions"));
-
-            for (int i = 5; i <= columns; i++)
-                record.add(rs.getString(i));
-            records.add(record);
-        }
-
-        return (VersionedRecord[]) records.toArray(new VersionedRecord[0]);
     }
 
 }
