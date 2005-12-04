@@ -12,7 +12,7 @@ public interface TableFormatWithOptionalCols extends FileFormatWithOptionalCols,
 
     Column[] cols();
 
-    void fill(List data, long datasetId);
+    void fillDefaults(List data, long datasetId);
 
     String identify();
 

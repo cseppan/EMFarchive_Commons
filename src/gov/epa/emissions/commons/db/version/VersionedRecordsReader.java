@@ -4,11 +4,13 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+//FIXME: modify it to be encapsulated within ScrollableVersionedRecords
 public class VersionedRecordsReader {
 
     private Datasource datasource;
@@ -42,7 +44,7 @@ public class VersionedRecordsReader {
         StringBuffer buffer = new StringBuffer();
 
         StringTokenizer tokenizer = new StringTokenizer(versions, ",");
-        // delete_version NOT SIMILAR TO '(6|6,%|%,6,%|%,6)'
+        // e.g.: delete_version NOT SIMILAR TO '(6|6,%|%,6,%|%,6)'
         while (tokenizer.hasMoreTokens()) {
             String version = tokenizer.nextToken();
             String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
@@ -68,6 +70,9 @@ public class VersionedRecordsReader {
     }
 
     private VersionedRecord[] doFetch(ResultSet rs) throws SQLException {
+        ResultSetMetaData metadata = rs.getMetaData();
+        int columns = metadata.getColumnCount();
+
         List records = new ArrayList();
 
         while (rs.next()) {
@@ -77,6 +82,8 @@ public class VersionedRecordsReader {
             record.setVersion(rs.getInt("version"));
             record.setDeleteVersions(rs.getString("delete_versions"));
 
+            for (int i = 5; i <= columns; i++)
+                record.add(rs.getString(i));
             records.add(record);
         }
 

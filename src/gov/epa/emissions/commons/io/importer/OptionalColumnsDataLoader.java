@@ -62,7 +62,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
         List data = new ArrayList();
         data.addAll(record.tokens());
 
-        tableFormat.fill(data, dataset.getDatasetid());
+        tableFormat.fillDefaults(data, dataset.getDatasetid());
         
         massageNullMarkers(data);
 

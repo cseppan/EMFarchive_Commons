@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.VersionedRecord;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.LongFormatter;
@@ -44,36 +45,46 @@ public class VersionedTableFormatWithOptionalCols implements TableFormatWithOpti
     }
 
     private Column[] versionCols(SqlDataTypes types) {
-        Column recordId = new Column(key(), types.autoIncrement(), new NullFormatter());
-        Column datasetId = new Column("Dataset_Id", types.longType(), new LongFormatter());
-        Column version = new Column("Version", types.longType(), new NullFormatter());
-        Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter());
+        // TODO: these constraints are Postgres-specific. Generic constraints ?
+        Column recordId = new Column(key(), types.autoIncrement(), new NullFormatter(), "NOT NULL");
+        Column datasetId = new Column("Dataset_Id", types.longType(), new LongFormatter(), "NOT NULL");
+        Column version = new Column("Version", types.longType(), new NullFormatter(), "NULL DEFAULT 0");
+        Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter(), "DEFAULT ''::text");
 
         return new Column[] { recordId, datasetId, version, deleteVersions };
     }
 
-    // FIXME: rework this mess
-    public void fill(List data, long datasetId) {
-        addVersionData(data, datasetId);
+    public void fillDefaults(List data, long datasetId) {
+        addVersionData(data, datasetId, 0);
         addComments(data);
 
-        addDefaultValuesForOptionalCols(data);
+        addDefaultsForOptionalCols(data);
+    }
+
+    public List fill(VersionedRecord record, int version) {
+        List data = new ArrayList();
+
+        addVersionData(data, record.getDatasetId(), version);
+        data.addAll(record.tokens());
+        addComments(data);
+
+        return data;
     }
 
     private void addComments(List data) {
         String last = (String) data.get(data.size() - 1);
-        if (!last.startsWith("!"))
+        if (last != null && !last.startsWith("!"))
             data.add(data.size(), "");// empty comment
     }
 
-    private void addVersionData(List data, long datasetId) {
+    private void addVersionData(List data, long datasetId, int version) {
         data.add(0, "");// record id
         data.add(1, datasetId + "");
-        data.add(2, "0");// version
+        data.add(2, version + "");// version
         data.add(3, "");// delete versions
     }
 
-    private void addDefaultValuesForOptionalCols(List data) {
+    private void addDefaultsForOptionalCols(List data) {
         int optionalCount = optionalCount(data);
         int toAdd = toAdd(optionalCount);
         int insertAt = insertAt(optionalCount);

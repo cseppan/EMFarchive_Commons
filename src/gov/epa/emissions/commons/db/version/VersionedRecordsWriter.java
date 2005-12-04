@@ -1,27 +1,32 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public class VersionedRecordsWriter {
 
-    private PreparedStatement dataInsertStatement;
-
     private PreparedStatement dataDeleteStatement;
 
-    public VersionedRecordsWriter(Datasource datasource, String table) throws SQLException {
+    private String table;
+
+    private VersionedTableFormatWithOptionalCols tableFormat;
+
+    private Datasource datasource;
+
+    public VersionedRecordsWriter(Datasource datasource, String table, VersionedTableFormatWithOptionalCols tableFormat)
+            throws SQLException {
+        this.datasource = datasource;
+        this.tableFormat = tableFormat;
+        this.table = table;
+
+        String dataDelete = "UPDATE " + datasource.getName() + "." + table + " SET delete_versions=? WHERE record_id=?";
         Connection connection = datasource.getConnection();
-
-        String qualifiedTable = datasource.getName() + "." + table;
-
-        String dataInsert = "INSERT INTO " + qualifiedTable
-                + " (record_id,dataset_id,version) VALUES (default,?,?)";
-        dataInsertStatement = connection.prepareStatement(dataInsert);
-
-        String dataDelete = "UPDATE " + qualifiedTable + " SET delete_versions=? WHERE record_id=?";
         dataDeleteStatement = connection.prepareStatement(dataDelete);
     }
 
@@ -36,7 +41,6 @@ public class VersionedRecordsWriter {
     }
 
     public void close() throws SQLException {
-        dataInsertStatement.close();
         dataDeleteStatement.close();
     }
 
@@ -59,10 +63,12 @@ public class VersionedRecordsWriter {
     }
 
     private void insertData(VersionedRecord[] records, Version version) throws Exception {
+        DataModifier modifier = datasource.dataModifier();
         for (int i = 0; i < records.length; i++) {
-            dataInsertStatement.setInt(1, records[i].getDatasetId());
-            dataInsertStatement.setInt(2, version.getVersion());
-            dataInsertStatement.execute();
+            List data = tableFormat.fill(records[i], version.getVersion());
+
+            String[] toArray = (String[]) data.toArray(new String[0]);
+            modifier.insertRow(table, toArray, tableFormat.cols());
         }
     }
 

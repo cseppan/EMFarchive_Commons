@@ -166,7 +166,7 @@ public class DataModifier {
     }
 
     private boolean isTypeString(DbColumn column) {
-        return column.sqlType().startsWith("VARCHAR");
+        return column.sqlType().startsWith("VARCHAR") || column.sqlType().equalsIgnoreCase("TEXT");
     }
 
     private String escapeAndDelimitStringValue(String val) {

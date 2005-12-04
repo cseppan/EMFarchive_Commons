@@ -95,7 +95,7 @@ public class VersionedTableFormatWithOptionalColsTest extends MockObjectTestCase
         data.add("opt1");// 1 of 2 filled in
         long datasetId = 129;
 
-        format.fill(data, datasetId);
+        format.fillDefaults(data, datasetId);
 
         // 4 - version cols, 2 optionals, 1 Comments
         assertEquals((4 + 2 + 1), data.size());
@@ -127,7 +127,7 @@ public class VersionedTableFormatWithOptionalColsTest extends MockObjectTestCase
         data.add("!Comments");// comments
         long datasetId = 129;
 
-        format.fill(data, datasetId);
+        format.fillDefaults(data, datasetId);
 
         // 4 - version cols, 2 optionals, 1 Comments
         assertEquals((4 + 2 + 1), data.size());

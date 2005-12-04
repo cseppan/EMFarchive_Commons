@@ -5,6 +5,6 @@ import java.sql.SQLException;
 
 public interface ConnectionFactory {
 
-    public abstract Connection getConnection() throws SQLException;
+    Connection getConnection() throws SQLException;
 
 }

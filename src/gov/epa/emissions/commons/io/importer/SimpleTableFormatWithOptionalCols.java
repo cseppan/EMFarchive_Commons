@@ -46,7 +46,7 @@ public class SimpleTableFormatWithOptionalCols implements TableFormatWithOptiona
     }
 
     // FIXME: rework this mess
-    public void fill(List data, long datasetId) {
+    public void fillDefaults(List data, long datasetId) {
         if (data.size() >= cols().length)
             return;
 

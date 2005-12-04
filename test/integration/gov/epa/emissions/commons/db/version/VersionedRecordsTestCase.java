@@ -8,7 +8,9 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.version.VersionsColumns;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
 
 import java.sql.SQLException;
 
@@ -58,17 +60,31 @@ public class VersionedRecordsTestCase extends PersistenceTestCase {
 
     private void createTable(String table, Datasource datasource) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(table, tableFormat().cols());
+    }
 
-        DbColumn recordId = new Column("record_id", types.autoIncrement(), "NOT NULL");
-        DbColumn datasetId = new Column("dataset_id", types.intType(), "NOT NULL");
-        DbColumn version = new Column("version", types.intType(), "NULL DEFAULT 0");
-        DbColumn deleteVersions = new Column("delete_versions", types.text(), "DEFAULT ''::text");
-        DbColumn param1 = new Column("param1", types.text());
-        DbColumn param2 = new Column("param2", types.text());
+    protected VersionedTableFormatWithOptionalCols tableFormat() {
+        FileFormatWithOptionalCols fileFormat = new FileFormatWithOptionalCols() {
+            public Column[] optionalCols() {
+                return new Column[0];
+            }
 
-        DbColumn[] cols = new DbColumn[] { recordId, datasetId, version, deleteVersions, param1, param2 };
+            public Column[] minCols() {
+                Column p1 = new Column("p1", types.text());
+                Column p2 = new Column("p2", types.text());
 
-        tableDefinition.createTable(table, cols);
+                return new Column[] { p1, p2 };
+            }
+
+            public String identify() {
+                return "Record_Id";
+            }
+
+            public Column[] cols() {
+                return minCols();
+            }
+        };
+        return new VersionedTableFormatWithOptionalCols(fileFormat, types);
     }
 
 }

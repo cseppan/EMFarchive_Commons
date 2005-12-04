@@ -17,24 +17,28 @@ public class Column implements DbColumn {
 
     private String constraints;
 
-    public Column(String name, String sqlType, ColumnFormatter formatter) {
-        this(name, sqlType, -999, formatter);
-    }
-
-    public Column(String name, String sqlType, int width, ColumnFormatter formatter) {
+    public Column(String name, String sqlType, int width, ColumnFormatter formatter, String constraints) {
         this.name = name;
         this.sqlType = sqlType;
         this.formatter = formatter;
         this.width = width;
+        this.constraints = constraints;
+    }
+
+    public Column(String name, String sqlType, int width, ColumnFormatter formatter) {
+        this(name, sqlType, width, formatter, null);
+    }
+
+    public Column(String name, String sqlType, ColumnFormatter formatter) {
+        this(name, sqlType, -1, formatter);
     }
 
     public Column(String name, String sqlType) {
         this(name, sqlType, new NullFormatter());
     }
 
-    public Column(String name, String sqlType, String constraints) {
-        this(name, sqlType);
-        this.constraints = constraints;
+    public Column(String name, String sqlType, ColumnFormatter formatter, String constraints) {
+        this(name, sqlType, -1, formatter, constraints);
     }
 
     public String format(ResultSet data) throws SQLException {

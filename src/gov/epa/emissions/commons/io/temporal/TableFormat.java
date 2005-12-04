@@ -4,10 +4,10 @@ import gov.epa.emissions.commons.io.Column;
 
 public interface TableFormat {
 
-	public abstract String key();
+    String key();
 
-	public abstract String identify();
+    String identify();
 
-	public abstract Column[] cols();
+    Column[] cols();
 
 }

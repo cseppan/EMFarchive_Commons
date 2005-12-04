@@ -17,7 +17,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        writer = new VersionedRecordsWriter(datasource, dataTable);
+        writer = new VersionedRecordsWriter(datasource, dataTable, tableFormat());
         versions = new Versions(datasource);
     }
 
@@ -80,6 +80,15 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         Version version = versions.get(1, 1);
         assertEquals(1, version.getVersion());
         assertFalse("Should me marked as Final", version.isFinalVersion());
+
+        VersionedRecord[] versionOneRecords = reader.fetch(version, dataTable);
+        for (int i = 0; i < versionOneRecords.length; i++)
+            assertEquals(3, versionOneRecords[i].getTokens().length);
+
+        assertEquals("p1", versionOneRecords[3].token(0));
+        assertEquals("p2", versionOneRecords[3].token(1));
+        assertEquals("p21", versionOneRecords[4].token(0));
+        assertEquals("p22", versionOneRecords[4].token(1));
     }
 
     public void testShouldDeleteExistingRecordAndAddNewRecordOnUpdate() throws Exception {

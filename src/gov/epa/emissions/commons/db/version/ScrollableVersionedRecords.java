@@ -72,9 +72,8 @@ public class ScrollableVersionedRecords {
         record.setDatasetId(resultSet.getInt("dataset_id"));
         record.setVersion(resultSet.getInt("version"));
         record.setDeleteVersions(resultSet.getString("delete_versions"));
-                
+
         for (int i = 5; i <= columnCount(); i++)
-            
             record.add(resultSet.getString(i));
 
         return record;
@@ -90,7 +89,6 @@ public class ScrollableVersionedRecords {
 
     /**
      * @return returns a range of records inclusive of start and end
-     * @throws SQLException
      */
     public VersionedRecord[] range(int start, int end) throws SQLException {
         moveTo(start);// one position prior to start
