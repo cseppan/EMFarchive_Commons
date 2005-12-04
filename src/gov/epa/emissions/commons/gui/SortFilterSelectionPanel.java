@@ -19,10 +19,6 @@ import javax.swing.ListSelectionModel;
  * Description: This table can both sort and filter data based on criteria
  * entred by the user.
  * </p>
- * 
- * @author Parthee R Partheepan
- * @version $Id: SortFilterSelectionPanel.java,v 1.8 2005/06/15 14:02:49 parthee
- *          Exp $
  */
 public class SortFilterSelectionPanel extends SortFilterTablePanel {
     public final static String SELECT_COL_NAME = "Select";

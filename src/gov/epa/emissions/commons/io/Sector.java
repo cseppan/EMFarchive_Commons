@@ -1,13 +1,3 @@
-/*
- * Creation on Sep 27, 2005
- * Eclipse Project Name: EMF
- * File Name: Sector.java
- * Author: Conrad F. D'Cruz
- */
-/**
- * 
- */
-
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
@@ -15,12 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * This class holds the name and description of an EMF Sector
- * 
- * @author Conrad F. D'Cruz
- * 
- */
 public class Sector implements Serializable {
     private long id;
 
@@ -30,11 +14,7 @@ public class Sector implements Serializable {
 
     private List sectorCriteria;
 
-    /**
-     * 
-     */
     public Sector() {
-        super();
         this.sectorCriteria = new ArrayList();
     }
 
@@ -68,17 +48,10 @@ public class Sector implements Serializable {
         this.name = name;
     }
 
-    /**
-     * @return Returns the sectorCriteria.
-     */
     public SectorCriteria[] getSectorCriteria() {
         return (SectorCriteria[]) this.sectorCriteria.toArray(new SectorCriteria[0]);
     }
 
-    /**
-     * @param sectorCriteria
-     *            The sectorCriteria to set.
-     */
     public void setSectorCriteria(SectorCriteria[] sectorCriteria) {
         this.sectorCriteria.clear();
         this.sectorCriteria.addAll(Arrays.asList(sectorCriteria));

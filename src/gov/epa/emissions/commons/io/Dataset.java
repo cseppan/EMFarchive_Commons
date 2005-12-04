@@ -1,13 +1,3 @@
-/*
- * Creation on Aug 29, 2005
- * Eclipse Project Name: EMF
- * File Name: Dataset.java
- * Author: Conrad F. D'Cruz
- */
-/**
- * 
- */
-
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;

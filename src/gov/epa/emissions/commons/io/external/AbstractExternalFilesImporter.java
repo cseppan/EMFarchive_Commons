@@ -1,13 +1,3 @@
-/*
- * Creation on Oct 3, 2005
- * Eclipse Project Name: Commons
- * File Name: AbstractExternalFilesImporter.java
- * Author: Conrad F. D'Cruz
- */
-/**
- * 
- */
-
 package gov.epa.emissions.commons.io.external;
 
 import gov.epa.emissions.commons.io.Dataset;
@@ -25,10 +15,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * @author Conrad F. D'Cruz
- * 
- */
 public abstract class AbstractExternalFilesImporter implements Importer {
     private static Log log = LogFactory.getLog(AbstractExternalFilesImporter.class);
 
@@ -38,21 +24,12 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
     private DatasetType datasetType;
 
-    /**
-     * 
-     */
     public AbstractExternalFilesImporter(DatasetType datasetType) {
         this.datasetType = datasetType;
         importerName = "Abstract External Files Importer";
         log.debug("Default AbstractExternal Files importer created");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gov.epa.emissions.commons.io.importer.Importer#run(java.io.File[],
-     *      gov.epa.emissions.commons.io.Dataset, boolean)
-     */
     public void run(Dataset dataset) {
         log.debug("updating non-ORL dataset");
         updateExternalDataset(dataset, files);

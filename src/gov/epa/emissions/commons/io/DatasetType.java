@@ -27,7 +27,6 @@ public class DatasetType implements Serializable {
     private List keywordsList;
 
     public DatasetType() {
-        super();
         this.keywordsList = new ArrayList();
     }
 

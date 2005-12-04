@@ -1,15 +1,4 @@
-/*
- * Creation on Aug 29, 2005
- * Eclipse Project Name: EMF
- * File Name: EmfDataset.java
- * Author: Conrad F. D'Cruz
- */
-/**
- * 
- */
-
 package gov.epa.emissions.commons.io;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SimpleDataset implements Dataset {
-    // TODO: how are these unused variables accessed ?
-
     private long datasetid;
 
     private String name;
@@ -47,22 +34,22 @@ public class SimpleDataset implements Dataset {
     private Date endDateTime;
 
     private List datasources;
-    
+
     private List internalSources;
+
     private List externalSources;
-   
+
     private List tables;
 
     private DatasetType datasetType;
 
     /**
      * No argument constructor needed for hibernate bean mapping
-     * 
      */
     public SimpleDataset() {
         tables = new ArrayList();
-		internalSources = new ArrayList();
-		externalSources = new ArrayList();
+        internalSources = new ArrayList();
+        externalSources = new ArrayList();
 
     }
 
@@ -227,31 +214,30 @@ public class SimpleDataset implements Dataset {
         return datasetType;
     }
 
-	public InternalSource[] getInternalSources() {
-		return (InternalSource[])this.internalSources.toArray(new InternalSource[0]);
-	}
-
-	public void setInternalSources(InternalSource[] internalSources) {
-		this.internalSources.clear();
-		this.internalSources.addAll(Arrays.asList(internalSources));
-	}
-
-    public void addInternalSource(InternalSource source) {
-    	this.internalSources.add(source);
+    public InternalSource[] getInternalSources() {
+        return (InternalSource[]) this.internalSources.toArray(new InternalSource[0]);
     }
 
-	public ExternalSource[] getExternalSources() {
-		return (ExternalSource[])this.externalSources.toArray(new ExternalSource[0]);
-	}
+    public void setInternalSources(InternalSource[] internalSources) {
+        this.internalSources.clear();
+        this.internalSources.addAll(Arrays.asList(internalSources));
+    }
 
-	public void setExternalSources(ExternalSource[] externalSources) {
-		this.externalSources.clear();
-		this.externalSources.addAll(Arrays.asList(externalSources));
-	}
+    public void addInternalSource(InternalSource source) {
+        this.internalSources.add(source);
+    }
 
-	public void addExternalSource(ExternalSource source) {
-		this.externalSources.add(source);
-	}
-    
+    public ExternalSource[] getExternalSources() {
+        return (ExternalSource[]) this.externalSources.toArray(new ExternalSource[0]);
+    }
+
+    public void setExternalSources(ExternalSource[] externalSources) {
+        this.externalSources.clear();
+        this.externalSources.addAll(Arrays.asList(externalSources));
+    }
+
+    public void addExternalSource(ExternalSource source) {
+        this.externalSources.add(source);
+    }
 
 }

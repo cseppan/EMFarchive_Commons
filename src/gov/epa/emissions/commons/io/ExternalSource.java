@@ -1,67 +1,34 @@
-/*
- * Creation on Oct 13, 2005
- * Eclipse Project Name: EMF
- * File Name: InternalSource.java
- * Author: Conrad F. D'Cruz
- */
-/**
- * 
- */
-
 package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
 
-/**
- * @author Conrad F. D'Cruz
- *
- */
 public class ExternalSource implements Serializable {
 
-	private String datasource;
-	private long listindex;
-	
+    private String datasource;
 
-	/**
-	 * @return Returns the listindex.
-	 */
-	public long getListindex() {
-		return listindex;
-	}
+    private long listindex;
 
-	/**
-	 * @param listindex The listindex to set.
-	 */
-	public void setListindex(long listindex) {
-		this.listindex = listindex;
-	}
+    public long getListindex() {
+        return listindex;
+    }
 
-	/**
-	 * 
-	 */
-	public ExternalSource() {
-		super();
-	}
+    public void setListindex(long listindex) {
+        this.listindex = listindex;
+    }
 
-	/**
-	 * @param datasource
-	 */
-	public ExternalSource(String datasource) {
-		this.datasource = datasource;
-	}
+    public ExternalSource() {// dummy: needed by Hibernate
+    }
 
-	/**
-	 * @return Returns the datasource.
-	 */
-	public String getDatasource() {
-		return datasource;
-	}
+    public ExternalSource(String datasource) {
+        this.datasource = datasource;
+    }
 
-	/**
-	 * @param datasource The datasource to set.
-	 */
-	public void setDatasource(String datasource) {
-		this.datasource = datasource;
-	}
+    public String getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(String datasource) {
+        this.datasource = datasource;
+    }
 
 }

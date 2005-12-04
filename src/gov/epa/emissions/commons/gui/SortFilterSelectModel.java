@@ -14,11 +14,6 @@ import org.apache.commons.collections.primitives.IntList;
  * Uses the GOF's <pattern>Decorator</pattern> pattern. Delegates all behavior
  * (except selectable) to the underlying delegate model
  * </p>
- * 
- * @author Craig Mattocks
- * @version $Id: SortFilterSelectModel.java,v 1.6 2005/06/28 14:30:24 parthee
- *          Exp $
- * 
  */
 public class SortFilterSelectModel extends MultiRowHeaderTableModel {
 
