@@ -3,9 +3,6 @@ package gov.epa.emissions.commons.io.legacy;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.Importer;
-import gov.epa.emissions.commons.io.legacy.CompleteORLImporter;
-
-import java.io.File;
 
 public abstract class CompleteORLImporterTest_FIXME extends ORLImporterTestCase {
 
@@ -15,9 +12,10 @@ public abstract class CompleteORLImporterTest_FIXME extends ORLImporterTestCase 
     }
 
     protected void doImport(String filename, Dataset dataset) throws Exception {
-        Importer importer = new CompleteORLImporter(dbSetup.getDbServer(), true, super.types, dataset.getDatasetType());
-        importer.preCondition(new File("test/data/orl/nc"), filename);
-        importer.run(dataset);
+        
+        Importer importer = new CompleteORLImporter(dbSetup.getDbServer(), true, super.types, dataset.getDatasetType(), dataset);
+        //FIXME: 
+        importer.run();
     }
 
 }

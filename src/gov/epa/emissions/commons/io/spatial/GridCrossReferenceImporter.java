@@ -19,6 +19,9 @@ import java.io.File;
 import java.util.List;
 
 public class GridCrossReferenceImporter implements Importer {
+    
+    private Dataset dataset;
+    
     private Datasource datasource;
 
     private File file;
@@ -27,30 +30,25 @@ public class GridCrossReferenceImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public GridCrossReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public GridCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+        this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new GridCrossRefFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
+        setup(file);
     }
 
-    // TODO: verify if file exists
-    public void preCondition(File folder, String filePattern) {
-        File file = new File(folder, filePattern);
-        try {
-            delegate.validateFile(file);
-        } catch (ImporterException e) {
-            e.printStackTrace();
-        }
-        
+    private void setup(File file) throws ImporterException {
+        delegate.validateFile(file);
         this.file = file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
 
-        delegate.createTable(table,datasource,formatUnit.tableFormat(),dataset.getName());
+        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {

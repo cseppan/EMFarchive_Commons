@@ -7,16 +7,19 @@
 
 package gov.epa.emissions.commons.io.external;
 
+import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.ImporterException;
+
+import java.io.File;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import gov.epa.emissions.commons.io.DatasetType;
 
 public class MeteorologyFilesImporter  extends AbstractExternalFilesImporter {
     private static Log log = LogFactory.getLog(MeteorologyFilesImporter.class);
 
-	public MeteorologyFilesImporter(DatasetType datasetType) {
-		super(datasetType);
+	public MeteorologyFilesImporter(File folder, String filePattern, Dataset dataset) throws ImporterException {
+		super(folder, filePattern, dataset);
 		importerName = "Meteorology Files Importer";
 		log.debug("Default Meteorology Files importer created");
 	}

@@ -14,16 +14,17 @@ public class IDAActivityImporter implements Importer {
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDAActivityImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public IDAActivityImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new IDAImporter(dataset, datasource, sqlDataTypes);
         this.sqlDataTypes = sqlDataTypes;
+        setup(file);
     }
 
-    public void preCondition(File folder, String filePattern) throws Exception {
-        delegate.preImport(new IDAActivityFileFormat(sqlDataTypes));
+    private void setup(File file) throws ImporterException {
+        delegate.setup(file, new IDAActivityFileFormat(sqlDataTypes));
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         delegate.run();
     }
 }

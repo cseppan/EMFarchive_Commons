@@ -55,7 +55,7 @@ public class MySqlDbServer implements DbServer {
 
     private void createReferenceTables(File fieldDefsFile, File referenceFilesDir) throws SQLException {
         try {
-            ReferenceImporter importer = new ReferenceImporter(this, fieldDefsFile, referenceFilesDir, false, null);
+            ReferenceImporter importer = new ReferenceImporter(this, fieldDefsFile, referenceFilesDir, false, null, null);
             importer.run();
 
             ReferenceTablesCreator tables = new ReferenceTablesCreator(null, getSqlDataTypes());

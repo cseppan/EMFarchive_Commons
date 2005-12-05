@@ -23,13 +23,17 @@ import org.apache.commons.logging.LogFactory;
 public class PointTemporalReferenceImporter implements Importer {
     private static Log log = LogFactory.getLog(PointTemporalReferenceImporter.class);
 
+    private Dataset dataset;
+
     private Datasource datasource;
 
     private File file;
 
     private DatasetTypeUnitWithOptionalCols unit;
 
-    public PointTemporalReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public PointTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+        setup(file);
+        this.dataset = dataset;
         this.datasource = datasource;
         PointTemporalReferenceFileFormat fileFormat = new PointTemporalReferenceFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
@@ -38,26 +42,21 @@ public class PointTemporalReferenceImporter implements Importer {
 
     /**
      * Expects table 'POINT_SOURCE' to be available in Datasource
-     * @throws Exception 
      */
-    public void preCondition(File folder, String filePattern) throws Exception {
-        file = validateFile(folder, filePattern);
+    private void setup(File file) throws ImporterException {
+        file = validateFile(file);
     }
 
-    private File validateFile(File path, String fileName) throws ImporterException {
-        log.debug("check if file exists " + fileName);
-        File file = new File(path, fileName);
-        log.debug("File is: " + file.getAbsolutePath());
+    private File validateFile(File file) throws ImporterException {
+        log.debug("check if file exists " + file.getAbsolutePath());
         if (!file.exists() || !file.isFile()) {
             log.error("File " + file.getAbsolutePath() + " not found");
             throw new ImporterException("File not found");
         }
-        log.debug("check if file exists " + fileName);
-
         return file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         try {
             doImport(file, dataset, "POINT_SOURCE", (TableFormatWithOptionalCols) unit.tableFormat());
         } catch (Exception e) {

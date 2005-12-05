@@ -46,8 +46,9 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportOnRoad() throws Exception {
-        Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
-        doImport(importer, "small-onroad.txt");
+        File importFile = new File("test/data/orl/nc","small-onroad.txt");
+        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
 
         Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
@@ -63,9 +64,10 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportOnRoadVersionZero() throws Exception {
-        Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
-        doImport(importer, "small-onroad.txt");
-
+        File importFile = new File("test/data/orl/nc","small-onroad.txt");
+        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
+        
         Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter, 0);
 
@@ -80,9 +82,10 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportNonRoad() throws Exception {
-        Importer importer = new ORLNonRoadImporter(dataset, datasource, sqlDataTypes);
-        doImport(importer, "small-nonroad.txt");
-
+        File importFile = new File("test/data/orl/nc","small-nonroad.txt");
+        Importer importer = new ORLNonRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
+        
         Exporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
@@ -99,8 +102,9 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportNonPoint() throws Exception {
-        Importer importer = new ORLNonPointImporter(dataset, datasource, sqlDataTypes);
-        doImport(importer, "small-nonpoint.txt");
+        File importFile = new File("test/data/orl/nc","small-nonpoint.txt");
+        Importer importer = new ORLNonPointImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
 
         Exporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
@@ -122,9 +126,10 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportPoint() throws Exception {
-        Importer importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-        doImport(importer, "small-point.txt");
-
+        File importFile= new File("test/data/orl/nc","small-point.txt"); 
+        Importer importer = new ORLPointImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
+        
         Exporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
@@ -165,12 +170,6 @@ public class ORLExportersTest extends PersistenceTestCase {
         exporter.export(version, file);
 
         return file;
-    }
-
-    private void doImport(Importer importer, String filename) throws Exception {
-        File folder = new File("test/data/orl/nc");
-        importer.preCondition(folder, filename);
-        importer.run(dataset);
     }
 
     private List readData(File file) throws IOException {

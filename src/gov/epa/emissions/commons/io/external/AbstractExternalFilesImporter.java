@@ -22,15 +22,16 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
     private File[] files;
 
-    private DatasetType datasetType;
+    private Dataset dataset;
 
-    public AbstractExternalFilesImporter(DatasetType datasetType) {
-        this.datasetType = datasetType;
+    public AbstractExternalFilesImporter(File folder, String filePattern, Dataset dataset) throws ImporterException {
+        setup(folder,filePattern);
+        this.dataset = dataset;
         importerName = "Abstract External Files Importer";
         log.debug("Default AbstractExternal Files importer created");
     }
 
-    public void run(Dataset dataset) {
+    public void run() {
         log.debug("updating non-ORL dataset");
         updateExternalDataset(dataset, files);
         log.debug("completed updating non-ORL dataset");
@@ -62,9 +63,9 @@ public abstract class AbstractExternalFilesImporter implements Importer {
         return file;
     }
 
-    public void preCondition(File path, String fileName) throws ImporterException {
+    private void setup(File path, String fileName) throws ImporterException {
+        DatasetType datasetType = dataset.getDatasetType();
         files = null;
-
         int minFiles = datasetType.getMinfiles();
         log.debug("Min files for " + datasetType.getName() + ": " + minFiles);
         files = extractFileNames(path, fileName);

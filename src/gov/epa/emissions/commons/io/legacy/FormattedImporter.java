@@ -62,7 +62,7 @@ public abstract class FormattedImporter implements Importer {
         }
     }
     
-	public void preCondition(File path, String fileName) throws ImporterException {
+	public void setup(File path, String fileName) throws ImporterException {
         files = new File[1];
         log.debug("" + files.length);
         log.debug("$$$ Path: " + path.getAbsolutePath());

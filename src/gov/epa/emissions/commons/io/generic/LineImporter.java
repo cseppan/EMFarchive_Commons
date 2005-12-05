@@ -16,33 +16,34 @@ import java.io.File;
 
 public class LineImporter implements Importer {
 
+    private Dataset dataset;
+    
     private Datasource datasource;
 
     private File file;
 
     private FormatUnit formatUnit;
-    
+
     private HelpImporter delegate;
 
-    public LineImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+
+
+    public LineImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+        this.delegate = new HelpImporter();
+        setup(file);
+        this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
         TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        this.delegate = new HelpImporter();
     }
 
-    public void preCondition(File folder, String filePattern) {
-        File file = new File(folder, filePattern);
-        try{
-            delegate.validateFile(file);
-        }catch (ImporterException e){
-            e.printStackTrace();
-        }
+    private void setup(File file) throws ImporterException {
+        delegate.validateFile(file);
         this.file = file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
 

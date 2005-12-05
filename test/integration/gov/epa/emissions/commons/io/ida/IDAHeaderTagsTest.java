@@ -4,7 +4,6 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
@@ -36,11 +35,9 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     }
 
     public void testShouldIdentifyAllRequiredTags() throws Exception {
-        String source = "test/data/ida/small-area.txt";
-        InternalSource internalSource = internalSource(source);
-        dataset.setInternalSources(new InternalSource[] { internalSource });
+        File file = new File("test/data/ida/small-area.txt");
         IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
-        importer.preImport(new IDANonPointFileFormat(sqlDataTypes));
+        importer.setup(file, new IDANonPointFileFormat(sqlDataTypes));
         importer.run();
         dropTable();
     }
@@ -48,29 +45,16 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
 
 
     public void testShouldIdentifyNoIDATag() throws Exception {
-        String source = "test/data/ida/noIDATags.txt";
-        InternalSource internalSource = internalSource(source);
-        dataset.setInternalSources(new InternalSource[] { internalSource });
-
-        IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
+        File file = new File("test/data/ida/noIDATags.txt");
         try {
-            importer.preImport(new IDANonPointFileFormat(sqlDataTypes));
+            IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
+            importer.setup(file, new IDANonPointFileFormat(sqlDataTypes));
             importer.run();
             assertTrue(false);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             assertTrue(e.getMessage().startsWith("The tag - 'IDA' is mandatory"));
         }
-    }
-
-    private InternalSource internalSource(String source) {
-        File file = new File(source);
-
-        InternalSource internalSource = new InternalSource();
-        internalSource.setSource(file.getAbsolutePath());
-        internalSource.setTable(dataset.getName());
-        internalSource.setSourceSize(file.length());
-        return internalSource;
     }
 
 }

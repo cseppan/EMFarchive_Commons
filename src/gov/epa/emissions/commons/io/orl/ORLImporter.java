@@ -48,8 +48,7 @@ public class ORLImporter {
         this.sqlDataTypes = sqlDataTypes;
     }
 
-    public void preCondition(File folder, String filePattern) throws Exception {
-        File file = new File(folder, filePattern);
+    public void setup(File file) throws ImporterException {
         validateORLFile(file);
         this.file = file;
     }
@@ -57,7 +56,6 @@ public class ORLImporter {
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
-
         try {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(),
                     (TableFormatWithOptionalCols) formatUnit.tableFormat());

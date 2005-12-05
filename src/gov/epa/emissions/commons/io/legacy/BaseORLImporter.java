@@ -86,8 +86,9 @@ public class BaseORLImporter extends FormattedImporter {
     protected ORLTableTypes tableTypes;
 
     public BaseORLImporter(DbServer dbServer, boolean annualNotAverageDaily, ORLDatasetTypesFactory typesFactory,
-            DatasetType datasetType) {
+            DatasetType datasetType, Dataset dataset) {
         super(dbServer, datasetType);
+        this.dataset = dataset;
         this.tableTypes = new ORLTableTypes(typesFactory);
         this.annualNotAverageDaily = annualNotAverageDaily;
 
@@ -97,16 +98,10 @@ public class BaseORLImporter extends FormattedImporter {
     /**
      * Take a array of Files and put them database, overwriting existing
      * corresponding tables specified in dataset based on overwrite flag.
-     * 
-     * @param dataset -
-     *            Dataset specifying needed properties such as datasetType and
-     *            table name (table name look-up is based on file name)
      * @param files -
      *            an array of Files which are checked prior to import
      */
-    public void run(Dataset dataset) throws Exception {
-        this.dataset = dataset;
-
+    public void run() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         if (files.length != 1) {
             throw new ImporterException("Can only import one valid orl file at a time: " + files);

@@ -12,29 +12,20 @@ import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCol
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ORLNonPointImporter implements Importer {
-    private static Log log = LogFactory.getLog(ORLNonPointImporter.class);
 
     private ORLImporter delegate;
 
-    public ORLNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public ORLNonPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new ORLNonPointFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
         DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableFormat, fileFormat);
 
         delegate = new ORLImporter(dataset, formatUnit, datasource, sqlDataTypes);
+        delegate.setup(file);
     }
 
-    public void preCondition(File folder, String filePattern) throws Exception {
-        delegate.preCondition(folder, filePattern);
-    }
-
-    public void run(Dataset dataset) throws ImporterException {
-        log.debug("Dataset Name = " + dataset.getName());
+    public void run() throws ImporterException {
         delegate.run();
-        log.debug("-- END --");
     }
 }

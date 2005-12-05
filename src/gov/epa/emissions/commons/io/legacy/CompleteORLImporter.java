@@ -11,12 +11,12 @@ import gov.epa.emissions.commons.io.Table;
 public class CompleteORLImporter extends BaseORLImporter {
 
     public CompleteORLImporter(DbServer dbServer, boolean annualNotAverageDaily, ORLDatasetTypesFactory typesFactory,
-            DatasetType datasetType) {
-        super(dbServer, annualNotAverageDaily, typesFactory, datasetType);
+            DatasetType datasetType, Dataset dataset) {
+        super(dbServer, annualNotAverageDaily, typesFactory, datasetType, dataset);
     }
 
-    public void run(Dataset dataset) throws Exception {
-        super.run(dataset);
+    public void run() throws Exception {
+        super.run();
         createSummaryTable(dataset);
     }
 

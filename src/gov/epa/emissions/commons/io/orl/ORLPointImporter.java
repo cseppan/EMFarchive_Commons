@@ -16,20 +16,15 @@ public class ORLPointImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-
+    public ORLPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
         DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableFormat, fileFormat);
-
         delegate = new ORLImporter(dataset, formatUnit, datasource, sqlDataTypes);
+        delegate.setup(file);
     }
 
-    public void preCondition(File folder, String filePattern) throws Exception {
-        delegate.preCondition(folder, filePattern);
-    }
-
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         delegate.run();
     }
 

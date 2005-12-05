@@ -39,9 +39,9 @@ public class SpeciationImporterTest extends PersistenceTestCase {
     }
 
     public void testImportChemicalSpeciationData() throws Exception {
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(datasource, sqlDataTypes, "Chem Spec");
-        importer.preCondition(new File("test/data/speciation"), "gspro-speciation.txt");
-        importer.run(dataset);
+        File file = new File("test/data/speciation","gspro-speciation.txt");
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(file, dataset, datasource, sqlDataTypes, "Chem Spec");
+        importer.run();
 
         assertEquals(88, countRecords());
     }

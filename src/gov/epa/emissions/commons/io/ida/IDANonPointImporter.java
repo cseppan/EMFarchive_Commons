@@ -14,16 +14,17 @@ public class IDANonPointImporter implements Importer {
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDANonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public IDANonPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         this.sqlDataTypes = sqlDataTypes;
         delegate = new IDAImporter(dataset, datasource, sqlDataTypes);
+        setup(file);
     }
 
-    public void preCondition(File folder, String filePattern) throws ImporterException {
-        delegate.preImport(new IDANonPointFileFormat(sqlDataTypes));
+    private void setup(File file) throws ImporterException {
+        delegate.setup(file, new IDANonPointFileFormat(sqlDataTypes));
     }
 
-    public void run(Dataset dataset2) throws ImporterException {
+    public void run() throws ImporterException {
         delegate.run();
     }
 }

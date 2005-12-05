@@ -37,9 +37,9 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
     }
 
     public void testImportGridCrossReferenceData() throws Exception {
-        GridCrossReferenceImporter importer = new GridCrossReferenceImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/spatial"), "amgref.txt");
-        importer.run(dataset);
+        File file = new File("test/data/spatial", "amgref.txt");
+        GridCrossReferenceImporter importer = new GridCrossReferenceImporter(file, dataset, datasource, sqlDataTypes);
+        importer.run();
 
         assertEquals(22, countRecords());
     }

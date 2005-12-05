@@ -19,6 +19,9 @@ import java.io.File;
 import java.util.List;
 
 public class SpeciationProfileImporter implements Importer {
+
+    private Dataset dataset;
+
     private Datasource datasource;
 
     private File file;
@@ -27,7 +30,10 @@ public class SpeciationProfileImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public SpeciationProfileImporter(Datasource datasource, SqlDataTypes sqlDataTypes, String identifier) {
+    public SpeciationProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+            String identifier) throws ImporterException {
+        setup(file);
+        this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new ProfileFileFormat(identifier, sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
@@ -35,22 +41,15 @@ public class SpeciationProfileImporter implements Importer {
         this.delegate = new HelpImporter();
     }
 
-    // TODO: verify if file exists
-    public void preCondition(File folder, String filePattern) {
-        File file = new File(folder, filePattern);
-        try {
-            delegate.validateFile(file);
-        } catch (ImporterException e) {
-            e.printStackTrace();
-        }
-        
+    private void setup(File file) throws ImporterException {
+        delegate.validateFile(file);
         this.file = file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-
-        delegate.createTable(table,datasource,formatUnit.tableFormat(),dataset.getName());
+        //FIXME: Remove this
+        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -73,5 +72,5 @@ public class SpeciationProfileImporter implements Importer {
         delegate.setInternalSource(file, table, fileFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
-  
+
 }

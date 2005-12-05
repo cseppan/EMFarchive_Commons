@@ -37,9 +37,9 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     }
 
     public void testExportChemicalSpeciationData() throws Exception {
-        InventoryTableImporter importer = new InventoryTableImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/other"), "invtable.txt");
-        importer.run(dataset);
+        File importFile = new File("test/data/other", "invtable.txt");
+        InventoryTableImporter importer = new InventoryTableImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
                 datasource, new InventoryTableFileFormat(sqlDataTypes, 1));

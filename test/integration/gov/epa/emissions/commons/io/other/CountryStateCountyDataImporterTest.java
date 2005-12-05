@@ -39,9 +39,9 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
     }
 
     public void testCountryStateCountyData() throws Exception {
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/other"), "costcy.txt");
-        importer.run(dataset);
+        File file = new File("test/data/other", "costcy.txt");
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(file, dataset, datasource, sqlDataTypes);
+        importer.run();
     }
     
     private int countRecords() {

@@ -42,12 +42,10 @@ public class PointTemporalReferenceImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportAFileWithVariableCols() throws Exception {
-        File folder = new File("test/data/temporal-crossreference");
-        String file = "point-source-VARIABLE-COLS.txt";
-
-        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(datasource, sqlDataTypes);
-        importer.preCondition(folder, file);
-        importer.run(dataset);
+        File file = new File("test/data/temporal-crossreference", "point-source-VARIABLE-COLS.txt");
+        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(file, dataset, datasource,
+                sqlDataTypes);
+        importer.run();
 
         assertEquals(20, countRecords("POINT_SOURCE"));
     }
@@ -58,10 +56,10 @@ public class PointTemporalReferenceImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
-        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(datasource, sqlDataTypes);
-
-        importer.preCondition(new File("test/data/temporal-crossreference"), "point-source.txt");
-        importer.run(dataset);
+        File file = new File("test/data/temporal-crossreference", "point-source.txt");
+        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(file, dataset, datasource,
+                sqlDataTypes);
+        importer.run();
 
         // assert
         String expected = "# comment1\n#comment 2  \n#comment 3\n";

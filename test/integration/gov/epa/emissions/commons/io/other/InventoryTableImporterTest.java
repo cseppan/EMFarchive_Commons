@@ -37,9 +37,9 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
     }
 
     public void testInventoryTableData() throws Exception {
-        InventoryTableImporter importer = new InventoryTableImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/other"), "invtable.txt");
-        importer.run(dataset);
+        File file = new File("test/data/other", "invtable.txt");
+        InventoryTableImporter importer = new InventoryTableImporter(file, dataset, datasource, sqlDataTypes);
+        importer.run();
 
         assertEquals(164, countRecords());
     }

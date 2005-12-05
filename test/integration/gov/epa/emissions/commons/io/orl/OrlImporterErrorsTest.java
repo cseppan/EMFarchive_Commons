@@ -33,11 +33,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingTokensInData() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
         try {
-            importer.preCondition(new File("test/data/orl/nc"), "BAD-point.txt");
-            importer.run(dataset);
+            File file = new File("test/data/orl/nc", "BAD-point.txt");
+            ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+            importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertFalse("should have encountered an error(missing cols) on record 5, and dropped the table",
@@ -49,11 +48,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingORLTagInHeader() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
         try {
-            importer.preCondition(new File("test/data/orl/nc"), "MISSING-ORL-TAG-IN-HEADER-point.txt");
-            importer.run(dataset);
+            File file = new File("test/data/orl/nc", "MISSING-ORL-TAG-IN-HEADER-point.txt");
+            ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+            importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertFalse("should have encountered an error due to missing 'ORL' tag, and dropped the table", tableReader
@@ -65,11 +63,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingCountryTagInHeader() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
         try {
-            importer.preCondition(new File("test/data/orl/nc"), "MISSING-COUNTRY-TAG-IN-HEADER-point.txt");            
-            importer.run(dataset);
+            File file = new File("test/data/orl/nc", "MISSING-COUNTRY-TAG-IN-HEADER-point.txt");
+            ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+            importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertFalse("should have encountered an error due to missing 'COUNTRY' tag, and dropped the table",
@@ -81,11 +78,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
     }
 
     public void testShouldDropTableOnEncounteringEmptyCountryTagInHeader() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
         try {
-            importer.preCondition(new File("test/data/orl/nc"), "MISSING-COUNTRY-TAG-IN-HEADER-point.txt");            
-            importer.run(dataset);
+            File file = new File("test/data/orl/nc", "MISSING-COUNTRY-TAG-IN-HEADER-point.txt"); 
+            ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+            importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertFalse("should have encountered an error due to empty 'COUNTRY' tag, and dropped the table",
@@ -97,11 +93,11 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
     }
 
     public void testShouldDropTableOnEncounteringMissingYearTagInHeader() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
         try {
-            importer.preCondition(new File("test/data/orl/nc"), "MISSING-YEAR-TAG-IN-HEADER-point.txt");            
-            importer.run(dataset);
+            File file = new File("test/data/orl/nc","MISSING-YEAR-TAG-IN-HEADER-point.txt");
+            ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+                        
+            importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertFalse("should have encountered an error due to missing 'YEAR' tag, and dropped the table",
@@ -113,11 +109,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
     }
 
     public void testShouldDropTableOnEncounteringEmptyYearTagInHeader() throws Exception {
-        ORLPointImporter importer = new ORLPointImporter(dataset, datasource, sqlDataTypes);
-
         try {
-            importer.preCondition(new File("test/data/orl/nc"), "MISSING-YEAR-TAG-IN-HEADER-point.txt");            
-            importer.run(dataset);
+            File file = new File("test/data/orl/nc", "MISSING-YEAR-TAG-IN-HEADER-point.txt"); 
+            ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+            importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = new TableReader(datasource.getConnection());
             assertFalse("should have encountered an error due to empty 'YEAR' tag, and dropped the table", tableReader

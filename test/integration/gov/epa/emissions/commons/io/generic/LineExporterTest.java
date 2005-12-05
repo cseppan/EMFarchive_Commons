@@ -40,9 +40,9 @@ public class LineExporterTest extends PersistenceTestCase {
     
 
     public void testExportSmallLineFile() throws Exception {
-        LineImporter importer = new LineImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/orl/nc"), "small-point.txt");
-        importer.run(dataset);
+        File importFile = new File("test/data/orl/nc","small-point.txt");
+        LineImporter importer = new LineImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
         
         LineExporter exporter = new LineExporter (dataset, datasource, new LineFileFormat(sqlDataTypes));
         File file = new File("test/data/orl/nc","lineexporter.txt");

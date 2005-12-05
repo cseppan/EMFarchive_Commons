@@ -47,9 +47,9 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
     }
 
     private void doImport() throws Exception {
-        Importer importer = new ORLOnRoadImporter(dataset, datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/orl/nc"), "small-onroad.txt");
-        importer.run(dataset);
+        File file = new File("test/data/orl/nc", "small-onroad.txt");
+        Importer importer = new ORLOnRoadImporter(file, dataset, datasource, sqlDataTypes);
+        importer.run();
     }
     
     protected void tearDown() throws Exception {

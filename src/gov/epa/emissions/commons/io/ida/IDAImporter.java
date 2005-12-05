@@ -41,10 +41,9 @@ public class IDAImporter {
         this.delegate = new HelpImporter();
     }
 
-    public void preImport(IDAFileFormat fileFormat) throws ImporterException {
-        InternalSource internalSource = dataset.getInternalSources()[0];
-        file = new File(internalSource.getSource());
+    public void setup(File file, IDAFileFormat fileFormat) throws ImporterException {
         delegate.validateFile(file);
+        this.file = file;
         IDAHeaderReader headerReader = new IDAHeaderReader(file);
         headerReader.read();
         headerReader.close();
@@ -53,9 +52,18 @@ public class IDAImporter {
         FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
-        unit.setInternalSource(internalSource);
+        unit.setInternalSource(internalSource(file,dataset.getName()));
 
         validateIDAFile(headerReader.comments());
+    }
+
+    private InternalSource internalSource(File file, String datasetName) {
+        InternalSource internalSource = new InternalSource();
+        internalSource.setSource(file.getAbsolutePath());
+        internalSource.setTable(delegate.tableName(datasetName));
+        internalSource.setSourceSize(file.length());
+        
+        return internalSource;
     }
 
     public void run() throws ImporterException {

@@ -36,8 +36,9 @@ public class ReferenceImporter extends FixedFormatImporter {
     private static final String REF_DIR_NAME = "refFiles";
 
     public ReferenceImporter(DbServer dbServer, File fieldDefsFileName, File referenceFilesDir,
-            boolean useTransactions, DatasetType datasetType) {
+            boolean useTransactions, DatasetType datasetType, Dataset dataset) {
         super(dbServer, datasetType);
+        this.dataset = dataset;
         this.tableTypes = new ReferenceTableTypes();
         this.fieldDefsFile = fieldDefsFileName;
         this.referenceFilesDir = referenceFilesDir;
@@ -225,7 +226,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         dataset.addTable(ReferenceTable.REF_TIME_ZONES);
         dataset.addTable(ReferenceTable.REF_TRIBAL_CODES);
 
-        run(dataset);
+        run();
     }
 
 }

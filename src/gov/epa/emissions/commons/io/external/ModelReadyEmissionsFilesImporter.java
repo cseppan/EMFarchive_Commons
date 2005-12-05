@@ -7,7 +7,10 @@
 
 package gov.epa.emissions.commons.io.external;
 
-import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.importer.ImporterException;
+
+import java.io.File;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,8 +18,8 @@ import org.apache.commons.logging.LogFactory;
 public class ModelReadyEmissionsFilesImporter  extends AbstractExternalFilesImporter {
     private static Log log = LogFactory.getLog(ModelReadyEmissionsFilesImporter.class);
 
-	public ModelReadyEmissionsFilesImporter(DatasetType datasetType) {
-		super(datasetType);
+	public ModelReadyEmissionsFilesImporter(File folder, String filePattern, Dataset dataset) throws ImporterException {
+		super(folder, filePattern, dataset);
 		importerName = "Model Ready Emissions Files Importer";
 		log.debug("Default ModelReadyEmissions Files importer created");
 	}

@@ -26,28 +26,29 @@ public class InventoryTableImporter implements Importer {
     private File file;
 
     private FormatUnit formatUnit;
-    
+
     private HelpImporter delegate;
 
-    public InventoryTableImporter(Datasource datasource, SqlDataTypes sqlDataTypes) {
+    private Dataset dataset;
+
+    public InventoryTableImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
+        this.delegate = new HelpImporter();
+        setup(file);
+        this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new InventoryTableFileFormat(sqlDataTypes, 1);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        this.delegate = new HelpImporter();
+
     }
 
-    public void preCondition(File folder, String filePattern) {
-        File file = new File(folder, filePattern);
-        try{
-            delegate.validateFile(file);
-        }catch (ImporterException e){
-            e.printStackTrace();
-        }
+    private void setup(File file) throws ImporterException {
+        delegate.validateFile(file);
         this.file = file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
 
@@ -64,8 +65,9 @@ public class InventoryTableImporter implements Importer {
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
-        //FIXME: Due to irregularity in inventory data names (1st column in input data file),
-        //some extra chars may be extracted into 2nd column (CAS number).
+        // FIXME: Due to irregularity in inventory data names (1st column in
+        // input data file),
+        // some extra chars may be extracted into 2nd column (CAS number).
         Reader fileReader = new DataReader(reader, new InventoryTableParser(formatUnit.fileFormat()));
 
         loader.load(fileReader, dataset, table);

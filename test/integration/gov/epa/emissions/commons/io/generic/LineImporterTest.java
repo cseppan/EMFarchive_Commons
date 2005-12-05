@@ -38,9 +38,9 @@ public class LineImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallLineFile() throws Exception {
-        LineImporter importer = new LineImporter(datasource, sqlDataTypes);
-        importer.preCondition(new File("test/data/orl/nc"), "small-point.txt");
-        importer.run(dataset);
+        File file = new File("test/data/orl/nc","small-point.txt");
+        LineImporter importer = new LineImporter(file, dataset, datasource, sqlDataTypes);
+        importer.run();
 
         assertEquals(22, countRecords());
     }

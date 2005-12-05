@@ -19,35 +19,36 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class CountryStateCountyDataImporter implements Importer {
+
+    private Dataset dataset;
+
     private SqlDataTypes sqlType;
 
     private Datasource datasource;
-    
+
     private HelpImporter delegate;
-    
+
     private File file;
 
     private CountryStateCountyFileFormatFactory metadataFactory;
 
-    public CountryStateCountyDataImporter(Datasource datasource, SqlDataTypes sqlType) {
+    public CountryStateCountyDataImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType)
+            throws ImporterException {
+        this.dataset = dataset;
         this.datasource = datasource;
         this.sqlType = sqlType;
 
         metadataFactory = new CountryStateCountyFileFormatFactory(sqlType);
         this.delegate = new HelpImporter();
+        setup(file);
     }
-    
-    public void preCondition(File folder, String filePattern) {
-        File file = new File(folder, filePattern);
-        try{   
-            delegate.validateFile(file);
-        }catch (ImporterException e){
-            e.printStackTrace();
-        }
+
+    private void setup(File file) throws ImporterException {
+        delegate.validateFile(file);
         this.file = file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         try {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
 
@@ -68,7 +69,8 @@ public class CountryStateCountyDataImporter implements Importer {
 
     private void doImport(BufferedReader fileReader, Dataset dataset, DatasetTypeUnit unit, String header)
             throws ImporterException {
-        Reader reader = new CountryStateCountyFileReader(fileReader, header, new InventoryTableParser(unit.fileFormat()));
+        Reader reader = new CountryStateCountyFileReader(fileReader, header,
+                new InventoryTableParser(unit.fileFormat()));
         DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
@@ -88,7 +90,7 @@ public class CountryStateCountyDataImporter implements Importer {
         FileFormat meta = metadataFactory.get(header);
         if (meta == null)
             throw new ImporterException("invalid header - " + header);
-        
+
         return meta;
     }
 
@@ -96,22 +98,23 @@ public class CountryStateCountyDataImporter implements Importer {
         String line = fileReader.readLine();
         String descrptn = "";
         String datasetdesc = dataset.getDescription();
-        if(datasetdesc != null)
+        if (datasetdesc != null)
             descrptn += datasetdesc;
 
-        //In case first line is not a beginning of a packet, esp. when called the
-        //first time
-        while (!line.trim().startsWith("/")){
+        // In case first line is not a beginning of a packet, esp. when called
+        // the
+        // first time
+        while (!line.trim().startsWith("/")) {
             descrptn += line;
             line = fileReader.readLine();
         }
-        
-        if(!descrptn.equalsIgnoreCase(""))
+
+        if (!descrptn.equalsIgnoreCase(""))
             dataset.setDescription(descrptn);
-        
+
         return line.trim().replaceAll("/", "");
     }
-    
+
     private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
         delegate.setInternalSource(file, table, fileFormat, dataset);
     }
