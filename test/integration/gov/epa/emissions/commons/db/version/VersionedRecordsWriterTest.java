@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.DbColumn;
 
 import java.sql.SQLException;
 
@@ -29,17 +28,15 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "", "true" });
+        addRecord(datasource, table, new String[] { "1", "0", "", "true" });
     }
 
     private void setupVersionZeroData(Datasource datasource, String table) throws SQLException {
-        DbColumn[] cols = new VersionDataColumns(types).get();
-
-        addRecord(datasource, table, cols, new String[] { null, "1", "0", null, "p1", "p2" });// 1
-        addRecord(datasource, table, cols, new String[] { null, "1", "0", null, "p21", "p22" });// 2
-        addRecord(datasource, table, cols, new String[] { null, "1", "0", null, "p31", "p32" });// 3
-        addRecord(datasource, table, cols, new String[] { null, "1", "0", null, "p41", "p42" });// 4
-        addRecord(datasource, table, cols, new String[] { null, "1", "0", null, "p51", "p52" });// 5
+        addRecord(datasource, table, new String[] { null, "1", "0", null, "p1", "p2" });// 1
+        addRecord(datasource, table, new String[] { null, "1", "0", null, "p21", "p22" });// 2
+        addRecord(datasource, table, new String[] { null, "1", "0", null, "p31", "p32" });// 3
+        addRecord(datasource, table, new String[] { null, "1", "0", null, "p41", "p42" });// 4
+        addRecord(datasource, table, new String[] { null, "1", "0", null, "p51", "p52" });// 5
     }
 
     public void testChangeSetWithTwoUpdatesInGivenVersion() throws Exception {

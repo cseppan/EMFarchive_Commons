@@ -1,11 +1,6 @@
 package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.DbColumn;
-import gov.epa.emissions.commons.db.version.Version;
-import gov.epa.emissions.commons.db.version.VersionDataColumns;
-import gov.epa.emissions.commons.db.version.VersionedRecord;
-import gov.epa.emissions.commons.db.version.VersionedRecordsReader;
 
 import java.sql.SQLException;
 
@@ -28,17 +23,15 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, createVersionsCols(), new String[] { "1", "0", "" });
+        addRecord(datasource, table, new String[] { "1", "0", "" });
     }
 
     private void setupVersionZeroData(Datasource datasource, String table) throws SQLException {
-        DbColumn[] cols = new VersionDataColumns(types).get();
-
-        addRecord(datasource, table, cols, new String[] { "1", "1", "0", null, "p1", "p2" });
-        addRecord(datasource, table, cols, new String[] { "2", "1", "0", "6", "p21", "p22" });
-        addRecord(datasource, table, cols, new String[] { "3", "1", "0", "2", "p31", "p32" });
-        addRecord(datasource, table, cols, new String[] { "4", "1", "0", null, "p41", "p42" });
-        addRecord(datasource, table, cols, new String[] { "5", "1", "0", null, "p51", "p52" });
+        addRecord(datasource, table, new String[] { "1", "1", "0", null, "p1", "p2" });
+        addRecord(datasource, table, new String[] { "2", "1", "0", "6", "p21", "p22" });
+        addRecord(datasource, table, new String[] { "3", "1", "0", "2", "p31", "p32" });
+        addRecord(datasource, table, new String[] { "4", "1", "0", null, "p41", "p42" });
+        addRecord(datasource, table, new String[] { "5", "1", "0", null, "p51", "p52" });
     }
 
     public void testFetchVersionZero() throws Exception {
@@ -55,14 +48,12 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
     }
 
     public void testFetchVersionTwoThatHasARecordDeleteFromVersionOne() throws Exception {
-        DbColumn[] cols = new VersionDataColumns(types).get();
-
         // mark record 6 deleted from version 2
-        addRecord(datasource, dataTable, cols, new String[] { "6", "1", "1", "2", "p61", "p62" });
-        addRecord(datasource, dataTable, cols, new String[] { "7", "1", "1", null, "p71", "p72" });
+        addRecord(datasource, dataTable, new String[] { "6", "1", "1", "2", "p61", "p62" });
+        addRecord(datasource, dataTable, new String[] { "7", "1", "1", null, "p71", "p72" });
         // setup version sequence
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "1", "0" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "2", "0,1" });
+        addRecord(datasource, versionsTable, new String[] { "1", "1", "0" });
+        addRecord(datasource, versionsTable, new String[] { "1", "2", "0,1" });
 
         Version versionTwo = new Version();
         versionTwo.setDatasetId(1);
@@ -80,27 +71,25 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
     }
 
     public void testFetchWhenARecordIsRemovedFromMultipleVersionsInDifferentNonLinearSequences() throws Exception {
-        DbColumn[] cols = new VersionDataColumns(types).get();
-
         // add records
-        addRecord(datasource, dataTable, cols, new String[] { "6", "1", "0", "3", "p61", "p62" });
-        addRecord(datasource, dataTable, cols, new String[] { "7", "1", "1", null, "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "8", "1", "4", null, "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "9", "1", "2", "4", "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "10", "1", "2", "5", "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "11", "1", "1", "3,4", "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "12", "1", "1", "2,3", "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "13", "1", "2", "4,5", "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "14", "1", "0", "2,3,7", "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "6", "1", "0", "3", "p61", "p62" });
+        addRecord(datasource, dataTable, new String[] { "7", "1", "1", null, "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "8", "1", "4", null, "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "9", "1", "2", "4", "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "10", "1", "2", "5", "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "11", "1", "1", "3,4", "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "12", "1", "1", "2,3", "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "13", "1", "2", "4,5", "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "14", "1", "0", "2,3,7", "p1", "p2" });
 
         // setup version sequence
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "1", "0" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "2", "0,1" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "3", "0,1" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "4", "0,1,2" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "5", "0,1,2" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "6", "0,1,2,5" });
-        addRecord(datasource, versionsTable, createVersionsCols(), new String[] { "1", "7", "0" });
+        addRecord(datasource, versionsTable, new String[] { "1", "1", "0" });
+        addRecord(datasource, versionsTable, new String[] { "1", "2", "0,1" });
+        addRecord(datasource, versionsTable, new String[] { "1", "3", "0,1" });
+        addRecord(datasource, versionsTable, new String[] { "1", "4", "0,1,2" });
+        addRecord(datasource, versionsTable, new String[] { "1", "5", "0,1,2" });
+        addRecord(datasource, versionsTable, new String[] { "1", "6", "0,1,2,5" });
+        addRecord(datasource, versionsTable, new String[] { "1", "7", "0" });
 
         verifyVersionThreeForRemoveMultipleVersionsInNonLinearSequence();
         verifyVersionTwoForRemoveMultipleVersionsInNonLinearSequence();
@@ -166,25 +155,23 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
 
     public void testFetchWithDeletesAcrossMultipleVersions() throws Exception {
         // mark record 6 as deleted from version 2
-        DbColumn[] cols = new VersionDataColumns(types).get();
-        addRecord(datasource, dataTable, cols, new String[] { "6", "1", "1", "2", "p61", "p62" });
-        addRecord(datasource, dataTable, cols, new String[] { "7", "1", "1", null, "p71", "p72" });
-        addRecord(datasource, dataTable, cols, new String[] { "8", "1", "2", "3", "p81", "p82" });
-        addRecord(datasource, dataTable, cols, new String[] { "9", "1", "3", null, "p1", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "10", "1", "4", null, "p", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "11", "1", "4", "5", "p", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "12", "1", "5", null, "p", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "13", "1", "5", null, "p", "p2" });
-        addRecord(datasource, dataTable, cols, new String[] { "14", "1", "6", null, "p", "p2" });
+        addRecord(datasource, dataTable, new String[] { "6", "1", "1", "2", "p61", "p62" });
+        addRecord(datasource, dataTable, new String[] { "7", "1", "1", null, "p71", "p72" });
+        addRecord(datasource, dataTable, new String[] { "8", "1", "2", "3", "p81", "p82" });
+        addRecord(datasource, dataTable, new String[] { "9", "1", "3", null, "p1", "p2" });
+        addRecord(datasource, dataTable, new String[] { "10", "1", "4", null, "p", "p2" });
+        addRecord(datasource, dataTable, new String[] { "11", "1", "4", "5", "p", "p2" });
+        addRecord(datasource, dataTable, new String[] { "12", "1", "5", null, "p", "p2" });
+        addRecord(datasource, dataTable, new String[] { "13", "1", "5", null, "p", "p2" });
+        addRecord(datasource, dataTable, new String[] { "14", "1", "6", null, "p", "p2" });
 
         // setup version sequence
-        DbColumn[] versionCols = createVersionsCols();
-        addRecord(datasource, versionsTable, versionCols, new String[] { "1", "1", "0" });
-        addRecord(datasource, versionsTable, versionCols, new String[] { "1", "2", "0,1" });
-        addRecord(datasource, versionsTable, versionCols, new String[] { "1", "3", "0,1,2" });
-        addRecord(datasource, versionsTable, versionCols, new String[] { "1", "4", "0,1" });
-        addRecord(datasource, versionsTable, versionCols, new String[] { "1", "5", "0,1,4" });
-        addRecord(datasource, versionsTable, versionCols, new String[] { "1", "6", "0,1" });
+        addRecord(datasource, versionsTable, new String[] { "1", "1", "0" });
+        addRecord(datasource, versionsTable, new String[] { "1", "2", "0,1" });
+        addRecord(datasource, versionsTable, new String[] { "1", "3", "0,1,2" });
+        addRecord(datasource, versionsTable, new String[] { "1", "4", "0,1" });
+        addRecord(datasource, versionsTable, new String[] { "1", "5", "0,1,4" });
+        addRecord(datasource, versionsTable, new String[] { "1", "6", "0,1" });
 
         verifyVersionThreeForDeletesAcrossMultipleVersions();
         verifyVersionFiveForDeletesAcrossMultipleVersions();

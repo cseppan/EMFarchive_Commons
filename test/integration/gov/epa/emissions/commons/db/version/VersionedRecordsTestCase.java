@@ -2,11 +2,9 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
-import gov.epa.emissions.commons.db.version.VersionsColumns;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -45,13 +43,9 @@ public class VersionedRecordsTestCase extends PersistenceTestCase {
         def.dropTable(dataTable);
     }
 
-    protected void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
+    protected void addRecord(Datasource datasource, String table, String[] data) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         modifier.insertRow(table, data);
-    }
-
-    protected DbColumn[] createVersionsCols() {
-        return new VersionsColumns(types).get();
     }
 
     private void createTable(String table, Datasource datasource) throws SQLException {
