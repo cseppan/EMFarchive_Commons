@@ -19,7 +19,7 @@ import java.sql.Statement;
  */
 public class MySqlDbServer implements DbServer {
 
-    private SqlDataTypes typeMapper;
+    private SqlDataTypes types;
 
     private Datasource emissionsDatasource;
 
@@ -29,7 +29,7 @@ public class MySqlDbServer implements DbServer {
 
     public MySqlDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName,
             File fieldDefsFile, File referenceFilesDir) throws SQLException {
-        this.typeMapper = new MySqlDataType();
+        this.types = new MySqlDataTypes();
         this.connection = connection;
 
         createEmissionsDatasource(connection, emissionsDatasourceName);
@@ -37,7 +37,7 @@ public class MySqlDbServer implements DbServer {
     }
 
     private void createEmissionsDatasource(Connection connection, String datasourceName) throws SQLException {
-        emissionsDatasource = new MySqlDatasource(datasourceName, connection);
+        emissionsDatasource = new MySqlDatasource(datasourceName, connection, types);
 
         if (!doesSchemaExist(datasourceName, emissionsDatasource.getConnection()))
             createSchema(datasourceName, emissionsDatasource.getConnection());
@@ -45,7 +45,7 @@ public class MySqlDbServer implements DbServer {
 
     private void createReferenceDatasource(Connection connection, String datasourceName, File fieldDefsFile,
             File referenceFilesDir) throws SQLException {
-        referenceDatasource = new MySqlDatasource(datasourceName, connection);
+        referenceDatasource = new MySqlDatasource(datasourceName, connection, types);
 
         if (!doesSchemaExist(datasourceName, referenceDatasource.getConnection())) {
             createSchema(datasourceName, referenceDatasource.getConnection());
@@ -103,7 +103,7 @@ public class MySqlDbServer implements DbServer {
     }
 
     public SqlDataTypes getSqlDataTypes() {
-        return typeMapper;
+        return types;
     }
 
     public String asciiToNumber(String asciiColumn, int precision) {

@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.db.mysql;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 
-public class MySqlDataType implements SqlDataTypes {
+public class MySqlDataTypes implements SqlDataTypes {
 
     // TODO: get rid of this
     public String type(String name, String genericType, int width) {

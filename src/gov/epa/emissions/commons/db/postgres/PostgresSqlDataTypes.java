@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.db.postgres;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 
-public class PostgresSqlDataType implements SqlDataTypes {
+public class PostgresSqlDataTypes implements SqlDataTypes {
 
     // TODO: get rid of this
     public String type(String name, String genericType, int width) {

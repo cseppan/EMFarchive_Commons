@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
@@ -27,7 +26,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         dataTable = "versioned_data";
         createTable(dataTable, datasource);
 
-        importTestData(dataTable, dataTypes());
+        importTestData(dataTable);
 
         results = new ScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "." + dataTable);
         results.execute();
@@ -38,13 +37,11 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         def.dropTable(dataTable);
     }
 
-    private void importTestData(String dataTable, SqlDataTypes types) throws Exception {
-        DbColumn[] cols = new VersionDataColumns(types).get();
-
+    private void importTestData(String dataTable) throws Exception {
         for (int i = 1; i <= 394; i++) {
             String data1 = "P1_" + i;
             String data2 = "P2_" + i;
-            addRecord(datasource, dataTable, cols, new String[] { i + "", "1", "5", "3,4", data1, data2 });
+            addRecord(datasource, dataTable, new String[] { i + "", "1", "5", "3,4", data1, data2 });
         }
     }
 
@@ -77,9 +74,9 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         return new VersionedTableFormatWithOptionalCols(fileFormat, types);
     }
 
-    private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
+    private void addRecord(Datasource datasource, String table, String[] data) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        modifier.insertRow(table, data, cols);
+        modifier.insertRow(table, data);
     }
 
     protected void tearDown() throws Exception {
@@ -147,7 +144,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     public void testFetchFirstRecord() throws Exception {
         VersionedRecord record = results.next();
         assertNotNull("Should be able to fetch first record", record);
-        assertEquals(3, record.size());//including comments
+        assertEquals(3, record.size());// including comments
 
         assertEquals(1, record.getRecordId());
         assertEquals(1, record.getDatasetId());

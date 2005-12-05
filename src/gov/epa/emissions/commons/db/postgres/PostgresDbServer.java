@@ -10,7 +10,7 @@ import java.sql.SQLException;
 //Note: Emissions & Reference are two schemas in a single database i.e. share a connection
 public class PostgresDbServer implements DbServer {
 
-    private SqlDataTypes typeMapper;
+    private SqlDataTypes types;
 
     private Datasource emissionsDatasource;
 
@@ -19,7 +19,7 @@ public class PostgresDbServer implements DbServer {
     private Connection connection;
 
     public PostgresDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName) {
-        this.typeMapper = new PostgresSqlDataType();
+        this.types = new PostgresSqlDataTypes();
         this.connection = connection;
 
         referenceDatasource = createDatasource(referenceDatasourceName, connection);
@@ -35,11 +35,11 @@ public class PostgresDbServer implements DbServer {
     }
 
     private Datasource createDatasource(String datasourceName, Connection connection) {
-        return new PostgresDatasource(datasourceName, connection);
+        return new PostgresDatasource(datasourceName, connection, types);
     }
 
     public SqlDataTypes getSqlDataTypes() {
-        return typeMapper;
+        return types;
     }
 
     public String asciiToNumber(String asciiColumn, int precision) {

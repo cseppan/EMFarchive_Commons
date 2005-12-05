@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.db.mysql;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DataQuery;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.io.Serializable;
@@ -18,10 +19,10 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
 
     private String name;
 
-    public MySqlDatasource(String name, Connection connection) {
+    public MySqlDatasource(String name, Connection connection, SqlDataTypes types) {
         this.name = name;
         this.connection = connection;
-        this.dataAcceptor = new DataModifier(name, connection);
+        this.dataAcceptor = new DataModifier(name, connection, types);
     }
 
     public String getName() {

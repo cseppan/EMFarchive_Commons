@@ -1,9 +1,14 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.io.Column;
+
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataModifier {
 
@@ -11,9 +16,12 @@ public class DataModifier {
 
     private String schema;
 
-    public DataModifier(String schema, Connection connection) {
+    private JdbcToCommonsSqlTypeMap typeMap;
+
+    public DataModifier(String schema, Connection connection, SqlDataTypes types) {
         this.schema = schema;
         this.connection = connection;
+        typeMap = new JdbcToCommonsSqlTypeMap(types);
     }
 
     private void execute(String sql) throws SQLException {
@@ -143,6 +151,9 @@ public class DataModifier {
         execute(insert.toString());
     }
 
+    /**
+     * Use 'insertRow(String table, String[] data) instead.
+     */
     public void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
         StringBuffer insert = new StringBuffer();
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
@@ -163,6 +174,28 @@ public class DataModifier {
         insert.append(')');// close parentheses around the query
 
         execute(insert.toString());
+    }
+
+    public void insertRow(String table, String[] data) throws SQLException {
+        DatabaseMetaData meta = connection.getMetaData();
+        ResultSet rs = meta.getColumns(null, schema, table, null);
+
+        List cols = new ArrayList();
+        try {
+            while (rs.next()) {
+                String name = rs.getString("COLUMN_NAME");
+                int type = rs.getInt("DATA_TYPE");
+                cols.add(new Column(name, mapType(type)));
+            }
+        } finally {
+            rs.close();
+        }
+
+        insertRow(table, data, (DbColumn[]) cols.toArray(new DbColumn[0]));
+    }
+
+    private String mapType(int type) {
+        return typeMap.get(type);
     }
 
     private boolean isTypeString(DbColumn column) {
