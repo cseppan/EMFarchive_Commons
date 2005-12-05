@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 
 public interface NIFDatasetTypeUnits {
 
-    public  void processFiles(InternalSource[] internalSources) throws ImporterException;
+    public  void processFiles(InternalSource[] internalSources, String tableName) throws ImporterException;
 
     public FormatUnit[] formatUnits();
 

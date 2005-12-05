@@ -41,8 +41,8 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
                 false);
     }
 
-    public void processFiles(InternalSource[] internalSources) throws ImporterException {
-        associateFileWithUnit(internalSources);
+    public void processFiles(InternalSource[] internalSources, String tableName) throws ImporterException {
+        associateFileWithUnit(internalSources, tableName);
         requiredExist();
     }
 
@@ -50,7 +50,7 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
         return new FormatUnit[] { ceDatasetTypeUnit, emDatasetTypeUnit, epDatasetTypeUnit, peDatasetTypeUnit };
     }
 
-    private void associateFileWithUnit(InternalSource[] internalSources) throws ImporterException {
+    private void associateFileWithUnit(InternalSource[] internalSources, String tableName) throws ImporterException {
         for (int i = 0; i < internalSources.length; i++) {
             InternalSource internalSource = internalSources[i];
             String key = notation(internalSource);
@@ -58,6 +58,7 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
             if(formatUnit!=null){
                 formatUnit.setInternalSource(internalSource);
                 internalSource.setType(formatUnit.fileFormat().identify());
+                internalSource.setTable(tableName+"_nif_"+key);
             }
         }
     }

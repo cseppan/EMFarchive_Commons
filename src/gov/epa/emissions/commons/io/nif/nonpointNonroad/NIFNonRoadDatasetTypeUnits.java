@@ -41,8 +41,8 @@ public class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
                 false);
     }
 
-    public void processFiles(InternalSource[] internalSources) throws ImporterException {
-        associateFileWithUnit(internalSources);
+    public void processFiles(InternalSource[] internalSources, String tableName) throws ImporterException {
+        associateFileWithUnit(internalSources, tableName);
         requiredExist();
     }
 
@@ -50,11 +50,17 @@ public class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
         return new FormatUnit[] { ceDatasetTypeUnit, emDatasetTypeUnit, epDatasetTypeUnit, peDatasetTypeUnit };
     }
 
-    private void associateFileWithUnit(InternalSource[] internalSources) throws ImporterException {
+    private void associateFileWithUnit(InternalSource[] internalSources, String tableName) throws ImporterException {
         for (int i = 0; i < internalSources.length; i++) {
             InternalSource internalSource = internalSources[i];
             String key = notation(internalSource);
-            setFileToDatasetTypeUnit(internalSource, key);
+            FormatUnit formatUnit = fileToDatasetTypeUnit(key);
+            if(formatUnit!=null){
+                internalSource.setType(formatUnit.fileFormat().identify());
+                internalSource.setTable(tableName+"_nif_"+key);
+                formatUnit.setInternalSource(internalSource);
+                
+            }
         }
     }
 
@@ -72,22 +78,23 @@ public class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
         }
     }
 
-    private void setFileToDatasetTypeUnit(InternalSource internalSource, String key) {
+    private FormatUnit fileToDatasetTypeUnit(String key) {
         if ("ce".equals(key)) {
-            ceDatasetTypeUnit.setInternalSource(internalSource);
+            return ceDatasetTypeUnit;
         }
 
         if ("em".equals(key)) {
-            emDatasetTypeUnit.setInternalSource(internalSource);
+            return emDatasetTypeUnit;
         }
 
         if ("ep".equals(key)) {
-            epDatasetTypeUnit.setInternalSource(internalSource);
+            return epDatasetTypeUnit;
         }
 
         if ("pe".equals(key)) {
-            peDatasetTypeUnit.setInternalSource(internalSource);
+            return peDatasetTypeUnit;
         }
+        return null;
     }
 
     private String notation(InternalSource internalSource) throws ImporterException {

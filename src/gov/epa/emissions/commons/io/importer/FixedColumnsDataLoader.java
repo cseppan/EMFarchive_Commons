@@ -58,6 +58,7 @@ public class FixedColumnsDataLoader implements DataLoader {
             data.add(record.token(i));
 
         //FIXME: comment should be moved to the file format
+        data.add("");
         return (String[]) data.toArray(new String[0]);
     }
 

@@ -46,7 +46,8 @@ public class NIFImporter {
         for (int i = 0; i < internalSources.length; i++) {
             delegate.validateFile(new File(internalSources[i].getSource()));
         }
-        datasetTypeUnits.processFiles(internalSources);
+        String tableName = delegate.tableName(dataset.getName());
+        datasetTypeUnits.processFiles(internalSources, tableName);
         updateInternalSources(datasetTypeUnits.formatUnits(), dataset);
     }
 
