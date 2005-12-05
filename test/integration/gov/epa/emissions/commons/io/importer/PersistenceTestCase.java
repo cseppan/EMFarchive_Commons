@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.DatabaseSetup;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -67,5 +68,10 @@ public abstract class PersistenceTestCase extends TestCase {
     protected void dropTable(String table, Datasource datasource) throws Exception, SQLException {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), table);
+    }
+
+    protected void dropData(String table, Datasource datasource) throws SQLException {
+        DataModifier modifier = datasource.dataModifier();
+        modifier.dropAll(table);
     }
 }

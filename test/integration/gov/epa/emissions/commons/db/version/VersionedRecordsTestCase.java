@@ -38,20 +38,16 @@ public class VersionedRecordsTestCase extends PersistenceTestCase {
     }
 
     protected void tearDown() throws Exception {
-        clean();
-    }
-
-    private void clean() throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         modifier.dropAll(versionsTable);
-
+        
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(dataTable);
     }
 
     protected void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        modifier.insertRow(table, data, cols);
+        modifier.insertRow(table, data);
     }
 
     protected DbColumn[] createVersionsCols() {

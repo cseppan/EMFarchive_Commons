@@ -38,8 +38,8 @@ public class VersionsTest extends PersistenceTestCase {
     protected void tearDown() throws Exception {
         versions.close();
 
-        DataModifier modifier = datasource.dataModifier();
-        modifier.dropAll(versionsTable);
+        dropData(versionsTable, datasource);
+        super.tearDown();
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {
@@ -80,7 +80,7 @@ public class VersionsTest extends PersistenceTestCase {
         Version derived = versions.derive(base);
 
         Version[] allVersions = versions.get(1);
-        
+
         assertNotNull("Should get all versions of a Dataset", allVersions);
         assertEquals(2, allVersions.length);
         assertEquals(base.getVersion(), allVersions[0].getVersion());

@@ -12,6 +12,7 @@ public class JdbcToCommonsSqlTypeMap {
         map = new HashMap();
         map.put(new Integer(Types.INTEGER), types.intType());
         map.put(new Integer(Types.BOOLEAN), types.booleanType());
+        map.put(new Integer(Types.BIT), types.booleanType());
         map.put(new Integer(Types.CHAR), types.charType());
         map.put(new Integer(Types.BIGINT), types.longType());
         map.put(new Integer(Types.REAL), types.realType());

@@ -2,6 +2,9 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
 
 import java.sql.Connection;
@@ -19,15 +22,37 @@ public class VersionedRecordsWriter {
 
     private Datasource datasource;
 
-    public VersionedRecordsWriter(Datasource datasource, String table, VersionedTableFormatWithOptionalCols tableFormat)
-            throws SQLException {
+    public VersionedRecordsWriter(Datasource datasource, String table, SqlDataTypes types) throws SQLException {
         this.datasource = datasource;
-        this.tableFormat = tableFormat;
         this.table = table;
+
+        FileFormatWithOptionalCols fileFormat = fileFormat(datasource.dataModifier(), table);
+        this.tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, types);
 
         String dataUpdate = "UPDATE " + datasource.getName() + "." + table + " SET delete_versions=? WHERE record_id=?";
         Connection connection = datasource.getConnection();
         updateStatement = connection.prepareStatement(dataUpdate);
+    }
+
+    private FileFormatWithOptionalCols fileFormat(DataModifier modifier, String table) throws SQLException {
+        final Column[] cols = modifier.getColumns(table);
+        return new FileFormatWithOptionalCols() {
+            public Column[] optionalCols() {
+                return null;
+            }
+
+            public Column[] minCols() {
+                return cols;
+            }
+
+            public String identify() {
+                return null;
+            }
+
+            public Column[] cols() {
+                return minCols();
+            }
+        };
     }
 
     /**
@@ -68,7 +93,7 @@ public class VersionedRecordsWriter {
             List data = tableFormat.fill(records[i], version.getVersion());
 
             String[] toArray = (String[]) data.toArray(new String[0]);
-            modifier.insertRow(table, toArray, tableFormat.cols());
+            modifier.insertRow(table, toArray);
         }
     }
 

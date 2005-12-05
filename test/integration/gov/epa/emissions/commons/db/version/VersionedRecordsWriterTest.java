@@ -17,13 +17,14 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        writer = new VersionedRecordsWriter(datasource, dataTable, tableFormat());
+        writer = new VersionedRecordsWriter(datasource, dataTable, dataTypes());
         versions = new Versions(datasource);
     }
 
     protected void tearDown() throws Exception {
         versions.close();
         writer.close();
+        
         super.tearDown();
     }
 

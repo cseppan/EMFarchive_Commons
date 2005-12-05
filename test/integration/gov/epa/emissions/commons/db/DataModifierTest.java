@@ -65,7 +65,7 @@ public class DataModifierTest extends PersistenceTestCase {
         DataModifier modifier = datasource.dataModifier();
 
         String[] data = { null, "102", "0", "", "p1", "p2" };
-        modifier.insertRow(table, data, cols());
+        modifier.insertRow(table, data);
 
         DataQuery query = datasource.query();
         ResultSet rs = query.selectAll(table);

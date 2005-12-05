@@ -177,6 +177,10 @@ public class DataModifier {
     }
 
     public void insertRow(String table, String[] data) throws SQLException {
+        insertRow(table, data, getColumns(table));
+    }
+
+    public Column[] getColumns(String table) throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
         ResultSet rs = meta.getColumns(null, schema, table, null);
 
@@ -184,22 +188,21 @@ public class DataModifier {
         try {
             while (rs.next()) {
                 String name = rs.getString("COLUMN_NAME");
-                int type = rs.getInt("DATA_TYPE");
-                cols.add(new Column(name, mapType(type)));
+                int jdbcType = rs.getInt("DATA_TYPE");
+                String type = typeMap.get(jdbcType);
+                
+                cols.add(new Column(name, type));
             }
         } finally {
             rs.close();
         }
 
-        insertRow(table, data, (DbColumn[]) cols.toArray(new DbColumn[0]));
-    }
-
-    private String mapType(int type) {
-        return typeMap.get(type);
+        return (Column[]) cols.toArray(new Column[0]);
     }
 
     private boolean isTypeString(DbColumn column) {
-        return column.sqlType().startsWith("VARCHAR") || column.sqlType().equalsIgnoreCase("TEXT");
+        String sqlType = column.sqlType();
+        return sqlType.startsWith("VARCHAR") || sqlType.equalsIgnoreCase("TEXT");
     }
 
     private String escapeAndDelimitStringValue(String val) {
