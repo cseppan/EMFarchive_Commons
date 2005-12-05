@@ -41,4 +41,8 @@ public class Version {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public void setFinalVersion(boolean finalVersion) {
+        this.finalVersion = finalVersion;
+    }
 }
