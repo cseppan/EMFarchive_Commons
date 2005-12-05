@@ -33,15 +33,16 @@ public class NIFImporter {
 
     private HelpImporter delegate;
 
-    public NIFImporter(Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource) {
+    public NIFImporter(Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource) throws ImporterException {
         this.dataset = dataset;
         this.datasetTypeUnits = datasetTypeUnits;
         this.datasource = datasource;
         this.tableNames = new ArrayList();
         this.delegate = new HelpImporter();
+        preImport();
     }
 
-    public void preImport() throws ImporterException {
+    private void preImport() throws ImporterException {
         InternalSource[] internalSources = dataset.getInternalSources();
         for (int i = 0; i < internalSources.length; i++) {
             delegate.validateFile(new File(internalSources[i].getSource()));

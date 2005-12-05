@@ -51,9 +51,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         dataset.setInternalSources(createAllInternalSources());
-
         NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
-        importer.preImport();
         importer.run();
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tablePE));
@@ -63,10 +61,8 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         dataset.setInternalSources(create_EP_InternalSources());
-
-        NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
         try {
-            importer.preImport();
+            NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
             assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF onroad import requires following file types"));

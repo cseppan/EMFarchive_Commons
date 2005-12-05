@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NIFNonPointImporterTest extends PersistenceTestCase{
+public class NIFNonPointImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 
@@ -25,13 +25,13 @@ public class NIFNonPointImporterTest extends PersistenceTestCase{
 
     private Dataset dataset;
 
-	private String tableCE;
+    private String tableCE;
 
-	private String tableEM;
+    private String tableEM;
 
-	private String tableEP;
+    private String tableEP;
 
-	private String tablePE;
+    private String tablePE;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -39,62 +39,60 @@ public class NIFNonPointImporterTest extends PersistenceTestCase{
         DbServer dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
-        
+
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
+
         String name = dataset.getName();
-        tableCE = name+"_ce";
-        tableEM = name+"_em";
-        tableEP = name+"_ep";
-        tablePE = name+"_pe";
+        tableCE = name + "_ce";
+        tableEM = name + "_em";
+        tableEP = name + "_ep";
+        tablePE = name + "_pe";
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         dataset.setInternalSources(createAllInternalSources());
         NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
-        importer.preImport();
         importer.run();
-        assertEquals(1,  countRecords(tableCE));
+        assertEquals(1, countRecords(tableCE));
         assertEquals(21, countRecords(tableEM));
-        assertEquals(4,  countRecords(tableEP));
-        assertEquals(4,  countRecords(tablePE));
+        assertEquals(4, countRecords(tableEP));
+        assertEquals(4, countRecords(tablePE));
         dropTables();
     }
-    
+
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         dataset.setInternalSources(create_CE_EP_InternalSources());
-        NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
-        try{
-            importer.preImport();
+        try {
+            NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
             assertTrue(false);
-        }catch (ImporterException e) {
+        } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following file types"));
         }
     }
-    
+
     private InternalSource[] create_CE_EP_InternalSources() {
         List sources = new ArrayList();
-        
+
         String dir = "test/data/nif/nonpoint";
-        sources.add(internalSource(new File(dir, "ky_ce.txt"),tableCE));
-        sources.add(internalSource(new File(dir, "ky_ep.txt"),tableEP));
-        
+        sources.add(internalSource(new File(dir, "ky_ce.txt"), tableCE));
+        sources.add(internalSource(new File(dir, "ky_ep.txt"), tableEP));
+
         return (InternalSource[]) sources.toArray(new InternalSource[0]);
     }
 
     private InternalSource[] createAllInternalSources() {
         List sources = new ArrayList();
-        
+
         String dir = "test/data/nif/nonpoint";
-        sources.add(internalSource(new File(dir, "ky_ce.txt"),tableCE));
-        sources.add(internalSource(new File(dir, "ky_em.txt"),tableEM));
-        sources.add(internalSource(new File(dir, "ky_ep.txt"),tableEP));
-        sources.add(internalSource(new File(dir, "ky_pe.txt"),tablePE));
+        sources.add(internalSource(new File(dir, "ky_ce.txt"), tableCE));
+        sources.add(internalSource(new File(dir, "ky_em.txt"), tableEM));
+        sources.add(internalSource(new File(dir, "ky_ep.txt"), tableEP));
+        sources.add(internalSource(new File(dir, "ky_pe.txt"), tablePE));
         return (InternalSource[]) sources.toArray(new InternalSource[0]);
     }
-    
+
     private InternalSource internalSource(File file, String table) {
         InternalSource source = new InternalSource();
         source.setTable(table);
@@ -108,7 +106,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase{
         TableReader tableReader = new TableReader(datasource.getConnection());
         return tableReader.count(datasource.getName(), tableName);
     }
-    
+
     protected void dropTables() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
         dbUpdate.dropTable(datasource.getName(), tableCE);

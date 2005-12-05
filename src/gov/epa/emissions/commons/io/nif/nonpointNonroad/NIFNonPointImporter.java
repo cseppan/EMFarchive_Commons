@@ -13,14 +13,10 @@ public class NIFNonPointImporter implements NewImporter{
 
     private NIFImporter delegate;
 
-    public NIFNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public NIFNonPointImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new NIFImporter(dataset, new NIFNonPointDatasetTypeUnits(sqlDataTypes), datasource);
     }
     
-    public void preImport() throws Exception {
-        delegate.preImport();
-    }
-
     public void run() throws ImporterException {
         delegate.run();
     }

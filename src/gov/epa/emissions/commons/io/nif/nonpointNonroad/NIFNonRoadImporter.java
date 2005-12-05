@@ -13,14 +13,10 @@ public class NIFNonRoadImporter implements NewImporter{
 
     private NIFImporter delegate;
 
-    public NIFNonRoadImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public NIFNonRoadImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new NIFImporter(dataset, new NIFNonRoadDatasetTypeUnits(sqlDataTypes), datasource);
     }
     
-    public void preImport() throws ImporterException {
-       delegate.preImport();
-    }
-
     public void run() throws ImporterException {
         delegate.run();
     }
