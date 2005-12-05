@@ -3,66 +3,83 @@ package gov.epa.emissions.commons.db.version;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbColumn;
-import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
 
 import java.sql.SQLException;
-import java.util.Random;
 
 public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
 
     private ScrollableVersionedRecords results;
 
-    protected SqlDataTypes types;
     protected Datasource datasource;
+
     protected String dataTable;
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        importTestData();
-        
-        results = new ScrollableVersionedRecords(emissions(), "SELECT * from emissions.data");
+        datasource = emissions();
+        dataTable = "versioned_data";
+        createTable(dataTable, datasource);
+
+        importTestData(dataTable, dataTypes());
+
+        results = new ScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "." + dataTable);
         results.execute();
-        
-        
     }
 
     private void clean() throws SQLException {
-        DataModifier modifier = datasource.dataModifier();
-        modifier.dropAll(dataTable);
+        TableDefinition def = datasource.tableDefinition();
+        def.dropTable(dataTable);
     }
 
-    private void importTestData() throws Exception {
-        DbServer dbServer = dbSetup.getDbServer();
-        types = dbServer.getSqlDataTypes();
-
-        datasource = dbServer.getEmissionsDatasource();
-        dataTable = "data";
-
-        clean();
-        
+    private void importTestData(String dataTable, SqlDataTypes types) throws Exception {
         DbColumn[] cols = new VersionDataColumns(types).get();
 
-        Random rando = new Random();
-        
         for (int i = 1; i <= 394; i++) {
-            
-            String data1 = "P1_" + i;  
+            String data1 = "P1_" + i;
             String data2 = "P2_" + i;
-            addRecord(datasource, dataTable, cols, new String[] { i+"", "1", "5", "3,4", data1, data2 });            
+            addRecord(datasource, dataTable, cols, new String[] { i + "", "1", "5", "3,4", data1, data2 });
         }
-
     }
 
-    protected void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
+    private void createTable(String table, Datasource datasource) throws SQLException {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        tableDefinition.createTable(table, tableFormat(dataTypes()).cols());
+    }
+
+    protected VersionedTableFormatWithOptionalCols tableFormat(final SqlDataTypes types) {
+        FileFormatWithOptionalCols fileFormat = new FileFormatWithOptionalCols() {
+            public Column[] optionalCols() {
+                return new Column[0];
+            }
+
+            public Column[] minCols() {
+                Column p1 = new Column("p1", types.text());
+                Column p2 = new Column("p2", types.text());
+
+                return new Column[] { p1, p2 };
+            }
+
+            public String identify() {
+                return "Record_Id";
+            }
+
+            public Column[] cols() {
+                return minCols();
+            }
+        };
+        return new VersionedTableFormatWithOptionalCols(fileFormat, types);
+    }
+
+    private void addRecord(Datasource datasource, String table, DbColumn[] cols, String[] data) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         modifier.insertRow(table, data, cols);
-    }
-
-    protected DbColumn[] createVersionsCols() {
-        return new VersionsColumns(types).get();
     }
 
     protected void tearDown() throws Exception {
@@ -118,7 +135,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     public void testIterate() throws Exception {
         VersionedRecord record = results.next();
         assertNotNull("Should be able to iterate through records", record);
-        
+
         int firstIndex = record.getRecordId();
         for (int i = 1; i < 394; i++) {
             assertTrue("Should have more records", results.available());
@@ -130,7 +147,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     public void testFetchFirstRecord() throws Exception {
         VersionedRecord record = results.next();
         assertNotNull("Should be able to fetch first record", record);
-        assertEquals(2, record.size());
+        assertEquals(3, record.size());//including comments
 
         assertEquals(1, record.getRecordId());
         assertEquals(1, record.getDatasetId());
@@ -140,7 +157,4 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         assertEquals("P2_1", record.token(1));
     }
 
-    
-    
-    
 }
