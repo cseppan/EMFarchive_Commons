@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChangeSet {
@@ -23,24 +24,12 @@ public class ChangeSet {
         newRecords.add(record);
     }
 
-    public VersionedRecord[] getNew() {
-        return (VersionedRecord[]) newRecords.toArray(new VersionedRecord[0]);
-    }
-
     public void addDeleted(VersionedRecord record) {
         deletedRecords.add(record);
     }
 
-    public VersionedRecord[] getDeleted() {
-        return (VersionedRecord[]) deletedRecords.toArray(new VersionedRecord[0]);
-    }
-
     public void addUpdated(VersionedRecord record) {
         updatedRecords.add(record);
-    }
-
-    public VersionedRecord[] getUpdated() {
-        return (VersionedRecord[]) updatedRecords.toArray(new VersionedRecord[0]);
     }
 
     public Version getVersion() {
@@ -49,6 +38,33 @@ public class ChangeSet {
 
     public void setVersion(Version version) {
         this.version = version;
+    }
+
+    public VersionedRecord[] getDeletedRecords() {
+        return (VersionedRecord[]) deletedRecords.toArray(new VersionedRecord[0]);
+    }
+
+    public void setDeletedRecords(VersionedRecord[] records) {
+        this.deletedRecords.clear();
+        this.deletedRecords.addAll(Arrays.asList(records));
+    }
+
+    public VersionedRecord[] getNewRecords() {
+        return (VersionedRecord[]) newRecords.toArray(new VersionedRecord[0]);
+    }
+
+    public void setNewRecords(VersionedRecord[] records) {
+        this.newRecords.clear();
+        this.newRecords.addAll(Arrays.asList(records));
+    }
+
+    public VersionedRecord[] getUpdatedRecords() {
+        return (VersionedRecord[]) updatedRecords.toArray(new VersionedRecord[0]);
+    }
+
+    public void setUpdatedRecords(VersionedRecord[] records) {
+        this.updatedRecords.clear();
+        this.updatedRecords.addAll(Arrays.asList(records));
     }
 
 }

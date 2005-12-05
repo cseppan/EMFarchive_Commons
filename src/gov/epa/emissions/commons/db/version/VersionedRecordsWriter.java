@@ -70,7 +70,7 @@ public class VersionedRecordsWriter {
     }
 
     private void convertUpdatedRecords(ChangeSet changeset) {
-        VersionedRecord[] updatedRecords = changeset.getUpdated();
+        VersionedRecord[] updatedRecords = changeset.getUpdatedRecords();
 
         for (int i = 0; i < updatedRecords.length; i++) {
             VersionedRecord deleteRec = updatedRecords[i];
@@ -83,8 +83,8 @@ public class VersionedRecordsWriter {
     }
 
     private void writeData(ChangeSet changeset) throws Exception {
-        insertData(changeset.getNew(), changeset.getVersion());
-        deleteData(changeset.getDeleted(), changeset.getVersion());
+        insertData(changeset.getNewRecords(), changeset.getVersion());
+        deleteData(changeset.getDeletedRecords(), changeset.getVersion());
     }
 
     private void insertData(VersionedRecord[] records, Version version) throws Exception {
