@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.db.version;
 
 public class Version {
 
-    private int datasetId;
+    private long datasetId;
 
     private int version;
 
@@ -22,7 +22,7 @@ public class Version {
         return version;
     }
 
-    public void setDatasetId(int datasetId) {
+    public void setDatasetId(long datasetId) {
         this.datasetId = datasetId;
     }
 
@@ -30,7 +30,7 @@ public class Version {
         this.version = version;
     }
 
-    public int getDatasetId() {
+    public long getDatasetId() {
         return datasetId;
     }
 

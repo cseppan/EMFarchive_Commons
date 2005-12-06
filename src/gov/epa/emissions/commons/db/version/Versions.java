@@ -48,7 +48,7 @@ public class Versions {
                 ResultSet.CONCUR_READ_ONLY);
     }
 
-    public Version[] getPath(int datasetId, int finalVersion) throws SQLException {
+    public Version[] getPath(long datasetId, int finalVersion) throws SQLException {
         ResultSet rs = queryVersion(datasetId, finalVersion);
         if (!rs.next())
             return new Version[0];
@@ -56,7 +56,7 @@ public class Versions {
         return doGetPath(datasetId, rs);
     }
 
-    private Version[] doGetPath(int datasetId, ResultSet rs) throws SQLException {
+    private Version[] doGetPath(long datasetId, ResultSet rs) throws SQLException {
         int[] parentVersions = parseParentVersions(rs.getString(3));
         List versions = new ArrayList();
         for (int i = 0; i < parentVersions.length; i++) {
@@ -69,7 +69,7 @@ public class Versions {
         return (Version[]) versions.toArray(new Version[0]);
     }
 
-    public Version get(int datasetId, int version) throws SQLException {
+    public Version get(long datasetId, int version) throws SQLException {
         ResultSet rs = queryVersion(datasetId, version);
         if (!rs.next())
             return null;
@@ -77,7 +77,7 @@ public class Versions {
         return extractVersion(rs);
     }
 
-    private ResultSet queryVersion(int datasetId, int version) throws SQLException {
+    private ResultSet queryVersion(long datasetId, int version) throws SQLException {
         DataQuery query = datasource.query();
         ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".versions WHERE dataset_id = "
                 + datasetId + " AND version = " + version);
@@ -87,7 +87,7 @@ public class Versions {
 
     private Version extractVersion(ResultSet rs) throws SQLException {
         Version version = new Version();
-        version.setDatasetId(rs.getInt(1));
+        version.setDatasetId(rs.getLong(1));
         version.setVersion(rs.getInt(2));
         version.setPath(rs.getString("path"));
         if (rs.getBoolean("final_version"))
@@ -116,7 +116,7 @@ public class Versions {
         List versions = new ArrayList();
         while (rs.next()) {
             Version version = new Version();
-            version.setDatasetId(rs.getInt("Dataset_Id"));
+            version.setDatasetId(rs.getLong("Dataset_Id"));
             version.setVersion(rs.getInt("Version"));
             version.setPath(rs.getString("Path"));
             if (rs.getBoolean("final_version"))
@@ -139,7 +139,7 @@ public class Versions {
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
 
-        insertStatement.setInt(1, version.getDatasetId());
+        insertStatement.setLong(1, version.getDatasetId());
         insertStatement.setInt(2, version.getVersion());
         insertStatement.setString(3, version.getPath());
         insertStatement.executeUpdate();
@@ -149,7 +149,7 @@ public class Versions {
 
     public Version markFinal(Version derived) throws SQLException {
         derived.markFinal();
-        updateStatement.setInt(1, derived.getDatasetId());
+        updateStatement.setLong(1, derived.getDatasetId());
         updateStatement.executeUpdate();
 
         return derived;
@@ -161,8 +161,8 @@ public class Versions {
         return path;
     }
 
-    private int getNextVersionNumber(int datasetId) throws SQLException {
-        nextVersionStatement.setInt(1, datasetId);
+    private int getNextVersionNumber(long datasetId) throws SQLException {
+        nextVersionStatement.setLong(1, datasetId);
         ResultSet rs = nextVersionStatement.executeQuery();
         rs.last();
 
