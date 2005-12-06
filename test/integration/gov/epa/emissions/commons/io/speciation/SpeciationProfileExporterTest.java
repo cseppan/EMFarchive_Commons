@@ -9,8 +9,14 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetTypeUnit;
+import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 public class SpeciationProfileExporterTest extends PersistenceTestCase {
     private Datasource datasource;
@@ -18,6 +24,8 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
+    
+    private HelpImporter delegate;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -29,6 +37,13 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        
+        this.delegate = new HelpImporter();
+        FileFormat fileFormat = new ProfileFileFormat("Speciation Profile", sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        String table = delegate.tableName(dataset.getName());
+        FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
+        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
     }
 
     protected void tearDown() throws Exception {

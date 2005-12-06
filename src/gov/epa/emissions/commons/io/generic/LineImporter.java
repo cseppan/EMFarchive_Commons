@@ -26,8 +26,6 @@ public class LineImporter implements Importer {
 
     private HelpImporter delegate;
 
-
-
     public LineImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         this.delegate = new HelpImporter();
         setup(file);
@@ -45,12 +43,9 @@ public class LineImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
-
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
-            delegate.dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }

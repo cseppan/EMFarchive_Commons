@@ -10,16 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpeciationCrossRefFileFormat implements FileFormat {
-    private String identifier;
+  
     private Column[] columns;
     
-    public SpeciationCrossRefFileFormat(String identifier, SqlDataTypes type){
+    public SpeciationCrossRefFileFormat(SqlDataTypes type){
         columns = createCols(type);
-        this.identifier = identifier;
     }
     
     public String identify() {
-        return identifier;
+        return "Speciation Cross-Reference";
     }
 
     public Column[] cols() {

@@ -26,14 +26,14 @@ public class SpeciationCrossReferenceImporter implements Importer {
     private FormatUnit formatUnit;
 
     private HelpImporter delegate;
-
+    
     private Dataset dataset;
 
     public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes, String identifier) throws ImporterException {
         this.dataset = dataset;
         this.datasource = datasource;
-        FileFormat fileFormat = new SpeciationCrossRefFileFormat(identifier, sqlDataTypes);
+        FileFormat fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
@@ -47,12 +47,9 @@ public class SpeciationCrossReferenceImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        //FIXME: don't create the table RP
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
-            delegate.dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }

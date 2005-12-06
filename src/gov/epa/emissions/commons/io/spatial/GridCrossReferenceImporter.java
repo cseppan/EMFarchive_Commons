@@ -48,11 +48,9 @@ public class GridCrossReferenceImporter implements Importer {
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
 
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
-            delegate.dropTable(table, datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
