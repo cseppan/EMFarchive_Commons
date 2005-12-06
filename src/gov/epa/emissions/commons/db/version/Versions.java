@@ -31,7 +31,8 @@ public class Versions {
 
         Connection connection = datasource.getConnection();
 
-        String insert = "INSERT INTO " + datasource.getName() + ".versions (dataset_id,version,path) VALUES (?,?,?)";
+        String insert = "INSERT INTO " + datasource.getName()
+                + ".versions (dataset_id,version,name, path) VALUES (?,?,?,?)";
         insertStatement = connection.prepareStatement(insert);
 
         String update = "UPDATE " + datasource.getName() + ".versions set final_version=true WHERE dataset_id=?";
@@ -57,7 +58,7 @@ public class Versions {
     }
 
     private Version[] doGetPath(long datasetId, ResultSet rs) throws SQLException {
-        int[] parentVersions = parseParentVersions(rs.getString(3));
+        int[] parentVersions = parseParentVersions(rs.getString("path"));
         List versions = new ArrayList();
         for (int i = 0; i < parentVersions.length; i++) {
             Version parent = get(datasetId, parentVersions[i]);
@@ -87,8 +88,9 @@ public class Versions {
 
     private Version extractVersion(ResultSet rs) throws SQLException {
         Version version = new Version();
-        version.setDatasetId(rs.getLong(1));
-        version.setVersion(rs.getInt(2));
+        version.setDatasetId(rs.getLong("dataset_id"));
+        version.setVersion(rs.getInt("version"));
+        version.setName(rs.getString("name"));
         version.setPath(rs.getString("path"));
         if (rs.getBoolean("final_version"))
             version.markFinal();
@@ -128,20 +130,22 @@ public class Versions {
         return (Version[]) versions.toArray(new Version[0]);
     }
 
-    public Version derive(Version base) throws SQLException {
+    public Version derive(Version base, String name) throws SQLException {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
 
         Version version = new Version();
         int newVersionNum = getNextVersionNumber(base.getDatasetId());
 
+        version.setName(name);
         version.setVersion(newVersionNum);
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
 
         insertStatement.setLong(1, version.getDatasetId());
         insertStatement.setInt(2, version.getVersion());
-        insertStatement.setString(3, version.getPath());
+        insertStatement.setString(3, version.getName());
+        insertStatement.setString(4, version.getPath());
         insertStatement.executeUpdate();
 
         return version;

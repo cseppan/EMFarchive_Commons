@@ -23,12 +23,12 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
     protected void tearDown() throws Exception {
         versions.close();
         writer.close();
-        
+
         super.tearDown();
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { "1", "0", "", "true" });
+        addRecord(datasource, table, new String[] { "1", "0", "ver 0", "", "true" });
     }
 
     private void setupVersionZeroData(Datasource datasource, String table) throws SQLException {
@@ -43,7 +43,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         ChangeSet changeset = new ChangeSet();
 
         Version baseVersion = versions.get(1, 0);
-        Version versionOne = versions.derive(baseVersion);
+        Version versionOne = versions.derive(baseVersion, "version one");
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
@@ -63,7 +63,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         ChangeSet changeset = new ChangeSet();
 
         Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero);
+        Version versionOne = versions.derive(versionZero, "version one");
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
@@ -94,7 +94,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         ChangeSet changeSetForVersionOne = new ChangeSet();
 
         Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero);
+        Version versionOne = versions.derive(versionZero, "version one");
         changeSetForVersionOne.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
@@ -114,7 +114,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
         // version two (based on version zero): update 3, add (new) 8
         ChangeSet changeSetForVersionTwo = new ChangeSet();
-        Version versionTwo = versions.derive(versionZero);
+        Version versionTwo = versions.derive(versionZero, "version two");
         changeSetForVersionTwo.setVersion(versionTwo);
 
         VersionedRecord record3 = versionZeroRecords[2];
@@ -145,7 +145,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         ChangeSet changeset = new ChangeSet();
 
         Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero);
+        Version versionOne = versions.derive(versionZero, "version one");
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
@@ -164,7 +164,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
     public void testChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
         Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero);
+        Version versionOne = versions.derive(versionZero, "version one");
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -195,7 +195,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
 
         Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero);
+        Version versionOne = versions.derive(versionZero, "version one");
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -227,7 +227,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
 
         Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero);
+        Version versionOne = versions.derive(versionZero, "version one");
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);

@@ -10,6 +10,8 @@ public class Version {
 
     private boolean finalVersion = false;
 
+    private String name;
+
     public boolean isFinalVersion() {
         return finalVersion;
     }
@@ -44,5 +46,13 @@ public class Version {
 
     public void setFinalVersion(boolean finalVersion) {
         this.finalVersion = finalVersion;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

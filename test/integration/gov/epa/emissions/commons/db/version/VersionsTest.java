@@ -35,7 +35,7 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { "1", "0", "", "true" });
+        addRecord(datasource, table, new String[] { "1", "0", "version zero", "", "true" });
     }
 
     private void addRecord(Datasource datasource, String table, String[] data) throws SQLException {
@@ -54,7 +54,7 @@ public class VersionsTest extends PersistenceTestCase {
     public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
         Version base = versions.get(1, 0);
 
-        Version derived = versions.derive(base);
+        Version derived = versions.derive(base, "version one");
 
         assertNotNull("Should be able to derive from a Final version", derived);
         assertEquals(1, derived.getDatasetId());
@@ -65,7 +65,7 @@ public class VersionsTest extends PersistenceTestCase {
 
     public void testShouldGetAllVersionsOfADataset() throws Exception {
         Version base = versions.get(1, 0);
-        Version derived = versions.derive(base);
+        Version derived = versions.derive(base, "version one");
 
         Version[] allVersions = versions.get(1);
 
@@ -78,9 +78,9 @@ public class VersionsTest extends PersistenceTestCase {
     public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
         Version base = versions.get(1, 0);
 
-        Version derived = versions.derive(base);
+        Version derived = versions.derive(base, "version one");
         try {
-            versions.derive(derived);
+            versions.derive(derived, "version two");
         } catch (Exception e) {
             return;
         }
@@ -90,7 +90,7 @@ public class VersionsTest extends PersistenceTestCase {
 
     public void testShouldBeAbleToMarkADerivedVersionAsFinal() throws Exception {
         Version base = versions.get(1, 0);
-        Version derived = versions.derive(base);
+        Version derived = versions.derive(base, "version one");
 
         Version finalVersion = versions.markFinal(derived);
 
@@ -108,10 +108,10 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
-        String[] versionOneData = { "1", "1", "0" };
+        String[] versionOneData = { "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionFourData = { "1", "4", "0,1" };
+        String[] versionFourData = { "1", "4", "ver 4", "0,1" };
         addRecord(datasource, versionsTable, versionFourData);
 
         Version[] path = versions.getPath(1, 4);
@@ -123,13 +123,13 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testLinearVersionThreeShouldHaveZeroOneAndTwoInThePath() throws Exception {
-        String[] versionOneData = { "1", "1", "0" };
+        String[] versionOneData = { "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionTwoData = { "1", "2", "0,1" };
+        String[] versionTwoData = { "1", "2", "ver 2", "0,1" };
         addRecord(datasource, versionsTable, versionTwoData);
 
-        String[] versionThreeData = { "1", "3", "0,1,2" };
+        String[] versionThreeData = { "1", "3", "ver 3", "0,1,2" };
         addRecord(datasource, versionsTable, versionThreeData);
 
         Version[] path = versions.getPath(1, 3);
