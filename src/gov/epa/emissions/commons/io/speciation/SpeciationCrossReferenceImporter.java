@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedTokenizer;
@@ -17,7 +18,7 @@ import gov.epa.emissions.commons.io.temporal.TableFormat;
 import java.io.File;
 import java.util.List;
 
-public class SpeciationCrossReferenceImporter {
+public class SpeciationCrossReferenceImporter implements Importer {
     private Datasource datasource;
 
     private File file;
@@ -26,30 +27,28 @@ public class SpeciationCrossReferenceImporter {
 
     private HelpImporter delegate;
 
-    public SpeciationCrossReferenceImporter(Datasource datasource, SqlDataTypes sqlDataTypes, String identifier) {
+    private Dataset dataset;
+
+    public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, String identifier) throws ImporterException {
+        this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new SpeciationCrossRefFileFormat(identifier, sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
+        setup(file);
     }
 
-    // TODO: verify if file exists
-    public void preCondition(File folder, String filePattern) {
-        File file = new File(folder, filePattern);
-        try {
-            delegate.validateFile(file);
-        } catch (ImporterException e) {
-            e.printStackTrace();
-        }
-        
+    private void setup(File file) throws ImporterException {
+        delegate.validateFile(file);
         this.file = file;
     }
 
-    public void run(Dataset dataset) throws ImporterException {
+    public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-
-        delegate.createTable(table,datasource,formatUnit.tableFormat(),dataset.getName());
+        //FIXME: don't create the table RP
+        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -62,7 +61,8 @@ public class SpeciationCrossReferenceImporter {
     // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        Reader reader = new SpeciationCrossReferenceReader(file, formatUnit.fileFormat(), new WhitespaceDelimitedTokenizer());
+        Reader reader = new SpeciationCrossReferenceReader(file, formatUnit.fileFormat(),
+                new WhitespaceDelimitedTokenizer());
 
         loader.load(reader, dataset, table);
         loadDataset(file, table, formatUnit.fileFormat(), dataset, reader.comments());
@@ -72,5 +72,5 @@ public class SpeciationCrossReferenceImporter {
         delegate.setInternalSource(file, table, fileFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
-    
+
 }

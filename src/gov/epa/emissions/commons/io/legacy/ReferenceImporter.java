@@ -226,7 +226,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         dataset.addTable(ReferenceTable.REF_TIME_ZONES);
         dataset.addTable(ReferenceTable.REF_TRIBAL_CODES);
 
-        run();
+        run(dataset);
     }
 
 }

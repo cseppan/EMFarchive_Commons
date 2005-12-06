@@ -38,9 +38,9 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     }
 
     public void testImportSpeciationCrossRefData() throws Exception {
-        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(datasource, sqlDataTypes, "Speciation CrossRef");
-        importer.preCondition(new File("test/data/speciation"), "gsref-point.txt");
-        importer.run(dataset);
+        File file = new File("test/data/speciation", "gsref-point.txt");
+        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(file, dataset, datasource, sqlDataTypes, "Speciation CrossRef");
+        importer.run();
 
         assertEquals(153, countRecords());
     }

@@ -52,8 +52,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());
 
-        assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
-                tableName));
+        assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(), tableName));
         assertEquals(10, tableReader.count(datasource.getName(), tableName));
     }
 }

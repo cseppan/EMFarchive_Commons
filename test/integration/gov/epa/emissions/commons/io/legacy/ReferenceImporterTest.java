@@ -5,11 +5,7 @@ import gov.epa.emissions.commons.io.legacy.ReferenceImporter;
 
 public class ReferenceImporterTest extends PersistenceTestCase {
     
-    public void testRemoveme(){
-        assertTrue(true);
-    }
-    
-    public void FIXME_testImportReference() throws Exception {
+    public void testImportReference() throws Exception {
         ReferenceImporter referenceImporter = new ReferenceImporter(dbSetup.getDbServer(), fieldDefsFile,
                 referenceFilesDir, false, null, null);
         referenceImporter.run();

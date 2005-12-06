@@ -4,12 +4,11 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.NewImporter;
 import gov.epa.emissions.commons.io.nif.NIFImporter;
 
-
-public class NIFPointImporter implements NewImporter{
+public class NIFPointImporter implements Importer{
 
     private NIFImporter delegate;
 
