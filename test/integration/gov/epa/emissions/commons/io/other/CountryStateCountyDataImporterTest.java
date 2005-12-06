@@ -4,7 +4,6 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -44,8 +43,4 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
         importer.run();
     }
     
-    private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        return tableReader.count(datasource.getName(), dataset.getName());
-    }
 }

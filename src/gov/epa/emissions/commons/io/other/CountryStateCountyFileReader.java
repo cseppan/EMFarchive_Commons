@@ -44,8 +44,9 @@ public class CountryStateCountyFileReader implements PacketReader {
 
     public Record read() throws IOException {
         for (String line = fileReader.readLine(); !isEnd(line, fileReader); line = fileReader.readLine()) {
-            if (isData(line)){
-                //Country State County data file has less than 255 characters in a line
+            if (isData(line)) {
+                // Country State County data file has less than 255 characters
+                // in a line
                 fileReader.mark(255);
                 return parser.parse(line);
             }
@@ -56,20 +57,17 @@ public class CountryStateCountyFileReader implements PacketReader {
         return new TerminatorRecord();
     }
 
-    private boolean isEnd(String line, BufferedReader reader) {
-        if(line == null)
+    private boolean isEnd(String line, BufferedReader reader) throws IOException {
+        if (line == null)
             return true;
-        if (line.trim().startsWith("/")){
-            try{
-                //Country State County data file is a special packet
-                //file that it dosen't have ending structure like "/END/"
-                reader.reset();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+        
+        if (line.trim().startsWith("/")) {
+            // Country State County data file is a special packet
+            // file that it dosen't have ending structure like "/END/"
+            reader.reset();
             return true;
         }
-        
+
         return false;
     }
 

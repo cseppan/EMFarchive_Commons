@@ -104,8 +104,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         assertEquals("1", record.token(0));// record id
         assertEquals(dataset.getDatasetid() + "", record.token(1));
         assertEquals("0", record.token(2));// version
-        assertNull("Should have not value", record.token(3));// delete
-                                                                // versions
+        assertEquals("", record.token(3));// delete versions
         assertEquals("37001", record.token(4));
         assertEquals("10201302", record.token(5));
         assertEquals("0", record.token(6));

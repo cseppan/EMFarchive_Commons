@@ -127,13 +127,9 @@ public class ORLImporterTest extends PersistenceTestCase {
 
     // FIXME: the parser is not working properly
     public void FIXME_testShouldImportASmallAndSimpleExtendedNonPointFile() throws Exception {
-        try {
-            File file = new File("test/data/orl/extended", "orl-extended-nonpoint.txt");
-            ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
-            importer.run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        File file = new File("test/data/orl/extended", "orl-extended-nonpoint.txt");
+        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
+        importer.run();
         assertEquals(200, countRecords());
     }
 
@@ -207,7 +203,7 @@ public class ORLImporterTest extends PersistenceTestCase {
     // FIXME: the parser is not working properly
     public void FIXME_testShouldImportASmallAndSimpleExtendedNonRoadFile() throws Exception {
         File file = new File("test/data/orl/extended", "orl-extended-nonroad.txt");
-        ORLNonRoadImporter importer = new ORLNonRoadImporter(file,dataset, datasource, sqlDataTypes);
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
 
         assertEquals(200, countRecords());

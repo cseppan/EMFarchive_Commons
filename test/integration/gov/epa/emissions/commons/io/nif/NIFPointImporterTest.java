@@ -51,28 +51,31 @@ public class NIFPointImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         String name = dataset.getName();
-        tableCE = name + "_ce";
-        tableEM = name + "_em";
-        tableEP = name + "_ep";
-        tableER = name + "_er";
-        tableEU = name + "_eu";
-        tablePE = name + "_pe";
-        tableSI = name + "_si";
+        tableCE = name + "_nif_ce";
+        tableEM = name + "_nif_em";
+        tableEP = name + "_nif_ep";
+        tableER = name + "_nif_er";
+        tableEU = name + "_nif_eu";
+        tablePE = name + "_nif_pe";
+        tableSI = name + "_nif_si";
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         dataset.setInternalSources(createAllInternalSources());
-        
-        NIFPointImporter importer = new NIFPointImporter(dataset, datasource, sqlDataTypes);
-        importer.run();
-        assertEquals(92, countRecords(tableCE));
-        assertEquals(143, countRecords(tableEM));
-        assertEquals(26, countRecords(tableEP));
-        assertEquals(15, countRecords(tableER));
-        assertEquals(15, countRecords(tableEU));
-        assertEquals(26, countRecords(tablePE));
-        assertEquals(1, countRecords(tableSI));
-        dropTables();
+
+        try {
+            NIFPointImporter importer = new NIFPointImporter(dataset, datasource, sqlDataTypes);
+            importer.run();
+            assertEquals(92, countRecords(tableCE));
+            assertEquals(143, countRecords(tableEM));
+            assertEquals(26, countRecords(tableEP));
+            assertEquals(15, countRecords(tableER));
+            assertEquals(15, countRecords(tableEU));
+            assertEquals(26, countRecords(tablePE));
+            assertEquals(1, countRecords(tableSI));
+        } finally {
+            dropTables();
+        }
     }
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {

@@ -43,20 +43,22 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         String name = dataset.getName();
-        tableEM = name + "_em";
-        tablePE = name + "_pe";
-        tableTR = name + "_tr";
-
+        tableEM = name + "_nif_em";
+        tablePE = name + "_nif_pe";
+        tableTR = name + "_nif_tr";
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         dataset.setInternalSources(createAllInternalSources());
-        NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
-        importer.run();
-        assertEquals(10, countRecords(tableEM));
-        assertEquals(10, countRecords(tablePE));
-        assertEquals(8, countRecords(tableTR));
-        dropTables();
+        try {
+            NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, datasource, sqlDataTypes);
+            importer.run();
+            assertEquals(10, countRecords(tableEM));
+            assertEquals(10, countRecords(tablePE));
+            assertEquals(8, countRecords(tableTR));
+        } finally {
+            dropTables();
+        }
     }
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {

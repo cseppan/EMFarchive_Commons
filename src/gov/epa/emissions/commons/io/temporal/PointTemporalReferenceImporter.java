@@ -44,7 +44,7 @@ public class PointTemporalReferenceImporter implements Importer {
      * Expects table 'POINT_SOURCE' to be available in Datasource
      */
     private void setup(File file) throws ImporterException {
-        file = validateFile(file);
+        this.file = validateFile(file);
     }
 
     private File validateFile(File file) throws ImporterException {

@@ -102,7 +102,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
             assertEquals("0", version.toString());
 
             Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
-            assertNull("Delete Versions should be undefined on initial load", deleteVersions);
+            assertEquals("", deleteVersions);
         }
     }
 

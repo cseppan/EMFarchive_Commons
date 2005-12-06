@@ -95,25 +95,20 @@
         </junit>
     </target>
 
-    <target name="integration-tests"
-            depends="compile, setup-emissions-data"
-            description="All Integration Tests"
-    >
-    	<!--
-        <junit printsummary="yes" haltonfailure="yes">
-            <classpath refid="classpath" />
-            <formatter type="xml" />
-            <batchtest fork="yes" todir="${reports.integrationtests.dir}">
-                <fileset dir="${test.integration.dir}">
-                    <include name="**/*Test.java" />
-                    <exclude name="**/ReferenceImporterTest.java" />
-                    <exclude name="**/ReferenceTablesCreatorTest.java" />
-                    <exclude name="**/*ORLImporterTest.java" />
-                </fileset>
-            </batchtest>
-        </junit>
-        -->
-    </target>
+	<target name="integration-tests" depends="compile, setup-emissions-data"
+		description="All Integration Tests">
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath refid="classpath"/>
+			<formatter type="xml"/>
+			<batchtest fork="yes" todir="${reports.integrationtests.dir}">
+				<fileset dir="${test.integration.dir}">
+					<include name="**/*Test.java"/>
+					<exclude name="**/ReferenceImporterTest.java"/>
+					<exclude name="**/ReferenceTablesCreatorTest.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
 
     <target name="setup-emissions-data"
             depends="compile"

@@ -35,7 +35,6 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
     }
 
     protected void tearDown() throws Exception {
