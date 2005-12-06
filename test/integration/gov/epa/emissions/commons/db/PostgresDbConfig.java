@@ -15,7 +15,7 @@ public class PostgresDbConfig extends Config {
     }
 
     public String url() {
-        return "jdbc:postgresql://" + value("database.host") + "/" + value("database.name");
+        return "jdbc:postgresql://" + value("database.host") + ":" + value("database.port") + "/" + value("database.name");
     }
 
     public String username() {

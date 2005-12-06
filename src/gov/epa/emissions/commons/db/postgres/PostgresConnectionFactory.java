@@ -22,6 +22,7 @@ public class PostgresConnectionFactory implements ConnectionFactory {
         source.setPassword(params.getPassword());
         source.setMaxConnections(16);
         source.setInitialConnections(8);
+        source.setPortNumber(Integer.parseInt(params.getPort()));
     }
 
     // NOTE: the only reason why this is a Singleton - need to have
