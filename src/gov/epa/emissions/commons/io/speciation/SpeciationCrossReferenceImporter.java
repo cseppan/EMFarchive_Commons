@@ -30,7 +30,7 @@ public class SpeciationCrossReferenceImporter implements Importer {
     private Dataset dataset;
 
     public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource,
-            SqlDataTypes sqlDataTypes, String identifier) throws ImporterException {
+            SqlDataTypes sqlDataTypes) throws ImporterException {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);

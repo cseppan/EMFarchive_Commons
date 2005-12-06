@@ -53,7 +53,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
 
     public void testExportChemicalSpeciationData() throws Exception {
         File importFile = new File("test/data/speciation", "gsref-point.txt");
-        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(importFile, dataset, datasource, sqlDataTypes, "Speciation Cross Ref");
+        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
         
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, 
