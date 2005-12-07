@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
+import java.util.Date;
+
 public class Version {
 
     private long datasetId;
@@ -11,6 +13,8 @@ public class Version {
     private boolean finalVersion = false;
 
     private String name;
+
+    private Date date;
 
     public boolean isFinalVersion() {
         return finalVersion;
@@ -54,5 +58,25 @@ public class Version {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * create path for a versioned derived from 'me' i.e. I am it's base.
+     */
+    public String createPathForDerived() {
+        return path.length() == 0 ? (version + "") : (path + "," + version);
+    }
+
+    public long getBase() {
+        int start = path.lastIndexOf(",") + 1;
+        return Long.parseLong(path.substring(start));
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

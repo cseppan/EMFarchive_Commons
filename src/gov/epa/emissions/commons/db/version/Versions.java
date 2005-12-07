@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -141,6 +142,7 @@ public class Versions {
         version.setVersion(newVersionNum);
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
+        version.setDate(new Date());
 
         insertStatement.setLong(1, version.getDatasetId());
         insertStatement.setInt(2, version.getVersion());
@@ -160,9 +162,7 @@ public class Versions {
     }
 
     private String path(Version base) {
-        String path = base.getPath().length() == 0 ? (base.getVersion() + "") : (base.getPath() + "," + base
-                .getVersion());
-        return path;
+        return base.createPathForDerived();
     }
 
     private int getNextVersionNumber(long datasetId) throws SQLException {
