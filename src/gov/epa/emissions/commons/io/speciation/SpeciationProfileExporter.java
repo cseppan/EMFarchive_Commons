@@ -58,7 +58,7 @@ public class SpeciationProfileExporter {
         if(header != null){
             StringTokenizer st = new StringTokenizer(header, "#");
             while (st.hasMoreTokens()){
-                writer.println("#" + st.nextToken());
+                writer.print("#" + st.nextToken());
             }
         }
     }
