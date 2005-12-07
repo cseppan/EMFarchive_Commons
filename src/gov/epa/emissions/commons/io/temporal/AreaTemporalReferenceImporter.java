@@ -69,7 +69,7 @@ public class AreaTemporalReferenceImporter implements Importer {
             throws Exception {
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        Reader reader = new PointTemporalReferenceReader(fileReader);
+        Reader reader = new TemporalReferenceReader(fileReader);
 
         loader.load(reader, dataset, table);
         loadDataset(reader, dataset);
