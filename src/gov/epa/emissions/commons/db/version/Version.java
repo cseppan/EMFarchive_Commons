@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.security.User;
+
 import java.util.Date;
 
 public class Version {
@@ -15,6 +17,8 @@ public class Version {
     private String name;
 
     private Date date;
+
+    private User creator;
 
     public boolean isFinalVersion() {
         return finalVersion;
@@ -68,9 +72,9 @@ public class Version {
     }
 
     public long getBase() {
-        if(version == 0)//i.e. root
+        if (version == 0)// i.e. root
             return 0;
-        
+
         int start = path.lastIndexOf(",") + 1;
         return Long.parseLong(path.substring(start));
     }
@@ -81,5 +85,13 @@ public class Version {
 
     public Date getDate() {
         return date;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public User getCreator() {
+        return creator;
     }
 }

@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 public class VersionsTest extends PersistenceTestCase {
 
@@ -29,8 +30,8 @@ public class VersionsTest extends PersistenceTestCase {
 
     protected void tearDown() throws Exception {
         versions.close();
-
         dropData(versionsTable, datasource);
+        
         super.tearDown();
     }
 
@@ -61,6 +62,7 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(1, derived.getVersion());
         assertEquals("0", derived.getPath());
         assertFalse("Derived version should be non-final", derived.isFinalVersion());
+        assertNotNull(derived.getDate());
     }
 
     public void testShouldGetAllVersionsOfADataset() throws Exception {
@@ -91,6 +93,7 @@ public class VersionsTest extends PersistenceTestCase {
     public void testShouldBeAbleToMarkADerivedVersionAsFinal() throws Exception {
         Version base = versions.get(1, 0);
         Version derived = versions.derive(base, "version one");
+        Date creationDate = derived.getDate();
 
         Version finalVersion = versions.markFinal(derived);
 
@@ -105,6 +108,9 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(derived.getVersion(), results.getVersion());
         assertEquals(derived.getPath(), results.getPath());
         assertTrue("Derived version should be marked final in db", results.isFinalVersion());
+
+        Date finalDate = results.getDate();
+        assertTrue("Creation Date should be different from Final Date", !finalDate.before(creationDate));
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {

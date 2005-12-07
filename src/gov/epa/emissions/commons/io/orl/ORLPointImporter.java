@@ -20,7 +20,7 @@ public class ORLPointImporter implements Importer {
         FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
         TableFormatWithOptionalCols tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
         DatasetTypeUnitWithOptionalCols formatUnit = new DatasetTypeUnitWithOptionalCols(tableFormat, fileFormat);
-        delegate = new ORLImporter(dataset, formatUnit, datasource, sqlDataTypes);
+        delegate = new ORLImporter(dataset, formatUnit, datasource);
         delegate.setup(file);
     }
 

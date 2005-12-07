@@ -23,4 +23,6 @@ public interface SqlDataTypes {
 
     String booleanType();
 
+    String timestamp();
+
 }

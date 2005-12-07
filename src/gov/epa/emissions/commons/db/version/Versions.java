@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Versions {
 
     private PreparedStatement nextVersionStatement;
 
-    private PreparedStatement updateStatement;
+    private PreparedStatement markFinalStatement;
 
     private PreparedStatement versionsStatement;
 
@@ -33,11 +34,12 @@ public class Versions {
         Connection connection = datasource.getConnection();
 
         String insert = "INSERT INTO " + datasource.getName()
-                + ".versions (dataset_id,version,name, path) VALUES (?,?,?,?)";
+                + ".versions (dataset_id,version,name, path,date) VALUES (?,?,?,?,?)";
         insertStatement = connection.prepareStatement(insert);
 
-        String update = "UPDATE " + datasource.getName() + ".versions set final_version=true WHERE dataset_id=?";
-        updateStatement = connection.prepareStatement(update);
+        String markFinal = "UPDATE " + datasource.getName()
+                + ".versions set final_version=true AND date=? WHERE dataset_id=? AND version=?";
+        markFinalStatement = connection.prepareStatement(markFinal);
 
         String selectVersionNumber = "SELECT version FROM " + datasource.getName()
                 + ".versions WHERE dataset_id=? ORDER BY version";
@@ -95,6 +97,7 @@ public class Versions {
         version.setPath(rs.getString("path"));
         if (rs.getBoolean("final_version"))
             version.markFinal();
+        version.setDate(rs.getTimestamp("date"));
 
         return version;
     }
@@ -143,11 +146,14 @@ public class Versions {
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
         version.setDate(new Date());
+        // version.setCreator(user); TODO
 
         insertStatement.setLong(1, version.getDatasetId());
         insertStatement.setInt(2, version.getVersion());
         insertStatement.setString(3, version.getName());
         insertStatement.setString(4, version.getPath());
+        insertStatement.setTimestamp(5, new Timestamp(version.getDate().getTime()));
+
         insertStatement.executeUpdate();
 
         return version;
@@ -155,9 +161,13 @@ public class Versions {
 
     public Version markFinal(Version derived) throws SQLException {
         derived.markFinal();
-        updateStatement.setLong(1, derived.getDatasetId());
-        updateStatement.executeUpdate();
+        derived.setDate(new Date());
 
+        markFinalStatement.setTimestamp(1, new Timestamp(derived.getDate().getTime()));
+        markFinalStatement.setLong(2, derived.getDatasetId());
+        markFinalStatement.setInt(3, derived.getVersion());
+        markFinalStatement.executeUpdate();
+        
         return derived;
     }
 
@@ -176,7 +186,7 @@ public class Versions {
     public void close() throws SQLException {
         insertStatement.close();
         nextVersionStatement.close();
-        updateStatement.close();
+        markFinalStatement.close();
         versionsStatement.close();
     }
 

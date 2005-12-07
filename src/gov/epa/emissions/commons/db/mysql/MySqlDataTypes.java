@@ -62,4 +62,8 @@ public class MySqlDataTypes implements SqlDataTypes {
         return "BOOL";
     }
 
+    public String timestamp() {
+        return "";
+    }
+
 }

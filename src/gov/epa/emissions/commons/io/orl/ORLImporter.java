@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
@@ -36,14 +35,11 @@ public class ORLImporter {
 
     private HelpImporter delegate;
 
-    private SqlDataTypes sqlDataTypes;
-
-    public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
         this.delegate = new HelpImporter();
-        this.sqlDataTypes = sqlDataTypes;
     }
 
     public void setup(File file) throws ImporterException {

@@ -63,4 +63,8 @@ public class PostgresSqlDataTypes implements SqlDataTypes {
         return "BOOL";
     }
 
+    public String timestamp() {
+        return null;
+    }
+
 }
