@@ -61,7 +61,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         File exportfile = new File("test/data/spatial","SpetialSurrogatesExported.txt");
         exporter.export(exportfile);
         //FIXME: compare the original file and the exported file.
-        //exportfile.delete();
+        exportfile.delete();
         assertEquals(43, countRecords());
     }
     
