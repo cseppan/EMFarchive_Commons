@@ -52,7 +52,7 @@ public class NIFOnRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
             FormatUnit formatUnit = fileToDatasetTypeUnit(key);
             if(formatUnit!=null){
                 internalSource.setType(formatUnit.fileFormat().identify());
-                internalSource.setTable(tableName+"_nif_"+key);
+                internalSource.setTable(tableName+"_"+key);
                 formatUnit.setInternalSource(internalSource);
             }
         }

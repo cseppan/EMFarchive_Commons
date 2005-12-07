@@ -85,5 +85,13 @@ public class HelpImporter {
 
         return (String[]) names.toArray(new String[0]);
     }
+    
+    public InternalSource summarySource(String datasetName) {
+        InternalSource source = new InternalSource();
+        source.setType("Summary Table");
+        source.setTable(tableName(datasetName)+"_summary");
+        source.setSource("TODO: get a name");
+        return source;
+    }
 
 }

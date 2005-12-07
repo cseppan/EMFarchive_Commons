@@ -43,6 +43,8 @@ public class SimpleDataset implements Dataset {
 
     private DatasetType datasetType;
 
+    private InternalSource summarySource;
+
     /**
      * No argument constructor needed for hibernate bean mapping
      */
@@ -238,6 +240,15 @@ public class SimpleDataset implements Dataset {
 
     public void addExternalSource(ExternalSource source) {
         this.externalSources.add(source);
+    }
+
+    public void setSummarySource(InternalSource summarySource) {
+        this.summarySource = summarySource;
+        
+    }
+
+    public InternalSource getSummarySource() {
+        return summarySource;
     }
 
 }

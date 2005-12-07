@@ -82,6 +82,10 @@ public interface Dataset extends Serializable {
     void setExternalSources(ExternalSource[] externalSources);
 
     void addExternalSource(ExternalSource source);
+    
+    void setSummarySource(InternalSource summary);
+    
+    public InternalSource getSummarySource();
 
     // FIXME: used in legacy code - convenience methods
     Table getTable(String tableType);

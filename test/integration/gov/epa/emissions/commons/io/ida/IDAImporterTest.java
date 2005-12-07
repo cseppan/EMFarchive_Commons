@@ -38,7 +38,7 @@ public class IDAImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAreaFile() throws Exception {
         File file = new File("test/data/ida","small-area.txt");
-        IDANonPointImporter importer = new IDANonPointImporter(file, dataset, datasource, sqlDataTypes);
+        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
         // assert
         TableReader tableReader = new TableReader(datasource.getConnection());

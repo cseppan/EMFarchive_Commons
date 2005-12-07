@@ -14,7 +14,7 @@ public class EmissionUnitsFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "NIF3.0 Point Emission Records";
+        return "NIF3.0 Point Emission Units";
     }
 
     public Column[] cols() {

@@ -8,18 +8,19 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.SummaryTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
+import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonpointNonRoadSummary;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NIFNonPointImporterTest extends PersistenceTestCase {
+public class NIFNonPointSummaryTest extends PersistenceTestCase {
 
-    private Datasource datasource;
+    private Datasource emissionDatasource;
 
     private SqlDataTypes sqlDataTypes;
 
@@ -33,13 +34,16 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
 
     private String tablePE;
 
+    private Datasource referenceDatasource;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-
+        emissionDatasource = dbServer.getEmissionsDatasource();
+        referenceDatasource = dbServer.getReferenceDatasource();
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
@@ -51,39 +55,28 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
         tablePE = name + "_pe";
     }
 
-    public void testShouldImportAAllNonPointFiles() throws Exception {
+    public void testShouldImportAAllNonPointFilesAndCreateSummary() throws Exception {
         try {
             dataset.setInternalSources(createAllInternalSources());
-            NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
+            NIFNonPointImporter importer = new NIFNonPointImporter(dataset, emissionDatasource, sqlDataTypes);
+            SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource,referenceDatasource,dataset);
             importer.run();
+            summary.createSummary();
+            
             assertEquals(1, countRecords(tableCE));
             assertEquals(21, countRecords(tableEM));
             assertEquals(4, countRecords(tableEP));
             assertEquals(4, countRecords(tablePE));
-        } finally {
+            assertEquals(3, countRecords("test_summary"));
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally {
             dropTables();
         }
     }
 
-    public void testShouldCheckForReuiredInternalSources() throws Exception {
-        dataset.setInternalSources(create_CE_EP_InternalSources());
-        try {
-            NIFNonPointImporter importer = new NIFNonPointImporter(dataset, datasource, sqlDataTypes);
-            assertTrue(false);
-        } catch (ImporterException e) {
-            assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following file types"));
-        }
-    }
-
-    private InternalSource[] create_CE_EP_InternalSources() {
-        List sources = new ArrayList();
-
-        String dir = "test/data/nif/nonpoint";
-        sources.add(internalSource(new File(dir, "ky_ce.txt"), tableCE));
-        sources.add(internalSource(new File(dir, "ky_ep.txt"), tableEP));
-
-        return (InternalSource[]) sources.toArray(new InternalSource[0]);
-    }
 
     private InternalSource[] createAllInternalSources() {
         List sources = new ArrayList();
@@ -106,15 +99,16 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        return tableReader.count(datasource.getName(), tableName);
+        TableReader tableReader = new TableReader(emissionDatasource.getConnection());
+        return tableReader.count(emissionDatasource.getName(), tableName);
     }
 
     protected void dropTables() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        dbUpdate.dropTable(datasource.getName(), tableCE);
-        dbUpdate.dropTable(datasource.getName(), tableEM);
-        dbUpdate.dropTable(datasource.getName(), tableEP);
-        dbUpdate.dropTable(datasource.getName(), tablePE);
+        DbUpdate dbUpdate = new DbUpdate(emissionDatasource.getConnection());
+        dbUpdate.dropTable(emissionDatasource.getName(), tableCE);
+        dbUpdate.dropTable(emissionDatasource.getName(), tableEM);
+        dbUpdate.dropTable(emissionDatasource.getName(), tableEP);
+        dbUpdate.dropTable(emissionDatasource.getName(), tablePE);
+        dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
     }
 }

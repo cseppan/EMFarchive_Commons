@@ -58,7 +58,7 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
             if(formatUnit!=null){
                 formatUnit.setInternalSource(internalSource);
                 internalSource.setType(formatUnit.fileFormat().identify());
-                internalSource.setTable(tableName+"_nif_"+key);
+                internalSource.setTable(tableName+"_"+key);
             }
         }
     }

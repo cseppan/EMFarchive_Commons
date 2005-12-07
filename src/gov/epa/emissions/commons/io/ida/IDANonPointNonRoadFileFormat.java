@@ -9,13 +9,13 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IDANonPointFileFormat implements IDAFileFormat {
+public class IDANonPointNonRoadFileFormat implements IDAFileFormat {
 
     private List cols;
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDANonPointFileFormat( SqlDataTypes types) {
+    public IDANonPointNonRoadFileFormat( SqlDataTypes types) {
         cols = createCols(types);
         sqlDataTypes = types;
     }

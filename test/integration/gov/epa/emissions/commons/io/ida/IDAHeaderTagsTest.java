@@ -37,7 +37,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     public void testShouldIdentifyAllRequiredTags() throws Exception {
         File file = new File("test/data/ida/small-area.txt");
         IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
-        importer.setup(file, new IDANonPointFileFormat(sqlDataTypes));
+        importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
         importer.run();
         dropTable();
     }
@@ -48,7 +48,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
         File file = new File("test/data/ida/noIDATags.txt");
         try {
             IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
-            importer.setup(file, new IDANonPointFileFormat(sqlDataTypes));
+            importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
             importer.run();
             assertTrue(false);
         } catch (Exception e) {
