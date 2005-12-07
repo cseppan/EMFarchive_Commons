@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.speciation;
+package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
@@ -17,17 +17,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
-public class SpeciationProfileExporter {
+public class GenericExporter {
     private Dataset dataset;
 
     private Datasource datasource;
 
     private FileFormat fileFormat;
+    
+    private String delimiter;
+    
+    private boolean formatted;
 
-    public SpeciationProfileExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+    public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.fileFormat = fileFormat;
+        setDelimiter(" ");
+        setFormatted(false);
     }
 
     public void export(File file) throws ExporterException {
@@ -75,11 +81,22 @@ public class SpeciationProfileExporter {
 
     protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
-            writer.print(cols[i].format(data).trim());
+            if(formatted)
+                writer.print(cols[i].format(data));
+            else
+                writer.print(cols[i].format(data).trim());
+            
             if (i + 1 < cols.length)
-                writer.print(" ");// delimiter
+                writer.print(delimiter);// delimiter
         }
         writer.println();
     }
-
+    
+    public void setDelimiter(String del) {
+        this.delimiter = del;
+    }
+    
+    public void setFormatted(boolean formatted) {
+        this.formatted = formatted;
+    }
 }

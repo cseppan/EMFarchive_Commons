@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.generic.GenericExporter;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.io.PrintWriter;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class SpeciationCrossReferenceExporter extends SpeciationProfileExporter {
+public class SpeciationCrossReferenceExporter extends GenericExporter {
     
     private FileFormat fileFormat;
     

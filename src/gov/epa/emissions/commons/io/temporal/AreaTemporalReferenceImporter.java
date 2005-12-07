@@ -13,6 +13,8 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnitWithOptionalCols;
+import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
@@ -72,11 +74,13 @@ public class AreaTemporalReferenceImporter implements Importer {
         Reader reader = new TemporalReferenceReader(fileReader);
 
         loader.load(reader, dataset, table);
-        loadDataset(reader, dataset);
-    }
+        loadDataset(file, table, unit.fileFormat(), reader, dataset);
+            }
 
-    private void loadDataset(Reader reader, Dataset dataset) {
+    private void loadDataset(File file, String table, FileFormat fileFormat, Reader reader, Dataset dataset) {
         // TODO: other properties ?
+        HelpImporter delegate = new HelpImporter();
+        delegate.setInternalSource(file, table, fileFormat, dataset);
         dataset.setDescription(descriptions(reader.comments()));
     }
 
