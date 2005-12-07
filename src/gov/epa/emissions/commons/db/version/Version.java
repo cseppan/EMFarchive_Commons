@@ -68,6 +68,9 @@ public class Version {
     }
 
     public long getBase() {
+        if(version == 0)//i.e. root
+            return 0;
+        
         int start = path.lastIndexOf(",") + 1;
         return Long.parseLong(path.substring(start));
     }
