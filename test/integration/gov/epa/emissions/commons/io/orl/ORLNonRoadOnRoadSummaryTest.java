@@ -14,7 +14,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import java.io.File;
 import java.util.Random;
 
-public class ORLNonPointNonRoadOnRoadSummaryTest extends PersistenceTestCase {
+public class ORLNonRoadOnRoadSummaryTest extends PersistenceTestCase {
 
     private SqlDataTypes sqlDataTypes;
 
@@ -43,13 +43,23 @@ public class ORLNonPointNonRoadOnRoadSummaryTest extends PersistenceTestCase {
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
     }
 
-    public void testShouldImportASmallAndSimplePointFiles() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonpoint.txt");
-        Importer importer = new ORLNonPointImporter(file, dataset, emissionDatasource, sqlDataTypes);
+    public void testShouldImportASmallAndSimpleNonRoadAndCreateSummary() throws Exception {
+        File file = new File("test/data/orl/nc", "small-nonroad.txt");
+        Importer importer = new ORLNonRoadImporter(file, dataset, emissionDatasource, sqlDataTypes);
         importer.run();
-        SummaryTable summary = new ORLNonPointNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
+        SummaryTable summary = new ORLNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
-        assertEquals(6, countRecords("test"));
+        assertEquals(16, countRecords("test"));
+        assertEquals(1, countRecords("test_summary"));
+    }
+
+    public void testShouldImportASmallAndSimpleOnRoadAndCreateSummary() throws Exception {
+        File file = new File("test/data/orl/nc", "small-onroad.txt");
+        Importer importer = new ORLOnRoadImporter(file, dataset, emissionDatasource, sqlDataTypes);
+        importer.run();
+        SummaryTable summary = new ORLNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
+        summary.createSummary();
+        assertEquals(18, countRecords("test"));
         assertEquals(1, countRecords("test_summary"));
     }
 

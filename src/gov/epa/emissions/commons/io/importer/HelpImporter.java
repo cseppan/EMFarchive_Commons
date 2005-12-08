@@ -44,7 +44,7 @@ public class HelpImporter {
         try {
             tableDefinition.createTable(table, tableFormat.cols());
         } catch (SQLException e) {
-            throw new ImporterException("could not create table for dataset - " + datasetName, e);
+            throw new ImporterException("could not create table for dataset - " + datasetName+"\n"+e.getMessage(), e);
         }
 
     }
@@ -75,7 +75,7 @@ public class HelpImporter {
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
 
-        dataset.addInternalSource(source);
+        dataset.setInternalSources(new InternalSource[]{source});
     }
 
     private String[] colNames(Column[] cols) {

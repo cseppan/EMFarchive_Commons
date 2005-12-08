@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
+public class ORLNonPointSummary implements SummaryTable {
 
     private Datasource emissionsDatasource;
 
@@ -20,7 +20,7 @@ public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
 
     private HelpImporter delegate;
 
-    public ORLNonPointNonRoadOnRoadSummary(Datasource emissionDatasource, Datasource referenceDatasource, Dataset dataset) {
+    public ORLNonPointSummary(Datasource emissionDatasource, Datasource referenceDatasource, Dataset dataset) {
         this.emissionsDatasource = emissionDatasource;
         this.referenceDatasource = referenceDatasource;
         this.dataset = dataset;
@@ -29,8 +29,8 @@ public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
 
     public void createSummary() throws Exception {
         dataset.setSummarySource(delegate.summarySource(dataset.getName()));
-        String orlTable = emissionsDatasource.getName() +"."+ dataset.getInternalSources()[0].getTable();
-        String summaryTable = emissionsDatasource.getName() +"."+dataset.getSummarySource().getTable();
+        String orlTable = emissionsDatasource.getName() + "." + dataset.getInternalSources()[0].getTable();
+        String summaryTable = emissionsDatasource.getName() + "." + dataset.getSummarySource().getTable();
 
         // get the pollutant CAS codes
         ResultSet rs = emissionsDatasource.query().executeQuery("SELECT DISTINCT(" + "POLL" + ") FROM " + orlTable);
@@ -95,17 +95,14 @@ public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
                 tempTableNames[i] = tempTableName;
             }
 
-            // the select and join portions of the temporary table CREATE
-            // statements
+            // the select and join portions of the temporary table CREATE statements
             String[] tempTableSelectParts = new String[tempTableNames.length];
             String[] tempTableJoinParts = new String[tempTableNames.length];
             Arrays.fill(tempTableSelectParts, "");
             Arrays.fill(tempTableJoinParts, "");
             for (int index = 0, i = 0; index < pollutants.length; index++, i = (index / MAX_POLLUTANTS_JOIN)) {
-                // when using number (CAS) as column name, enclose in
-                // slanted
-                // quotes
-                String cleanPoll =  pollutants[index].replace('-', '_');
+                // when using number (CAS) as column name, enclose in slanted quotes
+                String cleanPoll = "_"+ pollutants[index].replace('-', '_');
                 tempTableSelectParts[i] += cleanPoll + "." + emissionCol + " as " + cleanPoll + ", ";
                 summaryTableSelectPart += "t" + i + "." + cleanPoll + " as " + cleanPoll + ", ";
 
@@ -137,10 +134,8 @@ public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
         else {
             // for each pollutant CAS code
             for (int i = 0; i < numOfPollutants; i++) {
-                // when using number (CAS) as column name, enclose in
-                // slanted
-                // quotes
-                String cleanPoll = "_" + pollutants[i].replace('-', '_') ;
+                // when using number (CAS) as column name, enclose in slanted quotes
+                String cleanPoll = "_" + pollutants[i].replace('-', '_');
                 summaryTableSelectPart += cleanPoll + "." + emissionCol + " as " + cleanPoll + ", ";
                 // get FIPS, SCC and CAS for pollutant
                 summaryTableJoinPart += "LEFT JOIN (SELECT " + "FIPS" + ", " + "SCC" + ", " + emissionCol + " FROM "
@@ -155,6 +150,7 @@ public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
         // create the temp tables first, if needed
         if (tempTableNames != null) {
             for (int i = 0; i < tempTableQueries.length; i++) {
+                System.err.println("temp table query-" + tempTableQueries[i]);
                 emissionsDatasource.query().execute(tempTableQueries[i]);
                 emissionsDatasource.query().execute((String) tempTableIndexList.get(i));
             }
@@ -170,8 +166,8 @@ public class ORLNonPointNonRoadOnRoadSummary implements SummaryTable {
                 + " = f." + "state_county_fips" + " AND " + summaryTableAndPart + "f.country_code='US')";
 
         // create the actual table
-        System.err.println("query-"+query);
-        
+        System.err.println("query-" + query);
+
         emissionsDatasource.query().execute(query);
 
         // drop the temp tables, if needed

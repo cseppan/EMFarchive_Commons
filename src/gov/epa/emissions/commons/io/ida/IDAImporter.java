@@ -75,6 +75,7 @@ public class IDAImporter {
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {
+            e.printStackTrace();
             delegate.dropTable(table, emissionDatasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }

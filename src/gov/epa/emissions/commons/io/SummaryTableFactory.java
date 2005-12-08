@@ -8,7 +8,8 @@ import gov.epa.emissions.commons.io.ida.IDASummary;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonpointNonRoadSummary;
 import gov.epa.emissions.commons.io.nif.onroad.NIFOnRoadSummary;
 import gov.epa.emissions.commons.io.nif.point.NIFPointSummary;
-import gov.epa.emissions.commons.io.orl.ORLNonPointNonRoadOnRoadSummary;
+import gov.epa.emissions.commons.io.orl.ORLNonPointSummary;
+import gov.epa.emissions.commons.io.orl.ORLNonRoadOnRoadSummary;
 import gov.epa.emissions.commons.io.orl.ORLPointSummary;
 
 public class SummaryTableFactory {
@@ -64,9 +65,10 @@ public class SummaryTableFactory {
 
         DatasetType datasetType = dataset.getDatasetType();
         String name = datasetType.getName().toLowerCase();
-        if (name.indexOf("nonpoint") >= 0 || name.indexOf("nonroad") >= 0 || name.indexOf("onroad") >= 0)
-            return new ORLNonPointNonRoadOnRoadSummary(emissions, reference, dataset);
-
+        if (name.indexOf("nonpoint") >= 0)
+            return new ORLNonPointSummary(emissions, reference, dataset);
+        if (name.indexOf("nonroad") >= 0 || name.indexOf("onroad") >= 0)
+            return new ORLNonRoadOnRoadSummary(emissions, reference, dataset);
         if (name.indexOf("point") >= 0)
             return new ORLPointSummary(emissions, reference, dataset);
 
