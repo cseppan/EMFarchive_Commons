@@ -75,6 +75,8 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(2, allVersions.length);
         assertEquals(base.getVersion(), allVersions[0].getVersion());
         assertEquals(derived.getVersion(), allVersions[1].getVersion());
+        assertEquals(1, allVersions[1].getVersion());
+        assertEquals("version one", allVersions[1].getName());
     }
 
     public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {

@@ -121,13 +121,7 @@ public class Versions {
 
         List versions = new ArrayList();
         while (rs.next()) {
-            Version version = new Version();
-            version.setDatasetId(rs.getLong("Dataset_Id"));
-            version.setVersion(rs.getInt("Version"));
-            version.setPath(rs.getString("Path"));
-            if (rs.getBoolean("final_version"))
-                version.markFinal();
-
+            Version version = extractVersion(rs);
             versions.add(version);
         }
 
@@ -167,7 +161,7 @@ public class Versions {
         markFinalStatement.setLong(2, derived.getDatasetId());
         markFinalStatement.setInt(3, derived.getVersion());
         markFinalStatement.executeUpdate();
-        
+
         return derived;
     }
 
