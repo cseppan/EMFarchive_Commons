@@ -6,12 +6,10 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.FileFormat;
-import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
 import java.io.File;
 import java.util.Calendar;
@@ -22,7 +20,9 @@ import java.util.List;
 
 public class IDAImporter {
 
-    private Datasource datasource;
+    private Datasource emissionDatasource;
+    
+    private Datasource referenceDatasource;
 
     private Dataset dataset;
 
@@ -34,9 +34,12 @@ public class IDAImporter {
 
     private File file;
 
-    public IDAImporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    
+
+    public IDAImporter(Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.emissionDatasource = emissionDatasource;
+        this.referenceDatasource = referenceDatasource;
         this.sqlDataTypes = sqlDataTypes;
         this.delegate = new HelpImporter();
     }
@@ -49,7 +52,7 @@ public class IDAImporter {
         headerReader.close();
 
         fileFormat.addPollutantCols(headerReader.polluntants());
-        FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        IDATableFormat tableFormat = new IDATableFormat(fileFormat, sqlDataTypes);
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         unit.setInternalSource(internalSource(file,dataset.getName()));
@@ -68,11 +71,11 @@ public class IDAImporter {
 
     public void run() throws ImporterException {
         String table = unit.getInternalSource().getTable();
-        delegate.createTable(table, datasource, unit.tableFormat(), dataset.getName());
+        delegate.createTable(table, emissionDatasource, unit.tableFormat(), dataset.getName());
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {
-            delegate.dropTable(table, datasource);
+            delegate.dropTable(table, emissionDatasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }
@@ -80,7 +83,7 @@ public class IDAImporter {
     private void doImport(DatasetTypeUnit unit, Dataset dataset, String table) throws Exception {
 
         Reader idaReader = new IDAFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
+        IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
         loader.load(idaReader, dataset, table);
         loadDataset(file, table, unit.fileFormat(), idaReader.comments(), dataset);
     }

@@ -14,67 +14,70 @@ import java.util.Random;
 
 public class IDAImporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
+    private Datasource emissionDatasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private Datasource referenceDatasource;
+
     protected void setUp() throws Exception {
         super.setUp();
         DbServer dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-
+        emissionDatasource = dbServer.getEmissionsDatasource();
+        referenceDatasource = dbServer.getReferenceDatasource();
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
     protected void tearDown() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        DbUpdate dbUpdate = new DbUpdate(emissionDatasource.getConnection());
+        dbUpdate.dropTable(emissionDatasource.getName(), dataset.getName());
     }
 
     public void testShouldImportASmallAreaFile() throws Exception {
         File file = new File("test/data/ida","small-area.txt");
-        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(file, dataset, datasource, sqlDataTypes);
+        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(file, dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
         importer.run();
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        TableReader tableReader = new TableReader(emissionDatasource.getConnection());
+        assertEquals(10, tableReader.count(emissionDatasource.getName(), dataset.getName()));
     }
 
     public void testShouldImportASmallPointFile() throws Exception {
         File file = new File("test/data/ida", "small-point.txt");
-        IDAPointImporter importer = new IDAPointImporter(file, dataset, datasource, sqlDataTypes);
-        importer.run();
+        IDAPointImporter importer = new IDAPointImporter(file, dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
+            importer.run();
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        TableReader tableReader = new TableReader(emissionDatasource.getConnection());
+        assertEquals(10, tableReader.count(emissionDatasource.getName(), dataset.getName()));
     }
 
     public void testShouldImportASmallMobileFile() throws Exception {
         File file = new File("test/data/ida","small-mobile.txt");
-        IDAMobileImporter importer = new IDAMobileImporter(file, dataset, datasource, sqlDataTypes);
+        IDAMobileImporter importer = new IDAMobileImporter(file, dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
 
         importer.run();
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        TableReader tableReader = new TableReader(emissionDatasource.getConnection());
+        assertEquals(10, tableReader.count(emissionDatasource.getName(), dataset.getName()));
     }
 
     public void FIXME_testShouldImportASmallActivityFile() throws Exception {
         File file  = new File("test/data/ida/small-activity.txt");
 
-        IDAActivityImporter importer = new IDAActivityImporter(file, dataset, datasource, sqlDataTypes);
+        IDAActivityImporter importer = new IDAActivityImporter(file, dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
         importer.run();
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        TableReader tableReader = new TableReader(emissionDatasource.getConnection());
+        assertEquals(10, tableReader.count(emissionDatasource.getName(), dataset.getName()));
     }
 
 }

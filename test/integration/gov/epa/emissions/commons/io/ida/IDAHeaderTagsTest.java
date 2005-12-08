@@ -14,29 +14,31 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
 
     private SqlDataTypes sqlDataTypes;
 
-    private Datasource datasource;
+    private Datasource emissionDatasource;
 
     private SimpleDataset dataset;
+
+    private Datasource referenceDatasource;
 
     protected void setUp() throws Exception {
         super.setUp();
         DbServer dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-
+        emissionDatasource = dbServer.getEmissionsDatasource();
+        referenceDatasource = dbServer.getReferenceDatasource();
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
     private void dropTable() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        DbUpdate dbUpdate = new DbUpdate(emissionDatasource.getConnection());
+        dbUpdate.dropTable(emissionDatasource.getName(), dataset.getName());
     }
 
     public void testShouldIdentifyAllRequiredTags() throws Exception {
         File file = new File("test/data/ida/small-area.txt");
-        IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
+        IDAImporter importer = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
         importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
         importer.run();
         dropTable();
@@ -47,7 +49,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     public void testShouldIdentifyNoIDATag() throws Exception {
         File file = new File("test/data/ida/noIDATags.txt");
         try {
-            IDAImporter importer = new IDAImporter(dataset, datasource, sqlDataTypes);
+            IDAImporter importer = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
             importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
             importer.run();
             assertTrue(false);

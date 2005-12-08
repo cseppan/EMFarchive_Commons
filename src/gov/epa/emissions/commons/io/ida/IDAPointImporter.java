@@ -14,9 +14,9 @@ public class IDAPointImporter implements Importer {
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDAPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public IDAPointImporter(File file, Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         this.sqlDataTypes = sqlDataTypes;
-        delegate = new IDAImporter(dataset, datasource, sqlDataTypes);
+        delegate = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
         setup(file);
     }
 
