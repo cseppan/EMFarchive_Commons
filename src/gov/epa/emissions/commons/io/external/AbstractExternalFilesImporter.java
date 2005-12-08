@@ -25,8 +25,8 @@ public abstract class AbstractExternalFilesImporter implements Importer {
     private Dataset dataset;
 
     public AbstractExternalFilesImporter(File folder, String filePattern, Dataset dataset) throws ImporterException {
-        setup(folder,filePattern);
         this.dataset = dataset;
+        setup(folder, filePattern, dataset);
         importerName = "Abstract External Files Importer";
         log.debug("Default AbstractExternal Files importer created");
     }
@@ -63,7 +63,7 @@ public abstract class AbstractExternalFilesImporter implements Importer {
         return file;
     }
 
-    private void setup(File path, String fileName) throws ImporterException {
+    private void setup(File path, String fileName, Dataset dataset) throws ImporterException {
         DatasetType datasetType = dataset.getDatasetType();
         files = null;
         int minFiles = datasetType.getMinfiles();
