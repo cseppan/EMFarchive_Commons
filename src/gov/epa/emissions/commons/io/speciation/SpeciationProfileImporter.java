@@ -30,14 +30,13 @@ public class SpeciationProfileImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public SpeciationProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
-            String identifier) throws ImporterException {
+    public SpeciationProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         this.delegate = new HelpImporter();
         
         setup(file);
         this.dataset = dataset;
         this.datasource = datasource;
-        FileFormat fileFormat = new ProfileFileFormat(identifier, sqlDataTypes);
+        FileFormat fileFormat = new ProfileFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }

@@ -10,16 +10,15 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 
 public class ProfileFileFormat implements FileFormat{
-    private String identifier;
+
     private Column[] columns;
     
-    public ProfileFileFormat(String identifier, SqlDataTypes type){
+    public ProfileFileFormat(SqlDataTypes type){
         columns = createCols(type);
-        this.identifier = identifier;
     }
     
     public String identify() {
-        return identifier;
+        return "Chem Speciation Profile";
     }
 
     public Column[] cols() {

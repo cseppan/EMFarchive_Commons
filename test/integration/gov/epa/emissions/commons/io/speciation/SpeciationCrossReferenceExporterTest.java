@@ -57,8 +57,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         importer.run();
         
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, 
-                datasource, new SpeciationCrossRefFileFormat(sqlDataTypes),
-                sqlDataTypes);
+                datasource, sqlDataTypes);
         File exportfile = new File("test/data/speciation","SpeciatiationCrossRefExported.txt");
         exporter.export(exportfile);
         //FIXME: compare the original file and the exported file.

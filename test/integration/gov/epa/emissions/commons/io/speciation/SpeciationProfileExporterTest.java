@@ -39,7 +39,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
         
         this.delegate = new HelpImporter();
-        FileFormat fileFormat = new ProfileFileFormat("Speciation Profile", sqlDataTypes);
+        FileFormat fileFormat = new ProfileFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         String table = delegate.tableName(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
@@ -53,11 +53,11 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
 
     public void testExportChemicalSpeciationData() throws Exception {
         File importFile = new File("test/data/speciation","gspro-speciation.txt");
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(importFile, dataset, datasource, sqlDataTypes, "Chem Spec");
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
         
         SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, 
-                datasource, new ProfileFileFormat("Chem Speciation Profile", sqlDataTypes));
+                datasource, sqlDataTypes);
         File file = new File("test/data/speciation","speciatiationprofileexported.txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.

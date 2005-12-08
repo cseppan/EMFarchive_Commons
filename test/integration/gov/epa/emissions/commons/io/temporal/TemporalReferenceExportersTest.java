@@ -57,7 +57,7 @@ public class TemporalReferenceExportersTest extends PersistenceTestCase {
         importer.run();
 
         PointTemporalReferenceExporter exporter = new PointTemporalReferenceExporter(dataset, 
-                datasource, new PointTemporalReferenceFileFormat(sqlDataTypes));
+                datasource, sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference","point-cross-ref-exported.txt");
         exporter.export(exportfile);
         //FIXME: compare the original file and the exported file.        
@@ -74,7 +74,7 @@ public class TemporalReferenceExportersTest extends PersistenceTestCase {
         assertEquals(28, countRecords("AREA_SOURCE"));
         
         AreaTemporalReferenceExporter exporter = new AreaTemporalReferenceExporter(dataset, 
-                datasource, new AreaTemporalReferenceFileFormat(sqlDataTypes));
+                datasource, sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference","area-cross-ref-exported.txt");
         exporter.export(exportfile);
         //FIXME: compare the original file and the exported file.        
@@ -91,7 +91,7 @@ public class TemporalReferenceExportersTest extends PersistenceTestCase {
         assertEquals(28, countRecords("MOBILE_SOURCE"));
         
         MobileTemporalReferenceExporter exporter = new MobileTemporalReferenceExporter(dataset, 
-                datasource, new MobileTemporalReferenceFileFormat(sqlDataTypes));
+                datasource, sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference","mobile-cross-ref-exported.txt");
         exporter.export(exportfile);
         //FIXME: compare the original file and the exported file.        

@@ -41,7 +41,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(new Random().nextInt());
         
         this.delegate = new HelpImporter();
-        FileFormat fileFormat = new ProfileFileFormat("Speciation Profile", sqlDataTypes);
+        FileFormat fileFormat = new ProfileFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         String table = delegate.tableName(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
@@ -55,7 +55,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
 
     public void testImportChemicalSpeciationData() throws Exception {
         File file = new File("test/data/speciation","gspro-speciation.txt");
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(file, dataset, datasource, sqlDataTypes, "Speciation Profile");
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
 
         assertEquals(88, countRecords());

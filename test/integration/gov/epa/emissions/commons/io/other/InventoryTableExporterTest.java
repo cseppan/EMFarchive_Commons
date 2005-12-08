@@ -42,7 +42,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         importer.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                datasource, new InventoryTableFileFormat(sqlDataTypes, 1));
+                datasource, sqlDataTypes);
         File file = new File("test/data/other","inventorytableexported.txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.

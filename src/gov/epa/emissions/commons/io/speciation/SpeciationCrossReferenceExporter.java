@@ -25,9 +25,9 @@ public class SpeciationCrossReferenceExporter extends GenericExporter {
     private SqlDataTypes types;
     
     public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, 
-            FileFormat fileFormat, SqlDataTypes types) {
-        super(dataset, datasource, fileFormat);
-        this.fileFormat = fileFormat;
+            SqlDataTypes types) {
+        super(dataset, datasource,  new SpeciationCrossRefFileFormat(types));
+        this.fileFormat = new SpeciationCrossRefFileFormat(types);
         this.types = types;
     }
     
