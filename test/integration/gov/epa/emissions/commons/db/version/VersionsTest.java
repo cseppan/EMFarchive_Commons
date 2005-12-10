@@ -52,6 +52,29 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(1, path[0].getDatasetId());
     }
 
+    public void testGetsLastFinalVersionForDataset() throws Exception{
+        int finalVersion = versions.getLastFinalVersion(1);
+        assertEquals(0,finalVersion);
+    }
+    
+    public void testSeveralMarksDerivedVersionAsFinal() throws Exception{
+        long datasetId = 1;
+        Version base = versions.get(datasetId, 0);
+
+        Version derived = versions.derive(base, "version one");
+        versions.markFinal(derived);
+        int finalVersion = versions.getLastFinalVersion(datasetId);
+        assertEquals(derived.getVersion(),finalVersion);
+        derived = versions.derive(derived,"version two");
+        versions.markFinal(derived);
+        finalVersion = versions.getLastFinalVersion(datasetId);
+        assertEquals(derived.getVersion(),finalVersion);
+        derived = versions.derive(derived,"version two");
+        versions.markFinal(derived);
+        finalVersion = versions.getLastFinalVersion(datasetId);
+        assertEquals(derived.getVersion(),finalVersion);
+    }
+    
     public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
         Version base = versions.get(1, 0);
 

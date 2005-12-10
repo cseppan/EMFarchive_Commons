@@ -114,6 +114,22 @@ public class Versions {
         return versions.toArray();
     }
 
+    public int getLastFinalVersion(long datasetId) throws SQLException{
+        int versionNumber = 0;
+        
+        Version[] allVersionForDataset = get(datasetId);
+        
+        for (int i = 0; i < allVersionForDataset.length; i++) {
+            int versNum = allVersionForDataset[i].getVersion();
+
+            if (versNum > versionNumber){
+                versionNumber = allVersionForDataset[i].getVersion();
+            }
+        }
+        
+        return versionNumber;
+    }
+    
     public Version[] get(long datasetId) throws SQLException {
         // FIXME: convert to long
         versionsStatement.setInt(1, (int) datasetId);
