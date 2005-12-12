@@ -8,12 +8,8 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.Exporter;
-import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.FileFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.orl.ORLOnRoadExporter;
@@ -42,13 +38,13 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
         
-        HelpImporter delegate = new HelpImporter();
+        /*HelpImporter delegate = new HelpImporter();
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new VersionedTemporalReferenceTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new VersionedTemporalTableFormat(fileFormat, sqlDataTypes);
         String table = delegate.tableName(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-//        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
-    
+        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+        */
     }
 
     protected void tearDown() throws Exception {
@@ -75,14 +71,14 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         exportfile.delete();
     }
         
-        public void ShouldExportOnRoadVersionZero() throws Exception {
-            File importFile = new File("test/data/orl/nc","small-onroad.txt");
-            Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
-            importer.run();
-            File exportfile = new File("test/data/temporal-crossreference","VersionedCrossRefExported.txt");
-            Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
-            exporter.export(0, exportfile);
-        }
+    public void ShouldExportReferenceVersionZero() throws Exception {
+        File importFile = new File("test/data/orl/nc","small-onroad.txt");
+        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
+        File exportfile = new File("test/data/temporal-crossreference","VersionedCrossRefExported.txt");
+        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
+        exporter.export(0, exportfile);
+    }
     
 
     private void assertVersionInfo(String name, int rows) throws Exception {

@@ -4,21 +4,15 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.temporal.DiurnalFileFormat;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.temporal.MonthlyFileFormat;
-import gov.epa.emissions.commons.io.temporal.TemporalProfileImporter;
-import gov.epa.emissions.commons.io.temporal.WeeklyFileFormat;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Random;
+
+import org.dbunit.dataset.ITable;
 
 public class TemporalProfileImporterTest extends PersistenceTestCase {
 
@@ -26,7 +20,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private TemporalProfileImporter importer;
+    //private TemporalProfileImporter importer;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -35,24 +29,24 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
-        FixedColsTableFormat monthlyMeta = new FixedColsTableFormat(new MonthlyFileFormat(typeMapper), typeMapper);
-        createTable("Monthly", datasource, monthlyMeta);
+        //FixedColsTableFormat monthlyMeta = new FixedColsTableFormat(new MonthlyFileFormat(typeMapper), typeMapper);
+        //createTable("Monthly", datasource, monthlyMeta);
 
-        FixedColsTableFormat weeklyMeta = new FixedColsTableFormat(new WeeklyFileFormat(typeMapper), typeMapper);
-        createTable("Weekly", datasource, weeklyMeta);
+        //FixedColsTableFormat weeklyMeta = new FixedColsTableFormat(new WeeklyFileFormat(typeMapper), typeMapper);
+        //createTable("Weekly", datasource, weeklyMeta);
 
-        FixedColsTableFormat diurnalMeta = new FixedColsTableFormat(new DiurnalFileFormat(typeMapper), typeMapper);
-        createTable("Diurnal_Weekday", datasource, diurnalMeta);
-        createTable("Diurnal_Weekend", datasource, diurnalMeta);
+        //FixedColsTableFormat diurnalMeta = new FixedColsTableFormat(new DiurnalFileFormat(typeMapper), typeMapper);
+        //createTable("Diurnal_Weekday", datasource, diurnalMeta);
+        //createTable("Diurnal_Weekend", datasource, diurnalMeta);
 
-        importer = new TemporalProfileImporter(datasource, typeMapper);
+        //importer = new TemporalProfileImporter(file, dataset, datasource, typeMapper);
     }
 
-    private void createTable(String table, Datasource datasource, FixedColsTableFormat colsMetadata)
-            throws SQLException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, colsMetadata.cols());
-    }
+    //private void createTable(String table, Datasource datasource, FixedColsTableFormat colsMetadata)
+   //         throws SQLException {
+    //    TableDefinition tableDefinition = datasource.tableDefinition();
+    //    tableDefinition.createTable(table, colsMetadata.cols());
+    //}
 
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
@@ -62,18 +56,54 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekend");
     }
 
-    public void testShouldReadFromFileAndLoadMonthlyPacketIntoTable() throws ImporterException {
+    public void testShouldReadFromFileAndLoadMonthlyPacketIntoTable() throws Exception {
         File file = new File("test/data/temporal-profiles/small.txt");
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
-        importer.run(file, dataset);
+        TemporalProfileImporter importer = new TemporalProfileImporter(file, dataset, datasource, typeMapper);
+        importer.run();
 
         // assert
+        assertEquals(10, countRecords("Monthly"));
+        assertVersionInfo("Monthly", countRecords("Monthly"));
+        
+        assertEquals(13, countRecords("WEEKLY"));
+        assertVersionInfo("WEEKLY", countRecords("WEEKLY"));
+        
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, 
+                datasource, typeMapper);
+        File exportfile = new File("test/data/temporal-profiles","VersionedTemporalProfileExported.txt");
+        exporter.export(exportfile);
+        //FIXME: compare the original file and the exported file.
+        //exportfile.delete();
+    }
+    
+    private void assertVersionInfo(String name, int rows) throws Exception {
+        verifyVersionCols(name, rows);
+    }
+
+    private void verifyVersionCols(String table, int rows) throws Exception {
         TableReader tableReader = new TableReader(datasource.getConnection());
-        assertEquals(10, tableReader.count(datasource.getName(), "Monthly"));
+
+        ITable tableRef = tableReader.table(datasource.getName(), table);
+        for (int i = 0; i < rows; i++) {
+            Object recordId = tableRef.getValue(i, "Record_Id");
+            assertEquals((i + 1) + "", recordId.toString());
+
+            Object version = tableRef.getValue(i, "Version");
+            assertEquals("0", version.toString());
+
+            Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
+            assertEquals("", deleteVersions);
+        }
+    }
+
+    private int countRecords(String table) {
+        TableReader tableReader = new TableReader(datasource.getConnection());
+        return tableReader.count(datasource.getName(), table);
     }
 
 }

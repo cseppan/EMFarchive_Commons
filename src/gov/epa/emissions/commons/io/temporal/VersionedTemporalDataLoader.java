@@ -12,12 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VersionedTemporalReferenceDataLoader implements DataLoader {
+public class VersionedTemporalDataLoader implements DataLoader {
     private Datasource datasource;
 
-    private VersionedTemporalReferenceTableFormat colsMetadata;
+    private VersionedTemporalTableFormat colsMetadata;
 
-    public VersionedTemporalReferenceDataLoader(Datasource datasource, VersionedTemporalReferenceTableFormat tableFormat) {
+    public VersionedTemporalDataLoader(Datasource datasource, VersionedTemporalTableFormat tableFormat) {
         this.datasource = datasource;
         this.colsMetadata = tableFormat;
     }
@@ -52,7 +52,7 @@ public class VersionedTemporalReferenceDataLoader implements DataLoader {
         }
     }
     
-    private String[] data(Dataset dataset, Record record, VersionedTemporalReferenceTableFormat tableFormat) {
+    private String[] data(Dataset dataset, Record record, VersionedTemporalTableFormat tableFormat) {
         List data = new ArrayList();
         data.addAll(record.tokens());
         tableFormat.fillDefaults(data, dataset.getDatasetid()); 

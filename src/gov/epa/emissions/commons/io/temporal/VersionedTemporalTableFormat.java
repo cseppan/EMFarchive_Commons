@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VersionedTemporalReferenceTableFormat implements FileFormat, TableFormat {
+public class VersionedTemporalTableFormat implements FileFormat, TableFormat {
     private FileFormat base;
 
     private Column[] cols;
 
-    public VersionedTemporalReferenceTableFormat(FileFormat base, SqlDataTypes types) {
+    public VersionedTemporalTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
         cols = createCols(types);
     }

@@ -40,14 +40,11 @@ public class TemporalReferenceImporter implements Importer {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new VersionedTemporalReferenceTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new VersionedTemporalTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
     }
 
-    /**
-     * Expects table 'AREA_SOURCE' to be available in Datasource
-     */
     private void setup(File file) throws ImporterException {
         this.file = validateFile(file);
     }
@@ -63,18 +60,19 @@ public class TemporalReferenceImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table,datasource,unit.tableFormat(),dataset.getName());
+        delegate.createTable(table, datasource, unit.tableFormat(), dataset.getName());
         try {
-            doImport(file, dataset, table, (VersionedTemporalReferenceTableFormat)unit.tableFormat());
+            doImport(file, dataset, table, (VersionedTemporalTableFormat)unit.tableFormat());
         } catch (Exception e) {
+            delegate.dropTable(table, datasource);
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
 
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, VersionedTemporalReferenceTableFormat tableFormat)
+    private void doImport(File file, Dataset dataset, String table, VersionedTemporalTableFormat tableFormat)
             throws Exception {
-        VersionedTemporalReferenceDataLoader loader = new VersionedTemporalReferenceDataLoader(datasource, tableFormat);
+        VersionedTemporalDataLoader loader = new VersionedTemporalDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
         Reader reader = new TemporalReferenceReader(fileReader);
 
