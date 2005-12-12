@@ -47,7 +47,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         TableFormat tableFormat = new VersionedTemporalReferenceTableFormat(fileFormat, sqlDataTypes);
         String table = delegate.tableName(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+//        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
     
     }
 
