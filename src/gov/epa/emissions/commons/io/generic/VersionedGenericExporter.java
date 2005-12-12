@@ -1,9 +1,10 @@
-package gov.epa.emissions.commons.io.orl;
+package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.FileFormat;
@@ -15,21 +16,27 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 
-public class ORLExporter {
-
+public class VersionedGenericExporter implements Exporter {
     private Dataset dataset;
 
     private Datasource datasource;
 
     private FileFormat fileFormat;
+    
+    private String delimiter;
+    
+    private boolean formatted;
 
-    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+    public VersionedGenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.fileFormat = fileFormat;
+        setDelimiter(" ");
+        setFormatted(false);
     }
-
+    
     public void export(File file) throws ExporterException {
         export(0, file);
     }
@@ -45,7 +52,7 @@ public class ORLExporter {
         write(version, file, writer);
     }
 
-    private void write(int version, File file, PrintWriter writer) throws ExporterException {
+    protected void write(int version, File file, PrintWriter writer) throws ExporterException {
         try {
             writeHeaders(writer, dataset);
             writeData(version, writer, dataset, datasource);
@@ -56,11 +63,18 @@ public class ORLExporter {
         }
     }
 
-    private void writeHeaders(PrintWriter writer, Dataset dataset) {
-        writer.println(dataset.getDescription());
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
+        String header = dataset.getDescription();
+
+        if(header != null){
+            StringTokenizer st = new StringTokenizer(header, "#");
+            while (st.hasMoreTokens()){
+                writer.print("#" + st.nextToken());
+            }
+        }
     }
 
-    private void writeData(int version, PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+    protected void writeData(int version, PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         DataQuery q = datasource.query();
         InternalSource source = dataset.getInternalSources()[0];
 
@@ -71,13 +85,24 @@ public class ORLExporter {
             writeRecord(cols, data, writer);
     }
 
-    private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+    protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
-            writer.print(cols[i].format(data));
+            if(formatted)
+                writer.print(cols[i].format(data));
+            else
+                writer.print(cols[i].format(data));
+            
             if (i + 1 < cols.length)
-                writer.print(", ");// delimiter
+                writer.print(delimiter);// delimiter
         }
         writer.println();
     }
-
+    
+    public void setDelimiter(String del) {
+        this.delimiter = del;
+    }
+    
+    public void setFormatted(boolean formatted) {
+        this.formatted = formatted;
+    }
 }

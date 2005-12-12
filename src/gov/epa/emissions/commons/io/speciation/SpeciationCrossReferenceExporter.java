@@ -40,8 +40,10 @@ public class SpeciationCrossReferenceExporter extends GenericExporter {
             while (st.hasMoreTokens()){
                 lasttoken = st.nextToken();
                 int index = lasttoken.indexOf("/POINT DEFN/");
-                if(index <= 0)
+                if(index < 0)
                     writer.print("#" + lasttoken);
+                else if(index == 0)
+                    writer.print(lasttoken);
                 else
                     writer.print("#" + lasttoken.substring(0,index)
                             + lasttoken.substring(index));
