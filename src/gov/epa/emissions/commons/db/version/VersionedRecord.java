@@ -12,6 +12,13 @@ public class VersionedRecord extends Record {
 
     private String deleteVersions;
 
+    public VersionedRecord() {// needed for serialization
+    }
+
+    public VersionedRecord(int recordId) {
+        this.recordId = recordId;
+    }
+
     /**
      * @return Returns the deleteVersions.
      */
