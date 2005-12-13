@@ -46,7 +46,7 @@ public class MobileTemporalReferenceImporterTest extends PersistenceTestCase {
                 sqlDataTypes);
         importer.run();
 
-        assertEquals(28, countRecords("MOBILE_SOURCE"));
+        assertEquals(34, countRecords("MOBILE_SOURCE"));
     }
 
     private int countRecords(String table) {

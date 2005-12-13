@@ -75,7 +75,9 @@ public class HelpImporter {
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
 
-        dataset.setInternalSources(new InternalSource[]{source});
+        //Has to append the InternalSource to the internalsource list in dataset
+        dataset.addInternalSource(source); 
+        //dataset.setInternalSources(new InternalSource[]{source});
     }
 
     private String[] colNames(Column[] cols) {

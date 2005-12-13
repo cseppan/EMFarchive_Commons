@@ -70,13 +70,13 @@ public class TemporalProfileImporter implements Importer {
                 String header = readHeader(fileReader);
 
                 FileFormat fileFormat = fileFormat(header);
-                VersionedTemporalTableFormat tableFormat = new VersionedTemporalTableFormat(fileFormat, sqlType);
+                VersionedTableFormat tableFormat = new VersionedTableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
 
                 delegate.createTable(table(header), datasource, unit.tableFormat(), dataset.getName());
                 doImport(fileReader, dataset, unit, header);
-                loadDataset(file, table(header), unit.fileFormat(), dataset);
             }
+            addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (Exception e) {
             //delegate.dropTable(table(header), datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
@@ -87,10 +87,10 @@ public class TemporalProfileImporter implements Importer {
     private void doImport(BufferedReader fileReader, Dataset dataset, DatasetTypeUnit unit, String header)
             throws Exception {
         Reader reader = new FixedWidthPacketReader(fileReader, header, unit.fileFormat());
-        DataLoader loader = new VersionedTemporalDataLoader(datasource, (VersionedTemporalTableFormat) unit.tableFormat());
+        DataLoader loader = new VersionedTemporalDataLoader(datasource, (VersionedTableFormat) unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
-        addVersionZeroEntryToVersionsTable(datasource, dataset);
+        loadDataset(file, table(header), unit.fileFormat(), dataset);
     }
 
     // TODO: revisit ?

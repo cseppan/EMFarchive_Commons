@@ -20,33 +20,13 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    //private TemporalProfileImporter importer;
-
     protected void setUp() throws Exception {
         super.setUp();
 
         DbServer dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
-
-        //FixedColsTableFormat monthlyMeta = new FixedColsTableFormat(new MonthlyFileFormat(typeMapper), typeMapper);
-        //createTable("Monthly", datasource, monthlyMeta);
-
-        //FixedColsTableFormat weeklyMeta = new FixedColsTableFormat(new WeeklyFileFormat(typeMapper), typeMapper);
-        //createTable("Weekly", datasource, weeklyMeta);
-
-        //FixedColsTableFormat diurnalMeta = new FixedColsTableFormat(new DiurnalFileFormat(typeMapper), typeMapper);
-        //createTable("Diurnal_Weekday", datasource, diurnalMeta);
-        //createTable("Diurnal_Weekend", datasource, diurnalMeta);
-
-        //importer = new TemporalProfileImporter(file, dataset, datasource, typeMapper);
     }
-
-    //private void createTable(String table, Datasource datasource, FixedColsTableFormat colsMetadata)
-   //         throws SQLException {
-    //    TableDefinition tableDefinition = datasource.tableDefinition();
-    //    tableDefinition.createTable(table, colsMetadata.cols());
-    //}
 
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
@@ -54,6 +34,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), "Weekly");
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekday");
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekend");
+        dbUpdate.deleteAll(datasource.getName(), "versions");
     }
 
     public void testShouldReadFromFileAndLoadMonthlyPacketIntoTable() throws Exception {
@@ -78,7 +59,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         File exportfile = new File("test/data/temporal-profiles","VersionedTemporalProfileExported.txt");
         exporter.export(exportfile);
         //FIXME: compare the original file and the exported file.
-        //exportfile.delete();
+        exportfile.delete();
     }
     
     private void assertVersionInfo(String name, int rows) throws Exception {

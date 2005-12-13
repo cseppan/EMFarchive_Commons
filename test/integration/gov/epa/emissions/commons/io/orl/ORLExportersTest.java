@@ -42,7 +42,7 @@ public class ORLExportersTest extends PersistenceTestCase {
 
     protected void tearDown() throws Exception {
         DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-        //dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testShouldExportOnRoad() throws Exception {

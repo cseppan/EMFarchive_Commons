@@ -26,7 +26,7 @@ public class WeeklyFileFormat implements FileFormat {
         Column fri = new Column("Fri", types.intType(), 4, new IntegerFormatter());
         Column sat = new Column("Sat", types.intType(), 4, new IntegerFormatter());
         Column sun = new Column("Sun", types.intType(), 4, new IntegerFormatter());
-        Column totalWeights = new Column("Total_Weights", types.intType(), 5, new IntegerFormatter());
+        Column totalWeights = new Column("Total_Weights", types.intType(), 6, new IntegerFormatter());
 
         return new Column[] { code, mon, tue, wed, thu, fri, sat, sun, totalWeights };
     }

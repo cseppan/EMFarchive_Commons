@@ -73,15 +73,16 @@ public class TemporalProfileExporter implements Exporter {
         InternalSource[] sources = dataset.getInternalSources();
 
         for(int i = 0; i < sources.length; i++){
-            String qualifiedTable = datasource.getName() + "." + sources[i].getTable();
+            String table = sources[i].getTable();
+            String qualifiedTable = datasource.getName() + "." + table;
             ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable + " WHERE version=" + version);
-            String table = sources[i].getTable().replace('_', ' ');
-            System.out.println(table);
-            Column[] cols = factory.get(table).cols();
+            Column[] cols = factory.get(table.replace('_', ' ')).cols();
             writer.println("/" + table + "/");
 
             while (data.next())
                 writeRecord(cols, data, writer);
+            
+            writer.println("/END/");
         }
     }
 

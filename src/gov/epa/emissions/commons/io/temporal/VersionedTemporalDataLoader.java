@@ -15,9 +15,9 @@ import java.util.List;
 public class VersionedTemporalDataLoader implements DataLoader {
     private Datasource datasource;
 
-    private VersionedTemporalTableFormat colsMetadata;
+    private VersionedTableFormat colsMetadata;
 
-    public VersionedTemporalDataLoader(Datasource datasource, VersionedTemporalTableFormat tableFormat) {
+    public VersionedTemporalDataLoader(Datasource datasource, VersionedTableFormat tableFormat) {
         this.datasource = datasource;
         this.colsMetadata = tableFormat;
     }
@@ -52,7 +52,7 @@ public class VersionedTemporalDataLoader implements DataLoader {
         }
     }
     
-    private String[] data(Dataset dataset, Record record, VersionedTemporalTableFormat tableFormat) {
+    private String[] data(Dataset dataset, Record record, VersionedTableFormat tableFormat) {
         List data = new ArrayList();
         data.addAll(record.tokens());
         tableFormat.fillDefaults(data, dataset.getDatasetid()); 

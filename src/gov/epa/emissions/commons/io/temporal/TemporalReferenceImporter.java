@@ -40,7 +40,7 @@ public class TemporalReferenceImporter implements Importer {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new VersionedTemporalTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new VersionedTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
     }
@@ -62,7 +62,7 @@ public class TemporalReferenceImporter implements Importer {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, unit.tableFormat(), dataset.getName());
         try {
-            doImport(file, dataset, table, (VersionedTemporalTableFormat)unit.tableFormat());
+            doImport(file, dataset, table, (VersionedTableFormat)unit.tableFormat());
         } catch (Exception e) {
             delegate.dropTable(table, datasource);
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
@@ -70,7 +70,7 @@ public class TemporalReferenceImporter implements Importer {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, VersionedTemporalTableFormat tableFormat)
+    private void doImport(File file, Dataset dataset, String table, VersionedTableFormat tableFormat)
             throws Exception {
         VersionedTemporalDataLoader loader = new VersionedTemporalDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
