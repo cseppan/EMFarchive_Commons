@@ -83,7 +83,7 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         // ColumnsMetadata
         // assertEquals("37001, 2201001150, 100414, 1.0626200e+000, -9, !
         // EPA-derived", line);
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, , , , ", line);
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", line);
     }
 
     private List readData(File file) throws IOException {

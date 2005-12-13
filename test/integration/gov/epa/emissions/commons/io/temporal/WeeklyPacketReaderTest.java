@@ -61,7 +61,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals(" 200", record.token(5));
         assertEquals("   0", record.token(6));
         assertEquals("   0", record.token(7));
-        assertEquals(" 1000", record.token(8));
+        assertEquals("  1000", record.token(8));
     }
 
     public void testShouldReadSecondRecordCorrectly() throws IOException {
@@ -79,7 +79,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals(" 200", record.token(5));
         assertEquals("   0", record.token(6));
         assertEquals("   0", record.token(7));
-        assertEquals(" 1000", record.token(8));
+        assertEquals("  1000", record.token(8));
     }
 
     public void testShouldIdentifyEndOfPacket() throws IOException {

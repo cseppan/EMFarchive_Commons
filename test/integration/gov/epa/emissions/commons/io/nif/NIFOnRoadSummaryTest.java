@@ -62,7 +62,7 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tablePE));
             assertEquals(8, countRecords(tableTR));
-            assertEquals(0, countRecords("test_summary"));
+            assertEquals(2, countRecords("test_summary"));
         } finally {
             dropTables();
         }

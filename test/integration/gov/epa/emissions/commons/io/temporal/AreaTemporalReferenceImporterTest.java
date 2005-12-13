@@ -46,7 +46,7 @@ public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
                 sqlDataTypes);
         importer.run();
 
-        assertEquals(28, countRecords("AREA_SOURCE"));
+        assertEquals(34, countRecords("AREA_SOURCE"));
     }
 
     private int countRecords(String table) {

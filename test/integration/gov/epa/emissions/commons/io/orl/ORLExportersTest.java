@@ -59,8 +59,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, , , , ", (String) data.get(0));
-        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, , , , ", (String) data.get(1));
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data.get(0));
+        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data.get(1));
     }
 
     public void testShouldExportOnRoadVersionZero() throws Exception {
@@ -77,8 +77,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, , , , ", (String) data.get(0));
-        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, , , , ", (String) data.get(1));
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data.get(0));
+        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data.get(1));
     }
 
     public void testShouldExportNonRoad() throws Exception {
@@ -95,9 +95,9 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(16, data.size());
-        assertEquals("37001, 2260001010,           100414, 5.6000000e-001, -9, -9, -9, -9, , , , ", (String) data
+        assertEquals("37001, 2260001010,           100414, 5.6000000e-001, -9, -9, -9, -9, -9,         -9,   -9,  -9", (String) data
                 .get(0));
-        assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9, , , , ", (String) data
+        assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9, -9,         -9,   -9,  -9", (String) data
                 .get(1));
     }
 
@@ -116,11 +116,11 @@ public class ORLExportersTest extends PersistenceTestCase {
         List data = readData(file);
         assertEquals(6, data.size());
         assertEquals(
-                "37001,   10201302,    0,   0107,  2,      0,              246, 3.8729600e-004, -9, -9, -9, -9, , , , , ",
+                "37001,   10201302,    0,   0107,  2,      0,              246, 3.8729600e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9",
                 (String) data.get(0));
 
         assertEquals(
-                "37001,   10201302,    0,   0107,  2,      0,              253, 6.9105800e-004, -9, -9, -9, -9, , , , , ",
+                "37001,   10201302,    0,   0107,  2,      0,              253, 6.9105800e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9",
                 (String) data.get(1));
 
     }
@@ -144,7 +144,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 + "1,                 REXAMINC.;CUSTOMDIVISION,   40201301, 02, 01, 6.0000000e+001, "
                 + "7.5000000e+000, 3.7500000e+002, 2.0834600e+003, 4.7160000e+001, 3083,   0714,      "
                 + "0, L, -8.0708100e+001, 3.5120000e+001, 17,           108883, 9.7041400e+000,"
-                + " -9, -9, -9, -9, -9, , , , , , , , , , -9, -9";
+                + " -9, -9, -9, -9, -9,                   -9,     -9,    -9, ,         -9,         -9,         -9,   -9,  -9, -9, -9";
         String actual = (String) records.get(0);
         assertEquals(expected, actual);
     }
