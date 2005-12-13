@@ -51,8 +51,8 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
                 datasource, sqlDataTypes);
-        //File file = File.createTempFile("CSCexported", ".txt");
-        File file = new File("test/data/other", "CSCexported.txt");
+        File file = File.createTempFile("CSCexported", ".txt");
+        //File file = new File("test/data/other", "CSCexported.txt");
         exporter.export(file);
         
         // assert headers
