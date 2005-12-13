@@ -60,11 +60,11 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         
         // assert data
         List data = readData(file);
-        assertEquals(17, data.size());
-        //assertEquals("/COUNTRY/", (String) data.get(0));
-        //assertEquals("0                    US", ((String) data.get(1)).trim());
-        //assertEquals("/STATE/", (String) data.get(8));
-        //assertEquals("/COUNTY/", (String) data.get(20));
+        assertEquals(37, data.size());
+        assertEquals("/COUNTRY/", (String) data.get(0));
+        assertEquals("0 -9                   US", ((String) data.get(1)).trim());
+        assertEquals("/STATE/", (String) data.get(8));
+        assertEquals("/COUNTY/", (String) data.get(20));
     }
     
     private void assertComments(File file) throws IOException {
