@@ -24,4 +24,17 @@ public class RecordTest extends TestCase {
         assertEquals("1", tokens[0]);
         assertEquals("2", tokens[1]);
     }
+    
+    public void testReplaceTokenAtSpecificPosition() {
+        Record record = new Record();
+        record.setTokens(new String[] { "1", "2" });
+
+        record.replace(1, "modified");
+        
+        String[] tokens = record.getTokens();
+        assertEquals(2, tokens.length);
+        assertEquals("1", tokens[0]);
+        assertEquals("modified", tokens[1]);
+        
+    }
 }

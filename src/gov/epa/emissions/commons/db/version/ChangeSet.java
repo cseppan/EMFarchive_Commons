@@ -67,4 +67,16 @@ public class ChangeSet {
         this.updatedRecords.addAll(Arrays.asList(records));
     }
 
+    public void addDeleted(VersionedRecord[] records) {
+        deletedRecords.addAll(Arrays.asList(records));
+    }
+
+    public boolean containsUpdated(VersionedRecord record) {
+        return updatedRecords.contains(record);
+    }
+
+    public boolean containsNew(VersionedRecord record) {
+        return newRecords.contains(record);
+    }
+
 }

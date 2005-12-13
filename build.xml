@@ -97,7 +97,7 @@
 
 	<target name="integration-tests" depends="compile, setup-emissions-data"
 		description="All Integration Tests">
-		<junit printsummary="yes" haltonfailure="yes">
+		<junit printsummary="yes" haltonfailure="no">
 			<classpath refid="classpath"/>
 			<formatter type="xml"/>
 			<batchtest fork="yes" todir="${reports.integrationtests.dir}">

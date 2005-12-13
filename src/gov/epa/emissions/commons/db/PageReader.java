@@ -51,7 +51,7 @@ public class PageReader {
         int end = start + pageSize - 1;// since, end is inclusive in the range
         VersionedRecord[] records = scrollableRecords.range(start, end);
 
-        Page page = new Page();
+        Page page = new Page(pageNumber);
         page.setRecords(records);
 
         return page;

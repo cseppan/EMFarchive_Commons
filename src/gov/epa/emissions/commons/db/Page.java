@@ -6,12 +6,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Is a Data Struct
+ */
 public class Page {
 
     private List records;
 
-    public Page() {
+    private int number;
+
+    public Page() {// needed for serialization
+        this(0);
+    }
+
+    public Page(int number) {
+        this.number = number;
         records = new ArrayList();
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     public void add(VersionedRecord record) {

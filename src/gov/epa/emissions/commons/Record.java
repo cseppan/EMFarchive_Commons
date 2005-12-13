@@ -49,4 +49,12 @@ public class Record {
         tokens.addAll(Arrays.asList(tokensList));
     }
 
+    /**
+     * Replace the token at the position with the new token
+     */
+    public void replace(int position, String newToken) {
+        tokens.add(position, newToken);
+        tokens.remove(position + 1);
+    }
+
 }
