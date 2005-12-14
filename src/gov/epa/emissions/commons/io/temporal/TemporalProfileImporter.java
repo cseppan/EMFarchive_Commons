@@ -87,7 +87,7 @@ public class TemporalProfileImporter implements Importer {
     private void doImport(BufferedReader fileReader, Dataset dataset, DatasetTypeUnit unit, String header)
             throws Exception {
         Reader reader = new FixedWidthPacketReader(fileReader, header, unit.fileFormat());
-        DataLoader loader = new VersionedTemporalDataLoader(datasource, (VersionedTableFormat) unit.tableFormat());
+        DataLoader loader = new VersionedDataLoader(datasource, (VersionedTableFormat) unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
         loadDataset(file, table(header), unit.fileFormat(), dataset);

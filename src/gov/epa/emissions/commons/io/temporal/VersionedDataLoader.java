@@ -12,12 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VersionedTemporalDataLoader implements DataLoader {
+public class VersionedDataLoader implements DataLoader {
     private Datasource datasource;
 
     private VersionedTableFormat colsMetadata;
 
-    public VersionedTemporalDataLoader(Datasource datasource, VersionedTableFormat tableFormat) {
+    public VersionedDataLoader(Datasource datasource, VersionedTableFormat tableFormat) {
         this.datasource = datasource;
         this.colsMetadata = tableFormat;
     }

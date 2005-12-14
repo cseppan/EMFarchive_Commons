@@ -90,7 +90,7 @@ public class GenericExporter implements Exporter {
             if(formatted)
                 writer.print(cols[i].format(data));
             else
-                writer.print(cols[i].format(data));
+                writer.print(cols[i].format(data).trim());
             
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter

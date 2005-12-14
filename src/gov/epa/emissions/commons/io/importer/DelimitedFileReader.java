@@ -78,5 +78,15 @@ public class DelimitedFileReader implements Reader {
     public String line() {
         return line;
     }
+    
+    //Added to remove header lines
+    public String[] readHeader(int numLines) throws IOException {
+        List header = new ArrayList();
+        for(int i = 0; i < numLines; i++) {
+            header.add(fileReader.readLine());
+        }
+        
+        return (String[])header.toArray(new String[0]);
+    }
 
 }

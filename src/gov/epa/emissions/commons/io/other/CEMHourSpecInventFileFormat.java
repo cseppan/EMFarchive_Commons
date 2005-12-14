@@ -37,7 +37,9 @@ public class CEMHourSpecInventFileFormat implements FileFormat {
         columns.add(new Column("GLOAD", types.realType(), new RealFormatter()));
         columns.add(new Column("SLOAD", types.realType(), new RealFormatter()));
         columns.add(new Column("NOXMASS", types.realType(), new RealFormatter()));
-        columns.add(new Column("NOXRATE", types.realType(), new RealFormatter()));
+        //FIXME: NOXRATE column should be a real type data, but the sample input data
+        //has some values like "**GT2"
+        columns.add(new Column("NOXRATE", types.stringType(10), new StringFormatter(10)));
         columns.add(new Column("SO2MASS", types.realType(), new RealFormatter()));
         columns.add(new Column("HTINPUT", types.realType(), new RealFormatter()));
         columns.add(new Column("FLOW", types.intType(), new IntegerFormatter()));

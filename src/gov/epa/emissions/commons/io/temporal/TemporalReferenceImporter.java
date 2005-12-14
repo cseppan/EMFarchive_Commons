@@ -72,7 +72,7 @@ public class TemporalReferenceImporter implements Importer {
 
     private void doImport(File file, Dataset dataset, String table, VersionedTableFormat tableFormat)
             throws Exception {
-        VersionedTemporalDataLoader loader = new VersionedTemporalDataLoader(datasource, tableFormat);
+        VersionedDataLoader loader = new VersionedDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
         Reader reader = new TemporalReferenceReader(fileReader);
 
