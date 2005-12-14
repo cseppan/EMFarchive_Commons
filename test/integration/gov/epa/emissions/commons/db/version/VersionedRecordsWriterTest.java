@@ -16,7 +16,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        writer = new VersionedRecordsWriter(datasource, dataTable, dataTypes());
+        writer = new DefaultVersionedRecordsWriter(datasource, dataTable, dataTypes());
         versions = new Versions(datasource);
     }
 
@@ -46,7 +46,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         Version versionOne = versions.derive(baseVersion, "version one");
         changeset.setVersion(versionOne);
 
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetchAll(baseVersion, dataTable);
         assertEquals(5, records.length);
 
@@ -66,7 +66,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         Version versionOne = versions.derive(versionZero, "version one");
         changeset.setVersion(versionOne);
 
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable);
         assertEquals(5, records.length);
 
@@ -97,7 +97,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         Version versionOne = versions.derive(versionZero, "version one");
         changeSetForVersionOne.setVersion(versionOne);
 
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
         VersionedRecord[] versionZeroRecords = reader.fetchAll(versionZero, dataTable);
 
         changeSetForVersionOne.addDeleted(versionZeroRecords[3]);// delete 4
@@ -148,7 +148,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         Version versionOne = versions.derive(versionZero, "version one");
         changeset.setVersion(versionOne);
 
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable);
         assertTrue(records.length == 5);
 
@@ -182,7 +182,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
         VersionedRecord[] records = reader.fetchAll(version, dataTable);
         assertEquals(7, records.length);
         int init = records[0].getRecordId();
@@ -192,7 +192,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
     }
 
     public void testChangeSetWithRecordsDeleteShouldResultInNewVersionWithoutThoseRecords() throws Exception {
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
 
         Version versionZero = versions.get(1, 0);
         Version versionOne = versions.derive(versionZero, "version one");
@@ -224,7 +224,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
     }
 
     public void testChangeSetWithAddedAndDeletedRecords() throws Exception {
-        VersionedRecordsReader reader = new VersionedRecordsReader(datasource);
+        VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
 
         Version versionZero = versions.get(1, 0);
         Version versionOne = versions.derive(versionZero, "version one");

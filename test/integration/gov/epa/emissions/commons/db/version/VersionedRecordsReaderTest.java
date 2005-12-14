@@ -14,7 +14,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        reader = new VersionedRecordsReader(datasource);
+        reader = new DefaultVersionedRecordsReader(datasource);
     }
 
     protected void tearDown() throws Exception {

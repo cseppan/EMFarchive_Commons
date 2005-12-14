@@ -28,7 +28,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
 
         importTestData(dataTable);
 
-        results = new ScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "." + dataTable);
+        results = new DefaultScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "." + dataTable);
         results.execute();
     }
 
