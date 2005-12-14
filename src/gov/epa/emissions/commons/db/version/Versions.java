@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,13 +33,17 @@ public class Versions {
         this.datasource = datasource;
 
         Connection connection = datasource.getConnection();
+        connection.setAutoCommit(true);
+        createPreparedStatements(datasource, connection);
+    }
 
+    private void createPreparedStatements(Datasource datasource, Connection connection) throws SQLException {
         String insert = "INSERT INTO " + datasource.getName()
                 + ".versions (dataset_id,version,name, path,date) VALUES (?,?,?,?,?)";
         insertStatement = connection.prepareStatement(insert);
 
         String markFinal = "UPDATE " + datasource.getName()
-                + ".versions set final_version=true AND date=? WHERE dataset_id=? AND version=?";
+                + ".versions SET final_version=true AND date=? WHERE dataset_id=? AND version=?";
         markFinalStatement = connection.prepareStatement(markFinal);
 
         String selectVersionNumber = "SELECT version FROM " + datasource.getName()
@@ -114,22 +119,22 @@ public class Versions {
         return versions.toArray();
     }
 
-    public int getLastFinalVersion(long datasetId) throws SQLException{
+    public int getLastFinalVersion(long datasetId) throws SQLException {
         int versionNumber = 0;
-        
+
         Version[] allVersionForDataset = get(datasetId);
-        
+
         for (int i = 0; i < allVersionForDataset.length; i++) {
             int versNum = allVersionForDataset[i].getVersion();
 
-            if (versNum > versionNumber){
+            if (versNum > versionNumber) {
                 versionNumber = allVersionForDataset[i].getVersion();
             }
         }
-        
+
         return versionNumber;
     }
-    
+
     public Version[] get(long datasetId) throws SQLException {
         // FIXME: convert to long
         versionsStatement.setInt(1, (int) datasetId);
@@ -166,17 +171,19 @@ public class Versions {
 
         insertStatement.executeUpdate();
 
-        return version;
+        return get(version.getDatasetId(), version.getVersion());
     }
 
     public Version markFinal(Version derived) throws SQLException {
         derived.markFinal();
         derived.setDate(new Date());
 
-        markFinalStatement.setTimestamp(1, new Timestamp(derived.getDate().getTime()));
-        markFinalStatement.setLong(2, derived.getDatasetId());
-        markFinalStatement.setInt(3, derived.getVersion());
-        markFinalStatement.executeUpdate();
+        // FIXME: need to add 'date' to the update statement
+        String update = "UPDATE " + datasource.getName() + ".versions SET final_version=true WHERE dataset_id="
+                + derived.getDatasetId() + " AND version=" + derived.getVersion();
+
+        Statement stmt = datasource.getConnection().createStatement();
+        stmt.executeUpdate(update);
 
         return get(derived.getDatasetId(), derived.getVersion());
     }

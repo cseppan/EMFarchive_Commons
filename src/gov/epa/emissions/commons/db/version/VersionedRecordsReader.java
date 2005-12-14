@@ -8,6 +8,9 @@ public interface VersionedRecordsReader {
 
     VersionedRecord[] fetchAll(Version version, String table) throws SQLException;
 
+    VersionedRecord[] fetchAll(Version version, String table, String sortOrder) throws SQLException;
+
     ScrollableVersionedRecords fetch(Version version, String table) throws SQLException;
 
+    ScrollableVersionedRecords fetch(Version version, String table, String sortOrder) throws SQLException;
 }

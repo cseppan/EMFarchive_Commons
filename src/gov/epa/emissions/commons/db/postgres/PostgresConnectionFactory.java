@@ -36,6 +36,9 @@ public class PostgresConnectionFactory implements ConnectionFactory {
     }
 
     public Connection getConnection() throws SQLException {
-        return source.getConnection();
+        Connection connection = source.getConnection();
+        connection.setAutoCommit(true);
+        
+        return connection;
     }
 }
