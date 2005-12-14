@@ -5,6 +5,6 @@ import gov.epa.emissions.commons.io.Column;
 public interface FileFormat {
 
     String identify();
-
+   
     Column[] cols();
 }

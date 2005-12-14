@@ -38,8 +38,9 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version versionZero = new Version();
         versionZero.setDatasetId(1);
         versionZero.setVersion(0);
+        String sortOrder="";
 
-        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable);
+        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, sortOrder);
 
         assertEquals(5, records.length);
 
@@ -58,8 +59,8 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version versionTwo = new Version();
         versionTwo.setDatasetId(1);
         versionTwo.setVersion(2);
-
-        VersionedRecord[] records = reader.fetchAll(versionTwo, dataTable);
+        String sortOrder="";
+        VersionedRecord[] records = reader.fetchAll(versionTwo, dataTable,sortOrder);
 
         assertEquals(5, records.length);
 
@@ -100,8 +101,9 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(3);
-
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        String sortOrder="";
+        
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, sortOrder);
 
         assertEquals(6, records.length);
 
@@ -118,7 +120,9 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        String sortOrder="";
+        
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, sortOrder);
 
         assertEquals(10, records.length);
 
@@ -138,8 +142,8 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(4);
-
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        String sortOrder="";
+        VersionedRecord[] records = reader.fetchAll(version, dataTable,sortOrder);
 
         assertEquals(8, records.length);
 
@@ -182,8 +186,8 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(3);
-
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        String sortOrder="";
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, sortOrder);
 
         assertEquals(6, records.length);
 
@@ -199,8 +203,8 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(5);
-
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        String sortOrder="";
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, sortOrder);
 
         assertEquals(10, records.length);
 
@@ -220,8 +224,8 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         Version version = new Version();
         version.setDatasetId(1);
         version.setVersion(2);
-
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        String sortOrder="";
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, sortOrder);
 
         assertEquals(6, records.length);
 
