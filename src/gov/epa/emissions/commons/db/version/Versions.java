@@ -178,7 +178,7 @@ public class Versions {
         markFinalStatement.setInt(3, derived.getVersion());
         markFinalStatement.executeUpdate();
 
-        return derived;
+        return get(derived.getDatasetId(), derived.getVersion());
     }
 
     private String path(Version base) {

@@ -30,25 +30,7 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
 
         String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
                 + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
-                + "ORDER BY version, record_id" + ",";
-
-        ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);
-        records.execute();
-
-        return records;
-    }
-
-    public VersionedRecord[] fetchAll(Version version, String table, String sortOrder) throws SQLException {
-        return fetch(version, table,sortOrder).all();
-    }
-
-    public ScrollableVersionedRecords fetch(Version version, String table, String sortOrder) throws SQLException {
-        String versions = fetchCommaSeparatedVersionSequence(version);
-        String deleteClause = createDeleteClause(versions);
-
-        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
-                + "ORDER BY version, record_id" + "," + sortOrder;
+                + "ORDER BY version, record_id";
 
         ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);
         records.execute();
