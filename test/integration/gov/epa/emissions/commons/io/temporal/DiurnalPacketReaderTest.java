@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.temporal.DiurnalFileFormat;
 
@@ -40,14 +41,14 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
         assertEquals("DIURNAL WEEKDAY", reader.identify());
     }
 
-    public void testShouldReadTwentyRecordsOfTheDiurnalPacket() throws IOException {
+    public void testShouldReadTwentyRecordsOfTheDiurnalPacket() throws IOException, ImporterException {
         for (int i = 0; i < 20; i++) {
             Record record = reader.read();
             assertNotNull(record);
         }
     }
 
-    public void testShouldReadFirstRecordCorrectly() throws IOException {
+    public void testShouldReadFirstRecordCorrectly() throws IOException, ImporterException {
         Record record = reader.read();
 
         assertEquals(26, record.size());
@@ -81,7 +82,7 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
 
     }
 
-    public void testShouldReadSecondRecordCorrectly() throws IOException {
+    public void testShouldReadSecondRecordCorrectly() throws IOException, ImporterException {
         reader.read(); // ignore
 
         Record record = reader.read();
@@ -116,7 +117,7 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
         assertEquals(" 1000 ", record.token(25));
     }
 
-    public void testShouldIdentifyEndOfPacket() throws IOException {
+    public void testShouldIdentifyEndOfPacket() throws IOException, ImporterException {
         for (int i = 0; i < 20; i++) {
             assertNotNull(reader.read());
         }

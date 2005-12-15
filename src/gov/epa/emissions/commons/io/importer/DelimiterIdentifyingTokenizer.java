@@ -4,25 +4,43 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
 
     private int minTokens;
 
-    private Tokenizer commaTokenizer;
+    private Tokenizer tokenizer;
 
-    private Tokenizer semiColonTokenizer;
+    private boolean initialize = false;
 
     public DelimiterIdentifyingTokenizer(int minTokens) {
         this.minTokens = minTokens;
-        commaTokenizer = new CommaDelimitedTokenizer();
-        semiColonTokenizer = new SemiColonDelimitedTokenizer();
     }
 
-    public String[] tokens(String input) {
-        String[] commaDelimited = commaTokenizer.tokens(input);
-        if (commaDelimited.length >= minTokens)
-            return commaDelimited;
+    public String[] tokens(String input) throws ImporterException {
+        if (!initialize)
+            identifyTokenizer(input);
+        return tokenizer.tokens(input);
+    }
 
-        String[] semiColonDelimited = semiColonTokenizer.tokens(input);
-        if (semiColonDelimited.length >= minTokens)
-            return semiColonDelimited;
+    private void identifyTokenizer(String input) throws ImporterException {
+        Tokenizer commaTokenizer = new CommaDelimitedTokenizer();
+        String[] tokens = commaTokenizer.tokens(input);
+        if (tokens.length >= minTokens) {
+            tokenizer = commaTokenizer;
+            return;
+        }
 
-        return null;
+        Tokenizer semiColonTokenizer = new SemiColonDelimitedTokenizer();
+        tokens = semiColonTokenizer.tokens(input);
+        if (tokens.length >= minTokens) {
+            tokenizer = semiColonTokenizer;
+            return;
+        }
+
+        Tokenizer whiteSpaceDelimiter = new WhitespaceDelimitedTokenizer();
+        tokens = whiteSpaceDelimiter.tokens(input);
+        if (tokens.length >= minTokens) {
+            tokenizer = whiteSpaceDelimiter;
+            return;
+        }
+
+        throw new ImporterException("Could not identify the delimiter");
+
     }
 }

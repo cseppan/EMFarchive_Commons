@@ -19,7 +19,7 @@ public class DelimiterIdentifyingFileReader implements Reader {
         reader.close();
     }
 
-    public Record read() throws IOException {
+    public Record read() throws IOException, ImporterException {
         return reader.read();
     }
 

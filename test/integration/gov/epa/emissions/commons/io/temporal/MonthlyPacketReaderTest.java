@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.temporal.MonthlyFileFormat;
 
@@ -40,14 +41,14 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         assertEquals("MONTHLY", reader.identify());
     }
 
-    public void testShouldReadTenRecordsOfTheMonthlyPacket() throws IOException {
+    public void testShouldReadTenRecordsOfTheMonthlyPacket() throws IOException, ImporterException {
         for (int i = 0; i < 10; i++) {
             Record record = reader.read();
             assertNotNull(record);
         }
     }
 
-    public void testShouldReadFirstRecordCorrectly() throws IOException {
+    public void testShouldReadFirstRecordCorrectly() throws IOException, ImporterException {
         Record record = reader.read();
 
         assertEquals(14, record.size());
@@ -68,7 +69,7 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         assertEquals("  999", record.token(13));
     }
 
-    public void testShouldReadSecondRecordCorrectly() throws IOException {
+    public void testShouldReadSecondRecordCorrectly() throws IOException, ImporterException {
         reader.read(); // ignore
 
         Record record = reader.read();
@@ -91,7 +92,7 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         assertEquals("  999", record.token(13));
     }
 
-    public void testShouldIdentifyEndOfPacket() throws IOException {
+    public void testShouldIdentifyEndOfPacket() throws IOException, ImporterException {
         for (int i = 0; i < 10; i++) {
             assertNotNull(reader.read());
         }

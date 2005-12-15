@@ -2,16 +2,17 @@ package gov.epa.emissions.commons.io.importer;
 
 public class WhitespaceDelimitedTokenizer implements Tokenizer {
 
-    private static final String ANY_CHAR_EXCEPT_WHITESPACE = "(([\\S]+))";
+    private static final String ANY_CHAR_EXCEPT_WHITESPACE = "[\\S]+";
     private DelimitedTokenizer delegate;
 
     public WhitespaceDelimitedTokenizer() {
-        delegate = new DelimitedTokenizer();
+        String pattern = DOUBLE_QUOTED_TEXT + "|" +  SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS +"|"+ANY_CHAR_EXCEPT_WHITESPACE;
+        delegate = new DelimitedTokenizer(pattern);
     }
 
     // whitespace includes space & tabs
     public String[] tokens(String input) {
-        return delegate.doTokenize(input, ANY_CHAR_EXCEPT_WHITESPACE);
+        return delegate.doTokenize(input);
     }
 
 }

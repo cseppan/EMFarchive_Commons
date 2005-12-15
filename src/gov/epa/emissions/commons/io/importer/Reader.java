@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Reader {
 
-    Record read() throws IOException;
+    Record read() throws IOException, ImporterException;
 
     List comments();
 

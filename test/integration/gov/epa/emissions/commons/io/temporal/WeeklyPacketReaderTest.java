@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.temporal.WeeklyFileFormat;
 
@@ -41,14 +42,14 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals("WEEKLY", reader.identify());
     }
 
-    public void testShouldReadThirteenRecordsOfTheWeeklyPacket() throws IOException {
+    public void testShouldReadThirteenRecordsOfTheWeeklyPacket() throws IOException, ImporterException {
         for (int i = 0; i < 13; i++) {
             Record record = reader.read();
             assertNotNull(record);
         }
     }
 
-    public void testShouldReadFirstRecordCorrectly() throws IOException {
+    public void testShouldReadFirstRecordCorrectly() throws IOException, ImporterException {
         Record record = reader.read();
 
         assertEquals(9, record.size());
@@ -64,7 +65,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals("  1000", record.token(8));
     }
 
-    public void testShouldReadSecondRecordCorrectly() throws IOException {
+    public void testShouldReadSecondRecordCorrectly() throws IOException, ImporterException {
         reader.read(); // ignore
 
         Record record = reader.read();
@@ -82,7 +83,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         assertEquals("  1000", record.token(8));
     }
 
-    public void testShouldIdentifyEndOfPacket() throws IOException {
+    public void testShouldIdentifyEndOfPacket() throws IOException, ImporterException {
         for (int i = 0; i < 13; i++) {
             assertNotNull(reader.read());
         }
@@ -93,7 +94,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
 
     }
 
-    public void testShouldReadCommentsAsItReadsRecords() throws IOException {
+    public void testShouldReadCommentsAsItReadsRecords() throws IOException, ImporterException {
         for (int i = 0; i < 13; i++) {
             assertNotNull(reader.read());
         }

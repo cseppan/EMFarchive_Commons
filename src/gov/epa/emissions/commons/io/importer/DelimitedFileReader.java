@@ -34,7 +34,7 @@ public class DelimitedFileReader implements Reader {
         fileReader.close();
     }
 
-    public Record read() throws IOException {
+    public Record read() throws IOException, ImporterException {
         String line = fileReader.readLine();
 
         while (line != null) {
@@ -55,7 +55,7 @@ public class DelimitedFileReader implements Reader {
         return !(line.trim().length() == 0) && (!isComment(line));
     }
 
-    private Record doRead(String line) {
+    private Record doRead(String line) throws ImporterException {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
         record.add(Arrays.asList(tokens));

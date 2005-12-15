@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
 import gov.epa.emissions.commons.io.importer.Tokenizer;
@@ -41,7 +42,7 @@ public class SpeciationCrossReferenceReader implements Reader {
         fileReader.close();
     }
 
-    public Record read() throws IOException {
+    public Record read() throws IOException, ImporterException {
         String line = fileReader.readLine();
 
         while (line != null) {
@@ -62,7 +63,7 @@ public class SpeciationCrossReferenceReader implements Reader {
         return !(line.trim().length() == 0) && (!isComment(line));
     }
 
-    private Record doRead(String line) {
+    private Record doRead(String line) throws ImporterException {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
         

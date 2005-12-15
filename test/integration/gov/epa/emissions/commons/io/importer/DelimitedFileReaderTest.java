@@ -20,21 +20,21 @@ public class DelimitedFileReaderTest extends TestCase {
         reader.close();
     }
 
-    public void testShouldAddTrailingInlineCommentsAsASingleTokenToRecord() throws IOException {
+    public void testShouldAddTrailingInlineCommentsAsASingleTokenToRecord() throws IOException, ImporterException {
         Record record = reader.read();
 
         assertNotNull(record);
         assertEquals("! EPA-derived", record.token(7));
     }
 
-    public void testShouldReadTenRecordsOfTheMonthlyPacket() throws IOException {
+    public void testShouldReadTenRecordsOfTheMonthlyPacket() throws IOException, ImporterException {
         for (int i = 0; i < 10; i++) {
             Record record = reader.read();
             assertNotNull(record);
         }
     }
 
-    public void testShouldReadFirstRecordCorrectly() throws IOException {
+    public void testShouldReadFirstRecordCorrectly() throws IOException, ImporterException {
         Record record = reader.read();
         assertEquals(8, record.size());
         assertEquals("37119", record.token(0));
@@ -47,7 +47,7 @@ public class DelimitedFileReaderTest extends TestCase {
         assertEquals("! EPA-derived", record.token(7));
     }
 
-    public void testShouldReadSecondRecordCorrectly() throws IOException {
+    public void testShouldReadSecondRecordCorrectly() throws IOException, ImporterException {
         reader.read(); // ignore
 
         Record record = reader.read();
@@ -61,7 +61,7 @@ public class DelimitedFileReaderTest extends TestCase {
         assertEquals("02", record.token(6));
     }
 
-    public void testShouldIdentifyEndOfFile() throws IOException {
+    public void testShouldIdentifyEndOfFile() throws IOException, ImporterException {
         for (int i = 0; i < 10; i++) {
             assertNotNull(reader.read());
         }
