@@ -101,7 +101,7 @@ public class BaseORLImporter extends FormattedImporter {
      * @param files -
      *            an array of Files which are checked prior to import
      */
-    public void run() throws Exception {
+    public void run() throws ImporterException {
         Datasource datasource = dbServer.getEmissionsDatasource();
         if (files.length != 1) {
             throw new ImporterException("Can only import one valid orl file at a time: " + files);
@@ -113,8 +113,12 @@ public class BaseORLImporter extends FormattedImporter {
             throw new ImporterException("Unknown/unhandled ORL type: " + type.getName());
         }
 
-        importFile(files[0], datasource, type);
-        postImport();
+        try {
+            importFile(files[0], datasource, type);
+            postImport();
+        } catch (Exception e) {
+            throw new ImporterException(e.getMessage());
+        }
     }
 
     /**

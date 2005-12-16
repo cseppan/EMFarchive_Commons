@@ -75,14 +75,12 @@ public class IDAImporter {
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {
-            e.printStackTrace();
             delegate.dropTable(table, emissionDatasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }
 
     private void doImport(DatasetTypeUnit unit, Dataset dataset, String table) throws Exception {
-
         Reader idaReader = new IDAFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
         IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
         loader.load(idaReader, dataset, table);

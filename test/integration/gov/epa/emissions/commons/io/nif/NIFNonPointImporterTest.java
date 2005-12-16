@@ -60,7 +60,9 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
             assertEquals(21, countRecords(tableEM));
             assertEquals(4, countRecords(tableEP));
             assertEquals(4, countRecords(tablePE));
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
             dropTables();
         }
     }

@@ -20,13 +20,13 @@ public class IDADataLoader implements DataLoader {
 
     private Datasource referenceDatasource;
 
-    private TableFormat colsMetadata;
+    private TableFormat tableFormat;
 
     // TODO: pull out the common code between FixedColumnDataLoader and
     // IDADataLoader
     public IDADataLoader(Datasource emissionDatasource, Datasource referenceDatasource, TableFormat tableFormat) {
         this.emissionDatasource = emissionDatasource;
-        this.colsMetadata = tableFormat;
+        this.tableFormat = tableFormat;
         this.referenceDatasource = referenceDatasource;
     }
 
@@ -43,7 +43,7 @@ public class IDADataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = emissionDatasource.dataModifier();
-            String key = colsMetadata.key();
+            String key = tableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -55,12 +55,12 @@ public class IDADataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = emissionDatasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
+            modifier.insertRow(table, data(dataset, record), tableFormat.cols());
             record = reader.read();
         }
     }
 
-    private String[] data(Dataset dataset, Record record) throws SQLException {
+    private String[] data(Dataset dataset, Record record) throws SQLException, ImporterException {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
         String stateID = record.token(0);
@@ -70,7 +70,18 @@ public class IDADataLoader implements DataLoader {
         for (int i = 0; i < record.size(); i++)
             data.add(record.token(i));
 
+        addEmptyLineCommentIfNotThere(data,tableFormat);
         return (String[]) data.toArray(new String[0]);
+    }
+
+    private void addEmptyLineCommentIfNotThere(List data, TableFormat tableFormat) throws ImporterException {
+        int diff = tableFormat.cols().length- data.size();
+        if(diff==1){
+            data.add("");
+            return;
+        }
+        throw new ImporterException("Number of tokens are "+data.size() + " but table column size is "+ tableFormat.cols().length);
+        
     }
 
     private String stateAbbr(Datasource referenceDatasource, String fips) throws SQLException {

@@ -9,6 +9,7 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.Table;
 import gov.epa.emissions.commons.io.importer.FieldDefinitionsFileReader;
 import gov.epa.emissions.commons.io.importer.FileColumnsMetadata;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -195,7 +196,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         return fieldDefsReader.getFileColumnsMetadata(fileImportType);
     }
 
-    public void run() throws Exception {
+    public void run() throws ImporterException {
         File file = new File((referenceFilesDir.getPath() + File.separatorChar + REF_DIR_NAME));
 
         FilenameFilter textFileFilter = new FilenameFilter() {
@@ -226,7 +227,11 @@ public class ReferenceImporter extends FixedFormatImporter {
         dataset.addTable(ReferenceTable.REF_TIME_ZONES);
         dataset.addTable(ReferenceTable.REF_TRIBAL_CODES);
 
-        run(dataset);
+        try {
+            run(dataset);
+        } catch (Exception e) {
+            throw new ImporterException(e.getMessage());
+        }
     }
 
 }

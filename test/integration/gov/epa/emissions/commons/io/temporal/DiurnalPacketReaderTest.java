@@ -78,7 +78,7 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
         assertEquals("   0", record.token(22));
         assertEquals("   0", record.token(23));
         assertEquals("   0", record.token(24));
-        assertEquals(" 1000 ", record.token(25));
+        assertEquals(" 1000", record.token(25));
 
     }
 
@@ -114,7 +114,7 @@ public class DiurnalPacketReaderTest extends MockObjectTestCase {
         assertEquals("   0", record.token(22));
         assertEquals("   0", record.token(23));
         assertEquals("   0", record.token(24));
-        assertEquals(" 1000 ", record.token(25));
+        assertEquals(" 1000", record.token(25));
     }
 
     public void testShouldIdentifyEndOfPacket() throws IOException, ImporterException {

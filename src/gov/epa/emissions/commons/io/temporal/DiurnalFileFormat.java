@@ -9,8 +9,11 @@ public class DiurnalFileFormat implements FileFormat {
 
     private SqlDataTypes types;
 
+    private Column[] cols;
+    
     public DiurnalFileFormat(SqlDataTypes types) {
         this.types = types;
+        this.cols = createCols();
     }
 
     public String identify() {
@@ -18,6 +21,10 @@ public class DiurnalFileFormat implements FileFormat {
     }
 
     public Column[] cols() {
+        return cols;
+    }
+
+    private Column[] createCols() {
         Column code = new Column("Code", types.intType(), 5, new IntegerFormatter());
         Column hr0 = new Column("hr0", types.intType(), 4, new IntegerFormatter());
         Column hr1 = new Column("hr1", types.intType(), 4, new IntegerFormatter());
@@ -43,7 +50,7 @@ public class DiurnalFileFormat implements FileFormat {
         Column hr21 = new Column("hr21", types.intType(), 4, new IntegerFormatter());
         Column hr22 = new Column("hr22", types.intType(), 4, new IntegerFormatter());
         Column hr23 = new Column("hr23", types.intType(), 4, new IntegerFormatter());
-        Column totalWeights = new Column("Total_Weights", types.intType(), 6, new IntegerFormatter());
+        Column totalWeights = new Column("Total_Weights", types.intType(), 5, new IntegerFormatter());
 
         return new Column[] { code, hr0, hr1, hr2, hr3, hr4, hr5, hr6, hr7, hr8, hr9, hr10, hr11, hr12, hr13, hr14,
                 hr15, hr16, hr17, hr18, hr19, hr20, hr21, hr22, hr23, totalWeights };

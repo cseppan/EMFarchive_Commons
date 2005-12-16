@@ -28,9 +28,9 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private FixedColsTableFormat tableColsMetadata;
+    private FixedColsTableFormat tableFormat;
 
-    private FileFormat colsMetadata;
+    private FileFormat fileFormat;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -39,9 +39,9 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
         typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
 
-        colsMetadata = new WeeklyFileFormat(typeMapper);
-        tableColsMetadata = new FixedColsTableFormat(colsMetadata, typeMapper);
-        createTable("Weekly", datasource, tableColsMetadata);
+        fileFormat = new WeeklyFileFormat(typeMapper);
+        tableFormat = new FixedColsTableFormat(fileFormat, typeMapper);
+        createTable("Weekly", datasource, tableFormat);
     }
 
     protected void tearDown() throws Exception {
@@ -51,17 +51,15 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
 
         try {
-            DataLoader loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
+            DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
             Dataset dataset = new SimpleDataset();
             dataset.setName("test");
             String tableName = "Weekly";
-
             loader.load(reader, dataset, tableName);
-
             // assert
             assertEquals(13, countRecords(tableName));
         } finally {
@@ -77,9 +75,9 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
     public void testShouldDropDataOnEncounteringBadData() throws Exception {
         File file = new File("test/data/temporal-profiles/BAD-weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), tableColsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), tableFormat);
 
-        DataLoader loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");

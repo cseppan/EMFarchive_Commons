@@ -46,7 +46,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
 
 
 
-    public void testShouldIdentifyNoIDATag() throws Exception {
+    public void itestShouldIdentifyNoIDATag() throws Exception {
         File file = new File("test/data/ida/noIDATags.txt");
         try {
             IDAImporter importer = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
@@ -54,7 +54,6 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
             importer.run();
             assertTrue(false);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
             assertTrue(e.getMessage().startsWith("The tag - 'IDA' is mandatory"));
         }
     }

@@ -14,11 +14,11 @@ public class FixedColumnsDataLoader implements DataLoader {
 
     private Datasource datasource;
 
-    private TableFormat colsMetadata;
+    private TableFormat tableFormat;
 
     public FixedColumnsDataLoader(Datasource datasource, TableFormat tableFormat) {
         this.datasource = datasource;
-        this.colsMetadata = tableFormat;
+        this.tableFormat = tableFormat;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -34,7 +34,7 @@ public class FixedColumnsDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.dataModifier();
-            String key = colsMetadata.key();
+            String key = tableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -46,7 +46,7 @@ public class FixedColumnsDataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = datasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
+            modifier.insertRow(table, data(dataset, record), tableFormat.cols());
             record = reader.read();
         }
     }
@@ -54,10 +54,18 @@ public class FixedColumnsDataLoader implements DataLoader {
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
-        for (int i = 0; i < record.size(); i++)
+        for (int i = 0; i < record.size(); i++){
             data.add(record.token(i));
-
+        }
+        addToEnd(data);
         return (String[]) data.toArray(new String[0]);
+    }
+
+    private void addToEnd(List data) {
+        int remain = tableFormat.cols().length - data.size();
+        for(int i=0;i<remain;i++){
+            data.add("");
+        }
     }
 
 }
