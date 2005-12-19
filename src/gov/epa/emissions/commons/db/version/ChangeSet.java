@@ -79,4 +79,11 @@ public class ChangeSet {
         return newRecords.contains(record);
     }
 
+    public boolean hasChanges() {
+        if (!newRecords.isEmpty() || !deletedRecords.isEmpty() || !updatedRecords.isEmpty())
+            return true;
+
+        return false;
+    }
+
 }

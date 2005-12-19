@@ -25,13 +25,33 @@ public class ChangeSetTest extends TestCase {
 
         assertTrue("Should contain the updated record", changeset.containsUpdated(record));
     }
-    
+
     public void testShouldReturnTrueIfItContainsNewRecord() {
         ChangeSet changeset = new ChangeSet();
         VersionedRecord record = new VersionedRecord();
-        
+
         changeset.addNew(record);
-        
+
         assertTrue("Should contain the new record", changeset.containsNew(record));
+    }
+
+    public void testShouldConfirmAvailabilityOfChangesIfItContainsEitherNewDeletedOrUpdatedRecords() {
+        ChangeSet newCS = new ChangeSet();
+        newCS.addNew(new VersionedRecord());
+        assertTrue("Adding a New record should confirm availability of 'changes'", newCS.hasChanges());
+
+        ChangeSet deletedCS = new ChangeSet();
+        deletedCS.addDeleted(new VersionedRecord());
+        assertTrue("Deleting a record should confirm availability of 'changes'", deletedCS.hasChanges());
+
+        ChangeSet updatedCS = new ChangeSet();
+        updatedCS.addUpdated(new VersionedRecord());
+        assertTrue("Updating a record should confirm availability of 'changes'", updatedCS.hasChanges());
+
+        ChangeSet newDeleteCS = new ChangeSet();
+        newDeleteCS.addNew(new VersionedRecord());
+        newDeleteCS.addDeleted(new VersionedRecord());
+        assertTrue("Adding and Deleting records should confirm availability of 'changes'", newDeleteCS.hasChanges());
+        
     }
 }
