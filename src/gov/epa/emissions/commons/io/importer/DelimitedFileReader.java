@@ -96,14 +96,14 @@ public class DelimitedFileReader implements Reader {
         String line = fileReader.readLine();
         
         Pattern pattern = Pattern.compile(regex);
-        if (pattern.split(line).length < 3) {
+        while (pattern.split(line).length < 3) {
             header.add(line);
             line = fileReader.readLine();
         }
         
         header.add(line); //Table header - Column Names
-        header.add(line); //Table header - Units
-        header.add(line); //FIXME: Assume one more line of table border
+        header.add(fileReader.readLine()); //Table header - Units
+        header.add(fileReader.readLine()); //FIXME: Assume one more line of table border
         
         return (String[])header.toArray(new String[0]);
     }
