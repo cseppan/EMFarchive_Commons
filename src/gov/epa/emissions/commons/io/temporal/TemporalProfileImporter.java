@@ -25,20 +25,20 @@ import org.apache.commons.logging.LogFactory;
 public class TemporalProfileImporter implements Importer {
 
     private static Log log = LogFactory.getLog(PointTemporalReferenceImporter.class);
-    
+
     private SqlDataTypes sqlType;
 
     private Datasource datasource;
-    
+
     private HelpImporter delegate;
 
     private TemporalFileFormatFactory metadataFactory;
-    
+
     private Dataset dataset;
-    
+
     private File file;
 
-    public TemporalProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType) 
+    public TemporalProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType)
             throws ImporterException {
         this.datasource = datasource;
         this.sqlType = sqlType;
@@ -48,7 +48,7 @@ public class TemporalProfileImporter implements Importer {
         metadataFactory = new TemporalFileFormatFactory(sqlType);
         delegate = new HelpImporter();
     }
-    
+
     private void setup(File file) throws ImporterException {
         this.file = validateFile(file);
     }
@@ -73,14 +73,22 @@ public class TemporalProfileImporter implements Importer {
                 VersionedTableFormat tableFormat = new VersionedTableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
 
-                delegate.createTable(table(header), datasource, unit.tableFormat(), dataset.getName());
-                doImport(fileReader, dataset, unit, header);
+                doImport(fileReader, unit, header);
             }
             addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (Exception e) {
-            //delegate.dropTable(table(header), datasource);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
+        }
+    }
+
+    private void doImport(BufferedReader fileReader, DatasetTypeUnit unit, String header) throws Exception {
+        try {
+            delegate.createTable(table(header), datasource, unit.tableFormat(), dataset.getName());
+            doImport(fileReader, dataset, unit, header);
+        } catch (Exception e) {
+            delegate.dropTable(table(header), datasource);
+            throw e;
         }
     }
 
@@ -114,13 +122,13 @@ public class TemporalProfileImporter implements Importer {
         String line = fileReader.readLine();
         return line.trim().replaceAll("/", "");
     }
-    
+
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true" };
         modifier.insertRow("versions", data);
     }
-    
+
     private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
         delegate.setInternalSource(file, table, fileFormat, dataset);
     }
