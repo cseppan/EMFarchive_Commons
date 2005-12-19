@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class DelimitedFileReader implements Reader {
 
@@ -85,6 +86,24 @@ public class DelimitedFileReader implements Reader {
         for(int i = 0; i < numLines; i++) {
             header.add(fileReader.readLine());
         }
+        
+        return (String[])header.toArray(new String[0]);
+    }
+    
+    //Added to remove header lines
+    public String[] readHeader(String regex) throws IOException {
+        List header = new ArrayList();
+        String line = fileReader.readLine();
+        
+        Pattern pattern = Pattern.compile(regex);
+        if (pattern.split(line).length < 3) {
+            header.add(line);
+            line = fileReader.readLine();
+        }
+        
+        header.add(line); //Table header - Column Names
+        header.add(line); //Table header - Units
+        header.add(line); //FIXME: Assume one more line of table border
         
         return (String[])header.toArray(new String[0]);
     }
