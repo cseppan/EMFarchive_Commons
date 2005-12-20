@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 public class SemiColonDelimitedTokenizer implements Tokenizer {
 
-    private static final String ANY_CHAR_EXCEPT_SEMICOLON = "[^;s]+";
+    private static final String ANY_CHAR_EXCEPT_SEMICOLON = "[^;]+";
 
     private DelimitedTokenizer delegate;
 
