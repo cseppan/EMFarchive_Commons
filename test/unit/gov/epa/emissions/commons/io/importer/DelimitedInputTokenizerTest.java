@@ -73,9 +73,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
 
         CommaDelimitedTokenizer tokenizer = new CommaDelimitedTokenizer();
         String[] tokens = tokenizer.tokens(input);
-        for(int i=0; i<tokens.length; i++){
-            System.out.println("tokens["+i+"]='"+tokens[i]+"'");
-        }
+
         assertEquals(10, tokens.length);
         assertEquals("37119", tokens[0]);
         assertEquals("0001", tokens[1]);

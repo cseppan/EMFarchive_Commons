@@ -51,7 +51,7 @@ public class PointTemporalReferenceImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String table) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), table);
     }
 

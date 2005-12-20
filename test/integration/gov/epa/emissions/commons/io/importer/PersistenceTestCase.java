@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.db.TableReader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,5 +74,9 @@ public abstract class PersistenceTestCase extends TestCase {
     protected void dropData(String table, Datasource datasource) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         modifier.dropAll(table);
+    }
+
+    protected TableReader tableReader(Datasource datasource) {
+        return dbSetup.tableReader(datasource);
     }
 }

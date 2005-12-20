@@ -87,7 +87,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertEquals(6, countRecords());
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         String table = dataset.getName();
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
@@ -98,7 +98,7 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     private void verifyVersionCols(String table, int rows) throws Exception {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         ITable tableRef = tableReader.table(datasource.getName(), table);
         for (int i = 0; i < rows; i++) {
@@ -138,7 +138,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
 
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         int rows = tableReader.count(datasource.getName(), dataset.getName());
         assertEquals(6, rows);
@@ -271,7 +271,7 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 

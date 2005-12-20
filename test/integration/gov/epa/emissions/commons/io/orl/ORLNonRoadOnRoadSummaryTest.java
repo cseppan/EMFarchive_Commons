@@ -64,7 +64,7 @@ public class ORLNonRoadOnRoadSummaryTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
-        TableReader tableReader = new TableReader(emissionDatasource.getConnection());
+        TableReader tableReader = tableReader(emissionDatasource);
         return tableReader.count(emissionDatasource.getName(), tableName);
     }
 

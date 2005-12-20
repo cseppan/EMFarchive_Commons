@@ -45,7 +45,7 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
     }
     
     private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 }

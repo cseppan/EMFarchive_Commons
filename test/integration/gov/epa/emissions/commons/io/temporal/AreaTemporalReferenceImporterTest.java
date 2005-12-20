@@ -1,8 +1,5 @@
 package gov.epa.emissions.commons.io.temporal;
 
-import java.io.File;
-import java.util.Random;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -12,6 +9,9 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.SimpleTableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
+
+import java.io.File;
+import java.util.Random;
 
 public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
     private Datasource datasource;
@@ -50,7 +50,7 @@ public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String table) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), table);
     }
 }

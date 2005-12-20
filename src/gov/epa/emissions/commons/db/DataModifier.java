@@ -34,8 +34,7 @@ public class DataModifier {
     }
 
     /**
-     * UPDATE databaseName.tableName SET columnName = setExpr WHERE
-     * whereColumns[i] LIKE 'likeClauses[i]'
+     * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] LIKE 'likeClauses[i]'
      * 
      * @param columnName -
      *            the column to update
@@ -71,8 +70,7 @@ public class DataModifier {
     }// updateWhereLike(String, String, String[], String[])
 
     /**
-     * UPDATE databaseName.tableName SET columnName = setExpr WHERE
-     * whereColumns[i] = equalsClauses[i]
+     * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] = equalsClauses[i]
      * 
      * @param columnName -
      *            the column to update
@@ -108,8 +106,8 @@ public class DataModifier {
     }// updateWhereEquals(String, String, String[], String[])
 
     /**
-     * Generate a concat expression for usage in SQL statements. If the value to
-     * be concatenated is a literal (constant), it should be enclosed in ''.
+     * Generate a concat expression for usage in SQL statements. If the value to be concatenated is a literal
+     * (constant), it should be enclosed in ''.
      * 
      * @param exprs -
      *            Array of data ('literals' and column names)
@@ -155,6 +153,9 @@ public class DataModifier {
      * Use 'insertRow(String table, String[] data) instead.
      */
     public void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
+        if (data.length > cols.length)
+            throw new SQLException("Invalid number of data tokens - " + data.length + ". Max: " + cols.length);
+
         StringBuffer insert = new StringBuffer();
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
@@ -190,7 +191,7 @@ public class DataModifier {
                 String name = rs.getString("COLUMN_NAME");
                 int jdbcType = rs.getInt("DATA_TYPE");
                 String type = typeMap.get(jdbcType);
-                
+
                 cols.add(new Column(name, type));
             }
         } finally {

@@ -1,8 +1,5 @@
 package gov.epa.emissions.commons.io.spatial;
 
-import java.io.File;
-import java.util.Random;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
@@ -17,6 +14,9 @@ import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
+
+import java.io.File;
+import java.util.Random;
 
 public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
     private Datasource datasource;
@@ -66,7 +66,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
     }
     
     private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 }

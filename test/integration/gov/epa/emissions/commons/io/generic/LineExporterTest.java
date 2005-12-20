@@ -13,7 +13,6 @@ import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
-import gov.epa.emissions.commons.io.generic.LineFileFormat;
 
 import java.io.File;
 import java.util.Random;
@@ -67,7 +66,7 @@ public class LineExporterTest extends PersistenceTestCase {
     }
     
     private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 }

@@ -108,7 +108,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
 

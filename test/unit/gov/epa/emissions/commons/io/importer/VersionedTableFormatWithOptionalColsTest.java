@@ -105,10 +105,10 @@ public class VersionedTableFormatWithOptionalColsTest extends MockObjectTestCase
         assertEquals("", data.get(3));// delete versions
         assertEquals("opt1", data.get(4));// optional 1
         assertEquals("", data.get(5));// optional 2
-        assertEquals("", data.get(6));// comments
+        assertEquals("!", data.get(6));// comments
     }
 
-    public void testShouldAddVersionDataDefaultForOptionalColsAndEmptyCommentsOnFillUsingDataWithNoOptionalDataAndComments() {
+    public void testShouldAddVersionDataDefaultForOptionalColsAndEmptyCommentsOnFillUsingDataWithOnlyComments() {
         Mock types = mock(SqlDataTypes.class);
         types.stubs().method(ANYTHING).will(returnValue(""));
 
@@ -139,4 +139,5 @@ public class VersionedTableFormatWithOptionalColsTest extends MockObjectTestCase
         assertEquals("", data.get(5));// optional 2
         assertEquals("!Comments", data.get(6));// comments
     }
+
 }

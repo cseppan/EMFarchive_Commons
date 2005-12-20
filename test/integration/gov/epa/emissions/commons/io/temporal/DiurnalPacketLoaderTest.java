@@ -9,11 +9,9 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.temporal.DiurnalFileFormat;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,7 +63,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
         loader.load(reader, dataset, tableName);
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         assertTrue("Table '" + tableName + "' should have been created", tableReader.exists(datasource.getName(),
                 tableName));

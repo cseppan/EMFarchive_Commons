@@ -4,7 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 
 import java.sql.SQLException;
 
-public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
+public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase {
 
     private VersionedRecordsWriter writer;
 
@@ -16,7 +16,7 @@ public class VersionedRecordsWriterTest extends VersionedRecordsTestCase {
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        writer = new DefaultVersionedRecordsWriter(datasource, dataTable, dataTypes());
+        writer = new DefaultVersionedRecordsWriter(datasource, dataTable);
         versions = new Versions(datasource);
     }
 

@@ -37,14 +37,14 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
-        /*HelpImporter delegate = new HelpImporter();
-        FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new VersionedTemporalTableFormat(fileFormat, sqlDataTypes);
-        String table = delegate.tableName(dataset.getName());
-        FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
-        */
+
+        /*
+         * HelpImporter delegate = new HelpImporter(); FileFormat fileFormat = new
+         * TemporalReferenceFileFormat(sqlDataTypes); TableFormat tableFormat = new
+         * VersionedTemporalTableFormat(fileFormat, sqlDataTypes); String table = delegate.tableName(dataset.getName());
+         * FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat); delegate.createTable(table, datasource,
+         * formatUnit.tableFormat(), dataset.getName());
+         */
     }
 
     protected void tearDown() throws Exception {
@@ -62,24 +62,22 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         int rows = countRecords();
         assertEquals(34, rows);
         assertVersionInfo(dataset.getName(), rows);
-        
-        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, 
-                datasource, sqlDataTypes);
-        File exportfile = new File("test/data/temporal-crossreference","VersionedCrossRefExported.txt");
+
+        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, datasource, sqlDataTypes);
+        File exportfile = new File("test/data/temporal-crossreference", "VersionedCrossRefExported.txt");
         exporter.export(exportfile);
-        //FIXME: compare the original file and the exported file.
+        // FIXME: compare the original file and the exported file.
         exportfile.delete();
     }
-        
+
     public void ShouldExportReferenceVersionZero() throws Exception {
-        File importFile = new File("test/data/orl/nc","small-onroad.txt");
+        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
         Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
-        File exportfile = new File("test/data/temporal-crossreference","VersionedCrossRefExported.txt");
+        File exportfile = new File("test/data/temporal-crossreference", "VersionedCrossRefExported.txt");
         Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
         exporter.export(0, exportfile);
     }
-    
 
     private void assertVersionInfo(String name, int rows) throws Exception {
         verifyVersionCols(name, rows);
@@ -87,7 +85,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
     }
 
     private void verifyVersionCols(String table, int rows) throws Exception {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         ITable tableRef = tableReader.table(datasource.getName(), table);
         for (int i = 0; i < rows; i++) {
@@ -115,7 +113,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 }

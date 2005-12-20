@@ -12,7 +12,6 @@ import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.speciation.SpeciationProfileImporter;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
 
@@ -62,7 +61,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
     }
     
     private int countRecords() {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
 }

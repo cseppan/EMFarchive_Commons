@@ -6,15 +6,13 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.temporal.WeeklyFileFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -68,7 +66,7 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
 

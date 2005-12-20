@@ -8,8 +8,8 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonRoadImporter;
 
 import java.io.File;
@@ -104,7 +104,7 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
 

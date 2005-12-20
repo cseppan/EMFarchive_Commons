@@ -58,7 +58,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         loader.load(reader, dataset, table);
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
         assertEquals(6, tableReader.count(datasource.getName(), table));
@@ -87,7 +87,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         loader.load(reader, dataset, table);
 
         // assert
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
         int rows = tableReader.count(datasource.getName(), table);
@@ -119,7 +119,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         try {
             loader.load(reader, dataset, table);
         } catch (ImporterException e) {
-            TableReader tableReader = new TableReader(datasource.getConnection());
+            TableReader tableReader = tableReader(datasource);
             assertEquals(0, tableReader.count(datasource.getName(), table));
 
             return;

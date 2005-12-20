@@ -2,10 +2,8 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.importer.VersionedDataFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,47 +16,33 @@ public class DefaultVersionedRecordsWriter implements VersionedRecordsWriter {
 
     private String table;
 
-    private VersionedTableFormatWithOptionalCols tableFormat;
+    private VersionedDataFormatter dataFormatter;
 
     private Datasource datasource;
 
-    public DefaultVersionedRecordsWriter(Datasource datasource, String table, SqlDataTypes types) throws SQLException {
+    public DefaultVersionedRecordsWriter(Datasource datasource, String table) throws SQLException {
         this.datasource = datasource;
         this.table = table;
 
-        FileFormatWithOptionalCols fileFormat = fileFormat(datasource.dataModifier(), table);
-        this.tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, types);
-
-        String dataUpdate = "UPDATE " + datasource.getName() + "." + table + " SET delete_versions=? WHERE record_id=?";
-        Connection connection = datasource.getConnection();
-        updateStatement = connection.prepareStatement(dataUpdate);
+        dataFormatter = dataFormatter(datasource, table);
+        updateStatement = updateStatement(datasource, table);
     }
 
-    private FileFormatWithOptionalCols fileFormat(DataModifier modifier, String table) throws SQLException {
-        final Column[] cols = modifier.getColumns(table);
-        return new FileFormatWithOptionalCols() {
-            public Column[] optionalCols() {
-                return null;
-            }
+    private VersionedDataFormatter dataFormatter(Datasource datasource, String table) throws SQLException {
+        DataModifier dataModifier = datasource.dataModifier();
+        Column[] cols = dataModifier.getColumns(table);
+        return new VersionedDataFormatter(cols);
+    }
 
-            public Column[] minCols() {
-                return cols;
-            }
-
-            public String identify() {
-                return null;
-            }
-
-            public Column[] cols() {
-                return minCols();
-            }
-        };
+    private PreparedStatement updateStatement(Datasource datasource, String table) throws SQLException {
+        String dataUpdate = "UPDATE " + datasource.getName() + "." + table + " SET delete_versions=? WHERE record_id=?";
+        Connection connection = datasource.getConnection();
+        return connection.prepareStatement(dataUpdate);
     }
 
     /**
-     * ChangeSet contains adds, deletes, and updates. An update is treated as a
-     * combination of 'delete' and 'add'. In effect, the ChangeSet is written as
-     * a list of 'delete' and 'add' operations.
+     * ChangeSet contains adds, deletes, and updates. An update is treated as a combination of 'delete' and 'add'. In
+     * effect, the ChangeSet is written as a list of 'delete' and 'add' operations.
      */
     public void update(ChangeSet changeset) throws Exception {
         convertUpdatedRecords(changeset);
@@ -90,8 +74,7 @@ public class DefaultVersionedRecordsWriter implements VersionedRecordsWriter {
     private void insertData(VersionedRecord[] records, Version version) throws Exception {
         DataModifier modifier = datasource.dataModifier();
         for (int i = 0; i < records.length; i++) {
-            List data = tableFormat.fill(records[i], version.getVersion());
-
+            List data = dataFormatter.format(records[i], version.getVersion());
             String[] toArray = (String[]) data.toArray(new String[0]);
             modifier.insertRow(table, toArray);
         }

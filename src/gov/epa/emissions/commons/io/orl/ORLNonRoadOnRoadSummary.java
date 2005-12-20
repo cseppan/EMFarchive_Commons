@@ -143,7 +143,6 @@ public class ORLNonRoadOnRoadSummary implements SummaryTable {
             }
         }
 
-        long startTime = System.currentTimeMillis();
         // FIXME: drop all the tables before creating them
         // create the temp tables first, if needed
         if (tempTableNames != null) {
@@ -174,8 +173,5 @@ public class ORLNonRoadOnRoadSummary implements SummaryTable {
                 emissionsDatasource.tableDefinition().dropTable(tempTableNames[i]);
             }
         }
-        long stopTime = System.currentTimeMillis();
-        System.out.println("Create ORL Summary required " + (stopTime - startTime) / 1000 + " seconds == "
-                + (stopTime - startTime) / 60000L + " minutes");
     }
 }

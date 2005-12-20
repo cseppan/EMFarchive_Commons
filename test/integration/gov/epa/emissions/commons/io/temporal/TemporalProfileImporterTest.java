@@ -50,24 +50,23 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         // assert
         assertEquals(10, countRecords("Monthly"));
         assertVersionInfo("Monthly", countRecords("Monthly"));
-        
+
         assertEquals(13, countRecords("WEEKLY"));
         assertVersionInfo("WEEKLY", countRecords("WEEKLY"));
-        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, 
-                datasource, typeMapper);
-        File exportfile = new File("test/data/temporal-profiles","VersionedTemporalProfileExported.txt");
+
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
+        File exportfile = new File("test/data/temporal-profiles", "VersionedTemporalProfileExported.txt");
         exporter.export(exportfile);
-        //FIXME: compare the original file and the exported file.
+        // FIXME: compare the original file and the exported file.
         exportfile.delete();
     }
-    
+
     private void assertVersionInfo(String name, int rows) throws Exception {
         verifyVersionCols(name, rows);
     }
 
     private void verifyVersionCols(String table, int rows) throws Exception {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
 
         ITable tableRef = tableReader.table(datasource.getName(), table);
         for (int i = 0; i < rows; i++) {
@@ -83,7 +82,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String table) {
-        TableReader tableReader = new TableReader(datasource.getConnection());
+        TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), table);
     }
 

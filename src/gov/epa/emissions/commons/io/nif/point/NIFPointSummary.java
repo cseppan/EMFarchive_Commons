@@ -89,11 +89,7 @@ public class NIFPointSummary implements SummaryTable {
 				+ " = er." + "state_facility_id" + " AND e." + "emission_point_id" + " = er." + "emission_point_id"
 				+ ")";
 
-		long startTime = System.currentTimeMillis();
 		emissionDatasource.query().execute(query);
-		long stopTime = System.currentTimeMillis();
-		System.out.println("Create NIF Point Summary required " + (stopTime - startTime) / 1000 + " seconds == "
-				+ (stopTime - startTime) / 60000L + " minutes");
 	}
 
 	private String emissionProcessTable(Dataset dataset) {

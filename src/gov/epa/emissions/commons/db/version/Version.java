@@ -94,4 +94,8 @@ public class Version {
     public User getCreator() {
         return creator;
     }
+
+    public String toString() {
+        return "Version " + version + " of Dataset - " + datasetId;
+    }
 }

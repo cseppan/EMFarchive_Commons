@@ -7,106 +7,95 @@ import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SummaryTable;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NIFNonpointNonRoadSummary implements SummaryTable {
 
-	private Dataset dataset;
+    private Dataset dataset;
 
-	private Datasource emissionDatasource;
+    private Datasource emissionDatasource;
 
-	private Datasource referenceDatasource;
+    private Datasource referenceDatasource;
 
     private HelpImporter delegate;
 
-	public NIFNonpointNonRoadSummary(Datasource emission, Datasource reference, Dataset dataset) {
-		this.emissionDatasource = emission;
-		this.referenceDatasource = reference;
-		this.dataset = dataset;
+    public NIFNonpointNonRoadSummary(Datasource emission, Datasource reference, Dataset dataset) {
+        this.emissionDatasource = emission;
+        this.referenceDatasource = reference;
+        this.dataset = dataset;
         this.delegate = new HelpImporter();
-	}
+    }
 
-	public void createSummary() throws Exception {
+    public void createSummary() throws Exception {
         dataset.setSummarySource(delegate.summarySource(dataset.getName()));
-		table(emissionDatasource, dataset);
-		String emTable = emissionDatasource.getName() + "." + emissionRecordsTable(dataset);
-		String epTable = emissionDatasource.getName() + "." + emissionProcessTable(dataset);
-		String summaryTable = emissionDatasource.getName() + "." + dataset.getSummarySource().getTable();
+        table(emissionDatasource, dataset);
+        String emTable = emissionDatasource.getName() + "." + emissionRecordsTable(dataset);
+        String epTable = emissionDatasource.getName() + "." + emissionProcessTable(dataset);
+        String summaryTable = emissionDatasource.getName() + "." + dataset.getSummarySource().getTable();
 
-		ResultSet rs = emissionDatasource.query().executeQuery("SELECT DISTINCT(pollutant_code) FROM " + emTable);
-		rs.last();
-		int numOfPollutants = rs.getRow();
-		rs.first();
-		String[] pollutants = new String[numOfPollutants];
+        ResultSet rs = emissionDatasource.query().executeQuery("SELECT DISTINCT(pollutant_code) FROM " + emTable);
+        rs.last();
+        int numOfPollutants = rs.getRow();
+        rs.first();
+        String[] pollutants = new String[numOfPollutants];
 
-		String selectPart = "";
-		String joinPart = "";
-		String cleanPoll;
+        String selectPart = "";
+        String joinPart = "";
+        String cleanPoll;
 
-		for (int i = 0; i < numOfPollutants; i++) {
-			pollutants[i] = rs.getString("pollutant_code");
-			cleanPoll = pollutants[i].replace('-', '_');
-			selectPart = selectPart + cleanPoll + ".emission_value as " + cleanPoll + ", ";
-			joinPart = joinPart + "LEFT JOIN (SELECT state_county_fips, scc, emission_value FROM " + emTable
-					+ " WHERE pollutant_code = '" + pollutants[i] + "') " + cleanPoll + " ON (e.state_county_fips = "
-					+ cleanPoll + ".state_county_fips AND e.scc = " + cleanPoll + ".scc)";
-			rs.next();
-		}
-		rs.close();
+        for (int i = 0; i < numOfPollutants; i++) {
+            pollutants[i] = rs.getString("pollutant_code");
+            cleanPoll = pollutants[i].replace('-', '_');
+            selectPart = selectPart + cleanPoll + ".emission_value as " + cleanPoll + ", ";
+            joinPart = joinPart + "LEFT JOIN (SELECT state_county_fips, scc, emission_value FROM " + emTable
+                    + " WHERE pollutant_code = '" + pollutants[i] + "') " + cleanPoll + " ON (e.state_county_fips = "
+                    + cleanPoll + ".state_county_fips AND e.scc = " + cleanPoll + ".scc)";
+            rs.next();
+        }
+        rs.close();
 
-		selectPart = selectPart.substring(0, selectPart.length() - 2);
+        selectPart = selectPart.substring(0, selectPart.length() - 2);
 
-		String query = "CREATE TABLE " + summaryTable + " AS SELECT DISTINCT f.state_abbr as STATE, "
-				+ "e.state_county_fips as FIPS, " + "e.scc as SCC, " + "ep.mact_code as MACT, " + "sic_code as SIC, "
-				+ "naics_code as NAICS, " + selectPart + " FROM " + epTable + " as ep, " + referenceDatasource.getName()
-				+ ".fips as f, " + "(SELECT DISTINCT state_county_fips, scc" + " FROM " + emTable + ") e " + joinPart
-				+ " WHERE (e.state_county_fips = f.state_county_fips AND f.country_code='US') "
-				+ "AND (e.state_county_fips=ep.state_county_fips AND e.scc=ep.scc)";
+        String query = "CREATE TABLE " + summaryTable + " AS SELECT DISTINCT f.state_abbr as STATE, "
+                + "e.state_county_fips as FIPS, " + "e.scc as SCC, " + "ep.mact_code as MACT, " + "sic_code as SIC, "
+                + "naics_code as NAICS, " + selectPart + " FROM " + epTable + " as ep, "
+                + referenceDatasource.getName() + ".fips as f, " + "(SELECT DISTINCT state_county_fips, scc" + " FROM "
+                + emTable + ") e " + joinPart
+                + " WHERE (e.state_county_fips = f.state_county_fips AND f.country_code='US') "
+                + "AND (e.state_county_fips=ep.state_county_fips AND e.scc=ep.scc)";
 
-		long startTime = System.currentTimeMillis();
-		System.out.println(query);
-		emissionDatasource.query().execute(query);
-		long stopTime = System.currentTimeMillis();
+        emissionDatasource.query().execute(query);
+    }
 
-		System.out.println("Creating table " + summaryTable + " took " + (stopTime - startTime) / 1000 + " seconds == "
-				+ (stopTime - startTime) / 60000L + " minutes");
+    private String emissionProcessTable(Dataset dataset) {
+        String emissionProcessIdentifier = "emission process";
+        return tableFromInternalSource(dataset, emissionProcessIdentifier);
+    }
 
-	}
-    
-    
+    private String emissionRecordsTable(Dataset dataset) {
+        String emissionRecordsIdentifier = "emission records";
+        return tableFromInternalSource(dataset, emissionRecordsIdentifier);
+    }
 
-	private String emissionProcessTable(Dataset dataset) {
-		String emissionProcessIdentifier = "emission process";
-		return tableFromInternalSource(dataset, emissionProcessIdentifier);
-	}
+    private String tableFromInternalSource(Dataset dataset, String identifier) {
+        InternalSource[] sources = dataset.getInternalSources();
+        for (int i = 0; i < sources.length; i++) {
+            String type = sources[i].getType().toLowerCase();
+            if (type.indexOf(identifier) != -1) {
+                return sources[i].getTable();
+            }
+        }
+        return null;
+    }
 
-	private String emissionRecordsTable(Dataset dataset) {
-		String emissionRecordsIdentifier = "emission records";
-		return tableFromInternalSource(dataset, emissionRecordsIdentifier);
-	}
-
-	private String tableFromInternalSource(Dataset dataset, String identifier) {
-		InternalSource[] sources = dataset.getInternalSources();
-		for (int i = 0; i < sources.length; i++) {
-			String type = sources[i].getType().toLowerCase();
-			if (type.indexOf(identifier) != -1) {
-				return sources[i].getTable();
-			}
-		}
-		return null;
-	}
-
-	private void table(Datasource emissionDatasource, Dataset dataset) throws SQLException,
-			Exception {
-		String summaryTable = dataset.getSummarySource().getTable();
-		TableDefinition tableDefinition = emissionDatasource.tableDefinition();
-		if (tableDefinition.tableExists(summaryTable)) {
-				throw new Exception("Table '" + summaryTable
-						+ "' already exists. Must either overwrite table or choose new name.");
-		}
-	}
-
+    private void table(Datasource emissionDatasource, Dataset dataset) throws SQLException, Exception {
+        String summaryTable = dataset.getSummarySource().getTable();
+        TableDefinition tableDefinition = emissionDatasource.tableDefinition();
+        if (tableDefinition.tableExists(summaryTable)) {
+            throw new Exception("Table '" + summaryTable
+                    + "' already exists. Must either overwrite table or choose new name.");
+        }
+    }
 
 }

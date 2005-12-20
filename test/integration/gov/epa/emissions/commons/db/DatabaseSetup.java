@@ -1,5 +1,8 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.db.ConnectionParams;
+import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.mysql.MySqlConnectionFactory;
 import gov.epa.emissions.commons.db.mysql.MySqlDbServer;
 import gov.epa.emissions.commons.db.postgres.PostgresConnectionFactory;
@@ -13,8 +16,10 @@ public class DatabaseSetup {
 
     private DbServer dbServer;
 
+    private String dbType;
+
     public DatabaseSetup(Properties pref) throws SQLException {
-        String dbType = pref.getProperty("database.type");
+        dbType = pref.getProperty("database.type");
 
         String emissionsDatasource = pref.getProperty("datasource.emissions.name");
         String referenceDatasource = pref.getProperty("datasource.reference.name");
@@ -25,15 +30,19 @@ public class DatabaseSetup {
         String username = pref.getProperty("database.username");
         String password = pref.getProperty("database.password");
 
-        if (dbType.equals("mysql")) {
-            //FIXME: create connections for both datasources
-            //Note: use emission schema as the default one to connect
+        if (isMySql()) {
+            // FIXME: create connections for both datasources
+            // Note: use emission schema as the default one to connect
             ConnectionParams params = new ConnectionParams(emissionsDatasource, host, port, username, password);
             createMySqlDbServer(pref, emissionsDatasource, referenceDatasource, params);
         } else {
             ConnectionParams params = new ConnectionParams(dbName, host, port, username, password);
             createPostgresDbServer(emissionsDatasource, referenceDatasource, params);
         }
+    }
+
+    private boolean isMySql() {
+        return dbType.equals("mysql");
     }
 
     private void createPostgresDbServer(String emissionsDatasource, String referenceDatasource, ConnectionParams params)
@@ -60,4 +69,10 @@ public class DatabaseSetup {
         dbServer.disconnect();
     }
 
+    public TableReader tableReader(Datasource datasource) {
+        if (isMySql())
+            return new MySqlTableReader(datasource.getConnection());
+
+        return new PostgresTableReader(datasource.getConnection());
+    }
 }

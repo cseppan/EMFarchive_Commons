@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.db.version.VersionedRecord;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.LongFormatter;
@@ -57,24 +56,24 @@ public class VersionedTableFormatWithOptionalCols implements TableFormatWithOpti
     public void fillDefaults(List data, long datasetId) {
         addVersionData(data, datasetId, 0);
         addComments(data);
-
         addDefaultsForOptionalCols(data);
     }
 
-    public List fill(VersionedRecord record, int version) {
-        List data = new ArrayList();
+    private void addComments(List data) {
+        if (size() == data.size())// includes comments
+            return;
 
-        addVersionData(data, record.getDatasetId(), version);
-        data.addAll(record.tokens());
-        addComments(data);
-
-        return data;
+        String last = (String) data.get(data.size() - 1);
+        if (!isComments(last))
+            data.add(data.size(), "!");// empty comment
     }
 
-    private void addComments(List data) {
-        String last = (String) data.get(data.size() - 1);
-        if (last != null && !last.startsWith("!"))
-            data.add(data.size(), "");// empty comment
+    private boolean isComments(String token) {
+        return token != null && token.startsWith("!");
+    }
+
+    private int size() {
+        return cols.length + optionalCols().length;
     }
 
     private void addVersionData(List data, long datasetId, int version) {

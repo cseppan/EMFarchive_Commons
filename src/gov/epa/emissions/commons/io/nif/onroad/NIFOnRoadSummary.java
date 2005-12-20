@@ -66,11 +66,7 @@ public class NIFOnRoadSummary implements SummaryTable {
                 + joinPart + " WHERE (e." + "state_county_fips" + " = f." + "state_county_fips" + " AND f.country_code='US') AND (e."
                 + "state_county_fips" + "=pe." + "state_county_fips" + " AND e." + "scc" + "=pe." + "scc" + ")";
 
-		long startTime = System.currentTimeMillis();
 		emissionDatasource.query().execute(query);
-		long stopTime = System.currentTimeMillis();
-		System.out.println("Create NIF Mobile Emissions Summary required " + (stopTime - startTime) / 1000
-				+ " seconds == " + (stopTime - startTime) / 60000L + " minutes");
 	}
 
 	private String emissionPeriodsTable(Dataset dataset) {
