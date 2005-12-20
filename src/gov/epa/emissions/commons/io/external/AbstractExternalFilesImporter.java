@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io.external;
 
+import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.ExternalSource;
@@ -24,9 +26,17 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
     private Dataset dataset;
 
-    public AbstractExternalFilesImporter(File folder, String filePattern, Dataset dataset) throws ImporterException {
+//    public AbstractExternalFilesImporter(File folder, String filePattern, Dataset dataset) throws ImporterException {
+//        this.dataset = dataset;
+//        setup(folder, filePattern, dataset);
+//        importerName = "Abstract External Files Importer";
+//        log.debug("Default AbstractExternal Files importer created");
+//    }
+
+    public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataType) throws ImporterException {
+       
         this.dataset = dataset;
-        setup(folder, filePattern, dataset);
+        setup(folder, filePatterns, dataset);
         importerName = "Abstract External Files Importer";
         log.debug("Default AbstractExternal Files importer created");
     }
@@ -63,12 +73,19 @@ public abstract class AbstractExternalFilesImporter implements Importer {
         return file;
     }
 
-    private void setup(File path, String fileName, Dataset dataset) throws ImporterException {
+    private void setup(File path, String[] filePatterns, Dataset dataset) throws ImporterException {
         DatasetType datasetType = dataset.getDatasetType();
+        if (filePatterns.length >1){
+            throw new ImporterException("Too many parameters for importer: " + importerName + " requires only one file pattern or filename");                        
+        }
+        if (filePatterns[0].length()==0){
+            throw new ImporterException(importerName + " importer requires a file pattern or filename");            
+        }
+        
         files = null;
         int minFiles = datasetType.getMinfiles();
         log.debug("Min files for " + datasetType.getName() + ": " + minFiles);
-        files = extractFileNames(path, fileName);
+        files = extractFileNames(path, filePatterns[0]);
         log.debug("Number of files in directory: " + files.length);
         if (files.length < minFiles) {
             throw new ImporterException(importerName + " importer requires " + minFiles + " files");
