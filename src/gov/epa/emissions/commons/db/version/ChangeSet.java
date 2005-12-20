@@ -90,4 +90,10 @@ public class ChangeSet {
         return version.getVersion();
     }
 
+    public void clear() {
+        deletedRecords.clear();
+        newRecords.clear();
+        updatedRecords.clear();
+    }
+
 }

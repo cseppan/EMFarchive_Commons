@@ -17,6 +17,25 @@ public class ChangeSetTest extends TestCase {
         }
     }
 
+    public void testShouldBeAbleToClearChanges() {
+        ChangeSet changeset = new ChangeSet();
+
+        changeset.addDeleted(new VersionedRecord());
+        assertEquals(1, changeset.getDeletedRecords().length);
+        changeset.clear();
+        assertEquals(0, changeset.getDeletedRecords().length);
+
+        changeset.addNew(new VersionedRecord());
+        assertEquals(1, changeset.getNewRecords().length);
+        changeset.clear();
+        assertEquals(0, changeset.getNewRecords().length);
+
+        changeset.addUpdated(new VersionedRecord());
+        assertEquals(1, changeset.getUpdatedRecords().length);
+        changeset.clear();
+        assertEquals(0, changeset.getUpdatedRecords().length);
+    }
+
     public void testShouldReturnTrueIfItContainsUpdatedRecord() {
         ChangeSet changeset = new ChangeSet();
         VersionedRecord record = new VersionedRecord();
@@ -52,6 +71,6 @@ public class ChangeSetTest extends TestCase {
         newDeleteCS.addNew(new VersionedRecord());
         newDeleteCS.addDeleted(new VersionedRecord());
         assertTrue("Adding and Deleting records should confirm availability of 'changes'", newDeleteCS.hasChanges());
-        
+
     }
 }
