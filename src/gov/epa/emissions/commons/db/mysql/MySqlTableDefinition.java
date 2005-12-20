@@ -62,14 +62,14 @@ public class MySqlTableDefinition implements TableDefinition {
         for (int i = 0; i < colNames.length; i++) {
             // one of the columnnames was "dec" for december.. caused a problem
             // there
-            if (colNames[i].equals("dec"))
+            if (colNames[i].equalsIgnoreCase("dec"))
                 colNames[i] = colNames[i] + "1";
 
             ddlStatement = ddlStatement + clean(colNames[i]) + " " + colTypes[i]
                     + (colNames[i].equals(primaryCol) ? " PRIMARY KEY " + ", " : ", ");
         }// for i
         ddlStatement = ddlStatement.substring(0, ddlStatement.length() - 2) + ")";
-
+        System.err.println("create table -"+ddlStatement);
         execute(ddlStatement);
     }
 

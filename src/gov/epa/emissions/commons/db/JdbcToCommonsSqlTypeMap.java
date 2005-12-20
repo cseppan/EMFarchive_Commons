@@ -17,8 +17,10 @@ public class JdbcToCommonsSqlTypeMap {
         map.put(new Integer(Types.BIGINT), types.longType());
         map.put(new Integer(Types.REAL), types.realType());
         map.put(new Integer(Types.SMALLINT), types.smallInt());
-        map.put(new Integer(Types.VARCHAR), types.text());
+        map.put(new Integer(Types.LONGVARCHAR), types.text());
+        map.put(new Integer(Types.VARCHAR), types.stringType());
         map.put(new Integer(Types.DATE), types.timestamp());
+        map.put(new Integer(Types.TIMESTAMP), types.timestamp());
     }
 
     public String get(int type) {

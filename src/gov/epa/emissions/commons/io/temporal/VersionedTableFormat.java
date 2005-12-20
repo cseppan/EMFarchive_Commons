@@ -44,13 +44,19 @@ public class VersionedTableFormat implements FileFormat, TableFormat {
     }
 
     private Column[] versionCols(SqlDataTypes types) {
-        // TODO: these constraints are Postgres-specific. Generic constraints ?
-        Column recordId = new Column(key(), types.autoIncrement(), new NullFormatter(), "NOT NULL");
+        Column recordId = recordID(types);
         Column datasetId = new Column("Dataset_Id", types.longType(), new LongFormatter(), "NOT NULL");
         Column version = new Column("Version", types.longType(), new NullFormatter(), "NULL DEFAULT 0");
         Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter(), "DEFAULT ''::text");
 
         return new Column[] { recordId, datasetId, version, deleteVersions };
+    }
+    
+    private Column recordID(SqlDataTypes types) {
+        String key = key();
+        String keyType = types.autoIncrement()+",Primary Key("+key+")";
+        Column recordId = new Column(key, keyType, new NullFormatter());
+        return recordId;
     }
 
     public void fillDefaults(List data, long datasetId) {

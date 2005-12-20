@@ -60,6 +60,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private String[] data(Dataset dataset, Record record, TableFormatWithOptionalCols tableFormat) {
         List data = new ArrayList();
+        
         data.addAll(record.tokens());
 
         tableFormat.fillDefaults(data, dataset.getDatasetid());

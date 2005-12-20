@@ -77,6 +77,7 @@ public class TemporalProfileImporter implements Importer {
             }
             addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
@@ -87,6 +88,7 @@ public class TemporalProfileImporter implements Importer {
             delegate.createTable(table(header), datasource, unit.tableFormat(), dataset.getName());
             doImport(fileReader, dataset, unit, header);
         } catch (Exception e) {
+            e.printStackTrace();
             delegate.dropTable(table(header), datasource);
             throw e;
         }
@@ -125,7 +127,7 @@ public class TemporalProfileImporter implements Importer {
 
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true" };
+        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true",null};
         modifier.insertRow("versions", data);
     }
 

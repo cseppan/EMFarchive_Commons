@@ -48,30 +48,28 @@ public class ORLImporter {
     }
 
     private String formatDatasetName(String name) {
-//        Pattern p = Pattern.compile("\\W");
-//        Matcher m = p.matcher(name);
-//        String result = m.replaceAll("_");
-        String result=name;
+        // Pattern p = Pattern.compile("\\W");
+        // Matcher m = p.matcher(name);
+        // String result = m.replaceAll("_");
+        String result = name;
 
         for (int i = 0; i < result.length(); i++) {
-            if (!Character.isJavaLetterOrDigit(result.charAt(i))){
+            if (!Character.isJavaLetterOrDigit(result.charAt(i))) {
                 result = result.replace(result.charAt(i), '_');
             }
         }
-        
-        
+
         if (Character.isDigit(result.charAt(0))) {
             result = result.replace(result.charAt(0), '_');
             result = "DS" + result;
         }
-        
 
         return result;
     }
 
     public void run() throws ImporterException {
-// for demo #3 modify the way tables are named
-//        String table = delegate.tableName(dataset.getName());
+        // for demo #3 modify the way tables are named
+        // String table = delegate.tableName(dataset.getName());
         String table = delegate.tableName(formatDatasetName(dataset.getName()));
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
 
@@ -96,7 +94,7 @@ public class ORLImporter {
 
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true" };
+        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true", null };
         modifier.insertRow("versions", data);
     }
 

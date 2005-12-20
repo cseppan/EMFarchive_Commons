@@ -44,6 +44,7 @@ public class ReferenceImporter extends FixedFormatImporter {
         this.fieldDefsFile = fieldDefsFileName;
         this.referenceFilesDir = referenceFilesDir;
         this.useTransactions = useTransactions;
+        System.err.println("reference File  dir in constructor()-"+referenceFilesDir);
     }
 
     /**
@@ -197,7 +198,8 @@ public class ReferenceImporter extends FixedFormatImporter {
     }
 
     public void run() throws ImporterException {
-        File file = new File((referenceFilesDir.getPath() + File.separatorChar + REF_DIR_NAME));
+        System.err.println("reference File  dir in run()-"+referenceFilesDir);
+        File file = new File((referenceFilesDir.getAbsolutePath() + File.separatorChar + REF_DIR_NAME));
 
         FilenameFilter textFileFilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {

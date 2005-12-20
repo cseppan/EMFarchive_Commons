@@ -42,10 +42,11 @@ public class TableDefinitionDelegate {
         try {
             statement = connection.createStatement();
             statement.execute(query);
+        } catch (SQLException e) {
+            throw new SQLException("Could not execute query-" + query + "\n" + e.getMessage());
         } finally {
             if (statement != null)
                 statement.close();
         }
     }
-
 }

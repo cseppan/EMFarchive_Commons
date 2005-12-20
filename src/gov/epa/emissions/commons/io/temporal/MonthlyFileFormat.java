@@ -30,7 +30,7 @@ public class MonthlyFileFormat implements FileFormat {
         Column sep = new Column("Sep", types.intType(), 4, new IntegerFormatter());
         Column oct = new Column("Oct", types.intType(), 4, new IntegerFormatter());
         Column nov = new Column("Nov", types.intType(), 4, new IntegerFormatter());
-        Column dec = new Column("Dec", types.intType(), 4, new IntegerFormatter());
+        Column dec = new Column("Dece", types.intType(), 4, new IntegerFormatter());//Dec is a keyword in mysql
         Column totalWeights = new Column("Total_Weights", types.intType(), 5, new IntegerFormatter());
 
         return new Column[] { code, jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, totalWeights };

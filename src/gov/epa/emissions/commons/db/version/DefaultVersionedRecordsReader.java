@@ -42,7 +42,7 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
 
         if (sortOrder != null)
             queryString += "," + sortOrder;
-
+        System.out.println("query string =" + queryString);
         ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);
         records.execute();
 

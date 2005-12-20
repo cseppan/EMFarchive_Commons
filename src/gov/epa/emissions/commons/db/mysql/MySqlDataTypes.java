@@ -51,7 +51,7 @@ public class MySqlDataTypes implements SqlDataTypes {
     }
 
     public String text() {
-        return "TEXT";
+        return "TEXT"; //"VARCHAR(255)"; // FIXME: find the mysql type that equivalent to the postgres 'Text' type.
     }
 
     public String autoIncrement() {
@@ -64,6 +64,10 @@ public class MySqlDataTypes implements SqlDataTypes {
 
     public String timestamp() {
         return "";
+    }
+
+    public String stringType() {
+        return "VARCHAR";
     }
 
 }

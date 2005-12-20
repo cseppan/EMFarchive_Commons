@@ -46,7 +46,6 @@ public class HelpImporter {
         } catch (SQLException e) {
             throw new ImporterException("could not create table for dataset - " + datasetName+"\n"+e.getMessage(), e);
         }
-
     }
 
     public void dropTable(String table, Datasource datasource) throws ImporterException {
@@ -63,7 +62,6 @@ public class HelpImporter {
         StringBuffer description = new StringBuffer();
         for (Iterator iter = comments.iterator(); iter.hasNext();)
             description.append(iter.next() + "\n");
-
         return description.toString();
     }
 
@@ -74,7 +72,6 @@ public class HelpImporter {
         source.setCols(colNames(fileFormat.cols()));
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
-
         //Has to append the InternalSource to the internalsource list in dataset
         dataset.addInternalSource(source); 
         //dataset.setInternalSources(new InternalSource[]{source});

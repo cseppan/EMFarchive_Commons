@@ -25,4 +25,9 @@ public interface SqlDataTypes {
 
     String timestamp();
 
+    /*
+     * get the string type w/o the size, used in INSERT statements 
+     */
+    String stringType(); 
+
 }

@@ -54,6 +54,7 @@ public class DaySpecPointInventoryImporter implements Importer {
         try{
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }

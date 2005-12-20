@@ -59,7 +59,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         assertEquals(1, version.getVersion());
     }
 
-    public void testUpdateAndMarkVersionAsNonFinal() throws Exception {
+    public void testUpdate() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
         Version versionZero = versions.get(1, 0);
@@ -74,6 +74,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         changeset.addUpdated(records[1]);
 
         writer.update(changeset);
+        
 
         Version version = versions.get(1, 1);
         assertEquals(1, version.getVersion());

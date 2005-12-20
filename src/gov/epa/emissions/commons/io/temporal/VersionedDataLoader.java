@@ -15,11 +15,11 @@ import java.util.List;
 public class VersionedDataLoader implements DataLoader {
     private Datasource datasource;
 
-    private VersionedTableFormat colsMetadata;
+    private VersionedTableFormat versionedTableFormat;
 
     public VersionedDataLoader(Datasource datasource, VersionedTableFormat tableFormat) {
         this.datasource = datasource;
-        this.colsMetadata = tableFormat;
+        this.versionedTableFormat = tableFormat;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -35,7 +35,7 @@ public class VersionedDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.dataModifier();
-            String key = colsMetadata.key();
+            String key = versionedTableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -47,7 +47,7 @@ public class VersionedDataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = datasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record, colsMetadata), colsMetadata.cols());
+            modifier.insertRow(table, data(dataset, record, versionedTableFormat), versionedTableFormat.cols());
             record = reader.read();
         }
     }

@@ -83,7 +83,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         File file = new File("test/data/orl/nc", "small-nonpoint.txt");
         ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
-
+        
         assertEquals(6, countRecords());
 
         // assert
@@ -149,7 +149,7 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         assertNull(table.getValue(1, "CEFF"));
         assertNull(table.getValue(1, "REFF"));
-        assertEquals(new Float(1.0), table.getValue(1, "RPEN"));
+        assertEquals(1.0, Double.valueOf(""+table.getValue(1, "RPEN")).doubleValue(),0.000001);
 
         assertNull(table.getValue(2, "CEFF"));
         assertNull(table.getValue(2, "REFF"));

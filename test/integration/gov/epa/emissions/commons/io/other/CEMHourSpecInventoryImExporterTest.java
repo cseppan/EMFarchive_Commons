@@ -10,6 +10,7 @@ import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.TableFormat;
@@ -56,7 +57,12 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
     public void testImportCEMpthourData() throws Exception {
         File file = new File("test/data/other", "CEMpthour.txt");
         CEMHourSpecInventoryImporter importer = new CEMHourSpecInventoryImporter(file, dataset, datasource, sqlDataTypes);
-        importer.run();
+        try {
+            importer.run();
+        } catch (ImporterException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
         File exportfile = new File("test/data/other", "CEMpthourExported.txt");
         CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, datasource, sqlDataTypes);

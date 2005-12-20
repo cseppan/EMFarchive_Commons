@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ReferenceCVSFileImporter implements Importer {
 
@@ -66,18 +69,21 @@ public class ReferenceCVSFileImporter implements Importer {
     private void doImport() throws IOException, SQLException, ImporterException {
         Record record = reader.read();
         while (!record.isEnd()) {
-            check(record.getTokens(),fileFormat);
-            datasource.dataModifier().insertRow(tableName, record.getTokens(), fileFormat.cols());
+            datasource.dataModifier().insertRow(tableName, data(record.getTokens(),fileFormat), fileFormat.cols());
             record = reader.read();
         }
     }
 
-    private void check(String[] tokens, FileFormat fileFormat) throws ImporterException {
-        int token = tokens.length;
-        int cols = fileFormat.cols().length;
-        if(token != cols){
-            throw new ImporterException("The file '"+file.getAbsolutePath()+"', the row has "+ token + " tokens. But the table/column header has "+ cols + " columns.");
+    private String[] data(String[] tokens, FileFormat fileFormat) throws ImporterException {
+        int noEmptyTokens = fileFormat.cols().length - tokens.length; 
+        if(noEmptyTokens<0){
+            throw new ImporterException("Number of columns in table '"+tableName+ "' is less than number of tokens\nLine number -"+reader.lineNumber()+", Line-"+reader.line());
         }
+        List d = new ArrayList(Arrays.asList(tokens));
+        for(int i=0;i<noEmptyTokens;i++){
+            d.add("");
+        }
+        return (String[]) d.toArray(new String[0]);
     }
 
     private void createTable(String tableName, Datasource datasource, FileFormat fileFormat) throws ImporterException {

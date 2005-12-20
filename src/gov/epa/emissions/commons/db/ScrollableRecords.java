@@ -36,7 +36,10 @@ public class ScrollableRecords {
         try {
             return position();
         } finally {
-            resultSet.absolute(current);
+            if (current == 0)
+                resultSet.beforeFirst();
+            else
+                resultSet.absolute(current);
         }
     }
 
@@ -53,7 +56,10 @@ public class ScrollableRecords {
     }
 
     public void moveTo(int index) throws SQLException {
-        resultSet.absolute(index);
+        if (index == 0)
+            resultSet.beforeFirst();
+        else
+            resultSet.absolute(index);
     }
 
     public boolean available() throws SQLException {

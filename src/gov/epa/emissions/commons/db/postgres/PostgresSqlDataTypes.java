@@ -64,7 +64,11 @@ public class PostgresSqlDataTypes implements SqlDataTypes {
     }
 
     public String timestamp() {
-        return null;
+        return "";
     }
+    
+    public String stringType() {
+        return "VARCHAR";
+    }    
 
 }

@@ -13,11 +13,11 @@ import java.util.List;
 public class MassagedFixedColumnsDataLoader implements DataLoader {
     private Datasource datasource;
 
-    private TableFormat colsMetadata;
+    private TableFormat tableFormat;
 
     public MassagedFixedColumnsDataLoader(Datasource datasource, TableFormat tableFormat) {
         this.datasource = datasource;
-        this.colsMetadata = tableFormat;
+        this.tableFormat = tableFormat;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -33,7 +33,7 @@ public class MassagedFixedColumnsDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.dataModifier();
-            String key = colsMetadata.key();
+            String key = tableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -45,7 +45,7 @@ public class MassagedFixedColumnsDataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = datasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), colsMetadata.cols());
+            modifier.insertRow(table, data(dataset, record), tableFormat.cols());
             record = reader.read();
         }
     }
