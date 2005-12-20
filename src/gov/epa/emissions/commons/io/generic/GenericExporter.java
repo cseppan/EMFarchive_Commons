@@ -33,7 +33,7 @@ public class GenericExporter implements Exporter {
         this.dataset = dataset;
         this.datasource = datasource;
         this.fileFormat = fileFormat;
-        setDelimiter(" ");
+        setDelimiter(";");
         setFormatted(false);
     }
     
