@@ -32,7 +32,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     }
 
     private void dropTable() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(emissionDatasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), dataset.getName());
     }
 

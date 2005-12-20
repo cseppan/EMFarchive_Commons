@@ -109,7 +109,7 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
     }
 
     protected void dropTables() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableEM);
         dbUpdate.dropTable(datasource.getName(), tableEP);
         dbUpdate.dropTable(datasource.getName(), tablePE);

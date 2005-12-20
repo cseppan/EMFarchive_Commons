@@ -29,7 +29,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
     }
 
     protected void tearDown() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "Monthly");
         dbUpdate.dropTable(datasource.getName(), "Weekly");
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekday");

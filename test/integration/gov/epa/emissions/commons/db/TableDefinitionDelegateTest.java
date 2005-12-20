@@ -47,7 +47,7 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase{
     }
 
     private void dropTables(String[] names) throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         for(int i=0; i< names.length; i++){
             dbUpdate.dropTable(datasource.getName(), names[i]);    
         }

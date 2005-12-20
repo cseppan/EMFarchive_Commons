@@ -51,7 +51,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
     protected void tearDown() throws Exception {
         fileReader.close();
 
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "Diurnal_Weekday");
     }
 

@@ -45,8 +45,9 @@ public class DatabaseSetup {
         dbServer = new PostgresDbServer(factory.getConnection(), referenceDatasource, emissionsDatasource);
     }
 
-    private void createMySqlDbServer(ConnectionParams emissionParams, ConnectionParams referenceparams) throws SQLException {
-        dbServer = new MySqlDbServer(emissionParams,referenceparams);
+    private void createMySqlDbServer(ConnectionParams emissionParams, ConnectionParams referenceparams)
+            throws SQLException {
+        dbServer = new MySqlDbServer(emissionParams, referenceparams);
     }
 
     public DbServer getDbServer() {
@@ -62,5 +63,12 @@ public class DatabaseSetup {
             return new MySqlTableReader(datasource.getConnection());
 
         return new PostgresTableReader(datasource.getConnection());
+    }
+
+    public DbUpdate dbUpdate(Datasource datasource) throws Exception {
+        if (isMySql())
+            return new MySqlDbUpdate(datasource.getConnection());
+        
+        return new PostgresDbUpdate(datasource.getConnection());
     }
 }

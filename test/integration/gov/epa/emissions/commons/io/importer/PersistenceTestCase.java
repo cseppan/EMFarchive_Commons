@@ -67,7 +67,7 @@ public abstract class PersistenceTestCase extends TestCase {
     }
 
     protected void dropTable(String table, Datasource datasource) throws Exception, SQLException {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), table);
     }
 

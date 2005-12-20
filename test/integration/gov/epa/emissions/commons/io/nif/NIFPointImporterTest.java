@@ -126,7 +126,7 @@ public class NIFPointImporterTest extends PersistenceTestCase {
     }
 
     protected void dropTables() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableCE);
         dbUpdate.dropTable(datasource.getName(), tableEM);
         dbUpdate.dropTable(datasource.getName(), tableEP);

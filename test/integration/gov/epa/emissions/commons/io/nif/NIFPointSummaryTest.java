@@ -111,7 +111,7 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
     }
 
     protected void dropTables() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(emissionDatasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), tableCE);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEM);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEP);

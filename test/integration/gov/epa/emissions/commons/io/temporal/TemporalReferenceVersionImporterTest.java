@@ -48,7 +48,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
     }
 
     protected void tearDown() throws Exception {
-        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
 
         dbUpdate.deleteAll(datasource.getName(), "versions");
