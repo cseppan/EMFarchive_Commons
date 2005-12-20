@@ -2,6 +2,9 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.Record;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VersionedRecord extends Record {
 
     private int recordId;
@@ -56,5 +59,22 @@ public class VersionedRecord extends Record {
 
     public void setRecordId(int recordId) {
         this.recordId = recordId;
+    }
+
+    public String[] dataForInsertion(Version version) {
+        List data = new ArrayList();
+
+        data.add(0, "");// record id
+        data.add(1, datasetId + "");
+        data.add(2, version.getVersion() + "");// version
+        data.add(3, "");// delete versions
+
+        data.addAll(numVersionCols(), tokens());// add all specified data
+
+        return (String[]) data.toArray(new String[0]);
+    }
+
+    private int numVersionCols() {
+        return 4;
     }
 }

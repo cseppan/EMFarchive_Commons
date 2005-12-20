@@ -124,7 +124,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         record8.setDatasetId(1);
         changeSetForVersionTwo.addNew(record8);
 
-        // Verify update of 3 -> delete 3, add (new)9. Verify 8 added.
+        // Verify update of 2 -> delete 3, add (new)9. Verify 8 added.
         writer.update(changeSetForVersionTwo);
 
         VersionedRecord[] versionTwoRecords = reader.fetchAll(versionTwo, dataTable);

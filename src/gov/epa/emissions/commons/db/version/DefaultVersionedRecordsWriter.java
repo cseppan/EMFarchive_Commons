@@ -2,13 +2,10 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.importer.VersionedDataFormatter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 
 public class DefaultVersionedRecordsWriter implements VersionedRecordsWriter {
 
@@ -16,22 +13,13 @@ public class DefaultVersionedRecordsWriter implements VersionedRecordsWriter {
 
     private String table;
 
-    private VersionedDataFormatter dataFormatter;
-
     private Datasource datasource;
 
     public DefaultVersionedRecordsWriter(Datasource datasource, String table) throws SQLException {
         this.datasource = datasource;
         this.table = table;
 
-        dataFormatter = dataFormatter(datasource, table);
         updateStatement = updateStatement(datasource, table);
-    }
-
-    private VersionedDataFormatter dataFormatter(Datasource datasource, String table) throws SQLException {
-        DataModifier dataModifier = datasource.dataModifier();
-        Column[] cols = dataModifier.getColumns(table);
-        return new VersionedDataFormatter(cols);
     }
 
     private PreparedStatement updateStatement(Datasource datasource, String table) throws SQLException {
@@ -74,9 +62,8 @@ public class DefaultVersionedRecordsWriter implements VersionedRecordsWriter {
     private void insertData(VersionedRecord[] records, Version version) throws Exception {
         DataModifier modifier = datasource.dataModifier();
         for (int i = 0; i < records.length; i++) {
-            List data = dataFormatter.format(records[i], version.getVersion());
-            String[] toArray = (String[]) data.toArray(new String[0]);
-            modifier.insertRow(table, toArray);
+            String[] data = records[i].dataForInsertion(version);
+            modifier.insertRow(table, data);
         }
     }
 

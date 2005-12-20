@@ -86,4 +86,8 @@ public class ChangeSet {
         return false;
     }
 
+    public int getVersionNumber() {
+        return version.getVersion();
+    }
+
 }
