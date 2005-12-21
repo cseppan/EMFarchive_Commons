@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/core"/>
+	<classpathentry kind="src" path="src/postgres"/>
+	<classpathentry kind="src" path="test/postgres/integration"/>
+	<classpathentry kind="src" path="test/postgres/unit"/>
 	<classpathentry kind="src" path="test/core/compatibility"/>
 	<classpathentry kind="src" path="test/core/integration"/>
 	<classpathentry kind="src" path="test/core/unit"/>
