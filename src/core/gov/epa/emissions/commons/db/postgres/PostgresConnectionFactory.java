@@ -28,7 +28,7 @@ public class PostgresConnectionFactory implements ConnectionFactory {
     // NOTE: the only reason why this is a Singleton - need to have
     // a pool of DB connections for the entire test suite. Could not find
     // a simple, intuitive way to do it.
-    public static PostgresConnectionFactory instance(ConnectionParams params) {
+    public static PostgresConnectionFactory get(ConnectionParams params) {
         if (instance == null)
             instance = new PostgresConnectionFactory(params);
 

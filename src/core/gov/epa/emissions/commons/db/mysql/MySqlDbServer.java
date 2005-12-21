@@ -22,10 +22,6 @@ public class MySqlDbServer implements DbServer {
 
     private Datasource referenceDatasource;
 
-    private Connection emissionConnection;
-
-    private Connection referenceConnection;
-
     public MySqlDbServer(ConnectionParams emissionParams, ConnectionParams referenceParams) throws SQLException {
         this.types = new MySqlDataTypes();
         createEmissionsDatasource(emissionParams);
@@ -38,7 +34,7 @@ public class MySqlDbServer implements DbServer {
         if (!doesSchemaExist(name, connection)) {
             createSchema(name, connection);
         }
-        emissionConnection = new MySqlConnectionFactory(emissionParams).getConnection();
+        Connection emissionConnection = MySqlConnectionFactory.get().getConnection(emissionParams);
         emissionsDatasource = new MySqlDatasource(name, emissionConnection, types);
 
     }
@@ -50,7 +46,7 @@ public class MySqlDbServer implements DbServer {
             createSchema(name, connection);
             // TODO: create& import reference tables and data
         }
-        referenceConnection = new MySqlConnectionFactory(referenceParams).getConnection();
+        Connection referenceConnection = MySqlConnectionFactory.get().getConnection(referenceParams);
         referenceDatasource = new MySqlDatasource(name, referenceConnection, types);
 
     }
@@ -58,7 +54,7 @@ public class MySqlDbServer implements DbServer {
     private Connection connectToMySqlServer(ConnectionParams params) throws SQLException {
         ConnectionParams paramsWODbName = new ConnectionParams("", params.getHost(), params.getPort(), params
                 .getUsername(), params.getPassword());
-        return new MySqlConnectionFactory(paramsWODbName).getConnection();
+        return MySqlConnectionFactory.get().getConnection(paramsWODbName);
     }
 
     public Datasource getEmissionsDatasource() {
@@ -106,9 +102,8 @@ public class MySqlDbServer implements DbServer {
         return asciiColumn;
     }
 
-    public void disconnect() throws SQLException {
-        emissionConnection.close();
-        referenceConnection.close();
+    public void disconnect() {
+        MySqlConnectionFactory.get().close();
     }
 
 }

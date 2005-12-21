@@ -41,7 +41,7 @@ public class DatabaseSetup {
 
     private void createPostgresDbServer(String emissionsDatasource, String referenceDatasource, ConnectionParams params)
             throws SQLException {
-        PostgresConnectionFactory factory = PostgresConnectionFactory.instance(params);
+        PostgresConnectionFactory factory = PostgresConnectionFactory.get(params);
         dbServer = new PostgresDbServer(factory.getConnection(), referenceDatasource, emissionsDatasource);
     }
 

@@ -26,7 +26,7 @@ public abstract class PersistenceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         String folder = "test";
-        File conf = new File(folder, "test.conf");
+        File conf = new File(folder, configFilename());
 
         if (!conf.exists() || !conf.isFile()) {
             String error = "File: " + conf + " does not exist. Please copy either of the two TEMPLATE files "
@@ -43,6 +43,14 @@ public abstract class PersistenceTestCase extends TestCase {
         dbSetup = new DatabaseSetup(properties);
         fieldDefsFile = new File("config/field_defs.dat");
         referenceFilesDir = new File("config/refDbFiles");
+    }
+
+    private String configFilename() {
+        String db = System.getProperty("Database");
+        if (db != null && db.equalsIgnoreCase("MYSQL"))
+            return "mysql.conf";
+
+        return "postgres.conf";
     }
 
     protected void tearDown() throws Exception {
