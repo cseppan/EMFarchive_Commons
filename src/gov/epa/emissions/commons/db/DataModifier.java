@@ -28,7 +28,9 @@ public class DataModifier {
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         try {
             statement.execute(sql);
-        } finally {
+        } catch (SQLException e) {
+            throw new SQLException("Error in executing query-"+sql+"\n"+e.getMessage());
+        }finally {
             statement.close();
         }
     }
