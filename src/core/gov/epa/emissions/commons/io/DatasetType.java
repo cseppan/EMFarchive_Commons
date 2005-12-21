@@ -26,6 +26,25 @@ public class DatasetType implements Serializable {
 
     private List keywordsList;
 
+    private String importerClassName;
+    private String exporterClassName;
+    
+    public String getExporterClassName() {
+        return exporterClassName;
+    }
+
+    public void setExporterClassName(String exporterClassName) {
+        this.exporterClassName = exporterClassName;
+    }
+
+    public String getImporterClassName() {
+        return importerClassName;
+    }
+
+    public void setImporterClassName(String importerClassName) {
+        this.importerClassName = importerClassName;
+    }
+
     public DatasetType() {
         this.keywordsList = new ArrayList();
     }

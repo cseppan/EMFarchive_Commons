@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Emissions-Commons" default="nirvana" basedir=".">
+<project name="EPA-Commons" default="nirvana" basedir=".">
 
 	<!--  =================== Properties ====================================== -->
 	<property file="build.properties" />
