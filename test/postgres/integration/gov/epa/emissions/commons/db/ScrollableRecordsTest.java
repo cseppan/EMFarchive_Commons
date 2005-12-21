@@ -118,7 +118,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         assertEquals("2", record.token(8));
         assertEquals("0", record.token(9));
         assertEquals("246", record.token(10));
-        assertTrue(record.token(11).startsWith("0.000387296" ));//because of precision 
+        assertTrue(record.token(11).startsWith("0.000387296"));// because of precision
         assertNull(record.token(12));
         assertNull(record.token(13));
         assertNull(record.token(14));

@@ -12,7 +12,7 @@ import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCol
 
 import java.sql.SQLException;
 
-public class VersionedRecordsTestCase extends PersistenceTestCase {
+public abstract class VersionedRecordsTestCase extends PersistenceTestCase {
 
     protected Datasource datasource;
 
