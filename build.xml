@@ -25,11 +25,12 @@
 	<property name="build.classes.dir" value="${build.dist.dir}/classes" />
 
 	<property name="reports.dir" value="${build.home}/reports" />
-	<property name="reports.unittests.dir" value="${reports.dir}/tests" />
-	<property name="reports.integrationtests.dir" value="${reports.dir}/integration-tests" />
+	<property name="reports.tests.dir" value="${reports.dir}/tests" />
 
 	<property name="app.name" value="emf" />
 	<property name="app.path" value="/${app.name}" />
+
+	<property name="test.database" value="Postgres"/>
 
 
 	<path id="classpath">
@@ -43,8 +44,7 @@
 	<target name="init">
 		<mkdir dir="${build.home}" />
 		<mkdir dir="${build.classes.dir}" />
-		<mkdir dir="${reports.unittests.dir}" />
-		<mkdir dir="${reports.integrationtests.dir}" />
+		<mkdir dir="${reports.tests.dir}" />
 	</target>
 
 
@@ -103,13 +103,20 @@
 	<target name="core-tests" depends="compile-core, do-tests" />
 	<target name="postgres-tests" depends="compile-postgres, core-tests, do-tests" />
 	<target name="tests" depends="compile, do-tests" />
+	
+	<target name="mysql-tests">
+		<antcall target="core-tests">
+			<param name="test.database" value="MySql"/>
+		</antcall>
+	</target>
 
 	<target name="do-tests">
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath refid="classpath" />
+			<jvmarg value="-DDatabase=${test.database}"/>
 			<formatter type="xml" />
 
-			<batchtest fork="yes" todir="${reports.unittests.dir}">
+			<batchtest fork="yes" todir="${reports.tests.dir}">
 				<fileset dir="${build.classes.dir}">
 					<include name="**/*Test.class" />
 					<exclude name="**/ReferenceImporterTest.class" />
@@ -125,14 +132,15 @@
 			<classpath refid="classpath" />
 			<formatter type="xml" />
 
-			<test name="gov.epa.emissions.commons.io.legacy.ReferenceImporterTest" fork="yes" todir="${reports.integrationtests.dir}" />
-			<test name="gov.epa.emissions.commons.io.ref.ReferenceTablesCreatorTest" fork="yes" todir="${reports.integrationtests.dir}" />
+			<test name="gov.epa.emissions.commons.io.legacy.ReferenceImporterTest" fork="yes" todir="${reports.tests.dir}" />
+			<test name="gov.epa.emissions.commons.io.ref.ReferenceTablesCreatorTest" fork="yes" todir="${reports.tests.dir}" />
 		</junit>
 		<echo message="Emissions and Reference schema setup complete." />
 	</target>
 
 	<!-- DEFAULT target-->
 	<target name="nirvana" depends="tests" />
+	<target name="mysql-nirvana" depends="mysql-tests" />
 
 	<!-- Continuous Integration target -->
 	<target name="ci-build" depends="compile, nirvana" description="Continuous Integration build" />
