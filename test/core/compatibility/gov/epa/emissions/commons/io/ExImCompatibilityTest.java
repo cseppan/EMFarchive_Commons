@@ -44,7 +44,7 @@ public class ExImCompatibilityTest extends TestCase {
         String osName = System.getProperty("os.name");
         assertTrue("ExIm Compatibility Tests only run on Windows", osName.startsWith("Win"));
 
-        File workingDir = new File("test/compatibility");
+        File workingDir = new File("test/core/compatibility");
         String script = "compare_invs.pl";
         String[] args = new String[] { "perl.exe", script, type, importFile, exportFile };
 

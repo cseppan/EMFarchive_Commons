@@ -8,12 +8,12 @@
     <property name="env" environment="env" value="env" />
     <property name="J2EE_HOME" value="${env.J2EE_HOME}" />
     <property name="JAVA_HOME" value="${env.JAVA_HOME}" />
-    <property name="src.dir" value="src" />
+    <property name="core.src.dir" value="src/core" />
     <property name="lib.dir" value="lib" />
 
-    <property name="test.dir" value="test" />
-    <property name="test.unit.dir" value="${test.dir}/unit" />
-    <property name="test.integration.dir" value="${test.dir}/integration" />
+    <property name="core.test.dir" value="test/core" />
+    <property name="core.test.unit.dir" value="${core.test.dir}/unit" />
+    <property name="core.test.integration.dir" value="${core.test.dir}/integration" />
 
     <property name="build.home" value="build/sandbox" />
     <property name="build.dist.dir" value="${build.home}/dist" />
@@ -52,7 +52,7 @@
     </target>
 
     <target name="compile-src" depends="clean, init">
-        <javac srcdir="${src.dir}"
+        <javac srcdir="${core.src.dir}"
                destdir="${build.classes.dir}"
                classpathref="classpath"
                debug="on"
@@ -60,17 +60,17 @@
                source="1.4"
         />
         <copy todir="${build.classes.dir}">
-            <fileset dir="${src.dir}" includes="**/*.*" />
+            <fileset dir="${core.src.dir}" includes="**/*.*" />
         </copy>
     </target>
 
     <target name="compile-tests" depends="clean, init, compile-src">
-        <javac srcdir="${test.unit.dir}"
+        <javac srcdir="${core.test.unit.dir}"
                destdir="${build.classes.dir}"
                classpathref="classpath"
                debug="on"
         />
-        <javac srcdir="${test.integration.dir}"
+        <javac srcdir="${core.test.integration.dir}"
                destdir="${build.classes.dir}"
                classpathref="classpath"
                debug="on"
@@ -88,7 +88,7 @@
             <formatter type="xml" />
 
             <batchtest fork="yes" todir="${reports.unittests.dir}">
-                <fileset dir="${test.unit.dir}">
+                <fileset dir="${core.test.unit.dir}">
                     <include name="**/*Test.java" />
                 </fileset>
             </batchtest>
@@ -101,7 +101,7 @@
 			<classpath refid="classpath"/>
 			<formatter type="xml"/>
 			<batchtest fork="yes" todir="${reports.integrationtests.dir}">
-				<fileset dir="${test.integration.dir}">
+				<fileset dir="${core.test.integration.dir}">
 					<include name="**/*Test.java"/>
 					<exclude name="**/ReferenceImporterTest.java"/>
 					<exclude name="**/ReferenceTablesCreatorTest.java"/>
@@ -233,7 +233,7 @@
     </target>
 
     <target name="xml-coverage-report">
-        <cobertura-report srcdir="${src.dir}}"
+        <cobertura-report srcdir="${core.src.dir}}"
                           destdir="${coverage.xml.dir}"
                           format="xml"
         />
@@ -241,7 +241,7 @@
 
     <target name="html-coverage-report">
         <cobertura-report destdir="${coverage.html.dir}">
-            <fileset dir="${src.dir}">
+            <fileset dir="${core.src.dir}">
                 <include name="**/*.java" />
             </fileset>
         </cobertura-report>
@@ -258,7 +258,7 @@
     
     <target name="do-dist" depends="compile">
         <copy todir="${build.classes.dir}">
-            <fileset dir="${src.dir}" includes="**/*" />
+            <fileset dir="${core.src.dir}" includes="**/*" />
         </copy>
         <jar jarfile="${build.home}/${app.name}-${app.version}.jar"
              basedir="${build.classes.dir}"

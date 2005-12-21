@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * @version $Id: Enum.java,v 1.1 2005/11/09 17:51:27 rhavaldar Exp $
+ * @version $Id: Enum.java,v 1.1 2005/12/21 16:26:55 parthee Exp $
  */
 
 package gov.epa.emissions.commons;
