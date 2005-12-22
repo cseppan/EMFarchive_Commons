@@ -5,31 +5,20 @@ import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.nif.NIFImportHelper;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
-import java.io.File;
+public abstract class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
 
-public class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
+    protected FormatUnit ceDatasetTypeUnit;
 
-    private FormatUnit ceDatasetTypeUnit;
+    protected FormatUnit emDatasetTypeUnit;
 
-    private FormatUnit emDatasetTypeUnit;
+    protected FormatUnit epDatasetTypeUnit;
 
-    private FormatUnit epDatasetTypeUnit;
+    protected FormatUnit peDatasetTypeUnit;
 
-    private FormatUnit peDatasetTypeUnit;
-
-    private NIFImportHelper delegate;
-
-    private File[] files;
-
-    private String tablePrefix;
-
-    public NIFNonRoadDatasetTypeUnits(File[] files, String tablePrefix, SqlDataTypes sqlDataTypes) {
-        this.files = files;
-        this.tablePrefix = tablePrefix;
+    public NIFNonRoadDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
         FileFormat ceFileFormat = new ControlEfficiencyFileFormat(sqlDataTypes, "NIF3.0 Nonroad Control Efficiency");
         ceDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(ceFileFormat, sqlDataTypes), ceFileFormat,
                 false);
@@ -46,35 +35,17 @@ public class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
         peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
                 false);
 
-        delegate = new NIFImportHelper();
-    }
-
-    public void process() throws ImporterException {
-        associateFileWithUnit(files, tablePrefix);
-        requiredExist();
     }
 
     public FormatUnit[] formatUnits() {
         return new FormatUnit[] { ceDatasetTypeUnit, emDatasetTypeUnit, epDatasetTypeUnit, peDatasetTypeUnit };
     }
-    
-    public String dataTable(){
+
+    public String dataTable() {
         return emDatasetTypeUnit.getInternalSource().getTable();
     }
 
-    private void associateFileWithUnit(File[] files, String tableName) throws ImporterException {
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            String key = delegate.notation(file);
-            FormatUnit formatUnit = fileToDatasetTypeUnit(key);
-            if (formatUnit != null) {
-                formatUnit.setInternalSource(delegate.internalSource(tableName, key, file, formatUnit));
-
-            }
-        }
-    }
-
-    private void requiredExist() throws ImporterException {
+    protected void requiredExist() throws ImporterException {
         FormatUnit[] reqUnits = { emDatasetTypeUnit, epDatasetTypeUnit };
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < reqUnits.length; i++) {
@@ -88,7 +59,8 @@ public class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
         }
     }
 
-    private FormatUnit fileToDatasetTypeUnit(String key) {
+    protected FormatUnit keyToDatasetTypeUnit(String key) {
+        key = key.toLowerCase();
         if ("ce".equals(key)) {
             return ceDatasetTypeUnit;
         }

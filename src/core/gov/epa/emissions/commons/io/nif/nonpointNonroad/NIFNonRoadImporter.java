@@ -17,7 +17,7 @@ public class NIFNonRoadImporter implements Importer {
     public NIFNonRoadImporter(File[] files, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
             throws ImporterException {
         String tablePrefix  = new HelpImporter().tableName(dataset.getName());
-        delegate = new NIFImporter(files, dataset, new NIFNonRoadDatasetTypeUnits(files, tablePrefix, sqlDataTypes), datasource);
+        delegate = new NIFImporter(files, dataset, new NIFNonRoadFileDatasetTypeUnits(files, tablePrefix, sqlDataTypes), datasource);
     }
 
     public void run() throws ImporterException {
