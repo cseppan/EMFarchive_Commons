@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.SummaryTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -14,8 +13,6 @@ import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonpointNonRoadSummary;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class NIFNonPointSummaryTest extends PersistenceTestCase {
@@ -43,7 +40,7 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
         sqlDataTypes = dbServer.getSqlDataTypes();
         emissionDatasource = dbServer.getEmissionsDatasource();
         referenceDatasource = dbServer.getReferenceDatasource();
-        
+
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
@@ -57,45 +54,28 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
 
     public void testShouldImportAAllNonPointFilesAndCreateSummary() throws Exception {
         try {
-            dataset.setInternalSources(createAllInternalSources());
-            NIFNonPointImporter importer = new NIFNonPointImporter(dataset, emissionDatasource, sqlDataTypes);
-            SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource,referenceDatasource,dataset);
+            NIFNonPointImporter importer = new NIFNonPointImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+            SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
             importer.run();
             summary.createSummary();
-            
+
             assertEquals(1, countRecords(tableCE));
             assertEquals(21, countRecords(tableEM));
             assertEquals(4, countRecords(tableEP));
             assertEquals(4, countRecords(tablePE));
             assertEquals(3, countRecords("test_summary"));
-            
-        }catch(Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             dropTables();
         }
     }
 
-
-    private InternalSource[] createAllInternalSources() {
-        List sources = new ArrayList();
-
+    private File[] files() {
         String dir = "test/data/nif/nonpoint";
-        sources.add(internalSource(new File(dir, "ky_ce.txt"), tableCE));
-        sources.add(internalSource(new File(dir, "ky_em.txt"), tableEM));
-        sources.add(internalSource(new File(dir, "ky_ep.txt"), tableEP));
-        sources.add(internalSource(new File(dir, "ky_pe.txt"), tablePE));
-        return (InternalSource[]) sources.toArray(new InternalSource[0]);
-    }
-
-    private InternalSource internalSource(File file, String table) {
-        InternalSource source = new InternalSource();
-        source.setTable(table);
-        source.setSource(file.getAbsolutePath());
-        source.setSourceSize(file.length());
-
-        return source;
+        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
+                new File(dir, "ky_pe.txt") };
     }
 
     private int countRecords(String tableName) {

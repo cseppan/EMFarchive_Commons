@@ -6,15 +6,12 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonRoadImporter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class NIFNonRoadImporterTest extends PersistenceTestCase {
@@ -52,9 +49,8 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
-        dataset.setInternalSources(createEM_EP_PE_InternalSources());
         try {
-            NIFNonRoadImporter importer = new NIFNonRoadImporter(dataset, datasource, sqlDataTypes);
+            NIFNonRoadImporter importer = new NIFNonRoadImporter(files(), dataset, datasource, sqlDataTypes);
             importer.run();
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tableEP));
@@ -65,42 +61,22 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
-        dataset.setInternalSources(create_EP_PE_InternalSources());
         try {
-            NIFNonRoadImporter importer = new NIFNonRoadImporter(dataset, datasource, sqlDataTypes);
+            new NIFNonRoadImporter(files_EP_PE(), dataset, datasource, sqlDataTypes);
             assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonroad import requires following file types"));
         }
     }
 
-    private InternalSource[] createEM_EP_PE_InternalSources() {
-        List sources = new ArrayList();
-
+    private File[] files() {
         String dir = "test/data/nif/nonroad";
-        sources.add(internalSource(new File(dir, "ct_em.txt"), tableEM));
-        sources.add(internalSource(new File(dir, "ct_ep.txt"), tableEP));
-        sources.add(internalSource(new File(dir, "ct_pe.txt"), tablePE));
-        return (InternalSource[]) sources.toArray(new InternalSource[0]);
+        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt") };
     }
 
-    private InternalSource[] create_EP_PE_InternalSources() {
-        List sources = new ArrayList();
-
+    private File[] files_EP_PE() {
         String dir = "test/data/nif/nonroad";
-        sources.add(internalSource(new File(dir, "ct_ep.txt"), tableEP));
-        sources.add(internalSource(new File(dir, "ct_pe.txt"), tableCE));
-
-        return (InternalSource[]) sources.toArray(new InternalSource[0]);
-    }
-
-    private InternalSource internalSource(File file, String table) {
-        InternalSource source = new InternalSource();
-        source.setTable(table);
-        source.setSource(file.getAbsolutePath());
-        source.setSourceSize(file.length());
-
-        return source;
+        return new File[] { new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt") };
     }
 
     private int countRecords(String tableName) {

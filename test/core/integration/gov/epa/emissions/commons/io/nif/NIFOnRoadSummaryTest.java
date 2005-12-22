@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.SummaryTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -14,8 +13,6 @@ import gov.epa.emissions.commons.io.nif.onroad.NIFOnRoadImporter;
 import gov.epa.emissions.commons.io.nif.onroad.NIFOnRoadSummary;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class NIFOnRoadSummaryTest extends PersistenceTestCase {
@@ -53,9 +50,8 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
-        dataset.setInternalSources(createAllInternalSources());
         try {
-            NIFOnRoadImporter importer = new NIFOnRoadImporter(dataset, emissionDatasource, sqlDataTypes);
+            NIFOnRoadImporter importer = new NIFOnRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
             importer.run();
             SummaryTable summary = new NIFOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
             summary.createSummary();
@@ -68,22 +64,9 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
         }
     }
 
-    private InternalSource[] createAllInternalSources() {
-        List sources = new ArrayList();
+    private File[] files() {
         String dir = "test/data/nif/onroad";
-        sources.add(internalSource(new File(dir, "ct_em.txt"), tableEM));
-        sources.add(internalSource(new File(dir, "ct_pe.txt"), tablePE));
-        sources.add(internalSource(new File(dir, "ct_tr.txt"), tableTR));
-        return (InternalSource[]) sources.toArray(new InternalSource[0]);
-    }
-
-    private InternalSource internalSource(File file, String table) {
-        InternalSource source = new InternalSource();
-        source.setTable(table);
-        source.setSource(file.getAbsolutePath());
-        source.setSourceSize(file.length());
-
-        return source;
+        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_pe.txt"), new File(dir, "ct_tr.txt") };
     }
 
     private int countRecords(String tableName) {

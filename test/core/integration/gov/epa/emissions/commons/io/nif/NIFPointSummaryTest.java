@@ -14,8 +14,6 @@ import gov.epa.emissions.commons.io.nif.point.NIFPointImporter;
 import gov.epa.emissions.commons.io.nif.point.NIFPointSummary;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class NIFPointSummaryTest extends PersistenceTestCase {
@@ -64,9 +62,8 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
-        dataset.setInternalSources(createAllInternalSources());
         try {
-            NIFPointImporter importer = new NIFPointImporter(dataset, emissionDatasource, sqlDataTypes);
+            NIFPointImporter importer = new NIFPointImporter(files(), dataset, emissionDatasource, sqlDataTypes);
             importer.run();
             SummaryTable summary = new NIFPointSummary(emissionDatasource, referenceDatasource, dataset);
             summary.createSummary();
@@ -83,17 +80,11 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
         }
     }
 
-    private InternalSource[] createAllInternalSources() {
-        List sources = new ArrayList();
+    private File[] files() {
         String dir = "test/data/nif/point";
-        sources.add(internalSource(new File(dir, "ky_ce.txt"), tableCE));
-        sources.add(internalSource(new File(dir, "ky_em.txt"), tableEM));
-        sources.add(internalSource(new File(dir, "ky_ep.txt"), tableEP));
-        sources.add(internalSource(new File(dir, "ky_er.txt"), tableER));
-        sources.add(internalSource(new File(dir, "ky_eu.txt"), tableEU));
-        sources.add(internalSource(new File(dir, "ky_pe.txt"), tablePE));
-        sources.add(internalSource(new File(dir, "ky_si.txt"), tableSI));
-        return (InternalSource[]) sources.toArray(new InternalSource[0]);
+        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
+                new File(dir, "ky_er.txt"), new File(dir, "ky_eu.txt"), new File(dir, "ky_pe.txt"),
+                new File(dir, "ky_si.txt") };
     }
 
     private InternalSource internalSource(File file, String table) {
