@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Sector implements Serializable {
@@ -11,6 +12,10 @@ public class Sector implements Serializable {
     private String name;
 
     private String description;
+    
+    private String username;
+    
+    private Date lockDate;
 
     private List sectorCriteria;
 
@@ -59,6 +64,26 @@ public class Sector implements Serializable {
 
     public void addSectorCriteria(SectorCriteria criteria) {
         this.sectorCriteria.add(criteria);
+    }
+
+    public Date getLockDate() {
+        return lockDate;
+    }
+
+    public void setLockDate(Date lockDate) {
+        this.lockDate = lockDate;
+    }
+
+    public void setSectorCriteria(List sectorCriteria) {
+        this.sectorCriteria = sectorCriteria;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 }
