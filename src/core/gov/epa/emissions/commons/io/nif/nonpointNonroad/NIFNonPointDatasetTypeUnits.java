@@ -5,23 +5,21 @@ import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnitDelegate;
+import gov.epa.emissions.commons.io.nif.NIFImportHelper;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
-import java.io.File;
+public abstract class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
 
-public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
+    protected FormatUnit ceDatasetTypeUnit;
 
-    private FormatUnit ceDatasetTypeUnit;
+    protected FormatUnit emDatasetTypeUnit;
 
-    private FormatUnit emDatasetTypeUnit;
+    protected FormatUnit epDatasetTypeUnit;
 
-    private FormatUnit epDatasetTypeUnit;
+    protected FormatUnit peDatasetTypeUnit;
 
-    private FormatUnit peDatasetTypeUnit;
-
-    private NIFDatasetTypeUnitDelegate delegate;
+    protected NIFImportHelper delegate;
 
     public NIFNonPointDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
         FileFormat ceFileFormat = new ControlEfficiencyFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Control Efficiency");
@@ -39,31 +37,19 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
         FileFormat peFileFormat = new EmissionPeriodsFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Periods");
         peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
                 false);
+        delegate = new NIFImportHelper();
         
-        delegate = new NIFDatasetTypeUnitDelegate();
-    }
-
-    public void process(File[] files, String tableName) throws ImporterException {
-        associateFileWithUnit(files, tableName);
-        requiredExist();
     }
 
     public FormatUnit[] formatUnits() {
         return new FormatUnit[] { ceDatasetTypeUnit, emDatasetTypeUnit, epDatasetTypeUnit, peDatasetTypeUnit };
     }
-
-    private void associateFileWithUnit(File[] files, String tableName) throws ImporterException {
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            String key = delegate.notation(file);
-            FormatUnit formatUnit = fileToDatasetTypeUnit(key);
-            if(formatUnit!=null){
-                formatUnit.setInternalSource(delegate.internalSource(tableName,key,file,formatUnit));
-            }
-        }
+    
+    public String dataTable(){
+        return emDatasetTypeUnit.getInternalSource().getTable();
     }
 
-    private void requiredExist() throws ImporterException {
+    protected void requiredExist() throws ImporterException {
         FormatUnit[] reqUnits = { emDatasetTypeUnit, epDatasetTypeUnit };
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < reqUnits.length; i++) {
@@ -73,27 +59,28 @@ public class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
         }
 
         if (sb.length() > 0) {
-            throw new ImporterException("NIF nonpoint import requires following file types \n" + sb.toString());
+            throw new ImporterException("NIF nonpoint import requires following types \n" + sb.toString());
         }
     }
 
-    private FormatUnit fileToDatasetTypeUnit(String key) {
+    protected FormatUnit keyToDatasetTypeUnit(String key) {
+        key = key.toLowerCase();
         if ("ce".equals(key)) {
             return ceDatasetTypeUnit;
         }
-
+    
         if ("em".equals(key)) {
             return emDatasetTypeUnit;
         }
-
+    
         if ("ep".equals(key)) {
             return epDatasetTypeUnit;
         }
-
+    
         if ("pe".equals(key)) {
             return peDatasetTypeUnit;
         }
         return null;
     }
-
+    
 }

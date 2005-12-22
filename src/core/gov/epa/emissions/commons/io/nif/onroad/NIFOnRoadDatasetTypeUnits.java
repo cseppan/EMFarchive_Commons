@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnitDelegate;
+import gov.epa.emissions.commons.io.nif.NIFImportHelper;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
@@ -19,9 +19,15 @@ public class NIFOnRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
 
     private FormatUnit trDatasetTypeUnit;
 
-    private NIFDatasetTypeUnitDelegate delegate;
+    private NIFImportHelper delegate;
 
-    public NIFOnRoadDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
+    private File[] files;
+
+    private String tablePrefix;
+
+    public NIFOnRoadDatasetTypeUnits(File[] files, String tablePrefix, SqlDataTypes sqlDataTypes) {
+        this.files = files;
+        this.tablePrefix = tablePrefix;
         FileFormat emFileFormat = new EmissionRecordsFileFormat(sqlDataTypes);
         emDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(emFileFormat, sqlDataTypes), emFileFormat,
                 false);
@@ -33,16 +39,20 @@ public class NIFOnRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
         FileFormat trFileFormat = new TemporalRecordsFileFormat(sqlDataTypes);
         trDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(trFileFormat, sqlDataTypes), trFileFormat,
                 false);
-        delegate = new NIFDatasetTypeUnitDelegate();
+        delegate = new NIFImportHelper();
     }
 
-    public void process(File[] files, String tableName) throws ImporterException {
-        associateFileWithUnit(files, tableName);
+    public void process() throws ImporterException {
+        associateFileWithUnit(files, tablePrefix);
         requiredExist();
     }
 
     public FormatUnit[] formatUnits() {
         return new FormatUnit[] { emDatasetTypeUnit, peDatasetTypeUnit, trDatasetTypeUnit };
+    }
+    
+    public String dataTable(){
+        return emDatasetTypeUnit.getInternalSource().getTable();
     }
 
     private void associateFileWithUnit(File[] files, String tableName) throws ImporterException {
@@ -66,7 +76,7 @@ public class NIFOnRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
         }
 
         if (sb.length() > 0) {
-            throw new ImporterException("NIF onroad import requires following file types \n" + sb.toString());
+            throw new ImporterException("NIF onroad import requires following types \n" + sb.toString());
         }
     }
 

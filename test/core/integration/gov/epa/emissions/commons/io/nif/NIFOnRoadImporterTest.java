@@ -62,7 +62,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
             new NIFOnRoadImporter(files_EP(), dataset, datasource, sqlDataTypes);
             assertTrue(false);
         } catch (ImporterException e) {
-            assertTrue(e.getMessage().startsWith("NIF onroad import requires following file types"));
+            assertTrue(e.getMessage().startsWith("NIF onroad import requires following types"));
         }
     }
 

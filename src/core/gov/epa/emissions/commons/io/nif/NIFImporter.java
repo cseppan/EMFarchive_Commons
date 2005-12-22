@@ -47,7 +47,7 @@ public class NIFImporter {
             delegate.validateFile(files[i]);
         }
         String tableName = delegate.tableName(dataset.getName());
-        datasetTypeUnits.process(files, tableName);
+        datasetTypeUnits.process();
         updateInternalSources(datasetTypeUnits.formatUnits(), dataset);
     }
 

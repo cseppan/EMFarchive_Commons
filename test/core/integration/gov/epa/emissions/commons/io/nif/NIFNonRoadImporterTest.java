@@ -65,7 +65,7 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
             new NIFNonRoadImporter(files_EP_PE(), dataset, datasource, sqlDataTypes);
             assertTrue(false);
         } catch (ImporterException e) {
-            assertTrue(e.getMessage().startsWith("NIF nonroad import requires following file types"));
+            assertTrue(e.getMessage().startsWith("NIF nonroad import requires following types"));
         }
     }
 

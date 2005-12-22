@@ -1,5 +1,9 @@
 package gov.epa.emissions.commons.io.nif;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Random;
+
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
@@ -7,14 +11,13 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
+import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointTableImporter;
 
-import java.io.File;
-import java.util.Random;
-
-public class NIFNonPointImporterTest extends PersistenceTestCase {
+public class NIFNoinPointTableImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 
@@ -50,29 +53,38 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         try {
-            NIFNonPointImporter importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
+            //first import the files
+            Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
             importer.run();
             assertEquals(1, countRecords(tableCE));
             assertEquals(21, countRecords(tableEM));
             assertEquals(4, countRecords(tableEP));
             assertEquals(4, countRecords(tablePE));
+            String [] tables = {tableCE,tableEM,tableEP,tablePE};
+            Importer tableImporter = new NIFNonPointTableImporter(tables,dataset,datasource,sqlDataTypes);
+            tableImporter.run();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
+            assertEquals("20020101 0000",dateFormat.format(dataset.getStartDateTime()));
+            assertEquals("20021231 2359",dateFormat.format(dataset.getStopDateTime()));
+            assertEquals("TON",dataset.getUnits());
         } finally {
-            dropTables();
+           dropTables();
         }
     }
 
-    public void testShouldCheckForReuiredInternalSources() throws Exception {
+    public void testShouldCheckForRequiredTables() throws Exception {
         try {
-            new NIFNonPointImporter(files_CE_EP(), dataset, datasource, sqlDataTypes);
-            assertTrue(false);
+            Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
+            importer.run();
+            
+            String [] tables = {tableCE,tableEP};
+            new NIFNonPointTableImporter(tables,dataset,datasource,sqlDataTypes);
+            assertFalse(true);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types"));
+        } finally {
+           dropTables();
         }
-    }
-
-    private File[] files_CE_EP() {
-        String dir = "test/data/nif/nonpoint";
-        return new File[]{new File(dir, "ky_ce.txt"), new File(dir, "ky_ep.txt")};
     }
 
     private File[] files() {

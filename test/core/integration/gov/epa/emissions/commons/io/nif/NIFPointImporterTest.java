@@ -78,7 +78,7 @@ public class NIFPointImporterTest extends PersistenceTestCase {
             new NIFPointImporter(files_CE_EP(), dataset, datasource, sqlDataTypes);
             assertTrue(false);
         } catch (ImporterException e) {
-            assertTrue(e.getMessage().startsWith("NIF point import requires following file types"));
+            assertTrue(e.getMessage().startsWith("NIF point import requires following types"));
         }
     }
 
