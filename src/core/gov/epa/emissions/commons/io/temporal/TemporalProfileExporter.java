@@ -30,7 +30,7 @@ public class TemporalProfileExporter implements Exporter {
         this.datasource = datasource;
         factory = new TemporalFileFormatFactory(sqlDataTypes);
     }
-    
+
     public void export(File file) throws ExporterException {
         export(0, file);
     }
@@ -60,9 +60,9 @@ public class TemporalProfileExporter implements Exporter {
     private void writeHeaders(PrintWriter writer, Dataset dataset) {
         String header = dataset.getDescription();
 
-        if(header != null){
+        if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
-            while (st.hasMoreTokens()){
+            while (st.hasMoreTokens()) {
                 writer.println("#" + st.nextToken());
             }
         }
@@ -72,16 +72,16 @@ public class TemporalProfileExporter implements Exporter {
         DataQuery q = datasource.query();
         InternalSource[] sources = dataset.getInternalSources();
 
-        for(int i = 0; i < sources.length; i++){
+        for (int i = 0; i < sources.length; i++) {
             String table = sources[i].getTable();
             String qualifiedTable = datasource.getName() + "." + table;
-            ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable + " WHERE version=" + version);
+            ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable);
             Column[] cols = factory.get(table.replace('_', ' ')).cols();
             writer.println("/" + table + "/");
 
             while (data.next())
                 writeRecord(cols, data, writer);
-            
+
             writer.println("/END/");
         }
     }

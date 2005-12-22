@@ -2,9 +2,9 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.FillDefaultValues;
-import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.FillDefaultValuesOfVersionedRecord;
+import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
@@ -15,11 +15,12 @@ import java.util.List;
 public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
-    private FillDefaultValues filler;
+
+    private FillDefaultValuesOfVersionedRecord filler;
 
     public ORLNonRoadFileFormat(SqlDataTypes types) {
         this.types = types;
-        filler = new FillDefaultValues(this);
+        filler = new FillDefaultValuesOfVersionedRecord(this);
     }
 
     public String identify() {
@@ -56,12 +57,12 @@ public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
         cols.add(new Column("RPEN", types.realType(), new RealFormatter()));
-        //extended orl columns
+        // extended orl columns
         cols.add(new Column("SRCTYPE", types.stringType(2), new StringFormatter(2)));
         cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
         cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
         cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
-                
+
         return (Column[]) cols.toArray(new Column[0]);
     }
 

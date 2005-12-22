@@ -30,16 +30,16 @@ public class SpatialSurrogatesImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public SpatialSurrogatesImporter(File file, Dataset dataset, Datasource datasource, 
-            SqlDataTypes sqlDataTypes) throws ImporterException {
-        
+    public SpatialSurrogatesImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
+
         FileFormat fileFormat = new SpatialSurrogatesFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         this.delegate = new HelpImporter();
         this.dataset = dataset;
         this.datasource = datasource;
         this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        
+
         setup(file);
     }
 
@@ -50,8 +50,8 @@ public class SpatialSurrogatesImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        
-        try{
+
+        try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
@@ -65,11 +65,11 @@ public class SpatialSurrogatesImporter implements Importer {
         Reader reader = new WhitespaceDelimitedFileReader(file);
 
         loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, reader.comments());
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 }

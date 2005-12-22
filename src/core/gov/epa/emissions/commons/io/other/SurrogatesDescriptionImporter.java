@@ -29,9 +29,10 @@ public class SurrogatesDescriptionImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public SurrogatesDescriptionImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public SurrogatesDescriptionImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this.delegate = new HelpImporter();
-        
+
         setup(file);
         this.dataset = dataset;
         this.datasource = datasource;
@@ -47,8 +48,8 @@ public class SurrogatesDescriptionImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        
-        try{
+
+        try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
@@ -61,12 +62,12 @@ public class SurrogatesDescriptionImporter implements Importer {
         MassagedFixedColumnsDataLoader loader = new MassagedFixedColumnsDataLoader(datasource, tableFormat);
         DelimitedFileReader reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
 
-        loader.load(reader, dataset, table);       
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, reader.comments());
+        loader.load(reader, dataset, table);
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 }

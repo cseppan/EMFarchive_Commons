@@ -57,10 +57,10 @@ public class LineImporter implements Importer {
         Reader reader = new LineReader(file);
 
         loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset);
+        loadDataset(file, table, formatUnit.tableFormat(), dataset);
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
     }
 }

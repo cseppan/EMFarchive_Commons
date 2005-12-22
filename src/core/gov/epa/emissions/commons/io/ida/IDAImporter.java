@@ -5,11 +5,11 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.File;
 import java.util.Calendar;
@@ -84,11 +84,11 @@ public class IDAImporter {
         Reader idaReader = new IDAFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
         IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
         loader.load(idaReader, dataset, table);
-        loadDataset(file, table, unit.fileFormat(), idaReader.comments(), dataset);
+        loadDataset(file, table, unit.tableFormat(), idaReader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, List comments, Dataset dataset) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, List comments, Dataset dataset) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setUnits("short tons/year");
         dataset.setDescription(delegate.descriptions(comments));
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());

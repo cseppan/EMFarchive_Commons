@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.VersionedRecord;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.NullFormatter;
@@ -11,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VersionedTableFormat implements FileFormat, TableFormat {
+public class Old_VersionedTableFormat implements FileFormat, TableFormat {
     private FileFormat base;
 
     private Column[] cols;
 
-    public VersionedTableFormat(FileFormat base, SqlDataTypes types) {
+    public Old_VersionedTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
         cols = createCols(types);
     }
@@ -33,7 +34,8 @@ public class VersionedTableFormat implements FileFormat, TableFormat {
         List cols = new ArrayList();
 
         cols.addAll(Arrays.asList(versionCols(types)));
-        cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
+        // sandwich data b/w version cols and Comments
+        cols.addAll(Arrays.asList(base.cols()));
 
         Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
         cols.add(inlineComments);
@@ -49,12 +51,40 @@ public class VersionedTableFormat implements FileFormat, TableFormat {
 
         return new Column[] { recordId, datasetId, version, deleteVersions };
     }
-
+    
     private Column recordID(SqlDataTypes types) {
         String key = key();
-        String keyType = types.autoIncrement() + ",Primary Key(" + key + ")";
+        String keyType = types.autoIncrement()+",Primary Key("+key+")";
         Column recordId = new Column(key, keyType, new NullFormatter());
         return recordId;
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        addVersionData(data, datasetId, 0);
+        addComments(data);
+    }
+
+    public List fill(VersionedRecord record, int version) {
+        List data = new ArrayList();
+
+        addVersionData(data, record.getDatasetId(), version);
+        data.addAll(record.tokens());
+        addComments(data);
+
+        return data;
+    }
+
+    private void addComments(List data) {
+        String last = (String) data.get(data.size() - 1);
+        if (last != null && !last.startsWith("!"))
+            data.add(data.size(), "");// empty comment
+    }
+
+    private void addVersionData(List data, long datasetId, int version) {
+        data.add(0, "");// record id
+        data.add(1, datasetId + "");
+        data.add(2, version + "");// version
+        data.add(3, "");// delete versions
     }
 
     public String identify() {

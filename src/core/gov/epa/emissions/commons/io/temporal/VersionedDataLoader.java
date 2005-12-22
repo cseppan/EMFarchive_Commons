@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -15,11 +16,14 @@ import java.util.List;
 public class VersionedDataLoader implements DataLoader {
     private Datasource datasource;
 
-    private VersionedTableFormat versionedTableFormat;
+    private FileFormatWithOptionalCols fileFormat;
 
-    public VersionedDataLoader(Datasource datasource, VersionedTableFormat tableFormat) {
+    private String key;
+
+    public VersionedDataLoader(Datasource datasource, FileFormatWithOptionalCols format, String key) {
         this.datasource = datasource;
-        this.versionedTableFormat = tableFormat;
+        this.fileFormat = format;
+        this.key = key;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -35,7 +39,6 @@ public class VersionedDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.dataModifier();
-            String key = versionedTableFormat.key();
             long value = dataset.getDatasetid();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
@@ -47,15 +50,15 @@ public class VersionedDataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = datasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record, versionedTableFormat), versionedTableFormat.cols());
+            modifier.insertRow(table, data(dataset, record, fileFormat));
             record = reader.read();
         }
     }
-    
-    private String[] data(Dataset dataset, Record record, VersionedTableFormat tableFormat) {
+
+    private String[] data(Dataset dataset, Record record, FileFormatWithOptionalCols fileFormat) {
         List data = new ArrayList();
         data.addAll(record.tokens());
-        tableFormat.fillDefaults(data, dataset.getDatasetid()); 
+        fileFormat.fillDefaults(data, dataset.getDatasetid());
         massageNullMarkers(data);
 
         return (String[]) data.toArray(new String[0]);

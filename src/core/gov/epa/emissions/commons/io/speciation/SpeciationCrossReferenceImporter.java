@@ -26,11 +26,11 @@ public class SpeciationCrossReferenceImporter implements Importer {
     private FormatUnit formatUnit;
 
     private HelpImporter delegate;
-    
+
     private Dataset dataset;
 
-    public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource,
-            SqlDataTypes sqlDataTypes) throws ImporterException {
+    public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
@@ -62,11 +62,11 @@ public class SpeciationCrossReferenceImporter implements Importer {
                 new WhitespaceDelimitedTokenizer());
 
         loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, reader.comments());
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 

@@ -32,9 +32,10 @@ public class DaySpecPointInventoryImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public DaySpecPointInventoryImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public DaySpecPointInventoryImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this.delegate = new HelpImporter();
-        
+
         setup(file);
         this.dataset = dataset;
         this.datasource = datasource;
@@ -50,11 +51,10 @@ public class DaySpecPointInventoryImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        
-        try{
+
+        try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
@@ -66,12 +66,12 @@ public class DaySpecPointInventoryImporter implements Importer {
         BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
         Reader fileReader = new DataReader(reader, new FixedWidthParser(formatUnit.fileFormat()));
 
-        loader.load(fileReader, dataset, table);       
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, fileReader.comments());
+        loader.load(fileReader, dataset, table);
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 }

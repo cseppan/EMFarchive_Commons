@@ -51,72 +51,16 @@ public class VersionedTableFormatWithOptionalCols implements TableFormatWithOpti
 
         return new Column[] { recordId, datasetId, version, deleteVersions };
     }
-    
+
     private Column recordID(SqlDataTypes types) {
         String key = key();
-        String keyType = types.autoIncrement()+", Primary Key("+key+")";
+        String keyType = types.autoIncrement() + ", Primary Key(" + key + ")";
         Column recordId = new Column(key, keyType, new NullFormatter());
         return recordId;
     }
 
-    
-    public void fillDefaults(List data, long datasetId) {
-        addVersionData(data, datasetId, 0);
-        addComments(data);
-        addDefaultsForOptionalCols(data);
-    }
-
-    private void addComments(List data) {
-        if (size() == data.size())// includes comments
-            return;
-
-        String last = (String) data.get(data.size() - 1);
-        if (!isComments(last))
-            data.add(data.size(), "!");// empty comment
-    }
-
-    private boolean isComments(String token) {
-        return token != null && token.startsWith("!");
-    }
-
-    private int size() {
-        return cols.length + optionalCols().length;
-    }
-
-    private void addVersionData(List data, long datasetId, int version) {
-        data.add(0, "");// record id
-        data.add(1, datasetId + "");
-        data.add(2, version + "");// version
-        data.add(3, "");// delete versions
-    }
-
-    private void addDefaultsForOptionalCols(List data) {
-        int optionalCount = optionalCount(data);
-        int toAdd = toAdd(optionalCount);
-        int insertAt = insertAt(optionalCount);
-
-        for (int i = 0; i < toAdd; i++)
-            data.add(insertAt + i, "");
-    }
-
-    private int insertAt(int optionalCount) {
-        return numVersionCols() + base.minCols().length + optionalCount;
-    }
-
     private int numVersionCols() {
         return 4;
-    }
-
-    private int toAdd(int optionalCount) {
-        return base.optionalCols().length - optionalCount;
-    }
-
-    private int optionalCount(List data) {
-        return data.size() - numFixedCols();
-    }
-
-    private int numFixedCols() {
-        return numVersionCols() + base.minCols().length + 1;// 1 - comments
     }
 
     public String identify() {
@@ -129,6 +73,11 @@ public class VersionedTableFormatWithOptionalCols implements TableFormatWithOpti
 
     public Column[] minCols() {
         return base.minCols();
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        // TODO Auto-generated method stub
+
     }
 
 }

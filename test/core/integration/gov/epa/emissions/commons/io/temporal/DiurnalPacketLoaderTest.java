@@ -25,7 +25,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private FixedColsTableFormat tableColsMetadata;
+    private FixedColsTableFormat tableFormat;
 
     private DataLoader loader;
 
@@ -37,15 +37,15 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
         DbServer dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
-        DiurnalFileFormat colsMetadata = new DiurnalFileFormat(typeMapper);
-        tableColsMetadata = new FixedColsTableFormat(colsMetadata, typeMapper);
+        DiurnalFileFormat fileFormat = new DiurnalFileFormat(typeMapper);
+        tableFormat = new FixedColsTableFormat(fileFormat, typeMapper);
 
-        createTable("Diurnal_Weekday", datasource, tableColsMetadata);
-        loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
+        createTable("Diurnal_Weekday", datasource, tableFormat);
+        loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
     }
 
     protected void tearDown() throws Exception {

@@ -45,7 +45,7 @@ public class MassagedFixedColumnsDataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = datasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), tableFormat.cols());
+            modifier.insertRow(table, data(dataset, record));
             record = reader.read();
         }
     }
@@ -55,21 +55,21 @@ public class MassagedFixedColumnsDataLoader implements DataLoader {
         data.add("" + dataset.getDatasetid());
         for (int i = 0; i < record.size(); i++)
             data.add(record.token(i));
-        
+
         addToEnd(data);
         massageNullMarkers(data);
-        
+
         return (String[]) data.toArray(new String[0]);
     }
-    
-    //TODO:common code between MassageFixed and FixedColumnDataLoader
+
+    // TODO:common code between MassageFixed and FixedColumnDataLoader
     private void addToEnd(List data) {
         int remain = tableFormat.cols().length - data.size();
-        for(int i=0;i<remain;i++){
+        for (int i = 0; i < remain; i++) {
             data.add("");
         }
     }
-    
+
     // FIXME: should this be applied to ALL data loaders ?
     private void massageNullMarkers(List data) {
         for (int i = 0; i < data.size(); i++) {

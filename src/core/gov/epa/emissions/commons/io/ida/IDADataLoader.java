@@ -55,7 +55,7 @@ public class IDADataLoader implements DataLoader {
         Record record = reader.read();
         DataModifier modifier = emissionDatasource.dataModifier();
         while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), tableFormat.cols());
+            modifier.insertRow(table, data(dataset, record));
             record = reader.read();
         }
     }

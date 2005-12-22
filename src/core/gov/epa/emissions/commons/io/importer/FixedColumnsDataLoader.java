@@ -54,7 +54,7 @@ public class FixedColumnsDataLoader implements DataLoader {
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
         data.add("" + dataset.getDatasetid());
-        for (int i = 0; i < record.size(); i++){
+        for (int i = 0; i < record.size(); i++) {
             data.add(record.token(i));
         }
         addToEnd(data);
@@ -63,7 +63,7 @@ public class FixedColumnsDataLoader implements DataLoader {
 
     private void addToEnd(List data) {
         int remain = tableFormat.cols().length - data.size();
-        for(int i=0;i<remain;i++){
+        for (int i = 0; i < remain; i++) {
             data.add("");
         }
     }

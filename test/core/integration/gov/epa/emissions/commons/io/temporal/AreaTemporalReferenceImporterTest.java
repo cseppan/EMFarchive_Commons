@@ -7,8 +7,6 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.SimpleTableFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.File;
 import java.util.Random;
@@ -32,7 +30,7 @@ public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         AreaTemporalReferenceFileFormat base = new AreaTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(base, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);
         createTable("AREA_SOURCE", datasource, tableFormat);
     }
 

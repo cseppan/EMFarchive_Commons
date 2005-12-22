@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -74,7 +75,7 @@ public class CountryStateCountyDataImporter implements Importer {
         DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
-        loadDataset(file, table(header), unit.fileFormat(), dataset);
+        loadDataset(file, table(header), unit.tableFormat(), dataset);
     }
 
     // TODO: revisit ?
@@ -115,8 +116,8 @@ public class CountryStateCountyDataImporter implements Importer {
         return line.trim().replaceAll("/", "");
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
     }
 
 }

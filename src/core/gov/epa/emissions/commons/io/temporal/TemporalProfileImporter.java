@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -70,14 +71,13 @@ public class TemporalProfileImporter implements Importer {
                 String header = readHeader(fileReader);
 
                 FileFormat fileFormat = fileFormat(header);
-                VersionedTableFormat tableFormat = new VersionedTableFormat(fileFormat, sqlType);
+                FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
 
                 doImport(fileReader, unit, header);
             }
             addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }
@@ -88,7 +88,6 @@ public class TemporalProfileImporter implements Importer {
             delegate.createTable(table(header), datasource, unit.tableFormat(), dataset.getName());
             doImport(fileReader, dataset, unit, header);
         } catch (Exception e) {
-            e.printStackTrace();
             delegate.dropTable(table(header), datasource);
             throw e;
         }
@@ -97,10 +96,10 @@ public class TemporalProfileImporter implements Importer {
     private void doImport(BufferedReader fileReader, Dataset dataset, DatasetTypeUnit unit, String header)
             throws Exception {
         Reader reader = new FixedWidthPacketReader(fileReader, header, unit.fileFormat());
-        DataLoader loader = new VersionedDataLoader(datasource, (VersionedTableFormat) unit.tableFormat());
+        DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
-        loadDataset(file, table(header), unit.fileFormat(), dataset);
+        loadDataset(file, table(header), unit.tableFormat(), dataset);
     }
 
     // TODO: revisit ?
@@ -127,12 +126,12 @@ public class TemporalProfileImporter implements Importer {
 
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true",null};
+        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true", null };
         modifier.insertRow("versions", data);
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
     }
 
 }

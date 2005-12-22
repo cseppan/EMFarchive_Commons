@@ -8,7 +8,8 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -54,7 +55,7 @@ public abstract class VersionedRecordsTestCase extends PersistenceTestCase {
         tableDefinition.createTable(table, tableFormat().cols());
     }
 
-    protected VersionedTableFormatWithOptionalCols tableFormat() {
+    protected TableFormat tableFormat() {
         FileFormatWithOptionalCols fileFormat = new FileFormatWithOptionalCols() {
             public Column[] optionalCols() {
                 return new Column[0];
@@ -78,7 +79,7 @@ public abstract class VersionedRecordsTestCase extends PersistenceTestCase {
             public void fillDefaults(List data, long datasetId) {// ignored
             }
         };
-        return new VersionedTableFormatWithOptionalCols(fileFormat, types);
+        return new VersionedTableFormat(fileFormat, types);
     }
 
 }

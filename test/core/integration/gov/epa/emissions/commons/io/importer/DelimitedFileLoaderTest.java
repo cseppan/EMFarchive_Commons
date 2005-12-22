@@ -19,7 +19,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes dataType;
 
-    private FixedColsTableFormat colsMetadata;
+    private FixedColsTableFormat tableFormat;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -31,8 +31,8 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
         File file = new File("test/data/orl/SimpleDelimited.txt");
         reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
 
-        colsMetadata = new FixedColsTableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
-        createTable("SimpleDelimited", datasource, colsMetadata);
+        tableFormat = new FixedColsTableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
+        createTable("SimpleDelimited", datasource, tableFormat);
     }
 
     protected void tearDown() throws Exception {
@@ -41,7 +41,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadRecordsIntoTable() throws Exception {
-        DataLoader loader = new FixedColumnsDataLoader(datasource, colsMetadata);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");

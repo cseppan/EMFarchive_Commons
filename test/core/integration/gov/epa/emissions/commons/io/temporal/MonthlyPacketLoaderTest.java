@@ -25,7 +25,7 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    public FixedColsTableFormat tableColsMetadata;
+    public FixedColsTableFormat tableFormat;
 
     private BufferedReader fileReader;
 
@@ -37,12 +37,12 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         File file = new File("test/data/temporal-profiles/monthly.txt");
-        MonthlyFileFormat colsMetadata = new MonthlyFileFormat(typeMapper);
-        tableColsMetadata = new FixedColsTableFormat(colsMetadata, typeMapper);
-        createTable("Monthly", datasource, tableColsMetadata);
-        
+        MonthlyFileFormat fileFormat = new MonthlyFileFormat(typeMapper);
+        tableFormat = new FixedColsTableFormat(fileFormat, typeMapper);
+        createTable("Monthly", datasource, tableFormat);
+
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), colsMetadata);
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
     }
 
     protected void tearDown() throws Exception {
@@ -52,7 +52,7 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadRecordsIntoMonthlyTable() throws Exception {
-        DataLoader loader = new FixedColumnsDataLoader(datasource, tableColsMetadata);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");

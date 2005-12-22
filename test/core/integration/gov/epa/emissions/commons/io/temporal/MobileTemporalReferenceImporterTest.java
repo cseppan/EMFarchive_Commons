@@ -7,8 +7,6 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.SimpleTableFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.File;
 import java.util.Random;
@@ -32,7 +30,7 @@ public class MobileTemporalReferenceImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         MobileTemporalReferenceFileFormat base = new MobileTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(base, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);
         createTable("MOBILE_SOURCE", datasource, tableFormat);
     }
 

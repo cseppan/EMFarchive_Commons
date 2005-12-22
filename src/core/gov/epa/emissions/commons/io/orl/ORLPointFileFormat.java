@@ -3,9 +3,9 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.FillDefaultValues;
-import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.FillDefaultValuesOfVersionedRecord;
+import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.SmallIntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
@@ -18,11 +18,11 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
 
-    private FillDefaultValues filler;
+    private FillDefaultValuesOfVersionedRecord filler;
 
     public ORLPointFileFormat(SqlDataTypes types) {
         this.types = types;
-        filler = new FillDefaultValues(this);
+        filler = new FillDefaultValuesOfVersionedRecord(this);
     }
 
     public String identify() {

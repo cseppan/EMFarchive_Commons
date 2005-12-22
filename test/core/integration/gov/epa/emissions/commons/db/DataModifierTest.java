@@ -3,7 +3,8 @@ package gov.epa.emissions.commons.db;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +33,7 @@ public class DataModifierTest extends PersistenceTestCase {
         return tableFormat(dataTypes()).cols();
     }
 
-    protected VersionedTableFormatWithOptionalCols tableFormat(final SqlDataTypes types) {
+    protected TableFormat tableFormat(final SqlDataTypes types) {
         FileFormatWithOptionalCols fileFormat = new FileFormatWithOptionalCols() {
             public Column[] optionalCols() {
                 return new Column[0];
@@ -56,7 +57,7 @@ public class DataModifierTest extends PersistenceTestCase {
             public void fillDefaults(List data, long datasetId) {// ignore
             }
         };
-        return new VersionedTableFormatWithOptionalCols(fileFormat, types);
+        return new VersionedTableFormat(fileFormat, types);
     }
 
     protected void tearDown() throws Exception {

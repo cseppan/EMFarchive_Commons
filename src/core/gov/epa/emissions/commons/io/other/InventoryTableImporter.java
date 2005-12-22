@@ -51,7 +51,7 @@ public class InventoryTableImporter implements Importer {
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
-        
+
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -71,11 +71,11 @@ public class InventoryTableImporter implements Importer {
         Reader fileReader = new DataReader(reader, new InventoryTableParser(formatUnit.fileFormat()));
 
         loader.load(fileReader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, fileReader.comments());
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 }

@@ -29,15 +29,14 @@ public class DataModifier {
         try {
             statement.execute(sql);
         } catch (SQLException e) {
-            throw new SQLException("Error in executing query-"+sql+"\n"+e.getMessage());
-        }finally {
+            throw new SQLException("Error in executing query-" + sql + "\n" + e.getMessage());
+        } finally {
             statement.close();
         }
     }
 
     /**
-     * UPDATE databaseName.tableName SET columnName = setExpr WHERE
-     * whereColumns[i] LIKE 'likeClauses[i]'
+     * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] LIKE 'likeClauses[i]'
      * 
      * @param columnName -
      *            the column to update
@@ -73,8 +72,7 @@ public class DataModifier {
     }// updateWhereLike(String, String, String[], String[])
 
     /**
-     * UPDATE databaseName.tableName SET columnName = setExpr WHERE
-     * whereColumns[i] = equalsClauses[i]
+     * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] = equalsClauses[i]
      * 
      * @param columnName -
      *            the column to update
@@ -110,8 +108,8 @@ public class DataModifier {
     }// updateWhereEquals(String, String, String[], String[])
 
     /**
-     * Generate a concat expression for usage in SQL statements. If the value to
-     * be concatenated is a literal (constant), it should be enclosed in ''.
+     * Generate a concat expression for usage in SQL statements. If the value to be concatenated is a literal
+     * (constant), it should be enclosed in ''.
      * 
      * @param exprs -
      *            Array of data ('literals' and column names)

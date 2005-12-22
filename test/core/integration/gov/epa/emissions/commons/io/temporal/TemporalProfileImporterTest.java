@@ -12,8 +12,6 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import java.io.File;
 import java.util.Random;
 
-import org.dbunit.dataset.ITable;
-
 public class TemporalProfileImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
@@ -49,36 +47,13 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
 
         // assert
         assertEquals(10, countRecords("Monthly"));
-        assertVersionInfo("Monthly", countRecords("Monthly"));
-
         assertEquals(13, countRecords("WEEKLY"));
-        assertVersionInfo("WEEKLY", countRecords("WEEKLY"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
         File exportfile = new File("test/data/temporal-profiles", "VersionedTemporalProfileExported.txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
         exportfile.delete();
-    }
-
-    private void assertVersionInfo(String name, int rows) throws Exception {
-        verifyVersionCols(name, rows);
-    }
-
-    private void verifyVersionCols(String table, int rows) throws Exception {
-        TableReader tableReader = tableReader(datasource);
-
-        ITable tableRef = tableReader.table(datasource.getName(), table);
-        for (int i = 0; i < rows; i++) {
-            Object recordId = tableRef.getValue(i, "Record_Id");
-            assertEquals((i + 1) + "", recordId.toString());
-
-            Object version = tableRef.getValue(i, "Version");
-            assertEquals("0", version.toString());
-
-            Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
-            assertEquals("", deleteVersions);
-        }
     }
 
     private int countRecords(String table) {

@@ -65,11 +65,11 @@ public class HelpImporter {
         return description.toString();
     }
 
-    public void setInternalSource(File file, String table, FileFormat fileFormat, Dataset dataset) {
+    public void setInternalSource(File file, String table, TableFormat tableFormat, Dataset dataset) {
         InternalSource source = new InternalSource();
         source.setTable(table);
-        source.setType(fileFormat.identify());
-        source.setCols(colNames(fileFormat.cols()));
+        source.setType(tableFormat.identify());
+        source.setCols(colNames(tableFormat.cols()));
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
         //Has to append the InternalSource to the internalsource list in dataset

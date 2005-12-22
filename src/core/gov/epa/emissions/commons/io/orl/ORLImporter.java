@@ -6,13 +6,12 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,14 +67,14 @@ public class ORLImporter {
     }
 
     public void run() throws ImporterException {
-        // for demo #3 modify the way tables are named
+        // FIXME: for demo #3 modify the way tables are named
         // String table = delegate.tableName(dataset.getName());
         String table = delegate.tableName(formatDatasetName(dataset.getName()));
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
 
         try {
-            doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(),
-                    (TableFormatWithOptionalCols) formatUnit.tableFormat());
+            doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
+                    .tableFormat());
         } catch (Exception e) {
             delegate.dropTable(table, datasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
@@ -83,8 +82,8 @@ public class ORLImporter {
     }
 
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat,
-            TableFormatWithOptionalCols tableFormat) throws Exception {
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
+            TableFormat tableFormat) throws Exception {
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
         Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
         loader.load(reader, dataset, table);
 
@@ -98,8 +97,8 @@ public class ORLImporter {
         modifier.insertRow("versions", data);
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, List comments, Dataset dataset) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, List comments, Dataset dataset) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setUnits("short tons/year");
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
         dataset.setDescription(delegate.descriptions(comments));

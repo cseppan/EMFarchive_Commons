@@ -31,12 +31,12 @@ public class SMKReportImporter implements Importer {
     private FormatUnit formatUnit;
 
     private HelpImporter delegate;
-    
+
     private SMKReportFileFormatFactory factory;
-    
+
     private String delimiter;
 
-    public SMKReportImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) 
+    public SMKReportImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
             throws IOException, ImporterException, Exception {
         this.delegate = new HelpImporter();
         setup(file);
@@ -49,7 +49,7 @@ public class SMKReportImporter implements Importer {
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 
-    private void setup(File file)throws ImporterException {
+    private void setup(File file) throws ImporterException {
         delegate.validateFile(file);
         this.file = file;
     }
@@ -57,7 +57,7 @@ public class SMKReportImporter implements Importer {
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
-        try{
+        try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             delegate.dropTable(table, datasource);
@@ -71,35 +71,35 @@ public class SMKReportImporter implements Importer {
         MassagedFixedColumnsDataLoader loader = new MassagedFixedColumnsDataLoader(datasource, tableFormat);
         DelimitedFileReader reader = getFileReader();
         List comments = getComments(reader);
-        loader.load(reader, dataset, table);       
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, comments);
+        loader.load(reader, dataset, table);
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
-    
+
     private List getComments(DelimitedFileReader reader) throws IOException {
         List comments = reader.comments();
         String[] headers = reader.readHeader("[" + delimiter + "]");
-        for(int i = 0; i < headers.length; i++) {
+        for (int i = 0; i < headers.length; i++) {
             comments.add(headers[i]);
         }
-        
+
         return comments;
     }
-    
+
     private DelimitedFileReader getFileReader() throws Exception {
-        if(delimiter.equals(";"))
+        if (delimiter.equals(";"))
             return new DelimitedFileReader(file, new SemiColonDelimitedTokenizer());
-        else if(delimiter.equals("|"))
+        else if (delimiter.equals("|"))
             return new DelimitedFileReader(file, new PipeDelimitedTokenizer());
-        else if(delimiter.equals(","))
+        else if (delimiter.equals(","))
             return new DelimitedFileReader(file, new CommaDelimitedTokenizer());
         else {
             throw new ImporterException("could not find delimiter - " + file.getAbsolutePath());
         }
     }
-    
+
 }

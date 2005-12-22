@@ -7,7 +7,8 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -52,7 +53,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         tableDefinition.createTable(table, tableFormat(dataTypes()).cols());
     }
 
-    protected VersionedTableFormatWithOptionalCols tableFormat(final SqlDataTypes types) {
+    protected TableFormat tableFormat(final SqlDataTypes types) {
         FileFormatWithOptionalCols fileFormat = new FileFormatWithOptionalCols() {
             public Column[] optionalCols() {
                 return new Column[0];
@@ -76,7 +77,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
             public void fillDefaults(List data, long datasetId) {// ignore
             }
         };
-        return new VersionedTableFormatWithOptionalCols(fileFormat, types);
+        return new VersionedTableFormat(fileFormat, types);
     }
 
     private void addRecord(Datasource datasource, String table, String[] data) throws SQLException {

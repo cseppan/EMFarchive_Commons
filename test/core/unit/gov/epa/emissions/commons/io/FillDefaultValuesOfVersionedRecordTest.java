@@ -6,9 +6,9 @@ import java.util.List;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-public class FillDefaultValuesTest extends MockObjectTestCase {
+public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
 
-    private FillDefaultValues filler;
+    private FillDefaultValuesOfVersionedRecord filler;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -25,7 +25,7 @@ public class FillDefaultValuesTest extends MockObjectTestCase {
                 new ColumnStub() };
         fileFormat.stubs().method("cols").will(returnValue(cols));
 
-        filler = new FillDefaultValues((FileFormatWithOptionalCols) fileFormat.proxy());
+        filler = new FillDefaultValuesOfVersionedRecord((FileFormatWithOptionalCols) fileFormat.proxy());
     }
 
     public void testShouldAddDatasetIdAndFillersForMissingOptionalColsOnFillDefaultValues() {
@@ -42,15 +42,18 @@ public class FillDefaultValuesTest extends MockObjectTestCase {
         filler.fillDefaults(data, datasetId);
 
         // verify
-        // 1 dataset id, 3 - fixed, 2 optionals, 1 Comments
-        assertEquals((1 + 3 + 2 + 1), data.size());
-        assertEquals(datasetId + "", data.get(0));// dataset id
-        assertEquals("fixed1", data.get(1));// fixed 1
-        assertEquals("fixed2", data.get(2));// fixed 2
-        assertEquals("fixed3", data.get(3));// fixed 3
-        assertEquals("optional1", data.get(4));// optional 1
-        assertEquals("", data.get(5));// optional 2 - filler
-        assertEquals("!Comments", data.get(6));// comments
+        // 4 version cols, 3 - fixed, 2 optionals, 1 Comments
+        assertEquals((4 + 3 + 2 + 1), data.size());
+        assertEquals("", data.get(0));// record id - filler
+        assertEquals(datasetId + "", data.get(1));// dataset id
+        assertEquals("0", data.get(2)); // version
+        assertEquals("", data.get(3));// delete versions
+        assertEquals("fixed1", data.get(4));// fixed 1
+        assertEquals("fixed2", data.get(5));// fixed 2
+        assertEquals("fixed3", data.get(6));// fixed 3
+        assertEquals("optional1", data.get(7));// optional 1
+        assertEquals("", data.get(8));// optional 2 - filler
+        assertEquals("!Comments", data.get(9));// comments
     }
 
     public void testShouldAddDatasetIdAndFillersForOptionalColsAndCommentsOnFillDefaultValues() {
@@ -66,14 +69,17 @@ public class FillDefaultValuesTest extends MockObjectTestCase {
 
         // verify
         // 1 dataset id, 3 - fixed, 2 optionals, 1 Comments
-        assertEquals((1 + 3 + 2 + 1), data.size());
-        assertEquals(datasetId + "", data.get(0));// dataset id
-        assertEquals("fixed1", data.get(1));// fixed 1
-        assertEquals("fixed2", data.get(2));// fixed 2
-        assertEquals("fixed3", data.get(3));// fixed 3
-        assertEquals("", data.get(4));// optional 1 - filler
-        assertEquals("", data.get(5));// optional 2 - filler
-        assertEquals("!", data.get(6));// comments - filler
+        assertEquals((4 + 3 + 2 + 1), data.size());
+        assertEquals("", data.get(0));// record id - filler
+        assertEquals(datasetId + "", data.get(1));// dataset id
+        assertEquals("0", data.get(2)); // version
+        assertEquals("", data.get(3));// delete versions
+        assertEquals("fixed1", data.get(4));// fixed 1
+        assertEquals("fixed2", data.get(5));// fixed 2
+        assertEquals("fixed3", data.get(6));// fixed 3
+        assertEquals("", data.get(7));// optional 1 - filler
+        assertEquals("", data.get(8));// optional 2 - filler
+        assertEquals("!", data.get(9));// comments - filler
     }
 
     public void testShouldAddDatasetIdAndFillersForAllOptionalColsOnFillDefaultValues() {
@@ -90,14 +96,17 @@ public class FillDefaultValuesTest extends MockObjectTestCase {
 
         // verify
         // 1 dataset id, 3 - fixed, 2 optionals, 1 Comments
-        assertEquals((1 + 3 + 2 + 1), data.size());
-        assertEquals(datasetId + "", data.get(0));// dataset id
-        assertEquals("fixed1", data.get(1));// fixed 1
-        assertEquals("fixed2", data.get(2));// fixed 2
-        assertEquals("fixed3", data.get(3));// fixed 3
-        assertEquals("", data.get(4));// optional 1 - filler
-        assertEquals("", data.get(5));// optional 2 - filler
-        assertEquals("!Comments", data.get(6));// comments
+        assertEquals((4 + 3 + 2 + 1), data.size());
+        assertEquals("", data.get(0));// record id - filler
+        assertEquals(datasetId + "", data.get(1));// dataset id
+        assertEquals("0", data.get(2)); // version
+        assertEquals("", data.get(3));// delete versions
+        assertEquals("fixed1", data.get(4));// fixed 1
+        assertEquals("fixed2", data.get(5));// fixed 2
+        assertEquals("fixed3", data.get(6));// fixed 3
+        assertEquals("", data.get(7));// optional 1 - filler
+        assertEquals("", data.get(8));// optional 2 - filler
+        assertEquals("!Comments", data.get(9));// comments
     }
 
     public class ColumnStub extends Column {

@@ -30,9 +30,10 @@ public class SpeciationProfileImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public SpeciationProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public SpeciationProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this.delegate = new HelpImporter();
-        
+
         setup(file);
         this.dataset = dataset;
         this.datasource = datasource;
@@ -48,8 +49,8 @@ public class SpeciationProfileImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        
-        try{
+
+        try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
@@ -63,11 +64,11 @@ public class SpeciationProfileImporter implements Importer {
         Reader reader = new WhitespaceDelimitedFileReader(file);
 
         loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, reader.comments());
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat format, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, format, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 

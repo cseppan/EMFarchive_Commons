@@ -11,11 +11,11 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
-import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         File file = new File("test/data/orl/nc", "small-nonpoint.txt");
         ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
-        
+
         assertEquals(6, countRecords());
 
         // assert
@@ -149,7 +149,7 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         assertNull(table.getValue(1, "CEFF"));
         assertNull(table.getValue(1, "REFF"));
-        assertEquals(1.0, Double.valueOf(""+table.getValue(1, "RPEN")).doubleValue(),0.000001);
+        assertEquals(1.0, Double.valueOf("" + table.getValue(1, "RPEN")).doubleValue(), 0.000001);
 
         assertNull(table.getValue(2, "CEFF"));
         assertNull(table.getValue(2, "REFF"));
@@ -169,10 +169,9 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
-        FileFormat fileFormat = new VersionedTableFormatWithOptionalCols(new ORLNonPointFileFormat(sqlDataTypes),
-                sqlDataTypes);
+        TableFormat tableFormat = new VersionedTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
         String[] actualCols = source.getCols();
-        String[] expectedCols = colNames(fileFormat.cols());
+        String[] expectedCols = colNames(tableFormat.cols());
         assertEquals(expectedCols.length, actualCols.length);
         for (int i = 0; i < actualCols.length; i++) {
             assertEquals(expectedCols[i], actualCols[i]);

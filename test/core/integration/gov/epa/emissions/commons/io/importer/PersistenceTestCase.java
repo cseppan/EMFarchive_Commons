@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,9 +70,9 @@ public abstract class PersistenceTestCase extends TestCase {
         return dbServer().getSqlDataTypes();
     }
 
-    protected void createTable(String table, Datasource datasource, FileFormat cols) throws SQLException {
+    protected void createTable(String table, Datasource datasource, TableFormat format) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
-        tableDefinition.createTable(table, cols.cols());
+        tableDefinition.createTable(table, format.cols());
     }
 
     protected void dropTable(String table, Datasource datasource) throws Exception, SQLException {

@@ -46,7 +46,7 @@ public class LineLoader implements DataLoader{
         DataModifier modifier = datasource.dataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
             String[] data = data(dataset, record);
-            modifier.insertRow(table, data, tableFormat.cols());
+            modifier.insertRow(table, data);
         }
     }
 

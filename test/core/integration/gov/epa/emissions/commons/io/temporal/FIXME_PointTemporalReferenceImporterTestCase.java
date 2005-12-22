@@ -7,13 +7,11 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.SimpleTableFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.File;
 import java.util.Random;
 
-public class PointTemporalReferenceImporterTest extends PersistenceTestCase {
+public abstract class FIXME_PointTemporalReferenceImporterTestCase extends PersistenceTestCase {
 
     private Datasource datasource;
 
@@ -33,7 +31,7 @@ public class PointTemporalReferenceImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         PointTemporalReferenceFileFormat base = new PointTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(base, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);
         createTable("POINT_SOURCE", datasource, tableFormat);
     }
 

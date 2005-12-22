@@ -9,7 +9,10 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.orl.ORLNonPointFileFormat;
+import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.PointTemporalReferenceFileFormat;
+import gov.epa.emissions.commons.io.temporal.TableFormat;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -38,17 +41,17 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), table);
     }
 
-    private TableFormatWithOptionalCols setupUnversionedTable() throws SQLException {
-        TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(
-                new PointTemporalReferenceFileFormat(sqlDataTypes), sqlDataTypes);
-        createTable(table, datasource, tableFormat);
+    private FileFormatWithOptionalCols setupUnversionedTable() throws SQLException {
+        FileFormatWithOptionalCols fileFormat = new PointTemporalReferenceFileFormat(sqlDataTypes);
+        FixedColsTableFormat format = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        createTable(table, datasource, format);
 
-        return tableFormat;
+        return fileFormat;
     }
 
     public void testShouldLoadRecordsFromFileWithVariableColsIntoUnversionedTable() throws Exception {
-        TableFormatWithOptionalCols tableFormat = setupUnversionedTable();
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
+        FileFormatWithOptionalCols fileFormat = setupUnversionedTable();
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, "Dataset_Id");
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
@@ -64,8 +67,8 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         assertEquals(6, tableReader.count(datasource.getName(), table));
     }
 
-    private TableFormatWithOptionalCols setupVersionedTable(FileFormatWithOptionalCols fileFormat) throws SQLException {
-        TableFormatWithOptionalCols tableFormat = new VersionedTableFormatWithOptionalCols(fileFormat, sqlDataTypes);
+    private TableFormat setupVersionedTable(FileFormatWithOptionalCols fileFormat) throws SQLException {
+        TableFormat tableFormat = new VersionedTableFormat(fileFormat, sqlDataTypes);
         createTable(table, datasource, tableFormat);
 
         return tableFormat;
@@ -74,9 +77,9 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
     public void testShouldLoadRecordsFromFileIntoVersionedTable() throws Exception {
         // create table
         ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat = setupVersionedTable(fileFormat);
+        TableFormat tableFormat = setupVersionedTable(fileFormat);
 
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
 
         Dataset dataset = new SimpleDataset();
         dataset.setName("test");
@@ -106,25 +109,4 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         }
     }
 
-    public void testShouldFailToLoadRecordsAsOneOfTheRecordsHasLessThanMinCols() throws Exception {
-        Dataset dataset = new SimpleDataset();
-        dataset.setName("test");
-
-        File file = new File("test/data/variable-cols-with-errors.txt");
-        Reader reader = new WhitespaceDelimitedFileReader(file);
-
-        TableFormatWithOptionalCols tableFormat = setupUnversionedTable();
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, tableFormat);
-
-        try {
-            loader.load(reader, dataset, table);
-        } catch (ImporterException e) {
-            TableReader tableReader = tableReader(datasource);
-            assertEquals(0, tableReader.count(datasource.getName(), table));
-
-            return;
-        }
-
-        fail("should have failed due to error in record 5 having less than min cols");
-    }
 }

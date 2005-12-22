@@ -69,7 +69,7 @@ public class ReferenceCVSFileImporter implements Importer {
     private void doImport() throws IOException, SQLException, ImporterException {
         Record record = reader.read();
         while (!record.isEnd()) {
-            datasource.dataModifier().insertRow(tableName, data(record.getTokens(),fileFormat), fileFormat.cols());
+            datasource.dataModifier().insertRow(tableName, data(record.getTokens(),fileFormat));
             record = reader.read();
         }
     }

@@ -19,9 +19,9 @@ import java.io.File;
 import java.util.List;
 
 public class GridCrossReferenceImporter implements Importer {
-    
+
     private Dataset dataset;
-    
+
     private Datasource datasource;
 
     private File file;
@@ -30,7 +30,8 @@ public class GridCrossReferenceImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public GridCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public GridCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new GridCrossRefFileFormat(sqlDataTypes);
@@ -62,11 +63,11 @@ public class GridCrossReferenceImporter implements Importer {
         Reader reader = new WhitespaceDelimitedFileReader(file);
 
         loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.fileFormat(), dataset, reader.comments());
+        loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
     }
 
-    private void loadDataset(File file, String table, FileFormat fileFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+        delegate.setInternalSource(file, table, tableFormat, dataset);
         dataset.setDescription(delegate.descriptions(comments));
     }
 }

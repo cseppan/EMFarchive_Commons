@@ -65,13 +65,11 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
             assertEquals(4, countRecords(tablePE));
             assertEquals(3, countRecords("test_summary"));
 
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dropTables();
         }
     }
-
+    
     private File[] files() {
         String dir = "test/data/nif/nonpoint";
         return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),

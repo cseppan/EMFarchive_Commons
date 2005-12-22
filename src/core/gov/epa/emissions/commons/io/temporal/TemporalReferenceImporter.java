@@ -6,7 +6,9 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FormatUnit;
+import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -32,15 +34,16 @@ public class TemporalReferenceImporter implements Importer {
     private File file;
 
     private FormatUnit unit;
-    
+
     private HelpImporter delegate;
 
-    public TemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public TemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         setup(file);
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new VersionedTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
     }
@@ -62,7 +65,7 @@ public class TemporalReferenceImporter implements Importer {
         String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, unit.tableFormat(), dataset.getName());
         try {
-            doImport(file, dataset, table, (VersionedTableFormat)unit.tableFormat());
+            doImport(file, dataset, table, unit.tableFormat());
         } catch (Exception e) {
             delegate.dropTable(table, datasource);
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
@@ -70,27 +73,26 @@ public class TemporalReferenceImporter implements Importer {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, VersionedTableFormat tableFormat)
-            throws Exception {
-        VersionedDataLoader loader = new VersionedDataLoader(datasource, tableFormat);
+    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
         Reader reader = new TemporalReferenceReader(fileReader);
 
         loader.load(reader, dataset, table);
         addVersionZeroEntryToVersionsTable(datasource, dataset);
-        loadDataset(file, table, unit.fileFormat(), reader, dataset);
+        loadDataset(file, table, unit.tableFormat(), reader, dataset);
     }
- 
+
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true" };
         modifier.insertRow("versions", data);
     }
-    
-    private void loadDataset(File file, String table, FileFormat fileFormat, Reader reader, Dataset dataset) {
+
+    private void loadDataset(File file, String table, TableFormat format, Reader reader, Dataset dataset) {
         // TODO: other properties ?
         HelpImporter delegate = new HelpImporter();
-        delegate.setInternalSource(file, table, fileFormat, dataset);
+        delegate.setInternalSource(file, table, format, dataset);
         dataset.setDescription(descriptions(reader.comments()));
     }
 
