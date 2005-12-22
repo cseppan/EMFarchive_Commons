@@ -6,6 +6,7 @@ import java.util.List;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FillDefaultValues;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.RealFormatter;
@@ -15,8 +16,11 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
 
+    private FillDefaultValues filler;
+
     public ORLNonPointFileFormat(SqlDataTypes types) {
         this.types = types;
+        filler = new FillDefaultValues(this);
     }
 
     public String identify() {
@@ -46,7 +50,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("NAICS", types.stringType(6), new StringFormatter(6)));
         cols.add(new Column("POLL", types.stringType(16), new StringFormatter(16)));
         cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));
-        
+
         return (Column[]) cols.toArray(new Column[0]);
     }
 
@@ -57,7 +61,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
         cols.add(new Column("RPEN", types.realType(), new RealFormatter()));
-        //extended orl columns
+        // extended orl columns
         cols.add(new Column("PRIMARY_DEVICE_TYPE_CODE", types.stringType(4), new StringFormatter(4)));
         cols.add(new Column("SECONDARY_DEVICE_TYPE_CODE", types.stringType(4), new StringFormatter(4)));
         cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
@@ -65,5 +69,9 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
 
         return (Column[]) cols.toArray(new Column[0]);
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fillDefaults(data, datasetId);
     }
 }

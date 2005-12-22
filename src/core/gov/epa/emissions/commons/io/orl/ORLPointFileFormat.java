@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FillDefaultValues;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.RealFormatter;
@@ -17,8 +18,11 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
 
+    private FillDefaultValues filler;
+
     public ORLPointFileFormat(SqlDataTypes types) {
         this.types = types;
+        filler = new FillDefaultValues(this);
     }
 
     public String identify() {
@@ -75,20 +79,24 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
         cols.add(new Column("CPRI", types.intType(), new IntegerFormatter()));
         cols.add(new Column("CSEC", types.intType(), new IntegerFormatter()));
-        //extended orl columns
-        cols.add(new Column("NEI_UNIQUE_ID",types.stringType(20), new StringFormatter(20)));
-        cols.add(new Column("ORIS_FACILITY_CODE",types.stringType(6), new StringFormatter(6)));
-        cols.add(new Column("ORIS_BOILER_ID",types.stringType(5), new StringFormatter(5)));
-        cols.add(new Column("IPM_YN",types.charType(), new CharFormatter()));
-        cols.add(new Column("DATA_SOURCE",types.stringType(10), new StringFormatter(10)));
-        cols.add(new Column("STACK_DEFAULT_FLAG",types.stringType(10), new StringFormatter(10)));
-        cols.add(new Column("LOCATION_DEFAULT_FLAG",types.stringType(10), new StringFormatter(10)));
-        cols.add(new Column("YEAR",types.stringType(4), new StringFormatter(4)));
-        cols.add(new Column("TRIBAL_CODE",types.stringType(3), new StringFormatter(3)));
-        cols.add(new Column("HORIZONTAL_AREA_FUGITIVE",types.realType(), new RealFormatter()));
-        cols.add(new Column("RELEASE_HEIGHT_FUGITIVE",types.realType(), new RealFormatter()));
+        // extended orl columns
+        cols.add(new Column("NEI_UNIQUE_ID", types.stringType(20), new StringFormatter(20)));
+        cols.add(new Column("ORIS_FACILITY_CODE", types.stringType(6), new StringFormatter(6)));
+        cols.add(new Column("ORIS_BOILER_ID", types.stringType(5), new StringFormatter(5)));
+        cols.add(new Column("IPM_YN", types.charType(), new CharFormatter()));
+        cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("STACK_DEFAULT_FLAG", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("LOCATION_DEFAULT_FLAG", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
+        cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("HORIZONTAL_AREA_FUGITIVE", types.realType(), new RealFormatter()));
+        cols.add(new Column("RELEASE_HEIGHT_FUGITIVE", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fillDefaults(data, datasetId);
     }
 
 }

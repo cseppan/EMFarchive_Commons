@@ -10,6 +10,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCols;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
 
@@ -28,7 +29,8 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
 
         importTestData(dataTable);
 
-        results = new DefaultScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "." + dataTable);
+        results = new DefaultScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "."
+                + dataTable);
         results.execute();
     }
 
@@ -69,6 +71,9 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
 
             public Column[] cols() {
                 return minCols();
+            }
+
+            public void fillDefaults(List data, long datasetId) {// ignore
             }
         };
         return new VersionedTableFormatWithOptionalCols(fileFormat, types);

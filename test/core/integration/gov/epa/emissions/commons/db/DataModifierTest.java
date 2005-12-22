@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.importer.VersionedTableFormatWithOptionalCol
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class DataModifierTest extends PersistenceTestCase {
 
@@ -51,6 +52,9 @@ public class DataModifierTest extends PersistenceTestCase {
             public Column[] cols() {
                 return minCols();
             }
+
+            public void fillDefaults(List data, long datasetId) {// ignore
+            }
         };
         return new VersionedTableFormatWithOptionalCols(fileFormat, types);
     }
@@ -64,7 +68,7 @@ public class DataModifierTest extends PersistenceTestCase {
     public void testShouldInsertRowUsingSpecifiedCols() throws Exception {
         DataModifier modifier = datasource.dataModifier();
 
-        String[] data = { null, "102", "0", "", "p1", "p2",""};
+        String[] data = { null, "102", "0", "", "p1", "p2", "" };
         modifier.insertRow(table, data);
 
         DataQuery query = datasource.query();
@@ -75,8 +79,8 @@ public class DataModifierTest extends PersistenceTestCase {
         assertEquals("", rs.getString(4));
         assertEquals("p1", rs.getString(5));
         assertEquals("p2", rs.getString(6));
-        assertEquals("", rs.getString(7)); //in line comments
-        
+        assertEquals("", rs.getString(7)); // in line comments
+
         rs.close();
     }
 
@@ -94,8 +98,8 @@ public class DataModifierTest extends PersistenceTestCase {
         assertEquals("", rs.getString(4));
         assertEquals("p1", rs.getString(5));
         assertEquals("p2", rs.getString(6));
-        assertEquals("", rs.getString(7)); //in line comments
-        
+        assertEquals("", rs.getString(7)); // in line comments
+
         rs.close();
     }
 

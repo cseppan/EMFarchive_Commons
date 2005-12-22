@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FillDefaultValues;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.RealFormatter;
@@ -15,8 +16,11 @@ public class ORLOnRoadFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
 
+    private FillDefaultValues filler;
+
     public ORLOnRoadFileFormat(SqlDataTypes types) {
         this.types = types;
+        filler = new FillDefaultValues(this);
     }
 
     public String identify() {
@@ -49,14 +53,18 @@ public class ORLOnRoadFileFormat implements FileFormatWithOptionalCols {
     public Column[] optionalCols() {
         List cols = new ArrayList();
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
-        
-        //extended orl columns
+
+        // extended orl columns
         cols.add(new Column("SRCTYPE", types.stringType(2), new StringFormatter(2)));
         cols.add(new Column("DATA_SOURCE", types.stringType(6), new StringFormatter(6)));
         cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
         cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
-        
+
         return (Column[]) cols.toArray(new Column[0]);
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fillDefaults(data, datasetId);
     }
 
 }

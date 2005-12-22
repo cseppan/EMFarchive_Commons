@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.temporal;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.FillDefaultValues;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
@@ -13,8 +14,11 @@ import java.util.List;
 public class MobileTemporalReferenceFileFormat implements FileFormatWithOptionalCols {
     private SqlDataTypes types;
 
+    private FillDefaultValues filler;
+
     public MobileTemporalReferenceFileFormat(SqlDataTypes types) {
         this.types = types;
+        filler = new FillDefaultValues(this);
     }
 
     public String identify() {
@@ -51,5 +55,9 @@ public class MobileTemporalReferenceFileFormat implements FileFormatWithOptional
         Column diurnalCode = new Column("Diurnal_Code", types.intType(), new IntegerFormatter());
 
         return new Column[] { scc, monthlyCode, weeklyCode, diurnalCode };
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fillDefaults(data, datasetId);
     }
 }
