@@ -21,12 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class TemporalProfileImporter implements Importer {
-
-    private static Log log = LogFactory.getLog(PointTemporalReferenceImporter.class);
 
     private SqlDataTypes sqlType;
 
@@ -40,28 +35,14 @@ public class TemporalProfileImporter implements Importer {
 
     private File file;
 
-    public TemporalProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType)
-            throws ImporterException {
+    public TemporalProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType) {
         this.datasource = datasource;
         this.sqlType = sqlType;
         this.dataset = dataset;
-        setup(file);
+        this.file = file;
 
         metadataFactory = new TemporalFileFormatFactory(sqlType);
         delegate = new HelpImporter();
-    }
-
-    private void setup(File file) throws ImporterException {
-        this.file = validateFile(file);
-    }
-
-    private File validateFile(File file) throws ImporterException {
-        log.debug("check if file exists " + file.getAbsolutePath());
-        if (!file.exists() || !file.isFile()) {
-            log.error("File " + file.getAbsolutePath() + " not found");
-            throw new ImporterException("File not found");
-        }
-        return file;
     }
 
     public void run() throws ImporterException {

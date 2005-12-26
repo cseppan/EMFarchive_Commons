@@ -12,15 +12,9 @@ public class IDANonPointNonRoadImporter implements Importer {
 
     private IDAImporter delegate;
 
-    private SqlDataTypes sqlDataTypes;
-
-    public IDANonPointNonRoadImporter(File file, Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource, SqlDataTypes sqlDataTypes) throws ImporterException {
-        this.sqlDataTypes = sqlDataTypes;
+    public IDANonPointNonRoadImporter(File file, Dataset dataset, Datasource emissionDatasource,
+            Datasource referenceDatasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
-        setup(file);
-    }
-
-    private void setup(File file) throws ImporterException {
         delegate.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
     }
 

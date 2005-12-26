@@ -12,22 +12,15 @@ public class IDAPointImporter implements Importer {
 
     private IDAImporter delegate;
 
-    private SqlDataTypes sqlDataTypes;
-
-    public IDAPointImporter(File file, Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource, SqlDataTypes sqlDataTypes) throws ImporterException {
-        this.sqlDataTypes = sqlDataTypes;
+    public IDAPointImporter(File file, Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
-        setup(file);
-    }
-
-    private void setup(File file) throws ImporterException {
         IDAFileFormat fileFormat = new IDAPointFileFormat(sqlDataTypes);
         delegate.setup(file, fileFormat);
     }
 
     public void run() throws ImporterException {
         delegate.run();
-
     }
 
 }

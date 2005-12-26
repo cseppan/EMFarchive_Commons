@@ -18,12 +18,7 @@ import java.io.FileReader;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class AreaTemporalReferenceImporter implements Importer {
-    private static Log log = LogFactory.getLog(PointTemporalReferenceImporter.class);
-
     private Dataset dataset;
 
     private Datasource datasource;
@@ -32,30 +27,16 @@ public class AreaTemporalReferenceImporter implements Importer {
 
     private DatasetTypeUnit unit;
 
-    public AreaTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
-        setup(file);
+    /**
+     * Expects table 'AREA_SOURCE' to be available in Datasource
+     */
+    public AreaTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
         AreaTemporalReferenceFileFormat fileFormat = new AreaTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
-    }
-
-    /**
-     * Expects table 'AREA_SOURCE' to be available in Datasource
-     */
-    private void setup(File file) throws ImporterException {
-        this.file = validateFile(file);
-    }
-
-    private File validateFile(File file) throws ImporterException {
-        log.debug("check if file exists " + file.getAbsolutePath());
-        if (!file.exists() || !file.isFile()) {
-            log.error("File " + file.getAbsolutePath() + " not found");
-            throw new ImporterException("File not found");
-        }
-        return file;
     }
 
     public void run() throws ImporterException {

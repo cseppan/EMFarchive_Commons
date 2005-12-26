@@ -29,20 +29,15 @@ public class SpeciationCrossReferenceImporter implements Importer {
 
     private Dataset dataset;
 
-    public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
+    public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.datasource = datasource;
+        this.delegate = new HelpImporter();
+        this.file = file;
+
         FileFormat fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        this.delegate = new HelpImporter();
-        setup(file);
-    }
-
-    private void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
-        this.file = file;
     }
 
     public void run() throws ImporterException {

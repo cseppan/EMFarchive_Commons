@@ -33,19 +33,13 @@ public class CountryStateCountyDataImporter implements Importer {
 
     private CountryStateCountyFileFormatFactory metadataFactory;
 
-    public CountryStateCountyDataImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType)
-            throws ImporterException {
+    public CountryStateCountyDataImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.sqlType = sqlType;
 
         metadataFactory = new CountryStateCountyFileFormatFactory(sqlType);
         this.delegate = new HelpImporter();
-        setup(file);
-    }
-
-    private void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
         this.file = file;
     }
 

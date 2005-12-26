@@ -31,27 +31,13 @@ public class MobileTemporalReferenceImporter implements Importer {
 
     private DatasetTypeUnit unit;
 
-    public MobileTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
-        setup(file);
+    public MobileTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
         MobileTemporalReferenceFileFormat fileFormat = new MobileTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
-    }
-
-    private void setup(File file) throws ImporterException {
-        this.file = validateFile(file);
-    }
-
-    private File validateFile(File file) throws ImporterException {
-        log.debug("check if file exists " + file.getAbsolutePath());
-        if (!file.exists() || !file.isFile()) {
-            log.error("File " + file.getAbsolutePath() + " not found");
-            throw new ImporterException("File not found");
-        }
-        return file;
     }
 
     public void run() throws ImporterException {

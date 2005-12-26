@@ -39,19 +39,15 @@ public class SMKReportImporter implements Importer {
     public SMKReportImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
             throws IOException, ImporterException, Exception {
         this.delegate = new HelpImporter();
-        setup(file);
+        this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
         this.factory = new SMKReportFileFormatFactory(file, sqlDataTypes);
         this.delimiter = factory.getDelimiter();
+
         FileFormat fileFormat = factory.getFormat();
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-    }
-
-    private void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
-        this.file = file;
     }
 
     public void run() throws ImporterException {

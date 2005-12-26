@@ -28,11 +28,9 @@ public abstract class FormattedImporter implements Importer {
 
     protected File[] files;
 
-    private DatasetType datasetType;
 
     protected FormattedImporter(DbServer dbServer, DatasetType datasetType) {
         this.dbServer = dbServer;
-        this.datasetType = datasetType;
     }
 
     /**
@@ -64,24 +62,16 @@ public abstract class FormattedImporter implements Importer {
     
 	public void setup(File path, String fileName) throws ImporterException {
         files = new File[1];
-        log.debug("" + files.length);
-        log.debug("$$$ Path: " + path.getAbsolutePath());
-        log.debug("$$$ Filename: " + fileName);
-        log.debug("IS DATASETTYPE NULL? " + (datasetType== null));
-        log.debug("$$$ DatasetType: " + datasetType.getName());
 		File file = validateFile(path, fileName);
 		files[0]=file;
 	}
 
 	private File validateFile(File path, String fileName) throws ImporterException {
-        log.debug("check if file exists " + fileName);
         File file = new File(path, fileName);
-        log.debug("File is: " + file.getAbsolutePath());
         if (!file.exists() || !file.isFile()) {
             log.error("File " + file.getAbsolutePath() + " not found");
             throw new ImporterException("File not found");
         }
-        log.debug("check if file exists " + fileName);
 
         return file;
 	}

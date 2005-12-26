@@ -61,8 +61,6 @@ public class PostgresDbUpdate extends DbOperation implements DbUpdate {
         Connection jdbcConnection = connection.getConnection();
         Statement stmt = jdbcConnection.createStatement();
         stmt.execute("DROP TABLE " + qualifiedTable(schema, table));
-
-        // FIXME: use dbUnit to drop table
     }
 
     private String qualifiedTable(String schema, String table) {

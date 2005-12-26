@@ -42,19 +42,14 @@ public class ReferenceCVSFileImporter implements Importer {
         this.datasource = datasource;
         this.sqlDataTypes = sqlDataTypes;
         this.delegate = new HelpImporter();
-        setup(file);
-    }
-
-    public void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
         this.file = file;
+
         try {
             reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
         } catch (FileNotFoundException e) {
-            throw new ImporterException("File not found: "+file.getAbsolutePath()+ "\n"+e.getMessage());
+            throw new ImporterException("File not found: " + file.getAbsolutePath() + "\n" + e.getMessage());
         }
-        this.fileFormat = fileFormat();
-
+        this.fileFormat = fileFormat(reader);
     }
 
     public void run() throws ImporterException {
@@ -63,24 +58,27 @@ public class ReferenceCVSFileImporter implements Importer {
             doImport();
         } catch (Exception e) {
             delegate.dropTable(tableName, datasource);
-            throw new ImporterException("Could not import file: "+ file.getAbsolutePath()+ "\n"+ e.getMessage());
+            throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
         }
     }
+
     private void doImport() throws IOException, SQLException, ImporterException {
         Record record = reader.read();
         while (!record.isEnd()) {
-            datasource.dataModifier().insertRow(tableName, data(record.getTokens(),fileFormat));
+            datasource.dataModifier().insertRow(tableName, data(record.getTokens(), fileFormat));
             record = reader.read();
         }
     }
 
     private String[] data(String[] tokens, FileFormat fileFormat) throws ImporterException {
-        int noEmptyTokens = fileFormat.cols().length - tokens.length; 
-        if(noEmptyTokens<0){
-            throw new ImporterException("Number of columns in table '"+tableName+ "' is less than number of tokens\nLine number -"+reader.lineNumber()+", Line-"+reader.line());
+        int noEmptyTokens = fileFormat.cols().length - tokens.length;
+        if (noEmptyTokens < 0) {
+            throw new ImporterException("Number of columns in table '" + tableName
+                    + "' is less than number of tokens\nLine number -" + reader.lineNumber() + ", Line-"
+                    + reader.line());
         }
         List d = new ArrayList(Arrays.asList(tokens));
-        for(int i=0;i<noEmptyTokens;i++){
+        for (int i = 0; i < noEmptyTokens; i++) {
             d.add("");
         }
         return (String[]) d.toArray(new String[0]);
@@ -94,7 +92,7 @@ public class ReferenceCVSFileImporter implements Importer {
         }
     }
 
-    private ReferenceCVSFileFormat fileFormat() throws ImporterException {
+    private ReferenceCVSFileFormat fileFormat(Reader reader) throws ImporterException {
         try {
             Record record = reader.read();
             String[] tokens = record.getTokens();

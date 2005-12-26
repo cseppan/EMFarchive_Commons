@@ -30,22 +30,15 @@ public class SpatialSurrogatesImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public SpatialSurrogatesImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
-
-        FileFormat fileFormat = new SpatialSurrogatesFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+    public SpatialSurrogatesImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.delegate = new HelpImporter();
         this.dataset = dataset;
         this.datasource = datasource;
-        this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-
-        setup(file);
-    }
-
-    private void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
         this.file = file;
+
+        FileFormat fileFormat = new SpatialSurrogatesFileFormat(sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 
     public void run() throws ImporterException {

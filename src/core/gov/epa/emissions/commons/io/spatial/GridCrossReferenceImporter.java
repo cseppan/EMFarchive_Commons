@@ -30,19 +30,13 @@ public class GridCrossReferenceImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public GridCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
+    public GridCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new GridCrossRefFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         this.delegate = new HelpImporter();
-        setup(file);
-    }
-
-    private void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
         this.file = file;
     }
 

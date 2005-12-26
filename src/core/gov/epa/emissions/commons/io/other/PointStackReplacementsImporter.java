@@ -30,21 +30,15 @@ public class PointStackReplacementsImporter implements Importer {
 
     private HelpImporter delegate;
 
-    public PointStackReplacementsImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
+    public PointStackReplacementsImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.delegate = new HelpImporter();
 
-        setup(file);
+        this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new PointStackReplacementsFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-    }
-
-    private void setup(File file) throws ImporterException {
-        delegate.validateFile(file);
-        this.file = file;
     }
 
     public void run() throws ImporterException {
