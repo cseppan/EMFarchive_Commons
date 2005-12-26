@@ -50,18 +50,14 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
-        try {
-            NIFOnRoadImporter importer = new NIFOnRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
-            importer.run();
-            SummaryTable summary = new NIFOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
-            summary.createSummary();
-            assertEquals(10, countRecords(tableEM));
-            assertEquals(10, countRecords(tablePE));
-            assertEquals(8, countRecords(tableTR));
-            assertEquals(2, countRecords("test_summary"));
-        } finally {
-            dropTables();
-        }
+        NIFOnRoadImporter importer = new NIFOnRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+        importer.run();
+        SummaryTable summary = new NIFOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
+        summary.createSummary();
+        assertEquals(10, countRecords(tableEM));
+        assertEquals(10, countRecords(tablePE));
+        assertEquals(8, countRecords(tableTR));
+        assertEquals(2, countRecords("test_summary"));
     }
 
     private File[] files() {
@@ -74,13 +70,12 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
         return tableReader.count(emissionDatasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEM);
         dbUpdate.dropTable(emissionDatasource.getName(), tablePE);
         dbUpdate.dropTable(emissionDatasource.getName(), tableTR);
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
-
     }
 
 }

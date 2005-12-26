@@ -53,23 +53,18 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportAAllNonPointFilesAndCreateSummary() throws Exception {
-        try {
-            NIFNonPointImporter importer = new NIFNonPointImporter(files(), dataset, emissionDatasource, sqlDataTypes);
-            SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
-            importer.run();
-            summary.createSummary();
+        NIFNonPointImporter importer = new NIFNonPointImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+        SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
+        importer.run();
+        summary.createSummary();
 
-            assertEquals(1, countRecords(tableCE));
-            assertEquals(21, countRecords(tableEM));
-            assertEquals(4, countRecords(tableEP));
-            assertEquals(4, countRecords(tablePE));
-            assertEquals(3, countRecords("test_summary"));
-
-        } finally {
-            dropTables();
-        }
+        assertEquals(1, countRecords(tableCE));
+        assertEquals(21, countRecords(tableEM));
+        assertEquals(4, countRecords(tableEP));
+        assertEquals(4, countRecords(tablePE));
+        assertEquals(3, countRecords("test_summary"));
     }
-    
+
     private File[] files() {
         String dir = "test/data/nif/nonpoint";
         return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
@@ -81,7 +76,7 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
         return tableReader.count(emissionDatasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), tableCE);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEM);

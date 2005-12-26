@@ -31,7 +31,7 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }

@@ -10,4 +10,7 @@ public class ReferenceImporterTest extends PersistenceTestCase {
         referenceImporter.run();
     }
 
+    protected void doTearDown() throws Exception {//no op
+    }
+
 }

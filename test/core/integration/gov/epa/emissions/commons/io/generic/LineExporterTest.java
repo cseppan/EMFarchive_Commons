@@ -45,7 +45,7 @@ public class LineExporterTest extends PersistenceTestCase {
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }

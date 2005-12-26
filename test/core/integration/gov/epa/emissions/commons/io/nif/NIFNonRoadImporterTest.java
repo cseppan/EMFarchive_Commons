@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonRoadImporter;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class NIFNonRoadImporterTest extends PersistenceTestCase {
@@ -21,8 +22,6 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
-
-    private String tableCE;
 
     private String tableEM;
 
@@ -42,7 +41,6 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         String name = dataset.getName();
-        tableCE = name + "_ce";
         tableEM = name + "_em";
         tableEP = name + "_ep";
         tablePE = name + "_pe";
@@ -63,10 +61,12 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
             new NIFNonRoadImporter(files_EP_PE(), dataset, datasource, sqlDataTypes);
-            assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonroad import requires following types"));
+            return;
         }
+
+        fail("Should have failed as required types are unspecified");
     }
 
     private File[] files() {
@@ -84,7 +84,10 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {// no op
+    }
+
+    private void dropTables() throws Exception, SQLException {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableEM);
         dbUpdate.dropTable(datasource.getName(), tableEP);

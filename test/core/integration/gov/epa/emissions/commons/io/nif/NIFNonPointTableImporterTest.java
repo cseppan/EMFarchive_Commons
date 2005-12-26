@@ -17,7 +17,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointTableImporter;
 
-public class NIFNoinPointTableImporterTest extends PersistenceTestCase {
+public class NIFNonPointTableImporterTest extends PersistenceTestCase {
 
     private Datasource datasource;
 
@@ -52,58 +52,49 @@ public class NIFNoinPointTableImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
-        try {
-            //first import the files
-            Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
-            importer.run();
-            assertEquals(1, countRecords(tableCE));
-            assertEquals(21, countRecords(tableEM));
-            assertEquals(4, countRecords(tableEP));
-            assertEquals(4, countRecords(tablePE));
-            String [] tables = {tableCE,tableEM,tableEP,tablePE};
-            Importer tableImporter = new NIFNonPointTableImporter(tables,dataset,datasource,sqlDataTypes);
-            tableImporter.run();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
-            assertEquals("20020101 0000",dateFormat.format(dataset.getStartDateTime()));
-            assertEquals("20021231 2359",dateFormat.format(dataset.getStopDateTime()));
-            assertEquals("TON",dataset.getUnits());
-        } finally {
-           dropTables();
-        }
+        // first import the files
+        Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
+        importer.run();
+        assertEquals(1, countRecords(tableCE));
+        assertEquals(21, countRecords(tableEM));
+        assertEquals(4, countRecords(tableEP));
+        assertEquals(4, countRecords(tablePE));
+        String[] tables = { tableCE, tableEM, tableEP, tablePE };
+        Importer tableImporter = new NIFNonPointTableImporter(tables, dataset, datasource, sqlDataTypes);
+        tableImporter.run();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
+        assertEquals("20020101 0000", dateFormat.format(dataset.getStartDateTime()));
+        assertEquals("20021231 2359", dateFormat.format(dataset.getStopDateTime()));
+        assertEquals("TON", dataset.getUnits());
     }
 
     public void testShouldCheckForRequiredTables() throws Exception {
         try {
             Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
             importer.run();
-            
-            String [] tables = {tableCE,tableEP};
-            new NIFNonPointTableImporter(tables,dataset,datasource,sqlDataTypes);
-            assertFalse(true);
+
+            String[] tables = { tableCE, tableEP };
+            new NIFNonPointTableImporter(tables, dataset, datasource, sqlDataTypes);
         } catch (ImporterException e) {
-            assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types"));
-        } finally {
-           dropTables();
+            assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types "));
+            return;
         }
+
+        fail("Should have failed as not all tables are specified");
     }
 
     private File[] files() {
         String dir = "test/data/nif/nonpoint";
-        return new File[] {
-                new File(dir, "ky_ce.txt"),
-                new File(dir, "ky_em.txt"),
-                new File(dir, "ky_ep.txt"),
-                new File(dir, "ky_pe.txt")
-        };
+        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
+                new File(dir, "ky_pe.txt") };
     }
-
 
     private int countRecords(String tableName) {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableCE);
         dbUpdate.dropTable(datasource.getName(), tableEM);

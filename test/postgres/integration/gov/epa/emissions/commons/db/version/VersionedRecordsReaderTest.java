@@ -17,9 +17,9 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         reader = new DefaultVersionedRecordsReader(datasource);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         reader.close();
-        super.tearDown();
+        super.doTearDown();
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {

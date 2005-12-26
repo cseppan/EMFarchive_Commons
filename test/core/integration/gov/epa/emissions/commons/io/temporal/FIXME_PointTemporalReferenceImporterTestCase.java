@@ -36,7 +36,7 @@ public abstract class FIXME_PointTemporalReferenceImporterTestCase extends Persi
         createTable("POINT_SOURCE", datasource, tableFormat);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         dropTable("POINT_SOURCE", datasource);
     }
 

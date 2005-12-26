@@ -17,6 +17,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+//FIXME: move the functionality to appropriate components/classes. Remove this class.
 public class HelpImporter {
 
     private static Log log = LogFactory.getLog(ORLImporter.class);
@@ -35,7 +36,24 @@ public class HelpImporter {
     }
 
     public String tableName(String datasetName) {
-        return datasetName.trim().replaceAll(" ", "_");
+        return format(datasetName).trim().replaceAll(" ", "_");
+    }
+
+    private String format(String name) {
+        String result = name;
+
+        for (int i = 0; i < result.length(); i++) {
+            if (!Character.isJavaLetterOrDigit(result.charAt(i))) {
+                result = result.replace(result.charAt(i), '_');
+            }
+        }
+
+        if (Character.isDigit(result.charAt(0))) {
+            result = result.replace(result.charAt(0), '_');
+            result = "DS" + result;
+        }
+
+        return result;
     }
 
     public void createTable(String table, Datasource datasource, TableFormat tableFormat, String datasetName)
@@ -44,7 +62,8 @@ public class HelpImporter {
         try {
             tableDefinition.createTable(table, tableFormat.cols());
         } catch (SQLException e) {
-            throw new ImporterException("could not create table for dataset - " + datasetName+"\n"+e.getMessage(), e);
+            throw new ImporterException("could not create table for dataset - " + datasetName + "\n" + e.getMessage(),
+                    e);
         }
     }
 
@@ -72,9 +91,9 @@ public class HelpImporter {
         source.setCols(colNames(tableFormat.cols()));
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
-        //Has to append the InternalSource to the internalsource list in dataset
-        dataset.addInternalSource(source); 
-        //dataset.setInternalSources(new InternalSource[]{source});
+        // Has to append the InternalSource to the internalsource list in dataset
+        dataset.addInternalSource(source);
+        // dataset.setInternalSources(new InternalSource[]{source});
     }
 
     private String[] colNames(Column[] cols) {
@@ -84,11 +103,11 @@ public class HelpImporter {
 
         return (String[]) names.toArray(new String[0]);
     }
-    
+
     public InternalSource summarySource(String datasetName) {
         InternalSource source = new InternalSource();
         source.setType("Summary Table");
-        source.setTable(tableName(datasetName)+"_summary");
+        source.setTable(tableName(datasetName) + "_summary");
         source.setSource("TODO: get a name");
         return source;
     }

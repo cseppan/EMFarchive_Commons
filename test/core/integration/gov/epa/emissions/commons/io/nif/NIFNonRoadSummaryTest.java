@@ -23,8 +23,6 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
 
     private Dataset dataset;
 
-    private String tableCE;
-
     private String tableEM;
 
     private String tableEP;
@@ -40,45 +38,39 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
         sqlDataTypes = dbServer.getSqlDataTypes();
         emissionDatasource = dbServer.getEmissionsDatasource();
         referenceDatasource = dbServer.getReferenceDatasource();
-        
+
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         String name = dataset.getName();
-        tableCE = name + "_ce";
         tableEM = name + "_em";
         tableEP = name + "_ep";
         tablePE = name + "_pe";
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
-        try {
-            NIFNonRoadImporter importer = new NIFNonRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
-            importer.run();
-            SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource,referenceDatasource,dataset);
-            summary.createSummary();
-            assertEquals(10, countRecords(tableEM));
-            assertEquals(10, countRecords(tableEP));
-            assertEquals(10, countRecords(tablePE));
-            assertEquals(0,countRecords("test_summary"));
-        } finally {
-            dropTables();
-        }
+        NIFNonRoadImporter importer = new NIFNonRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+        importer.run();
+        SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
+        summary.createSummary();
+        assertEquals(10, countRecords(tableEM));
+        assertEquals(10, countRecords(tableEP));
+        assertEquals(10, countRecords(tablePE));
+        assertEquals(0, countRecords("test_summary"));
     }
 
     private File[] files() {
         String dir = "test/data/nif/nonroad";
-        return new File[]{ new File(dir, "ct_em.txt"), new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt")};
+        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt") };
     }
-
 
     private int countRecords(String tableName) {
         TableReader tableReader = tableReader(emissionDatasource);
         return tableReader.count(emissionDatasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEM);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEP);
@@ -86,4 +78,3 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
     }
 }
-

@@ -37,7 +37,7 @@ public class ORLPointSummaryTest extends PersistenceTestCase {
 
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), "test");
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");

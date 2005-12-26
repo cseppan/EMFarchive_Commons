@@ -20,11 +20,10 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         versions = new Versions(datasource);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         versions.close();
         writer.close();
-
-        super.tearDown();
+        super.doTearDown();
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {

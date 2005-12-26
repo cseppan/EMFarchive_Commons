@@ -35,7 +35,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
         createTable("SimpleDelimited", datasource, tableFormat);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "SimpleDelimited");
     }

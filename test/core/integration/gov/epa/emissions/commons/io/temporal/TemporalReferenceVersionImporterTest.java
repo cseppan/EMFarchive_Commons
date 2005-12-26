@@ -29,17 +29,9 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-
-        /*
-         * HelpImporter delegate = new HelpImporter(); FileFormat fileFormat = new
-         * TemporalReferenceFileFormat(sqlDataTypes); TableFormat tableFormat = new
-         * VersionedTemporalTableFormat(fileFormat, sqlDataTypes); String table = delegate.tableName(dataset.getName());
-         * FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat); delegate.createTable(table, datasource,
-         * formatUnit.tableFormat(), dataset.getName());
-         */
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
 

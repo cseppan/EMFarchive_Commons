@@ -10,4 +10,7 @@ public class ReferenceTablesCreatorTest extends PersistenceTestCase {
         tables.createAdditionalRefTables(dbSetup.getDbServer().getReferenceDatasource());
     }
 
+    protected void doTearDown() throws Exception {// no op
+    }
+
 }

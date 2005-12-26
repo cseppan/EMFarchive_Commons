@@ -123,4 +123,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         fail("should have encountered an error due to empty 'YEAR' tag, and dropped the table");
     }
 
+    protected void doTearDown() throws Exception {// no op
+    }
+
 }

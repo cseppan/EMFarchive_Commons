@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class NIFNonPointImporterTest extends PersistenceTestCase {
@@ -64,34 +65,34 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
             new NIFNonPointImporter(files_CE_EP(), dataset, datasource, sqlDataTypes);
-            assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types"));
+            return;
         }
+
+        fail("Should have failed as the required types were not specified");
     }
 
     private File[] files_CE_EP() {
         String dir = "test/data/nif/nonpoint";
-        return new File[]{new File(dir, "ky_ce.txt"), new File(dir, "ky_ep.txt")};
+        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_ep.txt") };
     }
 
     private File[] files() {
         String dir = "test/data/nif/nonpoint";
-        return new File[] {
-                new File(dir, "ky_ce.txt"),
-                new File(dir, "ky_em.txt"),
-                new File(dir, "ky_ep.txt"),
-                new File(dir, "ky_pe.txt")
-        };
+        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
+                new File(dir, "ky_pe.txt") };
     }
-
 
     private int countRecords(String tableName) {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {// no op
+    }
+
+    private void dropTables() throws Exception, SQLException {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableCE);
         dbUpdate.dropTable(datasource.getName(), tableEM);

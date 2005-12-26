@@ -85,10 +85,9 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         modifier.insertRow(table, data);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         results.close();
         clean();
-        super.tearDown();
     }
 
     public void testRowCount() throws Exception {

@@ -11,7 +11,8 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import java.io.File;
 import java.util.Random;
 
-public abstract class ShapeFileImporterTestCase extends PersistenceTestCase {
+//FIXME: fix the tests - add assertions
+public abstract class FIXME_ShapeFileImporterTestCase extends PersistenceTestCase {
 
     private Datasource datasource;
 
@@ -30,23 +31,16 @@ public abstract class ShapeFileImporterTestCase extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
-    protected void tearDown() throws Exception {
-//        DbUpdate dbUpdate = new DbUpdate(datasource.getConnection());
-//        dbUpdate.deleteAll(datasource.getName(), "versions");
- 
+    protected void doTearDown() throws Exception {// no op
     }
 
-//public ShapeFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataType) throws ImporterException {
-
     public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
-        String[] filePatterns = new String[]{"cnty_tn.*"};
-        
-        ShapeFilesImporter importer = new ShapeFilesImporter(new File("test/data/shape/cnty_tn"), filePatterns, dataset,datasource, sqlDataTypes);
-        
-        importer.run();
+        String[] filePatterns = new String[] { "cnty_tn.*" };
 
-        //dummy test
-        assertTrue(true);
+        ShapeFilesImporter importer = new ShapeFilesImporter(new File("test/data/shape/cnty_tn"), filePatterns,
+                dataset, datasource, sqlDataTypes);
+
+        importer.run();
     }
 
 }

@@ -35,7 +35,7 @@ public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
         createTable("AREA_SOURCE", datasource, tableFormat);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         dropTable("AREA_SOURCE", datasource);
     }
 

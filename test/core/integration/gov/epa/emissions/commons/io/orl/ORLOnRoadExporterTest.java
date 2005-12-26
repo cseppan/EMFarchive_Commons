@@ -52,7 +52,7 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         importer.run();
     }
     
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }

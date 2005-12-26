@@ -42,7 +42,7 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
         createTable("Weekly", datasource, tableFormat);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         dropTable("Weekly", datasource);
     }
 

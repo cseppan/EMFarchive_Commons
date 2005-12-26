@@ -45,7 +45,7 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
         createTable("MOBILE_SOURCE", datasource, tableFormat2);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         dropTable("POINT_SOURCE", datasource);
         dropTable("AREA_SOURCE", datasource);
         dropTable("MOBILE_SOURCE", datasource);

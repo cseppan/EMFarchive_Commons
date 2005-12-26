@@ -37,7 +37,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         table = "varying";
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), table);
     }

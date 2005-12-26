@@ -37,7 +37,7 @@ public abstract class VersionedRecordsTestCase extends PersistenceTestCase {
         createTable(dataTable, datasource);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DataModifier modifier = datasource.dataModifier();
         modifier.dropAll(versionsTable);
 

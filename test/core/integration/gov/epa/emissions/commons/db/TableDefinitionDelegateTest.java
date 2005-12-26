@@ -52,4 +52,7 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase{
             dbUpdate.dropTable(datasource.getName(), names[i]);    
         }
     }
+
+    protected void doTearDown() throws Exception {//No op
+    }
 }

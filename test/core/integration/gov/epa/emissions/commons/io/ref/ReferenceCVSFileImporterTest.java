@@ -27,7 +27,7 @@ public class ReferenceCVSFileImporterTest extends PersistenceTestCase {
         datasource = dbServer.getEmissionsDatasource();
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableName);
     }

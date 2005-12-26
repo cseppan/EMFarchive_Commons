@@ -54,9 +54,12 @@ public abstract class PersistenceTestCase extends TestCase {
         return "postgres.conf";
     }
 
-    protected void tearDown() throws Exception {
+    protected final void tearDown() throws Exception {
+        doTearDown();
         dbSetup.tearDown();
     }
+
+    protected abstract void doTearDown() throws Exception;// subclasses must implement this method
 
     protected Datasource emissions() {
         return dbServer().getEmissionsDatasource();

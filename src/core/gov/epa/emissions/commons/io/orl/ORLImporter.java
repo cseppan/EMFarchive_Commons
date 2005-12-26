@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.io.orl;
 
-import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
@@ -15,7 +14,6 @@ import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -34,43 +32,19 @@ public class ORLImporter {
 
     private HelpImporter delegate;
 
-    public ORLImporter(Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
+    public ORLImporter(File file, Dataset dataset, FormatUnit formatUnit, Datasource datasource)
+            throws ImporterException {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
         this.delegate = new HelpImporter();
-    }
 
-    // FIXME: what's this?. - Refactor
-    public void setup(File file) throws ImporterException {
-        validateORLFile(file);
+        extractAttributes(file, dataset);
         this.file = file;
     }
 
-    private String formatDatasetName(String name) {
-        // Pattern p = Pattern.compile("\\W");
-        // Matcher m = p.matcher(name);
-        // String result = m.replaceAll("_");
-        String result = name;
-
-        for (int i = 0; i < result.length(); i++) {
-            if (!Character.isJavaLetterOrDigit(result.charAt(i))) {
-                result = result.replace(result.charAt(i), '_');
-            }
-        }
-
-        if (Character.isDigit(result.charAt(0))) {
-            result = result.replace(result.charAt(0), '_');
-            result = "DS" + result;
-        }
-
-        return result;
-    }
-
     public void run() throws ImporterException {
-        // FIXME: for demo #3 modify the way tables are named
-        // String table = delegate.tableName(dataset.getName());
-        String table = delegate.tableName(formatDatasetName(dataset.getName()));
+        String table = delegate.tableName(dataset.getName());
         delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
 
         try {
@@ -88,15 +62,7 @@ public class ORLImporter {
         Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
         loader.load(reader, dataset, table);
 
-        addVersionZeroEntryToVersionsTable(datasource, dataset);
         loadDataset(file, table, tableFormat, reader.comments(), dataset);
-    }
-
-    // FIXME: move this outta here
-    private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
-        DataModifier modifier = datasource.dataModifier();
-        String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true", null };
-        modifier.insertRow("versions", data);
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, List comments, Dataset dataset) {
@@ -106,10 +72,10 @@ public class ORLImporter {
         dataset.setDescription(delegate.descriptions(comments));
     }
 
-    private void validateORLFile(File file) throws ImporterException {
-        delegate.validateFile(file);
+    private void extractAttributes(File file, Dataset dataset) throws ImporterException {
         Reader reader = null;
         try {
+            // FIXME: move 'minCols' to FileFormat
             reader = new DelimiterIdentifyingFileReader(file, ((FileFormatWithOptionalCols) formatUnit.fileFormat())
                     .minCols().length);
             reader.read();

@@ -26,7 +26,7 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         datasource = dbServer.getEmissionsDatasource();
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "Monthly");
         dbUpdate.dropTable(datasource.getName(), "Weekly");

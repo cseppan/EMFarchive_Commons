@@ -36,8 +36,7 @@ public class ORLPointImporter implements Importer {
     private void create(File file, Dataset dataset, Datasource datasource, FileFormatWithOptionalCols fileFormat,
             TableFormat tableFormat) throws ImporterException {
         DatasetTypeUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate = new ORLImporter(dataset, formatUnit, datasource);
-        delegate.setup(file);
+        delegate = new ORLImporter(file, dataset, formatUnit, datasource);
     }
 
     public void run() throws ImporterException {

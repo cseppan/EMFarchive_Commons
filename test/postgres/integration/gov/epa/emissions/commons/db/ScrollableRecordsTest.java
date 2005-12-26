@@ -22,11 +22,10 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         results.execute();
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         results.close();
 
         dropNonPoint();
-        super.tearDown();
     }
 
     private void importNonPoint() throws Exception {

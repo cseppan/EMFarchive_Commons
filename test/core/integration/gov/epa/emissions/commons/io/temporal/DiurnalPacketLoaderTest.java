@@ -48,7 +48,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         fileReader.close();
 
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);

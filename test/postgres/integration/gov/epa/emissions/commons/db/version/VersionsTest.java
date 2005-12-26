@@ -28,11 +28,9 @@ public class VersionsTest extends PersistenceTestCase {
         versions = new Versions(datasource);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         versions.close();
         dropData(versionsTable, datasource);
-        
-        super.tearDown();
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {

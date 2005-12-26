@@ -45,7 +45,7 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         fileReader.close();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "monthly");

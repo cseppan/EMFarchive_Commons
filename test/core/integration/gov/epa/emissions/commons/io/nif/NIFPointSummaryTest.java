@@ -113,4 +113,7 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
     }
 
+    protected void doTearDown() throws Exception {// no op
+    }
+
 }

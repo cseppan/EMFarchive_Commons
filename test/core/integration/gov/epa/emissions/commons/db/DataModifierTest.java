@@ -60,10 +60,9 @@ public class DataModifierTest extends PersistenceTestCase {
         return new VersionedTableFormat(fileFormat, types);
     }
 
-    protected void tearDown() throws Exception {
+    protected void doTearDown() throws Exception {
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(table);
-        super.tearDown();
     }
 
     public void testShouldInsertRowUsingSpecifiedCols() throws Exception {

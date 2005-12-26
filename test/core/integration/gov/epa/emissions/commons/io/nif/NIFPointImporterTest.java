@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.point.NIFPointImporter;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class NIFPointImporterTest extends PersistenceTestCase {
@@ -76,10 +77,12 @@ public class NIFPointImporterTest extends PersistenceTestCase {
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
             new NIFPointImporter(files_CE_EP(), dataset, datasource, sqlDataTypes);
-            assertTrue(false);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF point import requires following types"));
+            return;
         }
+
+        fail("Should have failed as required types are unspecified");
     }
 
     private File[] files() {
@@ -99,7 +102,10 @@ public class NIFPointImporterTest extends PersistenceTestCase {
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    protected void dropTables() throws Exception {
+    protected void doTearDown() throws Exception {// no op
+    }
+
+    private void dropTables() throws Exception, SQLException {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableCE);
         dbUpdate.dropTable(datasource.getName(), tableEM);
