@@ -67,7 +67,7 @@ public class TemporalProfileImporter implements Importer {
 
     private void doImport(BufferedReader fileReader, DatasetTypeUnit unit, String header) throws Exception {
         try {
-            delegate.createTable(table(header), datasource, unit.tableFormat(), dataset.getName());
+            delegate.createTable(table(header), datasource, unit.tableFormat());
             doImport(fileReader, dataset, unit, header);
         } catch (Exception e) {
             delegate.dropTable(table(header), datasource);

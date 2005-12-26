@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VersionedTableFormat implements FileFormat, TableFormat {
+public class VersionedTableFormat implements TableFormat {
     private FileFormat base;
 
     private Column[] cols;

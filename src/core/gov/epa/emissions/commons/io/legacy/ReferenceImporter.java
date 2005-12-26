@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class represents the ReferenceImporter for the reference database. TODO:
- * replace by injection. Combine Reference Tables & Reference Importer
+ * This class represents the ReferenceImporter for the reference database. TODO: replace by injection. Combine Reference
+ * Tables & Reference Importer
  */
 public class ReferenceImporter extends FixedFormatImporter {
     private File fieldDefsFile;
@@ -37,19 +37,19 @@ public class ReferenceImporter extends FixedFormatImporter {
     private static final String REF_DIR_NAME = "refFiles";
 
     public ReferenceImporter(DbServer dbServer, File fieldDefsFileName, File referenceFilesDir,
-            boolean useTransactions, DatasetType datasetType, Dataset dataset) {
-        super(dbServer, datasetType);
+            boolean useTransactions, Dataset dataset) {
+        super(dbServer);
         this.dataset = dataset;
         this.tableTypes = new ReferenceTableTypes();
         this.fieldDefsFile = fieldDefsFileName;
         this.referenceFilesDir = referenceFilesDir;
         this.useTransactions = useTransactions;
-        System.err.println("reference File  dir in constructor()-"+referenceFilesDir);
+        System.err.println("reference File  dir in constructor()-" + referenceFilesDir);
     }
 
     /**
-     * Take a array of Files and put them database, overwriting existing
-     * corresponding tables specified in dataset based on overwrite flag.
+     * Take a array of Files and put them database, overwriting existing corresponding tables specified in dataset based
+     * on overwrite flag.
      */
     public void run(Dataset dataset) throws Exception {
         super.dataset = dataset;
@@ -156,7 +156,6 @@ public class ReferenceImporter extends FixedFormatImporter {
         int numRows = 0;
 
         // kick out invalid data lines
-        int kickOutRows = 0;
         PrintWriter writer = null;
         String canonicalFileName = file.getCanonicalPath();
         int txtIndex = canonicalFileName.indexOf(".txt");
@@ -198,7 +197,7 @@ public class ReferenceImporter extends FixedFormatImporter {
     }
 
     public void run() throws ImporterException {
-        System.err.println("reference File  dir in run()-"+referenceFilesDir);
+        System.err.println("reference File  dir in run()-" + referenceFilesDir);
         File file = new File((referenceFilesDir.getAbsolutePath() + File.separatorChar + REF_DIR_NAME));
 
         FilenameFilter textFileFilter = new FilenameFilter() {

@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class IDATableFormat  implements FileFormat, TableFormat {
-
+public class IDATableFormat implements TableFormat {
 
     private FileFormat base;
 
@@ -37,18 +36,17 @@ public class IDATableFormat  implements FileFormat, TableFormat {
 
         Column datasetId = new Column(key(), types.longType(), new LongFormatter());
         cols.add(0, datasetId);
-        
+
         Column state = new Column("STATE", types.stringType(2), new StringFormatter(2));
-        cols.add(1,state);
-        
+        cols.add(1, state);
+
         Column fips = new Column("FIPS", types.stringType(5), new StringFormatter(5));
-        cols.add(2,fips);
-        
+        cols.add(2, fips);
+
         Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
         cols.add(inlineComments);
 
         return (Column[]) cols.toArray(new Column[0]);
     }
-
 
 }

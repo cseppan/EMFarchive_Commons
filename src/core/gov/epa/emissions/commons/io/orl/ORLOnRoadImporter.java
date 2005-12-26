@@ -17,8 +17,7 @@ public class ORLOnRoadImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLOnRoadImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
+    public ORLOnRoadImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         FileFormatWithOptionalCols fileFormat = new ORLOnRoadFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
 
@@ -26,7 +25,7 @@ public class ORLOnRoadImporter implements Importer {
     }
 
     public ORLOnRoadImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
-            DataFormatFactory factory) throws ImporterException {
+            DataFormatFactory factory) {
         FileFormatWithOptionalCols fileFormat = new ORLOnRoadFileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
 
@@ -34,7 +33,7 @@ public class ORLOnRoadImporter implements Importer {
     }
 
     private void create(File file, Dataset dataset, Datasource datasource, FileFormatWithOptionalCols fileFormat,
-            TableFormat tableFormat) throws ImporterException {
+            TableFormat tableFormat) {
         DatasetTypeUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         delegate = new ORLImporter(file, dataset, formatUnit, datasource);
     }

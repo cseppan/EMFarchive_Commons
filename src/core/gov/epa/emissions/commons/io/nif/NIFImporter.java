@@ -91,7 +91,7 @@ public class NIFImporter {
     private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
         String tableName = internalSource.getTable();
         String source = internalSource.getSource();
-        delegate.createTable(tableName, datasource, unit.tableFormat(), dataset.getName());
+        delegate.createTable(tableName, datasource, unit.tableFormat());
         tableNames.add(tableName);
         try {
             doImport(source, dataset, tableName, unit.fileFormat(), unit.tableFormat());

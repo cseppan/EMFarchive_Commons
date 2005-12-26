@@ -56,13 +56,13 @@ public class HelpImporter {
         return result;
     }
 
-    public void createTable(String table, Datasource datasource, TableFormat tableFormat, String datasetName)
+    public void createTable(String table, Datasource datasource, TableFormat tableFormat)
             throws ImporterException {
         TableDefinition tableDefinition = datasource.tableDefinition();
         try {
             tableDefinition.createTable(table, tableFormat.cols());
         } catch (SQLException e) {
-            throw new ImporterException("could not create table for dataset - " + datasetName + "\n" + e.getMessage(),
+            throw new ImporterException("could not create table - " + table + "\n" + e.getMessage(),
                     e);
         }
     }
@@ -91,9 +91,7 @@ public class HelpImporter {
         source.setCols(colNames(tableFormat.cols()));
         source.setSource(file.getAbsolutePath());
         source.setSourceSize(file.length());
-        // Has to append the InternalSource to the internalsource list in dataset
         dataset.addInternalSource(source);
-        // dataset.setInternalSources(new InternalSource[]{source});
     }
 
     private String[] colNames(Column[] cols) {
@@ -109,6 +107,7 @@ public class HelpImporter {
         source.setType("Summary Table");
         source.setTable(tableName(datasetName) + "_summary");
         source.setSource("TODO: get a name");
+
         return source;
     }
 

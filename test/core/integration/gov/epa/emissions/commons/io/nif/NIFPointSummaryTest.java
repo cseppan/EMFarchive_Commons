@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.SummaryTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -85,15 +84,6 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
         return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
                 new File(dir, "ky_er.txt"), new File(dir, "ky_eu.txt"), new File(dir, "ky_pe.txt"),
                 new File(dir, "ky_si.txt") };
-    }
-
-    private InternalSource internalSource(File file, String table) {
-        InternalSource source = new InternalSource();
-        source.setTable(table);
-        source.setSource(file.getAbsolutePath());
-        source.setSourceSize(file.length());
-
-        return source;
     }
 
     private int countRecords(String tableName) {

@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.legacy;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
@@ -29,7 +28,7 @@ public abstract class FormattedImporter implements Importer {
     protected File[] files;
 
 
-    protected FormattedImporter(DbServer dbServer, DatasetType datasetType) {
+    protected FormattedImporter(DbServer dbServer) {
         this.dbServer = dbServer;
     }
 

@@ -6,7 +6,7 @@ public class ReferenceImporterTest extends PersistenceTestCase {
     
     public void testImportReference() throws Exception {
         ReferenceImporter referenceImporter = new ReferenceImporter(dbSetup.getDbServer(), fieldDefsFile,
-                referenceFilesDir, false, null, null);
+                referenceFilesDir, false, null);
         referenceImporter.run();
     }
 

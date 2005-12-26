@@ -46,7 +46,7 @@ public class TemporalReferenceImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, unit.tableFormat(), dataset.getName());
+        delegate.createTable(table, datasource, unit.tableFormat());
         try {
             doImport(file, dataset, table, unit.tableFormat());
         } catch (Exception e) {

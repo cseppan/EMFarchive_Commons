@@ -52,7 +52,7 @@ public class SMKReportImporter implements Importer {
 
     public void run() throws ImporterException {
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+        delegate.createTable(table, datasource, formatUnit.tableFormat());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {

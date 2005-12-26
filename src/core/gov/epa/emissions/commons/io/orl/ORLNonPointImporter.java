@@ -18,8 +18,7 @@ public class ORLNonPointImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLNonPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
+    public ORLNonPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         FileFormatWithOptionalCols fileFormat = fileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat(sqlDataTypes), sqlDataTypes);
 
@@ -27,7 +26,7 @@ public class ORLNonPointImporter implements Importer {
     }
 
     public ORLNonPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
-            DataFormatFactory factory) throws ImporterException {
+            DataFormatFactory factory) {
         FileFormatWithOptionalCols fileFormat = fileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
 
@@ -39,7 +38,7 @@ public class ORLNonPointImporter implements Importer {
     }
 
     private void create(File file, Dataset dataset, Datasource datasource, FileFormatWithOptionalCols fileFormat,
-            TableFormat tableFormat) throws ImporterException {
+            TableFormat tableFormat) {
         DatasetTypeUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         delegate = new ORLImporter(file, dataset, formatUnit, datasource);
     }

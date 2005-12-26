@@ -71,7 +71,7 @@ public class IDAImporter {
 
     public void run() throws ImporterException {
         String table = unit.getInternalSource().getTable();
-        delegate.createTable(table, emissionDatasource, unit.tableFormat(), dataset.getName());
+        delegate.createTable(table, emissionDatasource, unit.tableFormat());
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {

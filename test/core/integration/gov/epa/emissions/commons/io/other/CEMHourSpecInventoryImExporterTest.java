@@ -45,7 +45,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+        delegate.createTable(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {

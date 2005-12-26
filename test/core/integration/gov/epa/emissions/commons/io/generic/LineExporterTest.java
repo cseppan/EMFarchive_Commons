@@ -42,7 +42,7 @@ public class LineExporterTest extends PersistenceTestCase {
         TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
         String table = delegate.tableName(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+        delegate.createTable(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {

@@ -32,20 +32,19 @@ public class ORLImporter {
 
     private HelpImporter delegate;
 
-    public ORLImporter(File file, Dataset dataset, FormatUnit formatUnit, Datasource datasource)
-            throws ImporterException {
+    public ORLImporter(File file, Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
         this.delegate = new HelpImporter();
-
-        extractAttributes(file, dataset);
         this.file = file;
     }
 
     public void run() throws ImporterException {
+        importAttributes(file, dataset);
+
         String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat(), dataset.getName());
+        delegate.createTable(table, datasource, formatUnit.tableFormat());
 
         try {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
@@ -72,7 +71,7 @@ public class ORLImporter {
         dataset.setDescription(delegate.descriptions(comments));
     }
 
-    private void extractAttributes(File file, Dataset dataset) throws ImporterException {
+    private void importAttributes(File file, Dataset dataset) throws ImporterException {
         Reader reader = null;
         try {
             // FIXME: move 'minCols' to FileFormat

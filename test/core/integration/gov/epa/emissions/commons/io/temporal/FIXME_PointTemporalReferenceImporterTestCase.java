@@ -42,7 +42,7 @@ public abstract class FIXME_PointTemporalReferenceImporterTestCase extends Persi
 
     public void testShouldImportAFileWithVariableCols() throws Exception {
         File file = new File("test/data/temporal-crossreference", "point-source-VARIABLE-COLS.txt");
-        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(file, dataset, datasource,
+        FIX_THE_TEST_PointTemporalReferenceImporter importer = new FIX_THE_TEST_PointTemporalReferenceImporter(file, dataset, datasource,
                 sqlDataTypes);
         importer.run();
 
@@ -56,7 +56,7 @@ public abstract class FIXME_PointTemporalReferenceImporterTestCase extends Persi
 
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File file = new File("test/data/temporal-crossreference", "point-source.txt");
-        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(file, dataset, datasource,
+        FIX_THE_TEST_PointTemporalReferenceImporter importer = new FIX_THE_TEST_PointTemporalReferenceImporter(file, dataset, datasource,
                 sqlDataTypes);
         importer.run();
 

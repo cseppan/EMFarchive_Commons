@@ -1,20 +1,17 @@
 package gov.epa.emissions.commons.io.legacy;
 
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.DatasetType;
 
 /**
- * This class contains all the common features for importing files with a fixed
- * format.
+ * This class contains all the common features for importing files with a fixed format.
  */
 public abstract class FixedFormatImporter extends FormattedImporter {
-    protected FixedFormatImporter(DbServer dbServer, DatasetType datasetType) {
-        super(dbServer, datasetType);
+    protected FixedFormatImporter(DbServer dbServer) {
+        super(dbServer);
     }
 
     /**
-     * this method takes a line and column widths as arguments and then splits
-     * the line into strings accordingly
+     * this method takes a line and column widths as arguments and then splits the line into strings accordingly
      * 
      * @param line
      *            the line to be split

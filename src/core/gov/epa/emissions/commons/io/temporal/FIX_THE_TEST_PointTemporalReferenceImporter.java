@@ -19,7 +19,8 @@ import java.io.FileReader;
 import java.util.Iterator;
 import java.util.List;
 
-public class PointTemporalReferenceImporter implements Importer {
+//FIXME: fix the corresponding test. This could be broken.
+public class FIX_THE_TEST_PointTemporalReferenceImporter implements Importer {
     private Dataset dataset;
 
     private Datasource datasource;
@@ -31,7 +32,8 @@ public class PointTemporalReferenceImporter implements Importer {
     /**
      * Expects table 'POINT_SOURCE' to be available in Datasource
      */
-    public PointTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public FIX_THE_TEST_PointTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) {
         this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;

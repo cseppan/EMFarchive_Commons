@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FixedColsTableFormat implements FileFormat, TableFormat {
+public class FixedColsTableFormat implements TableFormat {
 
     private FileFormat base;
 

@@ -32,10 +32,6 @@ public class TemporalProfileExporter implements Exporter {
     }
 
     public void export(File file) throws ExporterException {
-        export(0, file);
-    }
-
-    public void export(int version, File file) throws ExporterException {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
@@ -43,13 +39,13 @@ public class TemporalProfileExporter implements Exporter {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
 
-        write(version, file, writer);
+        write(file, writer);
     }
 
-    private void write(int version, File file, PrintWriter writer) throws ExporterException {
+    private void write(File file, PrintWriter writer) throws ExporterException {
         try {
             writeHeaders(writer, dataset);
-            writeData(version, writer, dataset, datasource);
+            writeData(writer, dataset, datasource);
         } catch (SQLException e) {
             throw new ExporterException("could not export file - " + file, e);
         } finally {
@@ -68,7 +64,7 @@ public class TemporalProfileExporter implements Exporter {
         }
     }
 
-    private void writeData(int version, PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         DataQuery q = datasource.query();
         InternalSource[] sources = dataset.getInternalSources();
 

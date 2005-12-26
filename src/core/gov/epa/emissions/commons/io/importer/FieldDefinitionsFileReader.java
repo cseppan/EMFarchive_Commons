@@ -91,19 +91,17 @@ public class FieldDefinitionsFileReader {
         }
 
         String[] typeSplitString = typesLine.split(DELIMITER);
-        for (int i = 0; i < typeSplitString.length; i++) {
-            try {
+        try {
+            for (int i = 0; i < typeSplitString.length; i++) {
                 details.setType(nameSplitString[i], typeSplitString[i]);
-            } catch (Exception e) {
             }
-        }
 
-        String[] widthSplitString = widthsLine.split(DELIMITER);
-        for (int i = 0; i < widthSplitString.length; i++) {
-            try {
+            String[] widthSplitString = widthsLine.split(DELIMITER);
+            for (int i = 0; i < widthSplitString.length; i++) {
                 details.setWidth(nameSplitString[i], widthSplitString[i]);
-            } catch (Exception e) {
             }
+        } catch (Exception e) {
+            throw new RuntimeException("FieldDefinitions FileReader failed. Reason: " + e.getMessage());
         }
 
         return details;

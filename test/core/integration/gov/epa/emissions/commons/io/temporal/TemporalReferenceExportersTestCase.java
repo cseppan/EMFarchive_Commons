@@ -6,9 +6,8 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.importer.SimpleTableFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.importer.TableFormatWithOptionalCols;
 
 import java.io.File;
 import java.util.Random;
@@ -33,15 +32,15 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         PointTemporalReferenceFileFormat base = new PointTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat = new SimpleTableFormatWithOptionalCols(base, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);
         createTable("POINT_SOURCE", datasource, tableFormat);
 
         AreaTemporalReferenceFileFormat base1 = new AreaTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat1 = new SimpleTableFormatWithOptionalCols(base1, sqlDataTypes);
+        TableFormat tableFormat1 = new FixedColsTableFormat(base1, sqlDataTypes);
         createTable("AREA_SOURCE", datasource, tableFormat1);
 
         MobileTemporalReferenceFileFormat base2 = new MobileTemporalReferenceFileFormat(sqlDataTypes);
-        TableFormatWithOptionalCols tableFormat2 = new SimpleTableFormatWithOptionalCols(base2, sqlDataTypes);
+        TableFormat tableFormat2 = new FixedColsTableFormat(base2, sqlDataTypes);
         createTable("MOBILE_SOURCE", datasource, tableFormat2);
     }
 
@@ -53,7 +52,7 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
 
     public void testShouldExportAFileWithVariableCols() throws Exception {
         File file = new File("test/data/temporal-crossreference", "point-source-VARIABLE-COLS.txt");
-        PointTemporalReferenceImporter importer = new PointTemporalReferenceImporter(file, dataset, datasource,
+        FIX_THE_TEST_PointTemporalReferenceImporter importer = new FIX_THE_TEST_PointTemporalReferenceImporter(file, dataset, datasource,
                 sqlDataTypes);
         importer.run();
 
