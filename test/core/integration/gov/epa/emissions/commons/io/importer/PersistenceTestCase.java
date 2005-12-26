@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.TableReader;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
+import gov.epa.emissions.commons.io.TableFormat;
 
 import java.io.File;
 import java.io.FileInputStream;

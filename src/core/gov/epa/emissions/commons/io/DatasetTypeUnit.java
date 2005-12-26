@@ -1,7 +1,5 @@
 package gov.epa.emissions.commons.io;
 
-import gov.epa.emissions.commons.io.importer.FileFormat;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 public class DatasetTypeUnit implements FormatUnit {
 

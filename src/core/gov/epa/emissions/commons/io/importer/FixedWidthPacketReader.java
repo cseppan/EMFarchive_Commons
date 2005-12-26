@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.io.FileFormat;
 
 import java.io.BufferedReader;
 import java.io.IOException;

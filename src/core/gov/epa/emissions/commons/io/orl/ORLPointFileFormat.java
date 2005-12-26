@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.FillDefaultValues;
 import gov.epa.emissions.commons.io.FillDefaultValuesOfVersionedRecord;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
@@ -18,11 +19,11 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
 
     private SqlDataTypes types;
 
-    private FillDefaultValuesOfVersionedRecord filler;
+    private FillDefaultValues filler;
 
     public ORLPointFileFormat(SqlDataTypes types) {
         this.types = types;
-        filler = new FillDefaultValuesOfVersionedRecord(this);
+        filler = new FillDefaultValuesOfVersionedRecord();
     }
 
     public String identify() {
@@ -96,7 +97,7 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
     }
 
     public void fillDefaults(List data, long datasetId) {
-        filler.fillDefaults(data, datasetId);
+        filler.fill(this, data, datasetId);
     }
 
 }

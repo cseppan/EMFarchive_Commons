@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io;
 
 import java.util.List;
 
-import gov.epa.emissions.commons.io.importer.FileFormat;
 
 public interface FileFormatWithOptionalCols extends FileFormat {
 

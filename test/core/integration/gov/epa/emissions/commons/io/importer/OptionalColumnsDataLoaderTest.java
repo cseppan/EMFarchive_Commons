@@ -8,10 +8,11 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.orl.ORLNonPointFileFormat;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.PointTemporalReferenceFileFormat;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.io.File;
@@ -76,7 +77,8 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
     public void testShouldLoadRecordsFromFileIntoVersionedTable() throws Exception {
         // create table
-        ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(sqlDataTypes);
+        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory();
+        ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(sqlDataTypes, formatFactory.defaultValuesFiller());
         TableFormat tableFormat = setupVersionedTable(fileFormat);
 
         OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());

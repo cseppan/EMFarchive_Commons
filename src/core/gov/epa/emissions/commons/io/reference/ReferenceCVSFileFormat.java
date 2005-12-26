@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.reference;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.FileFormat;
 
 import java.util.ArrayList;
 import java.util.List;

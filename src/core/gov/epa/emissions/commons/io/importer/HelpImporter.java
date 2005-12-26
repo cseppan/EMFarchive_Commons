@@ -5,8 +5,8 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.orl.ORLImporter;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.io.File;
 import java.sql.SQLException;

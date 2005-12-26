@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;

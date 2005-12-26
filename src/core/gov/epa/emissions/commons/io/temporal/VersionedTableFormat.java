@@ -2,10 +2,11 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.NullFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.TableFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class VersionedTableFormat implements FileFormat, TableFormat {
 
     public VersionedTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
-        cols = createCols(types);
+        cols = createCols(base, types);
     }
 
     public String key() {
@@ -29,7 +30,7 @@ public class VersionedTableFormat implements FileFormat, TableFormat {
         return cols;
     }
 
-    private Column[] createCols(SqlDataTypes types) {
+    private Column[] createCols(FileFormat base, SqlDataTypes types) {
         List cols = new ArrayList();
 
         cols.addAll(Arrays.asList(versionCols(types)));

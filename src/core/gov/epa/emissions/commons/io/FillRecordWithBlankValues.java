@@ -2,19 +2,12 @@ package gov.epa.emissions.commons.io;
 
 import java.util.List;
 
-public class FillDefaultValuesOfVersionedRecord implements FillDefaultValues {
+public class FillRecordWithBlankValues implements FillDefaultValues {
 
     public void fill(FileFormatWithOptionalCols base, List data, long datasetId) {
-        addVersionData(data, datasetId, 0);
+        data.add(0, datasetId + "");
         addComments(base, data);
         addDefaultsForOptionalCols(base, data);
-    }
-
-    private void addVersionData(List data, long datasetId, int version) {
-        data.add(0, "");// record id
-        data.add(1, datasetId + "");
-        data.add(2, version + "");// version
-        data.add(3, "");// delete versions
     }
 
     private void addComments(FileFormatWithOptionalCols base, List data) {
@@ -27,11 +20,7 @@ public class FillDefaultValuesOfVersionedRecord implements FillDefaultValues {
     }
 
     private int size(FileFormatWithOptionalCols base) {
-        return versionColsCount() + base.cols().length + 1;
-    }
-
-    private int versionColsCount() {
-        return 4;
+        return 1 + base.cols().length + 1;
     }
 
     private boolean isComments(String token) {
@@ -53,7 +42,7 @@ public class FillDefaultValuesOfVersionedRecord implements FillDefaultValues {
     }
 
     private int insertAt(FileFormatWithOptionalCols base, int optionalCount) {
-        return versionColsCount() + base.minCols().length + optionalCount;
+        return 1 + base.minCols().length + optionalCount;// 1 - dataset id
     }
 
     private int toAdd(FileFormatWithOptionalCols base, int optionalCount) {
@@ -61,6 +50,6 @@ public class FillDefaultValuesOfVersionedRecord implements FillDefaultValues {
     }
 
     private int optionalCount(FileFormatWithOptionalCols base, List data) {
-        return data.size() - versionColsCount() - base.minCols().length - 1;// 1 - comments
+        return data.size() - 1 - base.minCols().length - 1;// 1 - dataset id, 1 - comments
     }
 }

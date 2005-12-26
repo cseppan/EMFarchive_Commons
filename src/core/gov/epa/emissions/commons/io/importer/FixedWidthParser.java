@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormat;
 
 public class FixedWidthParser implements Parser {
 

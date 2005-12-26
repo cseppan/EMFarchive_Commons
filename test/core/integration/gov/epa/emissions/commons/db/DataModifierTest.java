@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.db;
 
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.ResultSet;

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.Record;
-import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;

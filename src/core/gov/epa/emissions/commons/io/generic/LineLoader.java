@@ -4,10 +4,10 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.temporal.TableFormat;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

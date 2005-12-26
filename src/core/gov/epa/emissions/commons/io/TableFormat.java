@@ -1,6 +1,4 @@
-package gov.epa.emissions.commons.io.temporal;
-
-import gov.epa.emissions.commons.io.Column;
+package gov.epa.emissions.commons.io;
 
 public interface TableFormat {
 

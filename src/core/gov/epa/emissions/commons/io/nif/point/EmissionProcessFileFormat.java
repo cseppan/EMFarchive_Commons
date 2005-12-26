@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.nif.point;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.nif.NIFFileFormat;
 
 public class EmissionProcessFileFormat implements FileFormat {

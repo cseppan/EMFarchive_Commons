@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.FileFormat;
 
 import java.util.HashMap;
 import java.util.Map;

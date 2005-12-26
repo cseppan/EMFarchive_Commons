@@ -8,7 +8,8 @@ import org.jmock.MockObjectTestCase;
 
 public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
 
-    private FillDefaultValuesOfVersionedRecord filler;
+    private FillDefaultValues filler;
+    private FileFormatWithOptionalCols fileFormatProxy;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -25,7 +26,8 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
                 new ColumnStub() };
         fileFormat.stubs().method("cols").will(returnValue(cols));
 
-        filler = new FillDefaultValuesOfVersionedRecord((FileFormatWithOptionalCols) fileFormat.proxy());
+        fileFormatProxy = (FileFormatWithOptionalCols) fileFormat.proxy();
+        filler = new FillDefaultValuesOfVersionedRecord();
     }
 
     public void testShouldAddDatasetIdAndFillersForMissingOptionalColsOnFillDefaultValues() {
@@ -39,7 +41,7 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
         long datasetId = 129;
 
         // run
-        filler.fillDefaults(data, datasetId);
+        filler.fill(fileFormatProxy, data, datasetId);
 
         // verify
         // 4 version cols, 3 - fixed, 2 optionals, 1 Comments
@@ -65,7 +67,7 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
         long datasetId = 129;
 
         // run
-        filler.fillDefaults(data, datasetId);
+        filler.fill(fileFormatProxy, data, datasetId);
 
         // verify
         // 1 dataset id, 3 - fixed, 2 optionals, 1 Comments
@@ -92,7 +94,7 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
         long datasetId = 129;
 
         // run
-        filler.fillDefaults(data, datasetId);
+        filler.fill(fileFormatProxy, data, datasetId);
 
         // verify
         // 1 dataset id, 3 - fixed, 2 optionals, 1 Comments

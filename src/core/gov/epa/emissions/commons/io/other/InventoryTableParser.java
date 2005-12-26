@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.importer.FileFormat;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.Parser;
 
 public class InventoryTableParser implements Parser {

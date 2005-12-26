@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FillDefaultValues;
+import gov.epa.emissions.commons.io.FillRecordWithBlankValues;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
@@ -18,7 +19,7 @@ public class MobileTemporalReferenceFileFormat implements FileFormatWithOptional
 
     public MobileTemporalReferenceFileFormat(SqlDataTypes types) {
         this.types = types;
-        filler = new FillDefaultValues(this);
+        filler = new FillRecordWithBlankValues();
     }
 
     public String identify() {
@@ -58,6 +59,6 @@ public class MobileTemporalReferenceFileFormat implements FileFormatWithOptional
     }
 
     public void fillDefaults(List data, long datasetId) {
-        filler.fillDefaults(data, datasetId);
+        filler.fill(this, data, datasetId);
     }
 }
