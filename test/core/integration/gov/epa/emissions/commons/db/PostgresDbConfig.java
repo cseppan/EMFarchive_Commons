@@ -1,10 +1,10 @@
 package gov.epa.emissions.commons.db;
 
-import gov.epa.emissions.commons.Config;
+import gov.epa.emissions.commons.FileConfig;
 
 import org.apache.commons.configuration.ConfigurationException;
 
-public class PostgresDbConfig extends Config {
+public class PostgresDbConfig extends FileConfig {
 
     public PostgresDbConfig(String file) throws ConfigurationException {
         super(file);
@@ -15,7 +15,8 @@ public class PostgresDbConfig extends Config {
     }
 
     public String url() {
-        return "jdbc:postgresql://" + value("database.host") + ":" + value("database.port") + "/" + value("database.name");
+        return "jdbc:postgresql://" + value("database.host") + ":" + value("database.port") + "/"
+                + value("database.name");
     }
 
     public String username() {

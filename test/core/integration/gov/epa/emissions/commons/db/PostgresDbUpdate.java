@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.Config;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,14 +13,27 @@ import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 
-public class PostgresDbUpdate extends DbOperation implements DbUpdate{
+public class PostgresDbUpdate extends DbOperation implements DbUpdate {
 
     public PostgresDbUpdate(Connection jdbcConnection) throws Exception {
         super(jdbcConnection);
     }
 
+    public PostgresDbUpdate() throws Exception {
+        this(new PostgresDbConfig("test/postgres.conf"));
+    }
+
+    public PostgresDbUpdate(Config config) throws Exception {
+        super(config);
+    }
+
     public void deleteAll(String schema, String table) throws DatabaseUnitException, SQLException {
         IDataSet dataset = dataset(qualifiedTable(schema, table));
+        DatabaseOperation.DELETE_ALL.execute(connection, dataset);
+    }
+
+    public void deleteAll(String table) throws DatabaseUnitException, SQLException {
+        IDataSet dataset = new DefaultDataSet(new DefaultTable(table));
         DatabaseOperation.DELETE_ALL.execute(connection, dataset);
     }
 
