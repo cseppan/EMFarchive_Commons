@@ -6,6 +6,4 @@ public interface Exporter {
 
     void export(File file) throws ExporterException;
 
-    void export(int version, File file) throws ExporterException;
-
 }

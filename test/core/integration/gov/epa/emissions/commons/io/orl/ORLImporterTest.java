@@ -63,7 +63,16 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         int rows = countRecords();
         assertEquals(10, rows);
+    }
 
+    public void testShouldImportASmallAndSimpleVersionedPointFile() throws Exception {
+        File file = new File("test/data/orl/nc", "small-point.txt");
+        ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes,
+                new VersionedDataFormatFactory(0));
+        importer.run();
+
+        int rows = countRecords();
+        assertEquals(10, rows);
         assertVersionInfo(dataset.getName(), rows);
     }
 
@@ -102,7 +111,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         File file = new File("test/data/orl/nc", "small-nonpoint.txt");
 
         ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory());
+                new VersionedDataFormatFactory(0));
         importer.run();
 
         assertEquals(6, countRecords());
@@ -203,7 +212,7 @@ public class ORLImporterTest extends PersistenceTestCase {
     public void testShouldLoadVersionedInternalSourceIntoDatasetOnImport() throws Exception {
         File file = new File("test/data/orl/nc", "small-nonpoint.txt");
         ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory());
+                new VersionedDataFormatFactory(0));
         importer.run();
 
         InternalSource[] sources = dataset.getInternalSources();
@@ -239,6 +248,16 @@ public class ORLImporterTest extends PersistenceTestCase {
 
         int rows = countRecords();
         assertEquals(16, rows);
+    }
+
+    public void testShouldImportASmallAndSimpleVersionedNonRoadFile() throws Exception {
+        File file = new File("test/data/orl/nc", "small-nonroad.txt");
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(file, dataset, datasource, sqlDataTypes,
+                new VersionedDataFormatFactory(0));
+        importer.run();
+
+        int rows = countRecords();
+        assertEquals(16, rows);
         assertVersionInfo(dataset.getName(), rows);
     }
 
@@ -254,6 +273,16 @@ public class ORLImporterTest extends PersistenceTestCase {
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
         File importFile = new File("test/data/orl/nc", "small-onroad.txt");
         Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        importer.run();
+
+        int rows = countRecords();
+        assertEquals(18, rows);
+    }
+
+    public void testShouldImportASmallAndSimpleVersionedOnRoadFile() throws Exception {
+        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
+        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes,
+                new VersionedDataFormatFactory(0));
         importer.run();
 
         int rows = countRecords();

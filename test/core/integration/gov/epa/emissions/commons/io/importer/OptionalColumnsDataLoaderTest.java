@@ -77,7 +77,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
     public void testShouldLoadRecordsFromFileIntoVersionedTable() throws Exception {
         // create table
-        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory();
+        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory(0);
         ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(sqlDataTypes, formatFactory.defaultValuesFiller());
         TableFormat tableFormat = setupVersionedTable(fileFormat);
 

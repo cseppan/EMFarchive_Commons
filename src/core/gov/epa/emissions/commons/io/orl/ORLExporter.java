@@ -4,9 +4,11 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.SimpleExportStatement;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,17 +26,20 @@ public class ORLExporter {
 
     private FileFormat fileFormat;
 
-    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+    private ExportStatement exportStatement;
+
+    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat, ExportStatement exportStatement) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.fileFormat = fileFormat;
+        this.exportStatement = exportStatement;
+    }
+
+    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+        this(dataset, datasource, fileFormat, new SimpleExportStatement());
     }
 
     public void export(File file) throws ExporterException {
-        export(0, file);
-    }
-
-    public void export(int version, File file) throws ExporterException {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
@@ -42,13 +47,13 @@ public class ORLExporter {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
 
-        write(version, file, writer);
+        write(file, writer);
     }
 
-    private void write(int version, File file, PrintWriter writer) throws ExporterException {
+    private void write(File file, PrintWriter writer) throws ExporterException {
         try {
             writeHeaders(writer, dataset);
-            writeData(version, writer, dataset, datasource);
+            writeData(writer, dataset, datasource);
         } catch (SQLException e) {
             throw new ExporterException("could not export file - " + file, e);
         } finally {
@@ -60,12 +65,12 @@ public class ORLExporter {
         writer.println(dataset.getDescription());
     }
 
-    private void writeData(int version, PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
-        DataQuery q = datasource.query();
+    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
         InternalSource source = dataset.getInternalSources()[0];
 
         String qualifiedTable = datasource.getName() + "." + source.getTable();
-        ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable + " WHERE version=" + version);
+        DataQuery q = datasource.query();
+        ResultSet data = q.executeQuery(exportStatement.generate(qualifiedTable));
         Column[] cols = fileFormat.cols();
         while (data.next())
             writeRecord(cols, data, writer);

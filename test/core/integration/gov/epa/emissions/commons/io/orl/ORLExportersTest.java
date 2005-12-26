@@ -4,9 +4,11 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
@@ -46,7 +48,7 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportOnRoad() throws Exception {
-        File importFile = new File("test/data/orl/nc","small-onroad.txt");
+        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
         Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
 
@@ -59,17 +61,20 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data.get(0));
-        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data.get(1));
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data
+                .get(0));
+        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data
+                .get(1));
     }
 
     public void testShouldExportOnRoadVersionZero() throws Exception {
-        File importFile = new File("test/data/orl/nc","small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
+        DataFormatFactory formatFactory = new VersionedDataFormatFactory(0);
+        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes, formatFactory);
         importer.run();
-        
-        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
-        File file = doExport(exporter, 0);
+
+        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes, formatFactory);
+        File file = doExport(exporter);
 
         // assert headers
         assertComments(file);
@@ -77,15 +82,17 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data.get(0));
-        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data.get(1));
+        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data
+                .get(0));
+        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data
+                .get(1));
     }
 
     public void testShouldExportNonRoad() throws Exception {
-        File importFile = new File("test/data/orl/nc","small-nonroad.txt");
+        File importFile = new File("test/data/orl/nc", "small-nonroad.txt");
         Importer importer = new ORLNonRoadImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
-        
+
         Exporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
@@ -95,14 +102,14 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(16, data.size());
-        assertEquals("37001, 2260001010,           100414, 5.6000000e-001, -9, -9, -9, -9, -9,         -9,   -9,  -9", (String) data
-                .get(0));
-        assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9, -9,         -9,   -9,  -9", (String) data
-                .get(1));
+        assertEquals("37001, 2260001010,           100414, 5.6000000e-001, -9, -9, -9, -9, -9,         -9,   -9,  -9",
+                (String) data.get(0));
+        assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9, -9,         -9,   -9,  -9",
+                (String) data.get(1));
     }
 
-    public void FIXME_testShouldExportNonPoint() throws Exception {
-        File importFile = new File("test/data/orl/nc","small-nonpoint.txt");
+    public void testShouldExportNonPoint() throws Exception {
+        File importFile = new File("test/data/orl/nc", "small-nonpoint.txt");
         Importer importer = new ORLNonPointImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
 
@@ -115,17 +122,19 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(6, data.size());
-        //regex is used because of precision diff between mysql and postgres
-        assertTrue(((String) data.get(0)).matches("37001,   10201302,    0,   0107,  2,      0,              246, 3.87296\\d*e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9"));
-        assertTrue(((String) data.get(1)).matches("37001,   10201302,    0,   0107,  2,      0,              253, 6.91058\\d*e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9"));
+        // regex is used because of precision diff between mysql and postgres
+        assertTrue(((String) data.get(0))
+                .matches("37001,   10201302,    0,   0107,  2,      0,              246, 3.87296\\d*e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9"));
+        assertTrue(((String) data.get(1))
+                .matches("37001,   10201302,    0,   0107,  2,      0,              253, 6.91058\\d*e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9"));
 
     }
 
     public void testShouldExportPoint() throws Exception {
-        File importFile= new File("test/data/orl/nc","small-point.txt"); 
+        File importFile = new File("test/data/orl/nc", "small-point.txt");
         Importer importer = new ORLPointImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
-        
+
         Exporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
         File file = doExport(exporter);
 
@@ -142,7 +151,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 + "7.50000\\d*e\\+000, 3.75000\\d*e\\+002, 2.08346\\d*e\\+003, 4.71600\\d*e\\+001, 3083,   0714,      "
                 + "0, L, -8.07081\\d*e\\+001, 3.51200\\d*e\\+001, 17,           108883, 9.70414\\d*e\\+000,"
                 + " -9, -9, -9, -9, -9,                   -9,     -9,    -9, ,         -9,         -9,         -9,   -9,  -9, -9, -9";
-        
+
         String actual = (String) records.get(0);
         assertTrue(actual.matches(expectedPattern));
     }
@@ -157,15 +166,6 @@ public class ORLExportersTest extends PersistenceTestCase {
         file.deleteOnExit();
 
         exporter.export(file);
-
-        return file;
-    }
-
-    private File doExport(Exporter exporter, int version) throws Exception {
-        File file = File.createTempFile("exported", ".orl");
-        file.deleteOnExit();
-
-        exporter.export(version, file);
 
         return file;
     }

@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
@@ -14,16 +15,20 @@ public class ORLOnRoadExporter implements Exporter {
     private ORLExporter delegate;
 
     public ORLOnRoadExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        FileFormat colsMetadata = new ORLOnRoadFileFormat(sqlDataTypes);
-        delegate = new ORLExporter(dataset, datasource, colsMetadata);
+        delegate = new ORLExporter(dataset, datasource, fileFormat(sqlDataTypes));
+    }
+
+    public ORLOnRoadExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+            DataFormatFactory formatFactory) {
+        delegate = new ORLExporter(dataset, datasource, fileFormat(sqlDataTypes), formatFactory.exportStatement());
+    }
+
+    private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {
+        return new ORLOnRoadFileFormat(sqlDataTypes);
     }
 
     public void export(File file) throws ExporterException {
         delegate.export(file);
-    }
-
-    public void export(int version, File file) throws ExporterException {
-        delegate.export(version, file);
     }
 
 }

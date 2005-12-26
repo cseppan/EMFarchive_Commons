@@ -8,4 +8,6 @@ public interface DataFormatFactory {
 
     FillDefaultValues defaultValuesFiller();
 
+    ExportStatement exportStatement();
+
 }

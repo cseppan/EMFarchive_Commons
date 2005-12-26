@@ -41,6 +41,7 @@ public class ORLImporter {
         this.delegate = new HelpImporter();
     }
 
+    // FIXME: what's this?. - Refactor
     public void setup(File file) throws ImporterException {
         validateORLFile(file);
         this.file = file;
@@ -91,6 +92,7 @@ public class ORLImporter {
         loadDataset(file, table, tableFormat, reader.comments(), dataset);
     }
 
+    // FIXME: move this outta here
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
         String[] data = { dataset.getDatasetid() + "", "0", "Initial Version", "", "true", null };
