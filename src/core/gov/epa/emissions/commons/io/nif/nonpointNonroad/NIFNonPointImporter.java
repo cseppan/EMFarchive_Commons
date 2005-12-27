@@ -16,7 +16,7 @@ public class NIFNonPointImporter implements Importer {
 
     public NIFNonPointImporter(File[] files, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
             throws ImporterException {
-        String tablePrefix = new DataTable().format(dataset.getName());
+        String tablePrefix = new DataTable(dataset).tableName();
         delegate = new NIFImporter(files, dataset,
                 new NIFNonPointFileDatasetTypeUnits(files, tablePrefix, sqlDataTypes), datasource);
     }

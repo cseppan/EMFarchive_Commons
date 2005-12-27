@@ -1,15 +1,22 @@
 package gov.epa.emissions.commons.io.importer;
 
-import java.sql.SQLException;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.TableFormat;
+
+import java.sql.SQLException;
 
 public class DataTable {
 
-    public String format(String datasetName) {
-        String result = datasetName;
+    private Dataset dataset;
+
+    public DataTable(Dataset dataset) {
+        this.dataset = dataset;
+    }
+
+    public String tableName() {
+        String result = dataset.getName();
 
         for (int i = 0; i < result.length(); i++) {
             if (!Character.isJavaLetterOrDigit(result.charAt(i))) {

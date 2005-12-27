@@ -38,8 +38,8 @@ public class LineExporterTest extends PersistenceTestCase {
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
         TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
         
-        DataTable dataTable = new DataTable();
-        String table = dataTable.format(dataset.getName());
+        DataTable dataTable = new DataTable(dataset);
+        String table = dataTable.tableName();
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         dataTable.create(table, datasource, formatUnit.tableFormat());
     }

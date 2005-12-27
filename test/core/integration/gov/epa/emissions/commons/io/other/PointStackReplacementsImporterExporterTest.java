@@ -39,8 +39,8 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         FileFormat fileFormat = new PointStackReplacementsFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         
-        DataTable dataTable = new DataTable();
-        String table = dataTable.format(dataset.getName());
+        DataTable dataTable = new DataTable(dataset);
+        String table = dataTable.tableName();
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         dataTable.create(table, datasource, formatUnit.tableFormat());
     }

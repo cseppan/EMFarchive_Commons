@@ -57,7 +57,7 @@ public class IDAImporter {
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         DatasetLoader loader = new DatasetLoader(dataset);
-        InternalSource internalSource = loader.internalSource(file, new DataTable().format(dataset.getName()), tableFormat);
+        InternalSource internalSource = loader.internalSource(file, new DataTable(dataset).tableName(), tableFormat);
         unit.setInternalSource(internalSource);
 
         validateIDAFile(headerReader.comments());
@@ -65,11 +65,12 @@ public class IDAImporter {
 
     public void run() throws ImporterException {
         String table = unit.getInternalSource().getTable();
-        new DataTable().create(table, emissionDatasource, unit.tableFormat());
+        DataTable dataTable = new DataTable(dataset);
+        dataTable.create(table, emissionDatasource, unit.tableFormat());
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {
-            new DataTable().drop(table, emissionDatasource);
+            dataTable.drop(table, emissionDatasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }

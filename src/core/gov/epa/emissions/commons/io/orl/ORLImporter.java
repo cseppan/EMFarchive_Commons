@@ -41,8 +41,8 @@ public class ORLImporter {
     public void run() throws ImporterException {
         importAttributes(file, dataset);
 
-        DataTable dataTable = new DataTable();
-        String table = dataTable.format(dataset.getName());
+        DataTable dataTable = new DataTable(dataset);
+        String table = dataTable.tableName();
         dataTable.create(table, datasource, formatUnit.tableFormat());
 
         try {

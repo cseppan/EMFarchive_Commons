@@ -93,7 +93,7 @@ public class NIFImporter {
     private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
         String tableName = internalSource.getTable();
         String source = internalSource.getSource();
-        new DataTable().create(tableName, datasource, unit.tableFormat());
+        new DataTable(dataset).create(tableName, datasource, unit.tableFormat());
         tableNames.add(tableName);
         try {
             doImport(source, dataset, tableName, unit.fileFormat(), unit.tableFormat());
@@ -141,8 +141,9 @@ public class NIFImporter {
     }
 
     private void dropTables(List tableNames) throws ImporterException {
+        DataTable dataTable = new DataTable(dataset);
         for (int i = 0; i < tableNames.size(); i++) {
-            new DataTable().drop(((String) tableNames.get(i)), datasource);
+            dataTable.drop(((String) tableNames.get(i)), datasource);
         }
     }
 

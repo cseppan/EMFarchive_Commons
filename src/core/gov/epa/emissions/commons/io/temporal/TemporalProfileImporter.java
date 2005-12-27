@@ -64,11 +64,12 @@ public class TemporalProfileImporter implements Importer {
     }
 
     private void doImport(BufferedReader fileReader, DatasetTypeUnit unit, String header) throws Exception {
+        DataTable dataTable = new DataTable(dataset);
         try {
-            new DataTable().create(table(header), datasource, unit.tableFormat());
+            dataTable.create(table(header), datasource, unit.tableFormat());
             doImport(fileReader, dataset, unit, header);
         } catch (Exception e) {
-            new DataTable().drop(table(header), datasource);
+            dataTable.drop(table(header), datasource);
             throw e;
         }
     }

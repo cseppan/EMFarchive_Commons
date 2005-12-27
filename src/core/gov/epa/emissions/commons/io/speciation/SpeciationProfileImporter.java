@@ -41,7 +41,7 @@ public class SpeciationProfileImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        String table = new DataTable().format(dataset.getName());
+        String table = new DataTable(dataset).tableName();
 
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());

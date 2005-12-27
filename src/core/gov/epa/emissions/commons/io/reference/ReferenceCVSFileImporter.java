@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.reference;
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.DataTable;
@@ -33,9 +34,12 @@ public class ReferenceCVSFileImporter implements Importer {
 
     private FileFormat fileFormat;
 
-    public ReferenceCVSFileImporter(File file, String tableName, Datasource datasource, SqlDataTypes sqlDataTypes)
-            throws ImporterException {
+    private Dataset dataset;
+
+    public ReferenceCVSFileImporter(File file, Dataset dataset, String tableName, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
         this.file = file;
+        this.dataset = dataset;
         this.tableName = tableName;
         this.datasource = datasource;
         this.sqlDataTypes = sqlDataTypes;
@@ -54,7 +58,7 @@ public class ReferenceCVSFileImporter implements Importer {
         try {
             doImport();
         } catch (Exception e) {
-            new DataTable().drop(tableName, datasource);
+            new DataTable(dataset).drop(tableName, datasource);
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
         }
     }
@@ -81,6 +85,7 @@ public class ReferenceCVSFileImporter implements Importer {
         return (String[]) d.toArray(new String[0]);
     }
 
+    //FIXME: use DataTable to create instead
     private void createTable(String tableName, Datasource datasource, FileFormat fileFormat) throws ImporterException {
         try {
             datasource.tableDefinition().createTable(tableName, fileFormat.cols());

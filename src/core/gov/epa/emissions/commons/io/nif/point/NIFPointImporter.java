@@ -16,7 +16,7 @@ public class NIFPointImporter implements Importer {
 
     public NIFPointImporter(File[] files, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes)
             throws ImporterException {
-        String tablePrefix = new DataTable().format(dataset.getName());
+        String tablePrefix = new DataTable(dataset).tableName();
         delegate = new NIFImporter(files, dataset, new NIFPointDatasetTypeUnits(files, tablePrefix, sqlDataTypes),
                 datasource);
     }

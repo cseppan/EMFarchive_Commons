@@ -39,9 +39,11 @@ public class SpeciationImporterTest extends PersistenceTestCase {
 
         FileFormat fileFormat = new ProfileFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        String table = new DataTable().format(dataset.getName());
+        
+        DataTable dataTable = new DataTable(dataset);
+        String table = dataTable.tableName();
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        new DataTable().create(table, datasource, formatUnit.tableFormat());
+        dataTable.create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
