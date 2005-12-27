@@ -10,7 +10,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
@@ -39,13 +39,12 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
-        HelpImporter delegate = new HelpImporter();
+
         FileFormat fileFormat = new SurrogatesDescriptionFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        String table = new DataTable().format(dataset.getName());
+        new DataTable().create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -55,24 +54,25 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
 
     public void testImportCEMpthourData() throws Exception {
         File file = new File("test/data/other", "SRGDESC.txt");
-        SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(file, dataset, datasource, sqlDataTypes);
+        SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(file, dataset, datasource,
+                sqlDataTypes);
         importer.run();
-        
-        
+
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
         SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
-        
+
         List data = readData(file);
         assertEquals(66, data.size());
         assertEquals(
-                "USA,100,\"Population\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt", 
+                "USA,100,\"Population\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt",
                 (String) data.get(0));
-        assertEquals("USA,580,\"Food, Drug, Chemical Industrial (IND3)\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt", 
-                (String)data.get(65));
+        assertEquals(
+                "USA,580,\"Food, Drug, Chemical Industrial (IND3)\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt",
+                (String) data.get(65));
         exportfile.delete();
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 

@@ -3,9 +3,9 @@ package gov.epa.emissions.commons.io.nif.onroad;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.SummaryTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.SummaryTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,14 +1,14 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.Comments;
+import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -31,27 +31,25 @@ public class ORLImporter {
 
     private FormatUnit formatUnit;
 
-    private HelpImporter_REMOVE_ME delegate;
-
     public ORLImporter(File file, Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
-        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
     }
 
     public void run() throws ImporterException {
         importAttributes(file, dataset);
 
-        String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        DataTable dataTable = new DataTable();
+        String table = dataTable.format(dataset.getName());
+        dataTable.create(table, datasource, formatUnit.tableFormat());
 
         try {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
                     .tableFormat());
         } catch (Exception e) {
-            delegate.dropTable(table, datasource);
+            dataTable.drop(table, datasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }

@@ -2,13 +2,14 @@ package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataReader;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
 import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
@@ -92,7 +93,7 @@ public class NIFImporter {
     private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
         String tableName = internalSource.getTable();
         String source = internalSource.getSource();
-        delegate.createTable(tableName, datasource, unit.tableFormat());
+        new DataTable().create(tableName, datasource, unit.tableFormat());
         tableNames.add(tableName);
         try {
             doImport(source, dataset, tableName, unit.fileFormat(), unit.tableFormat());
@@ -141,7 +142,7 @@ public class NIFImporter {
 
     private void dropTables(List tableNames) throws ImporterException {
         for (int i = 0; i < tableNames.size(); i++) {
-            delegate.dropTable((String) tableNames.get(i), datasource);
+            new DataTable().drop(((String) tableNames.get(i)), datasource);
         }
     }
 

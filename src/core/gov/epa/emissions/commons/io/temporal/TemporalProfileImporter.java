@@ -4,14 +4,14 @@ import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -28,8 +28,6 @@ public class TemporalProfileImporter implements Importer {
 
     private Datasource datasource;
 
-    private HelpImporter_REMOVE_ME delegate;
-
     private TemporalFileFormatFactory metadataFactory;
 
     private Dataset dataset;
@@ -43,7 +41,6 @@ public class TemporalProfileImporter implements Importer {
         this.file = file;
 
         metadataFactory = new TemporalFileFormatFactory(sqlType);
-        delegate = new HelpImporter_REMOVE_ME();
     }
 
     public void run() throws ImporterException {
@@ -68,10 +65,10 @@ public class TemporalProfileImporter implements Importer {
 
     private void doImport(BufferedReader fileReader, DatasetTypeUnit unit, String header) throws Exception {
         try {
-            delegate.createTable(table(header), datasource, unit.tableFormat());
+            new DataTable().create(table(header), datasource, unit.tableFormat());
             doImport(fileReader, dataset, unit, header);
         } catch (Exception e) {
-            delegate.dropTable(table(header), datasource);
+            new DataTable().drop(table(header), datasource);
             throw e;
         }
     }

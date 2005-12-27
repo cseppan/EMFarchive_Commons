@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.io.importer.FillRecordWithBlankValues;
+
 import java.util.ArrayList;
 import java.util.List;
 

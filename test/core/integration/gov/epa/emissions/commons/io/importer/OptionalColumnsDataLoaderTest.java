@@ -9,7 +9,6 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.orl.ORLNonPointFileFormat;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.temporal.PointTemporalReferenceFileFormat;

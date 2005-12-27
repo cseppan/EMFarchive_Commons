@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io;
+package gov.epa.emissions.commons.io.importer;
 
 public interface SummaryTable {
 

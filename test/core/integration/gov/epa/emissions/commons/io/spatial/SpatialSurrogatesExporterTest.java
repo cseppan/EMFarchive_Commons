@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
@@ -24,8 +24,6 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
-    
-    private HelpImporter_REMOVE_ME delegate;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -37,34 +35,32 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
-        this.delegate = new HelpImporter_REMOVE_ME();
+
         FileFormat fileFormat = new SpatialSurrogatesFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        String table = delegate.tableName(dataset.getName());
+        String table = new DataTable().format(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        new DataTable().create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
-    
+
     public void testExportSpetailSurrogatesData() throws Exception {
         File file = new File("test/data/spatial", "abmgpro.txt");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(file, dataset, datasource, sqlDataTypes);
         importer.run();
-        
-        SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, 
-                datasource, sqlDataTypes);
-        File exportfile = new File("test/data/spatial","SpetialSurrogatesExported.txt");
+
+        SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, datasource, sqlDataTypes);
+        File exportfile = new File("test/data/spatial", "SpetialSurrogatesExported.txt");
         exporter.export(exportfile);
-        //FIXME: compare the original file and the exported file.
+        // FIXME: compare the original file and the exported file.
         exportfile.delete();
         assertEquals(43, countRecords());
     }
-    
+
     private int countRecords() {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());

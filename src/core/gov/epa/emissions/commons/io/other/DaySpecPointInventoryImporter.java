@@ -2,16 +2,16 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataReader;
+import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.MassagedFixedColumnsDataLoader;
@@ -32,11 +32,7 @@ public class DaySpecPointInventoryImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    private HelpImporter_REMOVE_ME delegate;
-
     public DaySpecPointInventoryImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.delegate = new HelpImporter_REMOVE_ME();
-
         this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
@@ -46,7 +42,7 @@ public class DaySpecPointInventoryImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        String table = delegate.tableName(dataset.getName());
+        String table = new DataTable().format(dataset.getName());
 
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());

@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
-import gov.epa.emissions.commons.io.SummaryTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.SummaryTable;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;

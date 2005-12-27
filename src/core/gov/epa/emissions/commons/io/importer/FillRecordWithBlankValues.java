@@ -1,4 +1,6 @@
-package gov.epa.emissions.commons.io;
+package gov.epa.emissions.commons.io.importer;
+
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 
 import java.util.List;
 

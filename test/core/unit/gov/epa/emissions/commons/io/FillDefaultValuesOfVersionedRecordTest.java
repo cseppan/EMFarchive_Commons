@@ -1,5 +1,8 @@
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.io.importer.FillDefaultValues;
+import gov.epa.emissions.commons.io.importer.FillDefaultValuesOfVersionedRecord;
+
 import java.util.ArrayList;
 import java.util.List;
 

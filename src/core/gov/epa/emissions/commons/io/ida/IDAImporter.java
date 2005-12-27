@@ -2,12 +2,13 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.Comments;
+import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -56,7 +57,7 @@ public class IDAImporter {
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         DatasetLoader loader = new DatasetLoader(dataset);
-        InternalSource internalSource = loader.internalSource(file, delegate.tableName(dataset.getName()), tableFormat);
+        InternalSource internalSource = loader.internalSource(file, new DataTable().format(dataset.getName()), tableFormat);
         unit.setInternalSource(internalSource);
 
         validateIDAFile(headerReader.comments());
@@ -64,11 +65,11 @@ public class IDAImporter {
 
     public void run() throws ImporterException {
         String table = unit.getInternalSource().getTable();
-        delegate.createTable(table, emissionDatasource, unit.tableFormat());
+        new DataTable().create(table, emissionDatasource, unit.tableFormat());
         try {
             doImport(unit, dataset, table);
         } catch (Exception e) {
-            delegate.dropTable(table, emissionDatasource);
+            new DataTable().drop(table, emissionDatasource);
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }

@@ -2,15 +2,15 @@ package gov.epa.emissions.commons.io.spatial;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.Comments;
+import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -30,10 +30,7 @@ public class SpatialSurrogatesImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    private HelpImporter_REMOVE_ME delegate;
-
     public SpatialSurrogatesImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.delegate = new HelpImporter_REMOVE_ME();
         this.dataset = dataset;
         this.datasource = datasource;
         this.file = file;
@@ -44,7 +41,7 @@ public class SpatialSurrogatesImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        String table = delegate.tableName(dataset.getName());
+        String table = new DataTable().format(dataset.getName());
 
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());

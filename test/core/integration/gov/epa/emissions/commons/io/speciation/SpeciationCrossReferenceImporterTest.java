@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
@@ -25,8 +25,6 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
-    
-    private HelpImporter_REMOVE_ME delegate;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -38,13 +36,12 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
-        this.delegate = new HelpImporter_REMOVE_ME();
+
         FileFormat fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        String table = delegate.tableName(dataset.getName());
+        String table = new DataTable().format(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        new DataTable().create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -54,12 +51,13 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
 
     public void testImportSpeciationCrossRefData() throws Exception {
         File file = new File("test/data/speciation", "gsref-point.txt");
-        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(file, dataset, datasource, sqlDataTypes);
+        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(file, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         assertEquals(153, countRecords());
     }
-    
+
     private int countRecords() {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());

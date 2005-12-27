@@ -1,4 +1,9 @@
-package gov.epa.emissions.commons.io;
+package gov.epa.emissions.commons.io.importer;
+
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.TableFormat;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.db;
 
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.orl.ORLNonPointImporter;
 
 import java.io.File;

@@ -5,8 +5,8 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -27,8 +27,6 @@ public class ReferenceCVSFileImporter implements Importer {
 
     private SqlDataTypes sqlDataTypes;
 
-    private HelpImporter_REMOVE_ME delegate;
-
     private String tableName;
 
     private Reader reader;
@@ -41,7 +39,6 @@ public class ReferenceCVSFileImporter implements Importer {
         this.tableName = tableName;
         this.datasource = datasource;
         this.sqlDataTypes = sqlDataTypes;
-        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
 
         try {
@@ -57,7 +54,7 @@ public class ReferenceCVSFileImporter implements Importer {
         try {
             doImport();
         } catch (Exception e) {
-            delegate.dropTable(tableName, datasource);
+            new DataTable().drop(tableName, datasource);
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
         }
     }

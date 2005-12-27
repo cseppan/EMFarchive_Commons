@@ -3,16 +3,16 @@ package gov.epa.emissions.commons.io.temporal;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataLoader;
+import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -31,8 +31,6 @@ public class TemporalReferenceImporter implements Importer {
 
     private FormatUnit unit;
 
-    private HelpImporter_REMOVE_ME delegate;
-
     public TemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.file = file;
         this.dataset = dataset;
@@ -41,16 +39,16 @@ public class TemporalReferenceImporter implements Importer {
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
-        this.delegate = new HelpImporter_REMOVE_ME();
     }
 
     public void run() throws ImporterException {
-        String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, unit.tableFormat());
+        DataTable dataTable = new DataTable();
+        String table = dataTable.format(dataset.getName());
+        dataTable.create(table, datasource, unit.tableFormat());
         try {
             doImport(file, dataset, table, unit.tableFormat());
         } catch (Exception e) {
-            delegate.dropTable(table, datasource);
+            dataTable.drop(table, datasource);
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
 
         }

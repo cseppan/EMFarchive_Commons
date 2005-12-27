@@ -10,7 +10,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
@@ -40,12 +40,13 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
-        HelpImporter delegate = new HelpImporter();
         FileFormat fileFormat = new CEMHourSpecInventFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        
+        DataTable dataTable = new DataTable();
+        String table = dataTable.format(dataset.getName());
+        dataTable.create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {

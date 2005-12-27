@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.File;
@@ -23,8 +23,6 @@ public class LineExporterTest extends PersistenceTestCase {
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
-    
-    private HelpImporter_REMOVE_ME delegate;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -36,35 +34,34 @@ public class LineExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
-        this.delegate = new HelpImporter_REMOVE_ME();
+
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
         TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
-        String table = delegate.tableName(dataset.getName());
+        
+        DataTable dataTable = new DataTable();
+        String table = dataTable.format(dataset.getName());
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        dataTable.create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
-    
-    
 
     public void testExportSmallLineFile() throws Exception {
-        File importFile = new File("test/data/orl/nc","small-point.txt");
+        File importFile = new File("test/data/orl/nc", "small-point.txt");
         LineImporter importer = new LineImporter(importFile, dataset, datasource, sqlDataTypes);
         importer.run();
-        
-        LineExporter exporter = new LineExporter (dataset, datasource, new LineFileFormat(sqlDataTypes));
-        File file = new File("test/data/orl/nc","lineexporter.txt");
+
+        LineExporter exporter = new LineExporter(dataset, datasource, new LineFileFormat(sqlDataTypes));
+        File file = new File("test/data/orl/nc", "lineexporter.txt");
         exporter.export(file);
-        //FIXME: run the comparison tool, look at other exporter test
+        // FIXME: run the comparison tool, look at other exporter test
         assertEquals(22, countRecords());
         file.delete();
     }
-    
+
     private int countRecords() {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());

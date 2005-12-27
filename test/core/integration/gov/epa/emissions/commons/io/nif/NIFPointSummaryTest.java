@@ -7,8 +7,8 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.SummaryTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.SummaryTable;
 import gov.epa.emissions.commons.io.nif.point.NIFPointImporter;
 import gov.epa.emissions.commons.io.nif.point.NIFPointSummary;
 

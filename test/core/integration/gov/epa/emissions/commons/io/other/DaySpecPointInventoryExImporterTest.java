@@ -10,7 +10,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
@@ -39,13 +39,14 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-        
-        HelpImporter delegate = new HelpImporter();
+
         FileFormat fileFormat = new DaySpecPointInventoryFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        String table = delegate.tableName(dataset.getName());
-        delegate.createTable(table, datasource, formatUnit.tableFormat());
+        
+        DataTable dataTable = new DataTable();
+        String table = dataTable.format(dataset.getName());
+        dataTable.create(table, datasource, formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -55,22 +56,23 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
 
     public void testImportCEMpthourData() throws Exception {
         File file = new File("test/data/other", "nonCEMptday.txt");
-        DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(file, dataset, datasource, sqlDataTypes);
+        DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(file, dataset, datasource,
+                sqlDataTypes);
         importer.run();
-        
+
         File exportfile = new File("test/data/other", "ptdayExported.txt");
         exportfile.deleteOnExit();
         DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
-        
+
         List data = readData(file);
         assertEquals(48, data.size());
-        //assertEquals(
-        //        "ORISPL_CODE,UNITID,OP_DATE,OP_HOUR,OP_TIME,GLOAD,SLOAD,NOX_MASS,NOX_RATE,SO2_MASS,HEAT_INPUT,FLOW", 
-        //        (String) data.get(0));
-        //assertEquals("2161,**GT2,000113,19,0,-9,-9,-9,-9,-9,-9,-9", (String)data.get(21));
+        // assertEquals(
+        // "ORISPL_CODE,UNITID,OP_DATE,OP_HOUR,OP_TIME,GLOAD,SLOAD,NOX_MASS,NOX_RATE,SO2_MASS,HEAT_INPUT,FLOW",
+        // (String) data.get(0));
+        // assertEquals("2161,**GT2,000113,19,0,-9,-9,-9,-9,-9,-9,-9", (String)data.get(21));
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 

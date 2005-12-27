@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io;
+package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
