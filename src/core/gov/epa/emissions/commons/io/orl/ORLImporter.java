@@ -1,12 +1,14 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -17,7 +19,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
 public class ORLImporter {
@@ -30,13 +31,13 @@ public class ORLImporter {
 
     private FormatUnit formatUnit;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     public ORLImporter(File file, Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
     }
 
@@ -65,10 +66,11 @@ public class ORLImporter {
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, List comments, Dataset dataset) {
-        delegate.setInternalSource(file, table, tableFormat, dataset);
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
         dataset.setUnits("short tons/year");
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
-        dataset.setDescription(delegate.descriptions(comments));
+        dataset.setDescription(new Comments(comments).all());
     }
 
     private void importAttributes(File file, Dataset dataset) throws ImporterException {
@@ -82,37 +84,25 @@ public class ORLImporter {
         } catch (IOException e) {
             throw new ImporterException(e.getMessage());
         }
-        List comments = reader.comments();
-        addAttributesExtractedFromComments(comments, dataset);
+        addAttributes(reader.comments(), dataset);
     }
 
-    private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
-        if (!(tag("#ORL", comments) != null))
+    private void addAttributes(List commentsList, Dataset dataset) throws ImporterException {
+        Comments comments = new Comments(commentsList);
+        if (!comments.have("ORL"))
             throw new ImporterException("The tag - 'ORL' is mandatory.");
 
-        String country = tag("#COUNTRY", comments);
-        if (country == null || country.length() == 0)
+        if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
+        String country = comments.content("COUNTRY");
         dataset.setCountry(country);
         dataset.setRegion(country);
 
-        String year = tag("#YEAR", comments);
-        if (year == null || year.length() == 0)
+        if (!comments.hasContent("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
+        String year = comments.content("YEAR");
         dataset.setYear(Integer.parseInt(year));
         setStartStopDateTimes(dataset, Integer.parseInt(year));
-
-    }
-
-    private String tag(String tag, List comments) {
-        for (Iterator iter = comments.iterator(); iter.hasNext();) {
-            String comment = (String) iter.next();
-            if (comment.startsWith(tag)) {
-                return comment.substring(tag.length()).trim();
-            }
-        }
-
-        return null;
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {

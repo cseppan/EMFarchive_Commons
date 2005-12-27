@@ -3,9 +3,9 @@ package gov.epa.emissions.commons.io.nif.nonpointNonroad;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SummaryTable;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,17 +18,15 @@ public class NIFNonpointNonRoadSummary implements SummaryTable {
 
     private Datasource referenceDatasource;
 
-    private HelpImporter delegate;
-
     public NIFNonpointNonRoadSummary(Datasource emission, Datasource reference, Dataset dataset) {
         this.emissionDatasource = emission;
         this.referenceDatasource = reference;
         this.dataset = dataset;
-        this.delegate = new HelpImporter();
     }
 
     public void createSummary() throws Exception {
-        dataset.setSummarySource(delegate.summarySource(dataset.getName()));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        dataset.setSummarySource(loader.summarySource());
         table(emissionDatasource, dataset);
         String emTable = emissionDatasource.getName() + "." + emissionRecordsTable(dataset);
         String epTable = emissionDatasource.getName() + "." + emissionProcessTable(dataset);

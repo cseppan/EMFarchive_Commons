@@ -2,12 +2,13 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -15,8 +16,6 @@ import gov.epa.emissions.commons.io.importer.Reader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Iterator;
-import java.util.List;
 
 public class AreaTemporalReferenceImporter implements Importer {
     private Dataset dataset;
@@ -58,16 +57,10 @@ public class AreaTemporalReferenceImporter implements Importer {
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Reader reader, Dataset dataset) {
         // TODO: other properties ?
-        HelpImporter delegate = new HelpImporter();
-        delegate.setInternalSource(file, table, tableFormat, dataset);
-        dataset.setDescription(descriptions(reader.comments()));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
+        Comments comments = new Comments(reader.comments());
+        dataset.setDescription(comments.all());
     }
 
-    private String descriptions(List comments) {
-        StringBuffer description = new StringBuffer();
-        for (Iterator iter = comments.iterator(); iter.hasNext();)
-            description.append(iter.next() + "\n");
-
-        return description.toString();
-    }
 }

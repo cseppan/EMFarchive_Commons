@@ -2,14 +2,16 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.MassagedFixedColumnsDataLoader;
@@ -27,10 +29,10 @@ public class CEMHourSpecInventoryImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     public CEMHourSpecInventoryImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
@@ -64,8 +66,9 @@ public class CEMHourSpecInventoryImporter implements Importer {
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, tableFormat, dataset);
-        dataset.setDescription(delegate.descriptions(comments));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
+        dataset.setDescription(new Comments(comments).all());
     }
 
 }

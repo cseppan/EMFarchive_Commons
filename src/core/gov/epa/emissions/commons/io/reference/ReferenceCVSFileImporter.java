@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -27,7 +27,7 @@ public class ReferenceCVSFileImporter implements Importer {
 
     private SqlDataTypes sqlDataTypes;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     private String tableName;
 
@@ -41,7 +41,7 @@ public class ReferenceCVSFileImporter implements Importer {
         this.tableName = tableName;
         this.datasource = datasource;
         this.sqlDataTypes = sqlDataTypes;
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
 
         try {

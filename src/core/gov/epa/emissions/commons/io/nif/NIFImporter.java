@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
@@ -10,7 +11,7 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 
@@ -31,14 +32,15 @@ public class NIFImporter {
 
     private List tableNames;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
-    public NIFImporter(File[] files, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource) throws ImporterException {
+    public NIFImporter(File[] files, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource)
+            throws ImporterException {
         this.dataset = dataset;
         this.datasetTypeUnits = datasetTypeUnits;
         this.datasource = datasource;
         this.tableNames = new ArrayList();
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         setup(files);
     }
 
@@ -50,35 +52,34 @@ public class NIFImporter {
         updateInternalSources(datasetTypeUnits.formatUnits(), dataset);
     }
 
-
     public void run() throws ImporterException {
         validateTableNames(dataset.getInternalSources());
         FormatUnit[] units = datasetTypeUnits.formatUnits();
         for (int i = 0; i < units.length; i++) {
-            doImport(dataset, units[i]);  
+            doImport(dataset, units[i]);
         }
     }
-    
+
     private void validateTableNames(InternalSource[] internalSources) throws ImporterException {
         List tables = new ArrayList();
         for (int i = 0; i < internalSources.length; i++) {
             String table = internalSources[i].getTable();
             try {
-                if(datasource.tableDefinition().tableExists(table)){
+                if (datasource.tableDefinition().tableExists(table)) {
                     tables.add(table);
                 }
             } catch (Exception e) {
                 throw new ImporterException("Error in connecting to the database", e);
             }
         }
-        if(!tables.isEmpty()){
-            String s= tables.size()>1?"s ":"";
-            String isOrAre= tables.size()>1?" are":" is";
-            throw new ImporterException("The table name"+s + tables.toString() + isOrAre +" already exist in the database");
+        if (!tables.isEmpty()) {
+            String s = tables.size() > 1 ? "s " : "";
+            String isOrAre = tables.size() > 1 ? " are" : " is";
+            throw new ImporterException("The table name" + s + tables.toString() + isOrAre
+                    + " already exist in the database");
 
         }
     }
-
 
     private void doImport(Dataset dataset, FormatUnit unit) throws ImporterException {
         InternalSource internalSource = unit.getInternalSource();
@@ -113,9 +114,7 @@ public class NIFImporter {
 
     // TODO: load starttime, endtime
     private void loadDataset(List comments, Dataset dataset) {
-
-        dataset.setDescription(delegate.descriptions(comments));
-
+        dataset.setDescription(new Comments(comments).all());
     }
 
     private void updateInternalSources(FormatUnit[] formatUnits, Dataset dataset) {
@@ -127,10 +126,11 @@ public class NIFImporter {
                 source.setCols(colNames(formatUnits[i].fileFormat().cols()));
             }
         }
-        
+
         dataset.setInternalSources((InternalSource[]) sources.toArray(new InternalSource[0]));
     }
-    //TODO: use HelpImporter
+
+    // TODO: use HelpImporter
     private String[] colNames(Column[] cols) {
         List names = new ArrayList();
         for (int i = 0; i < cols.length; i++)

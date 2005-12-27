@@ -2,13 +2,15 @@ package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -25,14 +27,14 @@ public class SpeciationCrossReferenceImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     private Dataset dataset;
 
     public SpeciationCrossReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.datasource = datasource;
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
 
         FileFormat fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
@@ -61,8 +63,9 @@ public class SpeciationCrossReferenceImporter implements Importer {
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
-        delegate.setInternalSource(file, table, tableFormat, dataset);
-        dataset.setDescription(delegate.descriptions(comments));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
+        dataset.setDescription(new Comments(comments).all());
     }
 
 }

@@ -3,12 +3,13 @@ package gov.epa.emissions.commons.io.other;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -27,7 +28,7 @@ public class CountryStateCountyDataImporter implements Importer {
 
     private Datasource datasource;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     private File file;
 
@@ -39,7 +40,7 @@ public class CountryStateCountyDataImporter implements Importer {
         this.sqlType = sqlType;
 
         metadataFactory = new CountryStateCountyFileFormatFactory(sqlType);
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         this.file = file;
     }
 
@@ -111,7 +112,8 @@ public class CountryStateCountyDataImporter implements Importer {
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {
-        delegate.setInternalSource(file, table, tableFormat, dataset);
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
     }
 
 }

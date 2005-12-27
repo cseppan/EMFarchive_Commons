@@ -3,14 +3,16 @@ package gov.epa.emissions.commons.io.temporal;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -19,8 +21,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
 
 public class TemporalReferenceImporter implements Importer {
     private Dataset dataset;
@@ -31,17 +31,17 @@ public class TemporalReferenceImporter implements Importer {
 
     private FormatUnit unit;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     public TemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
         this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
-        
+
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
     }
 
     public void run() throws ImporterException {
@@ -74,16 +74,10 @@ public class TemporalReferenceImporter implements Importer {
 
     private void loadDataset(File file, String table, TableFormat format, Reader reader, Dataset dataset) {
         // TODO: other properties ?
-        HelpImporter delegate = new HelpImporter();
-        delegate.setInternalSource(file, table, format, dataset);
-        dataset.setDescription(descriptions(reader.comments()));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, format);
+        Comments comments = new Comments(reader.comments());
+        dataset.setDescription(comments.all());
     }
 
-    private String descriptions(List comments) {
-        StringBuffer description = new StringBuffer();
-        for (Iterator iter = comments.iterator(); iter.hasNext();)
-            description.append(iter.next() + System.getProperty("line.separator"));
-
-        return description.toString();
-    }
 }

@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class LineExporterTest extends PersistenceTestCase {
 
     private Dataset dataset;
     
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -37,7 +37,7 @@ public class LineExporterTest extends PersistenceTestCase {
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
         
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
         TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
         String table = delegate.tableName(dataset.getName());

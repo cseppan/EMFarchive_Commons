@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.SummaryTable;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -18,19 +18,17 @@ public class ORLPointSummary implements SummaryTable {
 
     private Dataset dataset;
 
-    private HelpImporter delegate;
-
     public ORLPointSummary(Datasource emissionDatasource, Datasource referenceDatasource, Dataset dataset) {
         this.emissionsDatasource = emissionDatasource;
         this.referenceDatasource = referenceDatasource;
         this.dataset = dataset;
-        this.delegate = new HelpImporter();
     }
 
     public void createSummary() throws Exception {
-        dataset.setSummarySource(delegate.summarySource(dataset.getName()));
-        String orlTable = emissionsDatasource.getName() +"."+ dataset.getInternalSources()[0].getTable();
-        String summaryTable = emissionsDatasource.getName() +"."+dataset.getSummarySource().getTable();
+        DatasetLoader loader = new DatasetLoader(dataset);
+        dataset.setSummarySource(loader.summarySource());
+        String orlTable = emissionsDatasource.getName() + "." + dataset.getInternalSources()[0].getTable();
+        String summaryTable = emissionsDatasource.getName() + "." + dataset.getSummarySource().getTable();
 
         // get the pollutant CAS codes
         ResultSet rs = emissionsDatasource.query().executeQuery("SELECT DISTINCT(" + "POLL" + ") FROM " + orlTable);
@@ -61,28 +59,26 @@ public class ORLPointSummary implements SummaryTable {
         // String createIndex = " (INDEX orl_key (" + FIPS + ", " + PLANTID
         // + ", " + POINTID + ", "
         // + STACKID + ", " + SEGMENT + ", " + SCC + "))";
-        summarySelectDistinct = " SELECT DISTINCT f." + "state_abbr" + " as " + "State" + ", " + "e." + "FIPS"
-                + " as " + "FIPS" + ", e." + "PLANTID" + " as " + "Plant_Id" + ", e." + "POINTID" + " as " + "Point_Id"
-                + ", e." + "STACKID" + " as " + "Stack_Id" + ", e." + "SEGMENT" + " as " + "Segment" + ", e."
-                + "SCC" + " as " + "SCC" + ", e." + "PLANT" + " as " + "Plant" + ", e." + "ERPTYPE" + " as "
-                + "Emissons_Release_Point" + ", e." + "SRCTYPE" + " as " + "Source_Type" + ", e." + "STKHGT" + " as " + "Height"
-                + ", e." + "STKDIAM" + " as " + "Diameter" + ", e." + "STKTEMP" + " as " + "Exit_Temp"
-                + ", e." + "STKFLOW" + " as " + "Exit_Flow_Rate" + ", e." + "STKVEL" + " as "
-                + "Exit_Vel" + ", e." + "SIC" + " as " + "SIC" + ", e." + "MACT" + " as " + "MACT" + ", e."
-                + "NAICS" + " as " + "NAICS" + ", e." + "CTYPE" + " as " + "Coordinate_System_Type" + ", e." + "XLOC"
-                + " as " + "X_Coord" + ", e." + "YLOC" + " as " + "Y_Coord" + ", e." + "UTMZ" + " as "
-                + "UTM_Zone" + ", ";
-        summaryFromSelectDistinct += "(SELECT DISTINCT " + "FIPS" + ", " + "PLANTID" + ", " + "POINTID"
-                + ", " + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + ", " + "PLANT" + ", "
-                + "ERPTYPE" + ", " + "SRCTYPE" + ", " + "STKHGT" + ", " + "STKDIAM" + ", "
-                + "STKTEMP" + ", " + "STKFLOW" + ", " + "STKVEL" + ", " + "SIC"
-                + ", " + "MACT" + ", " + "NAICS" + ", " + "CTYPE" + ", " + "XLOC" + ", "
-                + "YLOC" + ", " + "UTMZ" + " FROM " + orlTable + " ) e ";
+        summarySelectDistinct = " SELECT DISTINCT f." + "state_abbr" + " as " + "State" + ", " + "e." + "FIPS" + " as "
+                + "FIPS" + ", e." + "PLANTID" + " as " + "Plant_Id" + ", e." + "POINTID" + " as " + "Point_Id" + ", e."
+                + "STACKID" + " as " + "Stack_Id" + ", e." + "SEGMENT" + " as " + "Segment" + ", e." + "SCC" + " as "
+                + "SCC" + ", e." + "PLANT" + " as " + "Plant" + ", e." + "ERPTYPE" + " as " + "Emissons_Release_Point"
+                + ", e." + "SRCTYPE" + " as " + "Source_Type" + ", e." + "STKHGT" + " as " + "Height" + ", e."
+                + "STKDIAM" + " as " + "Diameter" + ", e." + "STKTEMP" + " as " + "Exit_Temp" + ", e." + "STKFLOW"
+                + " as " + "Exit_Flow_Rate" + ", e." + "STKVEL" + " as " + "Exit_Vel" + ", e." + "SIC" + " as " + "SIC"
+                + ", e." + "MACT" + " as " + "MACT" + ", e." + "NAICS" + " as " + "NAICS" + ", e." + "CTYPE" + " as "
+                + "Coordinate_System_Type" + ", e." + "XLOC" + " as " + "X_Coord" + ", e." + "YLOC" + " as "
+                + "Y_Coord" + ", e." + "UTMZ" + " as " + "UTM_Zone" + ", ";
+        summaryFromSelectDistinct += "(SELECT DISTINCT " + "FIPS" + ", " + "PLANTID" + ", " + "POINTID" + ", "
+                + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + ", " + "PLANT" + ", " + "ERPTYPE" + ", " + "SRCTYPE"
+                + ", " + "STKHGT" + ", " + "STKDIAM" + ", " + "STKTEMP" + ", " + "STKFLOW" + ", " + "STKVEL" + ", "
+                + "SIC" + ", " + "MACT" + ", " + "NAICS" + ", " + "CTYPE" + ", " + "XLOC" + ", " + "YLOC" + ", "
+                + "UTMZ" + " FROM " + orlTable + " ) e ";
         tempSelectDistinct = " SELECT DISTINCT e." + "FIPS" + " as " + "FIPS" + ", e." + "PLANTID" + " as "
                 + "Plant_Id" + ", e." + "POINTID" + " as " + "Point_Id" + ", e." + "STACKID" + " as " + "Stack_Id"
                 + ", e." + "SEGMENT" + " as " + "Segment" + ", e." + "SCC" + " as " + "SCC" + ", ";
-        tempFromSelectDistinct = " FROM (SELECT DISTINCT " + "FIPS" + ", " + "PLANTID" + ", " + "POINTID"
-                + ", " + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + " FROM " + orlTable + " ) e ";
+        tempFromSelectDistinct = " FROM (SELECT DISTINCT " + "FIPS" + ", " + "PLANTID" + ", " + "POINTID" + ", "
+                + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + " FROM " + orlTable + " ) e ";
 
         // if there is a large number of tables, join small
         // groups to form subsets, then join the subsets
@@ -122,25 +118,24 @@ public class ORLPointSummary implements SummaryTable {
                 // when using number (CAS) as column name, enclose in
                 // slanted
                 // quotes
-                String cleanPoll =  pollutants[index].replace('-', '_');
+                String cleanPoll = pollutants[index].replace('-', '_');
                 tempTableSelectParts[i] += cleanPoll + "." + emissionCol + " as " + cleanPoll + ", ";
                 summaryTableSelectPart += "t" + i + "." + cleanPoll + " as " + cleanPoll + ", ";
 
                 // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS for
                 // pollutant
 
-                    tempTableJoinParts[i] = tempTableJoinParts[i] + "LEFT JOIN (SELECT " + "FIPS" + ", "
-                            + "PLANTID" + ", " + "POINTID" + ", " + "STACKID" + ", " + "SEGMENT" + ", "
-                            + "SCC" + ", " + emissionCol + " FROM " + orlTable + " WHERE " + "POLL" + " = '"
-                            + pollutants[index] + "') " + cleanPoll + " ON (e." + "FIPS" + " = " + cleanPoll
-                            + "." + "FIPS" + " AND e." + "PLANTID" + " = " + cleanPoll + "." + "PLANTID"
-                            + " AND e." + "POINTID" + " = " + cleanPoll + "." + "POINTID" + " AND e." + "STACKID"
-                            + " = " + cleanPoll + "." + "STACKID" + " AND e." + "SEGMENT" + " = " + cleanPoll + "."
-                            + "SEGMENT" + " AND e." + "SCC" + " = " + cleanPoll + "." + "SCC" + ") ";
-                    summaryTableAndPart += "e." + "FIPS" + " = t" + i + "." + "FIPS" + " AND e." + "PLANTID"
-                            + " = t" + i + "." + "Plant_Id" + " AND e." + "POINTID" + " = t" + i + "." + "Point_Id"
-                            + " AND e." + "STACKID" + " = t" + i + "." + "Stack_Id" + " AND e." + "SEGMENT" + " = t"
-                            + i + "." + "Segment" + " AND e." + "SCC" + " = t" + i + "." + "SCC" + " AND ";
+                tempTableJoinParts[i] = tempTableJoinParts[i] + "LEFT JOIN (SELECT " + "FIPS" + ", " + "PLANTID" + ", "
+                        + "POINTID" + ", " + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + ", " + emissionCol
+                        + " FROM " + orlTable + " WHERE " + "POLL" + " = '" + pollutants[index] + "') " + cleanPoll
+                        + " ON (e." + "FIPS" + " = " + cleanPoll + "." + "FIPS" + " AND e." + "PLANTID" + " = "
+                        + cleanPoll + "." + "PLANTID" + " AND e." + "POINTID" + " = " + cleanPoll + "." + "POINTID"
+                        + " AND e." + "STACKID" + " = " + cleanPoll + "." + "STACKID" + " AND e." + "SEGMENT" + " = "
+                        + cleanPoll + "." + "SEGMENT" + " AND e." + "SCC" + " = " + cleanPoll + "." + "SCC" + ") ";
+                summaryTableAndPart += "e." + "FIPS" + " = t" + i + "." + "FIPS" + " AND e." + "PLANTID" + " = t" + i
+                        + "." + "Plant_Id" + " AND e." + "POINTID" + " = t" + i + "." + "Point_Id" + " AND e."
+                        + "STACKID" + " = t" + i + "." + "Stack_Id" + " AND e." + "SEGMENT" + " = t" + i + "."
+                        + "Segment" + " AND e." + "SCC" + " = t" + i + "." + "SCC" + " AND ";
             }
 
             // the temporary table CREATE statements
@@ -165,18 +160,17 @@ public class ORLPointSummary implements SummaryTable {
                 // when using number (CAS) as column name, enclose in
                 // slanted
                 // quotes
-                String cleanPoll = "_" + pollutants[i].replace('-', '_') ;
+                String cleanPoll = "_" + pollutants[i].replace('-', '_');
                 summaryTableSelectPart += cleanPoll + "." + emissionCol + " as " + cleanPoll + ", ";
                 // get FIPS, PLANTID, POINTID, STACKID, SEGMENT, SCC and CAS
                 // for pollutant
-                summaryTableJoinPart += "LEFT JOIN (SELECT " + "FIPS" + ", " + "PLANTID" + ", "
-                        + "POINTID" + ", " + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + ", "
-                        + emissionCol + " FROM " + orlTable + " WHERE " + "POLL" + " = '" + pollutants[i] + "') "
-                        + cleanPoll + " ON (e." + "FIPS" + " = " + cleanPoll + "." + "FIPS" + " AND e."
-                        + "PLANTID" + " = " + cleanPoll + "." + "PLANTID" + " AND e." + "POINTID" + " = "
-                        + cleanPoll + "." + "POINTID" + " AND e." + "STACKID" + " = " + cleanPoll + "."
-                        + "STACKID" + " AND e." + "SEGMENT" + " = " + cleanPoll + "." + "SEGMENT" + " AND e."
-                        + "SCC" + " = " + cleanPoll + "." + "SCC" + ") ";
+                summaryTableJoinPart += "LEFT JOIN (SELECT " + "FIPS" + ", " + "PLANTID" + ", " + "POINTID" + ", "
+                        + "STACKID" + ", " + "SEGMENT" + ", " + "SCC" + ", " + emissionCol + " FROM " + orlTable
+                        + " WHERE " + "POLL" + " = '" + pollutants[i] + "') " + cleanPoll + " ON (e." + "FIPS" + " = "
+                        + cleanPoll + "." + "FIPS" + " AND e." + "PLANTID" + " = " + cleanPoll + "." + "PLANTID"
+                        + " AND e." + "POINTID" + " = " + cleanPoll + "." + "POINTID" + " AND e." + "STACKID" + " = "
+                        + cleanPoll + "." + "STACKID" + " AND e." + "SEGMENT" + " = " + cleanPoll + "." + "SEGMENT"
+                        + " AND e." + "SCC" + " = " + cleanPoll + "." + "SCC" + ") ";
             }
         }
 
@@ -199,7 +193,7 @@ public class ORLPointSummary implements SummaryTable {
                 + " = f." + "state_county_fips" + " AND " + summaryTableAndPart + "f.country_code='US')";
 
         // create the actual table
-        
+
         emissionsDatasource.query().execute(query);
 
         // drop the temp tables, if needed

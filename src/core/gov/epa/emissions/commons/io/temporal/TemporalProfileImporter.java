@@ -4,13 +4,14 @@ import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -27,7 +28,7 @@ public class TemporalProfileImporter implements Importer {
 
     private Datasource datasource;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     private TemporalFileFormatFactory metadataFactory;
 
@@ -42,7 +43,7 @@ public class TemporalProfileImporter implements Importer {
         this.file = file;
 
         metadataFactory = new TemporalFileFormatFactory(sqlType);
-        delegate = new HelpImporter();
+        delegate = new HelpImporter_REMOVE_ME();
     }
 
     public void run() throws ImporterException {
@@ -113,7 +114,8 @@ public class TemporalProfileImporter implements Importer {
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {
-        delegate.setInternalSource(file, table, tableFormat, dataset);
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
     }
 
 }

@@ -2,11 +2,13 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Comments;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
+import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
@@ -15,13 +17,12 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
 public class IDAImporter {
 
     private Datasource emissionDatasource;
-    
+
     private Datasource referenceDatasource;
 
     private Dataset dataset;
@@ -30,18 +31,17 @@ public class IDAImporter {
 
     private DatasetTypeUnit unit;
 
-    private HelpImporter delegate;
+    private HelpImporter_REMOVE_ME delegate;
 
     private File file;
 
-    
-
-    public IDAImporter(Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource, SqlDataTypes sqlDataTypes) {
+    public IDAImporter(Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource,
+            SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.emissionDatasource = emissionDatasource;
         this.referenceDatasource = referenceDatasource;
         this.sqlDataTypes = sqlDataTypes;
-        this.delegate = new HelpImporter();
+        this.delegate = new HelpImporter_REMOVE_ME();
     }
 
     public void setup(File file, IDAFileFormat fileFormat) throws ImporterException {
@@ -55,18 +55,11 @@ public class IDAImporter {
         IDATableFormat tableFormat = new IDATableFormat(fileFormat, sqlDataTypes);
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
-        unit.setInternalSource(internalSource(file,dataset.getName()));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        InternalSource internalSource = loader.internalSource(file, delegate.tableName(dataset.getName()), tableFormat);
+        unit.setInternalSource(internalSource);
 
         validateIDAFile(headerReader.comments());
-    }
-
-    private InternalSource internalSource(File file, String datasetName) {
-        InternalSource internalSource = new InternalSource();
-        internalSource.setSource(file.getAbsolutePath());
-        internalSource.setTable(delegate.tableName(datasetName));
-        internalSource.setSourceSize(file.length());
-        
-        return internalSource;
     }
 
     public void run() throws ImporterException {
@@ -87,46 +80,38 @@ public class IDAImporter {
         loadDataset(file, table, unit.tableFormat(), idaReader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, TableFormat tableFormat, List comments, Dataset dataset) {
-        delegate.setInternalSource(file, table, tableFormat, dataset);
+    private void loadDataset(File file, String table, TableFormat tableFormat, List commentsList, Dataset dataset) {
+        DatasetLoader loader = new DatasetLoader(dataset);
+        loader.internalSource(file, table, tableFormat);
         dataset.setUnits("short tons/year");
-        dataset.setDescription(delegate.descriptions(comments));
+        Comments comments = new Comments(commentsList);
+        dataset.setDescription(comments.all());
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
-        dataset.setDescription(delegate.descriptions(comments));
     }
 
     private void validateIDAFile(List comments) throws ImporterException {
         addAttributesExtractedFromComments(comments, dataset);
     }
 
-    private void addAttributesExtractedFromComments(List comments, Dataset dataset) throws ImporterException {
-        if (!(tag("#IDA", comments) != null))
+    private void addAttributesExtractedFromComments(List commentsList, Dataset dataset) throws ImporterException {
+        Comments comments = new Comments(commentsList);
+        if (!comments.have("IDA"))
             throw new ImporterException("The tag - 'IDA' is mandatory.");
 
-        String country = tag("#COUNTRY", comments);
-        if (country == null || country.length() == 0)
+        if (!comments.have("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
         // TODO:Support all countries, Currently only files from US is supported
-        if(!country.toLowerCase().equals("us"))
-            throw new ImporterException("Currently the IDA importer supports files for US not for '"+country+"'");
+        String country = comments.content("COUNTRY");
+        if (!country.toLowerCase().equals("us"))
+            throw new ImporterException("Currently the IDA importer supports files for US not for '" + country + "'");
         dataset.setCountry(country);
         dataset.setRegion(country);
 
-        String year = tag("#YEAR", comments);
-        if (year == null || year.length() == 0)
+        if (!comments.have("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
+        String year = comments.content("YEAR");
         dataset.setYear(Integer.parseInt(year));
         setStartStopDateTimes(dataset, Integer.parseInt(year));
-    }
-
-    private String tag(String tag, List comments) {
-        for (Iterator iter = comments.iterator(); iter.hasNext();) {
-            String comment = (String) iter.next();
-            if (comment.trim().startsWith(tag)) {
-                return comment.substring(tag.length()).trim();
-            }
-        }
-        return null;
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {

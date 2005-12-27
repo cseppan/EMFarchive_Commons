@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetLoader;
 import gov.epa.emissions.commons.io.SummaryTable;
-import gov.epa.emissions.commons.io.importer.HelpImporter;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -18,17 +18,15 @@ public class ORLNonRoadOnRoadSummary implements SummaryTable {
 
     private Dataset dataset;
 
-    private HelpImporter delegate;
-
     public ORLNonRoadOnRoadSummary(Datasource emissionDatasource, Datasource referenceDatasource, Dataset dataset) {
         this.emissionsDatasource = emissionDatasource;
         this.referenceDatasource = referenceDatasource;
         this.dataset = dataset;
-        this.delegate = new HelpImporter();
     }
 
     public void createSummary() throws Exception {
-        dataset.setSummarySource(delegate.summarySource(dataset.getName()));
+        DatasetLoader loader = new DatasetLoader(dataset);
+        dataset.setSummarySource(loader.summarySource());
         String orlTable = emissionsDatasource.getName() + "." + dataset.getInternalSources()[0].getTable();
         String summaryTable = emissionsDatasource.getName() + "." + dataset.getSummarySource().getTable();
 
