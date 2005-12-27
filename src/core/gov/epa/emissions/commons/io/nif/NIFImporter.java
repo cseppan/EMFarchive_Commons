@@ -12,7 +12,7 @@ import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 
@@ -33,7 +33,7 @@ public class NIFImporter {
 
     private List tableNames;
 
-    private HelpImporter_REMOVE_ME delegate;
+    private FileVerifier fileVerifier;
 
     public NIFImporter(File[] files, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource)
             throws ImporterException {
@@ -41,13 +41,13 @@ public class NIFImporter {
         this.datasetTypeUnits = datasetTypeUnits;
         this.datasource = datasource;
         this.tableNames = new ArrayList();
-        this.delegate = new HelpImporter_REMOVE_ME();
+        this.fileVerifier = new FileVerifier();
         setup(files);
     }
 
     private void setup(File[] files) throws ImporterException {
         for (int i = 0; i < files.length; i++) {
-            delegate.validateFile(files[i]);
+            fileVerifier.verifier(files[i]);
         }
         datasetTypeUnits.process();
         updateInternalSources(datasetTypeUnits.formatUnits(), dataset);
@@ -93,7 +93,8 @@ public class NIFImporter {
     private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
         String tableName = internalSource.getTable();
         String source = internalSource.getSource();
-        new DataTable(dataset).create(tableName, datasource, unit.tableFormat());
+        DataTable dataTable = new DataTable(dataset, datasource);
+        dataTable.create(tableName, unit.tableFormat());
         tableNames.add(tableName);
         try {
             doImport(source, dataset, tableName, unit.fileFormat(), unit.tableFormat());
@@ -141,9 +142,9 @@ public class NIFImporter {
     }
 
     private void dropTables(List tableNames) throws ImporterException {
-        DataTable dataTable = new DataTable(dataset);
+        DataTable dataTable = new DataTable(dataset, datasource);
         for (int i = 0; i < tableNames.size(); i++) {
-            dataTable.drop(((String) tableNames.get(i)), datasource);
+            dataTable.drop((String) tableNames.get(i));
         }
     }
 

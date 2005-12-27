@@ -9,7 +9,7 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
-import gov.epa.emissions.commons.io.importer.HelpImporter_REMOVE_ME;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
@@ -32,9 +32,11 @@ public class IDAImporter {
 
     private DatasetTypeUnit unit;
 
-    private HelpImporter_REMOVE_ME delegate;
+    private FileVerifier fileVerifier;
 
     private File file;
+
+    private DataTable dataTable;
 
     public IDAImporter(Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource,
             SqlDataTypes sqlDataTypes) {
@@ -42,11 +44,11 @@ public class IDAImporter {
         this.emissionDatasource = emissionDatasource;
         this.referenceDatasource = referenceDatasource;
         this.sqlDataTypes = sqlDataTypes;
-        this.delegate = new HelpImporter_REMOVE_ME();
+        this.fileVerifier = new FileVerifier();
     }
 
     public void setup(File file, IDAFileFormat fileFormat) throws ImporterException {
-        delegate.validateFile(file);
+        fileVerifier.verifier(file);
         this.file = file;
         IDAHeaderReader headerReader = new IDAHeaderReader(file);
         headerReader.read();
@@ -57,20 +59,20 @@ public class IDAImporter {
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         DatasetLoader loader = new DatasetLoader(dataset);
-        InternalSource internalSource = loader.internalSource(file, new DataTable(dataset).tableName(), tableFormat);
+        
+        dataTable = new DataTable(dataset, emissionDatasource);
+        InternalSource internalSource = loader.internalSource(file, dataTable.name(), tableFormat);
         unit.setInternalSource(internalSource);
 
         validateIDAFile(headerReader.comments());
     }
 
     public void run() throws ImporterException {
-        String table = unit.getInternalSource().getTable();
-        DataTable dataTable = new DataTable(dataset);
-        dataTable.create(table, emissionDatasource, unit.tableFormat());
+        dataTable.create(unit.tableFormat());
         try {
-            doImport(unit, dataset, table);
+            doImport(unit, dataset, dataTable.name());
         } catch (Exception e) {
-            dataTable.drop(table, emissionDatasource);
+            dataTable.drop();
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }

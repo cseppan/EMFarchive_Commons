@@ -11,11 +11,14 @@ public class DataTable {
 
     private Dataset dataset;
 
-    public DataTable(Dataset dataset) {
+    private Datasource datasource;
+
+    public DataTable(Dataset dataset, Datasource datasource) {
         this.dataset = dataset;
+        this.datasource = datasource;
     }
 
-    public String tableName() {
+    public String name() {
         String result = dataset.getName();
 
         for (int i = 0; i < result.length(); i++) {
@@ -32,7 +35,7 @@ public class DataTable {
         return result.trim().replaceAll(" ", "_");
     }
 
-    public void create(String table, Datasource datasource, TableFormat tableFormat) throws ImporterException {
+    public void create(String table, TableFormat tableFormat) throws ImporterException {
         TableDefinition tableDefinition = datasource.tableDefinition();
         try {
             tableDefinition.createTable(table, tableFormat.cols());
@@ -41,7 +44,11 @@ public class DataTable {
         }
     }
 
-    public void drop(String table, Datasource datasource) throws ImporterException {
+    public void create(TableFormat tableFormat) throws ImporterException {
+        create(name(), tableFormat);
+    }
+
+    public void drop(String table) throws ImporterException {
         try {
             TableDefinition def = datasource.tableDefinition();
             def.dropTable(table);
@@ -49,6 +56,10 @@ public class DataTable {
             throw new ImporterException(
                     "could not drop table " + table + " after encountering error importing dataset", e);
         }
+    }
+
+    public void drop() throws ImporterException {
+        drop(name());
     }
 
 }

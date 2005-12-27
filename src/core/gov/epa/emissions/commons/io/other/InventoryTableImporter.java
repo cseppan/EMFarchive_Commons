@@ -42,14 +42,14 @@ public class InventoryTableImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        DataTable dataTable = new DataTable(dataset);
-        String table = dataTable.tableName();
-        dataTable.create(table, datasource, formatUnit.tableFormat());
+        DataTable dataTable = new DataTable(dataset, datasource);
+        String table = dataTable.name();
+        dataTable.create(formatUnit.tableFormat());
 
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
-            dataTable.drop(table, datasource);
+            dataTable.drop();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName());
         }

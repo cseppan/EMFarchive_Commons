@@ -42,7 +42,7 @@ public class DaySpecPointInventoryImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        String table = new DataTable(dataset).tableName();
+        String table = new DataTable(dataset, datasource).name();
 
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());

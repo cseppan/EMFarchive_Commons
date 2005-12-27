@@ -51,7 +51,7 @@ public class CountryStateCountyDataImporter implements Importer {
                 FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
 
-                new DataTable(dataset).create(table(header), datasource, unit.tableFormat());
+                new DataTable(dataset, datasource).create(table(header), unit.tableFormat());
                 doImport(fileReader, dataset, unit, header);
             }
         } catch (Exception e) {

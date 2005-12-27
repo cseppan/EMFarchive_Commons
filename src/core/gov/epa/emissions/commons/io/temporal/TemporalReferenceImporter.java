@@ -42,13 +42,12 @@ public class TemporalReferenceImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        DataTable dataTable = new DataTable(dataset);
-        String table = dataTable.tableName();
-        dataTable.create(table, datasource, unit.tableFormat());
+        DataTable dataTable = new DataTable(dataset, datasource);
+        dataTable.create(unit.tableFormat());
         try {
-            doImport(file, dataset, table, unit.tableFormat());
+            doImport(file, dataset, dataTable.name(), unit.tableFormat());
         } catch (Exception e) {
-            dataTable.drop(table, datasource);
+            dataTable.drop();
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
 
         }

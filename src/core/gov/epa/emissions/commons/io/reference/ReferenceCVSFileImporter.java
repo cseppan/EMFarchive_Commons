@@ -58,7 +58,7 @@ public class ReferenceCVSFileImporter implements Importer {
         try {
             doImport();
         } catch (Exception e) {
-            new DataTable(dataset).drop(tableName, datasource);
+            new DataTable(dataset, datasource).drop(tableName);
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
         }
     }

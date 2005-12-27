@@ -44,9 +44,8 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
         
-        DataTable dataTable = new DataTable(dataset);
-        String table = dataTable.tableName();
-        dataTable.create(table, datasource, formatUnit.tableFormat());
+        DataTable dataTable = new DataTable(dataset, datasource);
+        dataTable.create(formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {

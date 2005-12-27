@@ -35,7 +35,8 @@ public class LineImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        String table = new DataTable(dataset).tableName();
+        DataTable dataTable = new DataTable(dataset, datasource);
+        String table = dataTable.name();
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
