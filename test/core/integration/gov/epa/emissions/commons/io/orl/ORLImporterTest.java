@@ -58,8 +58,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
-        File file = new File("test/data/orl/nc", "small-point.txt");
-        ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        ORLPointImporter importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset,
+                datasource, sqlDataTypes);
         importer.run();
 
         int rows = countRecords();
@@ -84,16 +85,18 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleExtendedPointFile() throws Exception {
-        File file = new File("test/data/orl/extended", "orl-extended-point.txt");
-        ORLPointImporter importer = new ORLPointImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/extended");
+        ORLPointImporter importer = new ORLPointImporter(folder, new String[] { "orl-extended-point.txt" }, dataset,
+                datasource, sqlDataTypes);
         importer.run();
 
         assertEquals(193, countRecords());
     }
 
     public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonpoint.txt");
-        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+                datasource, sqlDataTypes);
         importer.run();
 
         assertEquals(6, countRecords());
@@ -158,15 +161,17 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleExtendedNonPointFile() throws Exception {
-        File file = new File("test/data/orl/extended", "orl-extended-nonpoint.txt");
-        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/extended");
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "orl-extended-nonpoint.txt" },
+                dataset, datasource, sqlDataTypes);
         importer.run();
         assertEquals(194, countRecords());
     }
 
     public void testShouldImportNonPointFileWithVaryingCols() throws Exception {
-        File file = new File("test/data/orl/nc", "varying-cols-nonpoint.txt");
-        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "varying-cols-nonpoint.txt" },
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
         TableReader tableReader = tableReader(datasource);
@@ -188,8 +193,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonpoint.txt");
-        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+                datasource, sqlDataTypes);
         importer.run();
 
         InternalSource[] sources = dataset.getInternalSources();
@@ -206,6 +212,7 @@ public class ORLImporterTest extends PersistenceTestCase {
             assertEquals(expectedCols[i], actualCols[i]);
         }
 
+        File file = new File(folder, "small-nonpoint.txt");
         assertEquals(file.getAbsolutePath(), source.getSource());
         assertEquals(file.length(), source.getSourceSize());
     }
@@ -243,8 +250,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonroad.txt");
-        ORLNonRoadImporter importer = new ORLNonRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset,
+                datasource, sqlDataTypes);
         importer.run();
 
         int rows = countRecords();
@@ -264,16 +272,18 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleExtendedNonRoadFile() throws Exception {
-        File file = new File("test/data/orl/extended", "orl-extended-nonroad.txt");
-        ORLNonRoadImporter importer = new ORLNonRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/extended");
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(folder, new String[] { "orl-extended-nonroad.txt" },
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
         assertEquals(194, countRecords());
     }
 
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         int rows = countRecords();
@@ -293,8 +303,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         // assert
@@ -304,8 +315,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadStartStopDateTimeIntoDatasetOnImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         // assert
@@ -319,10 +331,11 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertEquals(endCal.getTime(), end);
     }
 
-    //FIXME: test 'pauses' indefinitely
+    // FIXME: test 'pauses' indefinitely
     public void FIXME_testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         // assert
@@ -331,8 +344,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         // assert

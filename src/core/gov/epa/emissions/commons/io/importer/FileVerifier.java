@@ -4,7 +4,7 @@ import java.io.File;
 
 public class FileVerifier {
 
-    public void verifier(File file) throws ImporterException {
+    public void exists(File file) throws ImporterException {
         if (!file.exists()) {
             throw new ImporterException("The file '" + file + "' does not exist");
         }

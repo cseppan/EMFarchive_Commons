@@ -48,8 +48,9 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportOnRoad() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
@@ -89,8 +90,9 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportNonRoad() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-nonroad.txt");
-        Importer importer = new ORLNonRoadImporter(importFile, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         Exporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
@@ -109,8 +111,9 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportNonPoint() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-nonpoint.txt");
-        Importer importer = new ORLNonPointImporter(importFile, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         Exporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
@@ -131,8 +134,9 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportPoint() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-point.txt");
-        Importer importer = new ORLPointImporter(importFile, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
 
         Exporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);

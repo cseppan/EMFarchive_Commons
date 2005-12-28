@@ -17,11 +17,25 @@ public class ORLPointImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public ORLPointImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        validateFile(filePatterns);
+        File file = new File(folder, filePatterns[0]);
+
         FileFormatWithOptionalCols fileFormat = new ORLPointFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
 
         create(file, dataset, datasource, fileFormat, tableFormat);
+    }
+
+    private void validateFile(String[] filePatterns) throws ImporterException {
+        if (filePatterns.length > 1) {
+            throw new ImporterException("Too many parameters for importer: ORL Non Point "
+                    + " requires only one file pattern or filename");
+        }
+        if (filePatterns[0].length() == 0) {
+            throw new ImporterException("ORL Non Point importer requires a filename");
+        }
     }
 
     public ORLPointImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,

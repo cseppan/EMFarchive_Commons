@@ -44,11 +44,14 @@ public class ORLPointSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
-        File file = new File("test/data/orl/nc", "small-point.txt");
-        Importer importer = new ORLPointImporter(file, dataset, emissionDatasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset,
+                emissionDatasource, sqlDataTypes);
         importer.run();
+
         SummaryTable summary = new ORLPointSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
+
         assertEquals(10, countRecords("test"));
         assertEquals(1, countRecords("test_summary"));
     }

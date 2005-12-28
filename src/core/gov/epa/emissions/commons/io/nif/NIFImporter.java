@@ -47,7 +47,7 @@ public class NIFImporter {
 
     private void setup(File[] files) throws ImporterException {
         for (int i = 0; i < files.length; i++) {
-            fileVerifier.verifier(files[i]);
+            fileVerifier.exists(files[i]);
         }
         datasetTypeUnits.process();
         updateInternalSources(datasetTypeUnits.formatUnits(), dataset);

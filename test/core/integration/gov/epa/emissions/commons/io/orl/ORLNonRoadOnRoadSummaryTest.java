@@ -44,21 +44,27 @@ public class ORLNonRoadOnRoadSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleNonRoadAndCreateSummary() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonroad.txt");
-        Importer importer = new ORLNonRoadImporter(file, dataset, emissionDatasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset,
+                emissionDatasource, sqlDataTypes);
         importer.run();
+
         SummaryTable summary = new ORLNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
+
         assertEquals(16, countRecords("test"));
         assertEquals(1, countRecords("test_summary"));
     }
 
     public void testShouldImportASmallAndSimpleOnRoadAndCreateSummary() throws Exception {
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(file, dataset, emissionDatasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset,
+                emissionDatasource, sqlDataTypes);
         importer.run();
+
         SummaryTable summary = new ORLNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
+
         assertEquals(18, countRecords("test"));
         assertEquals(1, countRecords("test_summary"));
     }

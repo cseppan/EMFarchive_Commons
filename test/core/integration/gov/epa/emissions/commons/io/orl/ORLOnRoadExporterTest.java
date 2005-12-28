@@ -47,11 +47,12 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
     }
 
     private void doImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer importer = new ORLOnRoadImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+                sqlDataTypes);
         importer.run();
     }
-    
+
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
@@ -68,7 +69,7 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         assertEquals(headers(dataset.getDescription()).size(), lines.size());
     }
 
-    //FIXME: ORL import: convert -9 to null?? export convert null -> -9 or emptyspace?
+    // FIXME: ORL import: convert -9 to null?? export convert null -> -9 or emptyspace?
     public void testShouldExportTableRowsAsRecords() throws Exception {
         File file = File.createTempFile("onroad", ".orl");
         file.deleteOnExit();
