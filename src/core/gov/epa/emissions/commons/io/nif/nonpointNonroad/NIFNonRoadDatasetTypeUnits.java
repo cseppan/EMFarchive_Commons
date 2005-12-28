@@ -3,10 +3,10 @@ package gov.epa.emissions.commons.io.nif.nonpointNonroad;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
 public abstract class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
 

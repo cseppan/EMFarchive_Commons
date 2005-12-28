@@ -3,11 +3,11 @@ package gov.epa.emissions.commons.io.nif.point;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.NIFImportHelper;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
-import gov.epa.emissions.commons.io.temporal.FixedColsTableFormat;
 
 import java.io.File;
 

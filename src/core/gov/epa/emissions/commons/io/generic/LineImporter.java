@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataTable;
@@ -30,7 +31,7 @@ public class LineImporter implements Importer {
         this.dataset = dataset;
         this.datasource = datasource;
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 

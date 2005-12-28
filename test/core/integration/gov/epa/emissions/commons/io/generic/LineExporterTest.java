@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
@@ -36,7 +37,7 @@ public class LineExporterTest extends PersistenceTestCase {
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new LineTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         
         DataTable dataTable = new DataTable(dataset, datasource);
         FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
