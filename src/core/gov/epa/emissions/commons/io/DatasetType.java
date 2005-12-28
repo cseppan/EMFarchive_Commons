@@ -17,18 +17,14 @@ public class DatasetType implements Serializable {
 
     private int maxfiles;
 
-    // FIXME: add the min/max cols as cols in table
-    private int minColumns;
-
-    private int maxColumns;
-
     private boolean external;
 
     private List keywordsList;
 
     private String importerClassName;
+
     private String exporterClassName;
-    
+
     public String getExporterClassName() {
         return exporterClassName;
     }
@@ -106,23 +102,6 @@ public class DatasetType implements Serializable {
         return (other instanceof DatasetType && ((DatasetType) other).name.equals(name));
     }
 
-    // TODO: do the min/max cols apply to all Dataset Types ? or just ORL ?
-    public void setMinColumns(int minCols) {
-        this.minColumns = minCols;
-    }
-
-    public void setMaxColumns(int maxCols) {
-        this.maxColumns = maxCols;
-    }
-
-    public int getMinColumns() {
-        return minColumns;
-    }
-
-    public int getMaxColumns() {
-        return maxColumns;
-    }
-
     public boolean isExternal() {
         return external;
     }
@@ -143,5 +122,5 @@ public class DatasetType implements Serializable {
         keywordsList.clear();
         keywordsList.addAll(Arrays.asList(keywords));
     }
- 
+
 }
