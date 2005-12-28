@@ -71,7 +71,8 @@ public class ORLExportersTest extends PersistenceTestCase {
     public void testShouldExportOnRoadVersionZero() throws Exception {
         File importFile = new File("test/data/orl/nc", "small-onroad.txt");
         DataFormatFactory formatFactory = new VersionedDataFormatFactory(0);
-        Importer importer = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes, formatFactory);
+        Importer importer = new ORLOnRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
+                dataset, datasource, sqlDataTypes, formatFactory);
         importer.run();
 
         Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes, formatFactory);

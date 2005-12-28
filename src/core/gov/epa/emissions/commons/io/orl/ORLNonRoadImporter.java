@@ -19,37 +19,24 @@ public class ORLNonRoadImporter implements Importer {
 
     public ORLNonRoadImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        validateFile(filePatterns);
-        File file = new File(folder, filePatterns[0]);
-
         FileFormatWithOptionalCols fileFormat = new ORLNonRoadFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
 
-        create(file, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filePatterns, dataset, datasource, fileFormat, tableFormat);
     }
 
-    private void validateFile(String[] filePatterns) throws ImporterException {
-        if (filePatterns.length > 1) {
-            throw new ImporterException("Too many parameters for importer: ORL NonRoad "
-                    + " requires only one file pattern or filename");
-        }
-        if (filePatterns[0].length() == 0) {
-            throw new ImporterException("ORL NonRoad importer requires a filename");
-        }
-    }
-
-    public ORLNonRoadImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
-            DataFormatFactory factory) {
+    public ORLNonRoadImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new ORLNonRoadFileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
 
-        create(file, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filePatterns, dataset, datasource, fileFormat, tableFormat);
     }
 
-    private void create(File file, Dataset dataset, Datasource datasource, FileFormatWithOptionalCols fileFormat,
-            TableFormat tableFormat) {
+    private void create(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+            FileFormatWithOptionalCols fileFormat, TableFormat tableFormat) throws ImporterException {
         DatasetTypeUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate = new ORLImporter(file, dataset, formatUnit, datasource);
+        delegate = new ORLImporter(folder, filePatterns, dataset, formatUnit, datasource);
     }
 
     public void run() throws ImporterException {

@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
@@ -31,11 +32,24 @@ public class ORLImporter {
 
     private FormatUnit formatUnit;
 
-    public ORLImporter(File file, Dataset dataset, FormatUnit formatUnit, Datasource datasource) {
+    public ORLImporter(File folder, String[] filePatterns, Dataset dataset, DatasetTypeUnit formatUnit,
+            Datasource datasource) throws ImporterException {
+        validateFile(filePatterns);
+        this.file = new File(folder, filePatterns[0]);
+
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
-        this.file = file;
+    }
+
+    // FIXME: move to FileVerifier
+    private void validateFile(String[] filePatterns) throws ImporterException {
+        if (filePatterns.length > 1) {
+            throw new ImporterException("Too many parameters for importer. Requires only one file.");
+        }
+        if (filePatterns[0].length() == 0) {
+            throw new ImporterException("Importer requires a filename");
+        }
     }
 
     public void run() throws ImporterException {
@@ -45,8 +59,8 @@ public class ORLImporter {
         dataTable.create(formatUnit.tableFormat());
 
         try {
-            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat(),
-                    formatUnit.tableFormat());
+            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
+                    .tableFormat());
         } catch (Exception e) {
             dataTable.drop();
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());

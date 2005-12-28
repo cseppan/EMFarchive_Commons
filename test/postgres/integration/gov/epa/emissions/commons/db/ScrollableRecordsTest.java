@@ -33,8 +33,8 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
         File file = new File("test/data/orl/nc", "arinv.nonpoint.nti99_NC.txt");
-        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, emissions(), dataTypes(),
-                new VersionedDataFormatFactory(0));
+        ORLNonPointImporter importer = new ORLNonPointImporter(file.getParentFile(), new String[] { file.getName() },
+                dataset, emissions(), dataTypes(), new VersionedDataFormatFactory(0));
         importer.run();
     }
 

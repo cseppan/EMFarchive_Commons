@@ -69,8 +69,8 @@ public class ORLImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAndSimpleVersionedPointFile() throws Exception {
         File file = new File("test/data/orl/nc", "small-point.txt");
-        ORLPointImporter orlImporter = new ORLPointImporter(file, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+        ORLPointImporter orlImporter = new ORLPointImporter(file.getParentFile(), new String[] { file.getName() },
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, datasource);
         importer.run();
 
@@ -112,10 +112,10 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleVersionedNonPointFile() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonpoint.txt");
+        File folder = new File("test/data/orl/nc");
 
-        ORLNonPointImporter orlImporter = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+        ORLNonPointImporter orlImporter = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" },
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, datasource);
         importer.run();
 
@@ -218,9 +218,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadVersionedInternalSourceIntoDatasetOnImport() throws Exception {
-        File file = new File("test/data/orl/nc", "small-nonpoint.txt");
-        ORLNonPointImporter importer = new ORLNonPointImporter(file, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+        File folder = new File("test/data/orl/nc");
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
         importer.run();
 
         InternalSource[] sources = dataset.getInternalSources();
@@ -237,6 +237,7 @@ public class ORLImporterTest extends PersistenceTestCase {
             assertEquals(expectedCols[i], actualCols[i]);
         }
 
+        File file = new File(folder, "small-nonpoint.txt");
         assertEquals(file.getAbsolutePath(), source.getSource());
         assertEquals(file.length(), source.getSourceSize());
     }
@@ -261,8 +262,8 @@ public class ORLImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAndSimpleVersionedNonRoadFile() throws Exception {
         File file = new File("test/data/orl/nc", "small-nonroad.txt");
-        ORLNonRoadImporter orlImporter = new ORLNonRoadImporter(file, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+        ORLNonRoadImporter orlImporter = new ORLNonRoadImporter(file.getParentFile(), new String[] { file.getName() },
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, datasource);
         importer.run();
 
@@ -291,9 +292,9 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimpleVersionedOnRoadFile() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-onroad.txt");
-        Importer orlImporter = new ORLOnRoadImporter(importFile, dataset, datasource, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+        File file = new File("test/data/orl/nc", "small-onroad.txt");
+        Importer orlImporter = new ORLOnRoadImporter(file.getParentFile(), new String[] { file.getName() }, dataset,
+                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, datasource);
         importer.run();
 
