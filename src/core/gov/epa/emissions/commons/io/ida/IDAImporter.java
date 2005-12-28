@@ -48,7 +48,7 @@ public class IDAImporter {
     }
 
     public void setup(File file, IDAFileFormat fileFormat) throws ImporterException {
-        fileVerifier.exists(file);
+        fileVerifier.shouldExist(file);
         this.file = file;
         IDAHeaderReader headerReader = new IDAHeaderReader(file);
         headerReader.read();

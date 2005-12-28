@@ -10,6 +10,7 @@ import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -34,22 +35,12 @@ public class ORLImporter {
 
     public ORLImporter(File folder, String[] filePatterns, Dataset dataset, DatasetTypeUnit formatUnit,
             Datasource datasource) throws ImporterException {
-        validateFile(filePatterns);
+        new FileVerifier().shouldHaveOneFile(filePatterns);
         this.file = new File(folder, filePatterns[0]);
 
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
-    }
-
-    // FIXME: move to FileVerifier
-    private void validateFile(String[] filePatterns) throws ImporterException {
-        if (filePatterns.length > 1) {
-            throw new ImporterException("Too many parameters for importer. Requires only one file.");
-        }
-        if (filePatterns[0].length() == 0) {
-            throw new ImporterException("Importer requires a filename");
-        }
     }
 
     public void run() throws ImporterException {
