@@ -11,6 +11,7 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -35,13 +36,16 @@ public class TemporalProfileImporter implements Importer {
 
     private File file;
 
-    public TemporalProfileImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType) {
-        this.datasource = datasource;
-        this.sqlType = sqlType;
-        this.dataset = dataset;
-        this.file = file;
+    public TemporalProfileImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        new FileVerifier().shouldHaveOneFile(filePatterns);
+        this.file = new File(folder, filePatterns[0]);
 
-        metadataFactory = new TemporalFileFormatFactory(sqlType);
+        this.datasource = datasource;
+        this.sqlType = sqlDataTypes;
+        this.dataset = dataset;
+
+        metadataFactory = new TemporalFileFormatFactory(sqlDataTypes);
     }
 
     public void run() throws ImporterException {

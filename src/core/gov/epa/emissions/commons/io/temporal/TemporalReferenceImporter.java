@@ -13,6 +13,7 @@ import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -32,8 +33,10 @@ public class TemporalReferenceImporter implements Importer {
 
     private FormatUnit unit;
 
-    public TemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.file = file;
+    public TemporalReferenceImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        new FileVerifier().shouldHaveOneFile(filePatterns);
+        this.file = new File(folder, filePatterns[0]);
         this.dataset = dataset;
         this.datasource = datasource;
 

@@ -42,7 +42,8 @@ public class TemporalProfileImporterTest extends PersistenceTestCase {
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
 
-        TemporalProfileImporter importer = new TemporalProfileImporter(file, dataset, datasource, typeMapper);
+        TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
+                .getName() }, dataset, datasource, typeMapper);
         importer.run();
 
         // assert

@@ -40,7 +40,8 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
 
     public void testShouldImportReferenceFile() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
-        TemporalReferenceImporter importer = new TemporalReferenceImporter(file, dataset, datasource, sqlDataTypes);
+        TemporalReferenceImporter importer = new TemporalReferenceImporter(file.getParentFile(), new String[] { file
+                .getName() }, dataset, datasource, sqlDataTypes);
         importer.run();
 
         int rows = countRecords();
