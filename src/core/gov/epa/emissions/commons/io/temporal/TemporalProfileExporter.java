@@ -4,10 +4,13 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,12 +26,20 @@ public class TemporalProfileExporter implements Exporter {
 
     private Datasource datasource;
 
-    private TemporalFileFormatFactory factory;
+    private TemporalFileFormatFactory fileFormatFactory;
+
+    private DataFormatFactory dataFormatFactory;
 
     public TemporalProfileExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        this(dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+    }
+
+    public TemporalProfileExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+            DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
         this.datasource = datasource;
-        factory = new TemporalFileFormatFactory(sqlDataTypes);
+        this.fileFormatFactory = new TemporalFileFormatFactory(sqlDataTypes);
+        this.dataFormatFactory = dataFormatFactory;
     }
 
     public void export(File file) throws ExporterException {
@@ -71,8 +82,9 @@ public class TemporalProfileExporter implements Exporter {
         for (int i = 0; i < sources.length; i++) {
             String table = sources[i].getTable();
             String qualifiedTable = datasource.getName() + "." + table;
-            ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable);
-            Column[] cols = factory.get(table.replace('_', ' ')).cols();
+            ExportStatement exportStatement = dataFormatFactory.exportStatement();
+            ResultSet data = q.executeQuery(exportStatement.generate(qualifiedTable));
+            Column[] cols = fileFormatFactory.get(table.replace('_', ' ')).cols();
             writer.println("/" + table + "/");
 
             while (data.next())

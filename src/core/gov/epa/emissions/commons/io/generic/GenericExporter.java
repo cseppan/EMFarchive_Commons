@@ -3,11 +3,14 @@ package gov.epa.emissions.commons.io.generic;
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,19 +27,28 @@ public class GenericExporter implements Exporter {
     private Datasource datasource;
 
     private FileFormat fileFormat;
-    
+
     private String delimiter;
-    
+
     private boolean formatted;
-    
+
+    private DataFormatFactory dataFormatFactory;
+
     public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
+        this(dataset, datasource, fileFormat, new FixedDataFormatFactory());
+    }
+
+    public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat,
+            DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
         this.datasource = datasource;
         this.fileFormat = fileFormat;
+        this.dataFormatFactory = dataFormatFactory;
+
         setDelimiter(";");
         setFormatted(false);
     }
-    
+
     public void export(File file) throws ExporterException {
         PrintWriter writer = null;
         try {
@@ -62,9 +74,9 @@ public class GenericExporter implements Exporter {
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {
         String header = dataset.getDescription();
 
-        if(header != null){
+        if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
-            while (st.hasMoreTokens()){
+            while (st.hasMoreTokens()) {
                 writer.print("#" + st.nextToken());
             }
         }
@@ -75,7 +87,8 @@ public class GenericExporter implements Exporter {
         InternalSource source = dataset.getInternalSources()[0];
 
         String qualifiedTable = datasource.getName() + "." + source.getTable();
-        ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable);
+        ExportStatement export = dataFormatFactory.exportStatement();
+        ResultSet data = q.executeQuery(export.generate(qualifiedTable));
         Column[] cols = fileFormat.cols();
         while (data.next())
             writeRecord(cols, data, writer);
@@ -83,21 +96,21 @@ public class GenericExporter implements Exporter {
 
     protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
-            if(formatted)
+            if (formatted)
                 writer.print(cols[i].format(data));
             else
                 writer.print(cols[i].format(data).trim());
-            
+
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
         }
         writer.println();
     }
-    
+
     public void setDelimiter(String del) {
         this.delimiter = del;
     }
-    
+
     public void setFormatted(boolean formatted) {
         this.formatted = formatted;
     }

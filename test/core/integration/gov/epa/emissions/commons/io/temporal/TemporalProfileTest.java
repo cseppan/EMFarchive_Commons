@@ -12,7 +12,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import java.io.File;
 import java.util.Random;
 
-public class TemporalProfileImporterTest extends PersistenceTestCase {
+public class TemporalProfileTest extends PersistenceTestCase {
 
     private Datasource datasource;
 
