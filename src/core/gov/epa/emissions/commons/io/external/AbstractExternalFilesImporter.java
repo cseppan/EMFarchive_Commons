@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.external;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.ExternalSource;
@@ -28,6 +29,11 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
     public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataType) throws ImporterException {
+        this(folder, filePatterns, dataset, datasource, sqlDataType, null);
+    }
+
+    public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         this.dataset = dataset;
         init(folder, filePatterns, dataset);
         importerName = "Abstract External Files Importer";
@@ -35,7 +41,7 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
     public void run() {
         ExternalSource extSrc = null;
-        
+
         for (int i = 0; i < files.length; i++) {
             extSrc = new ExternalSource(files[i].getAbsolutePath());
             extSrc.setListindex(i);

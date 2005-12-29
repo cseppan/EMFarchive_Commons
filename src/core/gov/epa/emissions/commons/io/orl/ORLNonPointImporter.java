@@ -18,20 +18,20 @@ public class ORLNonPointImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLNonPointImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public ORLNonPointImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = fileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat(sqlDataTypes), sqlDataTypes);
 
-        create(folder, filePatterns, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
     }
 
-    public ORLNonPointImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public ORLNonPointImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = fileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
 
-        create(folder, filePatterns, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
     }
 
     private FileFormatWithOptionalCols fileFormat(SqlDataTypes sqlDataTypes, FillDefaultValues filler) {
