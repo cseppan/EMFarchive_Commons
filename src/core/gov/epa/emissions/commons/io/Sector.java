@@ -14,9 +14,9 @@ public class Sector implements Serializable {
     private String name;
 
     private String description;
-    
+
     private String username;
-    
+
     private Date lockDate;
 
     private List sectorCriteria;
@@ -88,7 +88,11 @@ public class Sector implements Serializable {
         this.username = username;
     }
 
-    public boolean isLockedByUser(User user){
+    public boolean isLocked(User user) {
         return (user.getFullName().equals(this.username));
+    }
+
+    public boolean isLocked() {
+        return username != null && lockDate != null;
     }
 }
