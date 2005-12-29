@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.security.User;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,4 +88,7 @@ public class Sector implements Serializable {
         this.username = username;
     }
 
+    public boolean isLockedByUser(User user){
+        return (user.getFullName().equals(this.username));
+    }
 }
