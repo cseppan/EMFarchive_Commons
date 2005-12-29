@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,20 +52,33 @@ public class FixedColumnsDataLoader implements DataLoader {
         }
     }
 
-    private String[] data(Dataset dataset, Record record) {
+    private String[] data(Dataset dataset, Record record){
         List data = new ArrayList();
-        data.add("" + dataset.getDatasetid());
-        for (int i = 0; i < record.size(); i++) {
-            data.add(record.token(i));
-        }
-        addToEnd(data);
+  
+        if (tableFormat instanceof VersionedTableFormat)
+            addVersionData(data, dataset.getDatasetid(), 0);
+        else
+            data.add("" + dataset.getDatasetid());
+  
+        data.addAll(record.tokens());
+
+        massageNullMarkers(data);
+  
         return (String[]) data.toArray(new String[0]);
     }
 
-    private void addToEnd(List data) {
-        int remain = tableFormat.cols().length - data.size();
-        for (int i = 0; i < remain; i++) {
-            data.add("");
+    private void addVersionData(List data, long datasetId, int version) {
+        data.add(0, "");// record id
+        data.add(1, datasetId + "");
+        data.add(2, version + "");// version
+        data.add(3, "");// delete versions
+    }
+
+    private void massageNullMarkers(List data) {
+        for (int i = 0; i < data.size(); i++) {
+            String element = (String) data.get(i);
+            if (element.equals("-9"))// NULL marker
+                data.set(i, "");
         }
     }
 

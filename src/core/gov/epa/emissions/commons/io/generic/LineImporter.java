@@ -2,14 +2,17 @@ package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -27,17 +30,30 @@ public class LineImporter implements Importer {
     private FormatUnit formatUnit;
 
     public LineImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
+        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        create(file, dataset, datasource, fileFormat, tableFormat);
+    }
+
+    public LineImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+            DataFormatFactory factory) {
+        FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
+        TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
+        create(file, dataset, datasource, fileFormat, tableFormat);
+    }
+    
+    private void create(File file, Dataset dataset, Datasource datasource, FileFormat fileFormat,
+            TableFormat tableFormat) {
         this.file = file;
         this.dataset = dataset;
         this.datasource = datasource;
-        FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
+        this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
-
+    
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
         String table = dataTable.name();
+        dataTable.create(formatUnit.tableFormat());
         try {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -47,7 +63,7 @@ public class LineImporter implements Importer {
     }
 
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        LineLoader loader = new LineLoader(datasource, tableFormat);
+        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         Reader reader = new LineReader(file);
 
         loader.load(reader, dataset, table);

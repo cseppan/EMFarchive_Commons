@@ -6,13 +6,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnit;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.File;
@@ -35,13 +29,6 @@ public class LineExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-
-        FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        
-        DataTable dataTable = new DataTable(dataset, datasource);
-        FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        dataTable.create(formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -55,11 +42,10 @@ public class LineExporterTest extends PersistenceTestCase {
         importer.run();
 
         LineExporter exporter = new LineExporter(dataset, datasource, new LineFileFormat(sqlDataTypes));
-        File file = new File("test/data/orl/nc", "lineexporter.txt");
+        File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         // FIXME: run the comparison tool, look at other exporter test
         assertEquals(22, countRecords());
-        file.delete();
     }
 
     private int countRecords() {
