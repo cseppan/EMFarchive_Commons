@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class DatasetType implements Serializable {
+public class DatasetType implements Serializable, Lockable {
 
     private long datasettypeid;
 
@@ -105,7 +105,7 @@ public class DatasetType implements Serializable {
     }
 
     public boolean equals(Object other) {
-        return (other instanceof DatasetType && ((DatasetType) other).name.equals(name));
+        return (other instanceof DatasetType && ((DatasetType) other).datasettypeid == datasettypeid);
     }
 
     public boolean isExternal() {

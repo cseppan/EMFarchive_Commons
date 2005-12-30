@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class Sector implements Serializable {
+public class Sector implements Serializable, Lockable {
     private long id;
 
     private String name;
@@ -93,5 +93,13 @@ public class Sector implements Serializable {
 
     public boolean isLocked() {
         return lock.isLocked();
+    }
+
+    public boolean equals(Object other) {
+        return (other instanceof Sector) && (((Sector) other).id == id);
+    }
+
+    public int hashCode() {
+        return (int) id;
     }
 }
