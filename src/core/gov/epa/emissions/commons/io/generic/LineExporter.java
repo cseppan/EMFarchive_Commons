@@ -1,67 +1,32 @@
 package gov.epa.emissions.commons.io.generic;
 
-import gov.epa.emissions.commons.db.DataQuery;
-import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.ExporterException;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.InternalSource;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LineExporter {
-    private Dataset dataset;
+import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DataFormatFactory;
+import gov.epa.emissions.commons.io.Dataset;
 
-    private Datasource datasource;
-
-    private FileFormat fileFormat;
-
-    public LineExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
-        this.dataset = dataset;
-        this.datasource = datasource;
-        this.fileFormat = fileFormat;
+public class LineExporter extends GenericExporter {
+    public LineExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        super(dataset, datasource, new LineFileFormat(sqlDataTypes));
     }
 
-    public void export(File file) throws ExporterException {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-        } catch (IOException e) {
-            throw new ExporterException("could not open file - " + file + " for writing");
-        }
-
-        write(file, writer);
+    public LineExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+            DataFormatFactory formatFactory) {
+        super(dataset, datasource, new LineFileFormat(sqlDataTypes), formatFactory);
+    }
+    
+    protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        String line = data.getString(cols[0].name());
+        line.replace('_', '-');
+        if(line.equalsIgnoreCase("-9"))
+            writer.println();
+        else
+            writer.println(line);
     }
 
-    private void write(File file, PrintWriter writer) throws ExporterException {
-        try {
-            writeData(writer, dataset, datasource);
-        } catch (SQLException e) {
-            throw new ExporterException("could not export file - " + file, e);
-        } finally {
-            writer.close();
-        }
-    }
-
-    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
-        DataQuery q = datasource.query();
-        InternalSource source = dataset.getInternalSources()[0];
-
-        ResultSet data = q.selectAll(source.getTable());
-        Column[] cols = fileFormat.cols();
-        while (data.next())
-            writeRecord(cols, data, writer);
-    }
-
-    private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {  
-        writer.print(data.getString(cols[0].name()));
-        writer.println();
-    }
 }
