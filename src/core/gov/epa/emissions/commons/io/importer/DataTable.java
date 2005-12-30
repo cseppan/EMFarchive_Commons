@@ -61,5 +61,9 @@ public class DataTable {
     public void drop() throws ImporterException {
         drop(name());
     }
+    
+    public boolean exists(String table) throws Exception {
+        return datasource.tableDefinition().tableExists(table);
+    }
 
 }
