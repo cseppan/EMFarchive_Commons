@@ -56,8 +56,9 @@ public class LineImporter implements Importer {
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
         String table = dataTable.name();
-        dataTable.create(formatUnit.tableFormat());
         try {
+            if(!dataTable.exists(table))
+                dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
