@@ -44,8 +44,8 @@ public class LineExporterTest extends PersistenceTestCase {
     }
 
     public void testExportSmallLineFile() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-point.txt");
-        LineImporter importer = new LineImporter(importFile, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, datasource, sqlDataTypes);
         importer.run();
 
         LineExporter exporter = new LineExporter(dataset, datasource, sqlDataTypes);
@@ -68,8 +68,8 @@ public class LineExporterTest extends PersistenceTestCase {
     }
     
     public void testExportVersionedSmallLineFile() throws Exception {
-        File importFile = new File("test/data/orl/nc", "small-point.txt");
-        LineImporter importer = new LineImporter(importFile, dataset, datasource, sqlDataTypes,
+        File folder = new File("test/data/orl/nc");
+        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, datasource, sqlDataTypes,
                 new VersionedDataFormatFactory(0));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, datasource);
         importer2.run();

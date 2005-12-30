@@ -44,19 +44,20 @@ public class LineImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallLineFile() throws Exception {
-        File file = new File("test/data/orl/nc","small-point.txt");
-        LineImporter importer = new LineImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/orl/nc");
+        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, 
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
         assertEquals(22, countRecords());
     }
     
     public void testShouldImportASmallVersionedLineFile() throws Exception {
-        File file = new File("test/data/orl/nc","small-point.txt");
-        LineImporter lineImporter = new LineImporter(file, dataset, datasource, sqlDataTypes,
+        File folder = new File("test/data/orl/nc");
+        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, datasource, sqlDataTypes,
                 new VersionedDataFormatFactory(0));
-        VersionedImporter importer = new VersionedImporter(lineImporter, dataset, datasource);
-        importer.run();
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, datasource);
+        importer2.run();
         
         int rows = countRecords();
         assertEquals(22, rows);
