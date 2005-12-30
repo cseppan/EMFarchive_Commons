@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -29,22 +30,24 @@ public class LineImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    public LineImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public LineImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        create(file, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
     }
 
-    public LineImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
-            DataFormatFactory factory) {
+    public LineImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         FileFormat fileFormat = new LineFileFormat(sqlDataTypes);
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
-        create(file, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
     }
     
-    private void create(File file, Dataset dataset, Datasource datasource, FileFormat fileFormat,
-            TableFormat tableFormat) {
-        this.file = file;
+    private void create(File folder, String[] filenames, Dataset dataset, Datasource datasource, FileFormat fileFormat,
+            TableFormat tableFormat) throws ImporterException {
+        new FileVerifier().shouldHaveOneFile(filenames);
+        this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
         this.datasource = datasource;
         this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
