@@ -18,6 +18,4 @@
  
  # comment 3
  2003 109 108 106 114 109  86  68   699
-/END/                                                                                                      
-
-# another comment - ignore me
+/END/                               
