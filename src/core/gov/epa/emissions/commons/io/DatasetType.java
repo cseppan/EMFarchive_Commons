@@ -1,8 +1,11 @@
 package gov.epa.emissions.commons.io;
 
+import gov.epa.emissions.commons.security.User;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class DatasetType implements Serializable {
@@ -25,6 +28,18 @@ public class DatasetType implements Serializable {
 
     private String exporterClassName;
 
+    private Mutex lock;
+
+    public DatasetType() {
+        this.keywordsList = new ArrayList();
+        this.lock = new Mutex();
+    }
+
+    public DatasetType(String name) {
+        this();
+        this.name = name;
+    }
+
     public String getExporterClassName() {
         return exporterClassName;
     }
@@ -39,15 +54,6 @@ public class DatasetType implements Serializable {
 
     public void setImporterClassName(String importerClassName) {
         this.importerClassName = importerClassName;
-    }
-
-    public DatasetType() {
-        this.keywordsList = new ArrayList();
-    }
-
-    public DatasetType(String name) {
-        this();
-        this.name = name;
     }
 
     public String getName() {
@@ -123,4 +129,27 @@ public class DatasetType implements Serializable {
         keywordsList.addAll(Arrays.asList(keywords));
     }
 
+    public String getUsername() {
+        return lock.getUsername();
+    }
+
+    public void setUsername(String username) {
+        lock.setUsername(username);
+    }
+
+    public Date getLockDate() {
+        return lock.getLockDate();
+    }
+
+    public void setLockDate(Date lockDate) {
+        this.lock.setLockDate(lockDate);
+    }
+
+    public boolean isLocked(User user) {
+        return lock.isLocked(user);
+    }
+
+    public boolean isLocked() {
+        return lock.isLocked();
+    }
 }

@@ -15,14 +15,13 @@ public class Sector implements Serializable {
 
     private String description;
 
-    private String username;
-
-    private Date lockDate;
-
     private List sectorCriteria;
+
+    private Mutex lock;
 
     public Sector() {
         this.sectorCriteria = new ArrayList();
+        this.lock = new Mutex();
     }
 
     public Sector(String description, String name) {
@@ -69,11 +68,11 @@ public class Sector implements Serializable {
     }
 
     public Date getLockDate() {
-        return lockDate;
+        return lock.getLockDate();
     }
 
     public void setLockDate(Date lockDate) {
-        this.lockDate = lockDate;
+        lock.setLockDate(lockDate);
     }
 
     public void setSectorCriteria(List sectorCriteria) {
@@ -81,18 +80,18 @@ public class Sector implements Serializable {
     }
 
     public String getUsername() {
-        return username;
+        return lock.getUsername();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        lock.setUsername(username);
     }
 
     public boolean isLocked(User user) {
-        return (user.getFullName().equals(this.username));
+        return lock.isLocked(user);
     }
 
     public boolean isLocked() {
-        return username != null && lockDate != null;
+        return lock.isLocked();
     }
 }
