@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -24,9 +25,18 @@ public class SpeciationCrossReferenceExporter extends GenericExporter {
     
     private SqlDataTypes types;
     
-    public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, 
-            SqlDataTypes types) {
-        super(dataset, datasource,  new SpeciationCrossRefFileFormat(types));
+    public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
+        super(dataset, datasource, new SpeciationProfileFileFormat(types));
+        create(types);
+    }
+    
+    public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+            DataFormatFactory factory) {
+        super(dataset, datasource, new SpeciationProfileFileFormat(types), factory);
+        create(types);
+    }
+    
+    private void create(SqlDataTypes types) {
         this.fileFormat = new SpeciationCrossRefFileFormat(types);
         this.types = types;
     }

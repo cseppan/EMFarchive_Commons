@@ -2,19 +2,29 @@ package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.FillDefaultValues;
+import gov.epa.emissions.commons.io.importer.FillRecordWithBlankValues;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SpeciationCrossRefFileFormat implements FileFormat {
+public class SpeciationCrossRefFileFormat implements FileFormatWithOptionalCols {
   
-    private Column[] columns;
+    private SqlDataTypes types;
+
+    private FillDefaultValues filler;
     
-    public SpeciationCrossRefFileFormat(SqlDataTypes type){
-        columns = createCols(type);
+    public SpeciationCrossRefFileFormat(SqlDataTypes types) {
+        this(types, new FillRecordWithBlankValues());
+    }
+
+    public SpeciationCrossRefFileFormat(SqlDataTypes types, FillDefaultValues filler) {
+        this.types = types;
+        this.filler = filler;
     }
     
     public String identify() {
@@ -22,16 +32,19 @@ public class SpeciationCrossRefFileFormat implements FileFormat {
     }
 
     public Column[] cols() {
-        return columns;
+        return asArray(minCols(), optionalCols());
+    }
+
+    private Column[] asArray(Column[] minCols, Column[] optionalCols) {
+        List list = new ArrayList();
+        list.addAll(Arrays.asList(minCols));
+        list.addAll(Arrays.asList(optionalCols));
+
+        return (Column[]) list.toArray(new Column[0]);
     }
     
-    private Column[] createCols(SqlDataTypes types) {
+    public Column[] optionalCols() {
         List columns = new ArrayList();
-        //FIXME: String type uses 32 as the number of characters assuming it is big enough to 
-        //hold the relevant fields
-        columns.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
-        columns.add(new Column("CODE", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("POLLUTANT", types.stringType(32), new StringFormatter(32)));
         columns.add(new Column("FIPS", types.intType(), new IntegerFormatter()));
         columns.add(new Column("MACT", types.stringType(6), new StringFormatter(6)));
         columns.add(new Column("SIC", types.intType(), new IntegerFormatter()));
@@ -41,5 +54,18 @@ public class SpeciationCrossRefFileFormat implements FileFormat {
         columns.add(new Column("SEGMENTID", types.stringType(32), new StringFormatter(32)));
 
         return (Column[]) columns.toArray(new Column[0]);
+    }
+    
+    public Column[] minCols() {
+        List columns = new ArrayList();
+        columns.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
+        columns.add(new Column("CODE", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("POLLUTANT", types.stringType(32), new StringFormatter(32)));
+        
+        return (Column[]) columns.toArray(new Column[0]);
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fill(this, data, datasetId);
     }
 }
