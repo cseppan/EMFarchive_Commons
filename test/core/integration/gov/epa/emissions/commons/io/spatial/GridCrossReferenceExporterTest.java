@@ -6,14 +6,10 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnit;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
 import java.util.Random;
@@ -35,13 +31,6 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-
-        FileFormat fileFormat = new GridCrossRefFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        
-        DataTable dataTable = new DataTable(dataset, datasource);
-        FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        dataTable.create(formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -50,17 +39,31 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     }
 
     public void testExportGridCrossRefData() throws Exception {
-        File importFile = new File("test/data/spatial", "amgref.txt");
-        GridCrossReferenceImporter importer = new GridCrossReferenceImporter(importFile, dataset, datasource,
-                sqlDataTypes);
+        File folder = new File("test/data/spatial");
+        GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
         GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, datasource, sqlDataTypes);
-        File file = new File("test/data/spatial", "GridCrossRefExported.txt");
+        File file = File.createTempFile("GridCrossRefExported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.
         assertEquals(22, countRecords());
-        file.delete();
+    }
+    
+    public void testExportVersionedGridCrossRefData() throws Exception {
+        File folder = new File("test/data/spatial");
+        GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+        importerv.run();
+        
+        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, datasource, sqlDataTypes,
+                new VersionedDataFormatFactory(0));
+        File file = File.createTempFile("GridCrossRefExported", ".txt");
+        exporter.export(file);
+        // FIXME: compare the original file and the exported file.
+        assertEquals(22, countRecords());
     }
 
     private int countRecords() {
