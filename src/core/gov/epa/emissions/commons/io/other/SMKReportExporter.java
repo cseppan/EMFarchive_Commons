@@ -30,8 +30,6 @@ public class SMKReportExporter implements Exporter {
     
     private String delimiter;
     
-    private boolean formatted;
-    
     private String tableframe;
     
     private DataFormatFactory dataFormatFactory;
@@ -51,7 +49,6 @@ public class SMKReportExporter implements Exporter {
         this.datasource = datasource;
         this.dataFormatFactory = dataFormatFactory;
         setDelimiter(";");
-        setFormatted(false);
     }
     
     public void export(File file) throws ExporterException {
@@ -78,14 +75,16 @@ public class SMKReportExporter implements Exporter {
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {
         String desc = dataset.getDescription();
-        if(desc.lastIndexOf('#')+2 == desc.length()) {
-            StringTokenizer st = new StringTokenizer(desc, System.getProperty("line.separator"));
-            while(st.hasMoreTokens()){
-                tableframe = st.nextToken();
-            }
-            writer.print(desc.substring(0, desc.indexOf(tableframe)));
-        } else 
-            writer.print(desc);
+        if(desc != null) {
+            if(desc.lastIndexOf('#')+2 == desc.length()) {
+                StringTokenizer st = new StringTokenizer(desc, System.getProperty("line.separator"));
+                while(st.hasMoreTokens()){
+                    tableframe = st.nextToken();
+                }
+                writer.print(desc.substring(0, desc.indexOf(tableframe)));
+            } else 
+                writer.print(desc);
+        }
     }
 
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
@@ -103,19 +102,15 @@ public class SMKReportExporter implements Exporter {
     }
 
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        for (int i = 2; i < cols.length; i++) {
-            if(formatted) {
-                if(cols[i-1].equalsIgnoreCase("sccdesc")) //cols index is one less than table column index
-                    writer.print("\"" + data.getObject(i).toString() + "\"");
-                else 
-                    writer.print(data.getObject(i).toString());
-            }
-            else {
-                if(cols[i-1].equalsIgnoreCase("sccdesc"))
-                    writer.print("\"" + data.getObject(i).toString().trim() + "\"");
-                else
-                    writer.print(data.getObject(i).toString().trim());
-            }
+        int i = 2;
+        if(cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions"))
+            i = 5;
+        
+        for (; i < cols.length; i++) {
+           if(cols[i-1].equalsIgnoreCase("sccdesc"))
+                writer.print("\"" + data.getObject(i).toString().trim() + "\"");
+           else
+                writer.print(data.getObject(i).toString().trim());
             
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -136,7 +131,4 @@ public class SMKReportExporter implements Exporter {
         this.delimiter = del;
     }
     
-    public void setFormatted(boolean formatted) {
-        this.formatted = formatted;
-    }
 }

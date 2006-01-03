@@ -30,7 +30,7 @@ public class ReferenceCSVFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "CVS File";
+        return "CSV File";
     }
 
     public Column[] cols() {

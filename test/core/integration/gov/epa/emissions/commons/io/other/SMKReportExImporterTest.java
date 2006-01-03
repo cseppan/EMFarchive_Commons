@@ -60,7 +60,6 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         SMKReportExporter exporter = new SMKReportExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
         exporter.setDelimiter("|");
-        exporter.setFormatted(true);
         exporter.export(exportfile);
     }
     
@@ -74,7 +73,6 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         SMKReportExporter exporter = new SMKReportExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
         exporter.setDelimiter("|");
-        exporter.setFormatted(true);
         exporter.export(exportfile);
     }
     
