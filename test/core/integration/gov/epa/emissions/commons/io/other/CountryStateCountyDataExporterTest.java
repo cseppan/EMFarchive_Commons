@@ -7,6 +7,8 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,15 +46,39 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), "county");
     }
 
-    public void testCountryStateCountyData() throws Exception {
-        File importFile = new File("test/data/other", "costcy.txt");
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(importFile, dataset, datasource, sqlDataTypes);
+    public void testExportCountryStateCountyData() throws Exception {
+        File folder = new File("test/data/other");
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
                 datasource, sqlDataTypes);
         File file = File.createTempFile("CSCexported", ".txt");
-        //File file = new File("test/data/other", "CSCexported.txt");
+        exporter.export(file);
+        
+        // assert headers
+        assertComments(file);
+        
+        // assert data
+        List data = readData(file);
+        assertEquals(37, data.size());
+        assertEquals("/COUNTRY/", (String) data.get(0));
+        assertEquals("0 -9                   US", ((String) data.get(1)).trim());
+        assertEquals("/STATE/", (String) data.get(8));
+        assertEquals("/COUNTY/", (String) data.get(20));
+    }
+    
+    public void testExportVersionedCountryStateCountyData() throws Exception {
+        File folder = new File("test/data/other");
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+        importerv.run();
+
+        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
+                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
         
         // assert headers

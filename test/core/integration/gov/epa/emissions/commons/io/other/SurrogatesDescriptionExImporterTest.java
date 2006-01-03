@@ -5,14 +5,10 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnit;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,13 +35,6 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-
-        FileFormat fileFormat = new SurrogatesDescriptionFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        
-        DataTable dataTable = new DataTable(dataset, datasource);
-        dataTable.create(formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -53,17 +42,40 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void testImportCEMpthourData() throws Exception {
-        File file = new File("test/data/other", "SRGDESC.txt");
-        SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(file, dataset, datasource,
-                sqlDataTypes);
+    public void testExportImportCEMpthourData() throws Exception {
+        File folder = new File("test/data/other");
+        SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(folder, new String[]{"SRGDESC.txt"}, 
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
         SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
 
-        List data = readData(file);
+        List data = readData(exportfile);
+        assertEquals(66, data.size());
+        assertEquals(
+                "USA,100,\"Population\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt",
+                (String) data.get(0));
+        assertEquals(
+                "USA,580,\"Food, Drug, Chemical Industrial (IND3)\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt",
+                (String) data.get(65));
+        exportfile.delete();
+    }
+    
+    public void testExportImportVersionedCEMpthourData() throws Exception {
+        File folder = new File("test/data/other");
+        SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(folder, new String[]{"SRGDESC.txt"}, 
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+        importerv.run();
+
+        File exportfile = File.createTempFile("SRGDescExported", ".txt");
+        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, datasource, 
+                sqlDataTypes, new VersionedDataFormatFactory(0));
+        exporter.export(exportfile);
+
+        List data = readData(exportfile);
         assertEquals(66, data.size());
         assertEquals(
                 "USA,100,\"Population\",/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt",

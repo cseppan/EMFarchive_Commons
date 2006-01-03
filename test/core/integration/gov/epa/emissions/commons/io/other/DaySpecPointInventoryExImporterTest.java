@@ -5,14 +5,10 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnit;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
-import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.SimpleDataset;
-import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,13 +35,6 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-
-        FileFormat fileFormat = new DaySpecPointInventoryFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        FormatUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        
-        DataTable dataTable = new DataTable(dataset, datasource);
-        dataTable.create(formatUnit.tableFormat());
     }
 
     protected void doTearDown() throws Exception {
@@ -54,17 +43,17 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     }
 
     public void testImportCEMpthourData() throws Exception {
-        File file = new File("test/data/other", "nonCEMptday.txt");
-        DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(file, dataset, datasource,
-                sqlDataTypes);
+        File folder = new File("test/data/other");
+        DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
-        File exportfile = new File("test/data/other", "ptdayExported.txt");
+        File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
         DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
 
-        List data = readData(file);
+        List data = readData(exportfile);
         assertEquals(48, data.size());
         // assertEquals(
         // "ORISPL_CODE,UNITID,OP_DATE,OP_HOUR,OP_TIME,GLOAD,SLOAD,NOX_MASS,NOX_RATE,SO2_MASS,HEAT_INPUT,FLOW",
@@ -72,6 +61,28 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         // assertEquals("2161,**GT2,000113,19,0,-9,-9,-9,-9,-9,-9,-9", (String)data.get(21));
     }
 
+    public void testImportVersionedCEMpthourData() throws Exception {
+        File folder = new File("test/data/other");
+        DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+        importerv.run();
+
+        File exportfile = File.createTempFile("ptdayExported", ".txt");
+        exportfile.deleteOnExit();
+        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, datasource, 
+                sqlDataTypes, new VersionedDataFormatFactory(0));
+        exporter.export(exportfile);
+
+        List data = readData(exportfile);
+        assertEquals(48, data.size());
+        // assertEquals(
+        // "ORISPL_CODE,UNITID,OP_DATE,OP_HOUR,OP_TIME,GLOAD,SLOAD,NOX_MASS,NOX_RATE,SO2_MASS,HEAT_INPUT,FLOW",
+        // (String) data.get(0));
+        // assertEquals("2161,**GT2,000113,19,0,-9,-9,-9,-9,-9,-9,-9", (String)data.get(21));
+    }
+
+    
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 

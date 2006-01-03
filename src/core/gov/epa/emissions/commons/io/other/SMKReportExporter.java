@@ -2,10 +2,14 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,10 +33,23 @@ public class SMKReportExporter implements Exporter {
     private boolean formatted;
     
     private String tableframe;
+    
+    private DataFormatFactory dataFormatFactory;
+    
+    public SMKReportExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
+        setup(dataset, datasource, types, new FixedDataFormatFactory());
+    }
+    
+    public SMKReportExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+            DataFormatFactory factory) {
+        setup(dataset, datasource, types, factory);
+    }
 
-    public SMKReportExporter(Dataset dataset, Datasource datasource) {
+    private void setup(Dataset dataset, Datasource datasource, SqlDataTypes types,
+            DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
         this.datasource = datasource;
+        this.dataFormatFactory = dataFormatFactory;
         setDelimiter(";");
         setFormatted(false);
     }
@@ -76,7 +93,8 @@ public class SMKReportExporter implements Exporter {
         InternalSource source = dataset.getInternalSources()[0];
 
         String qualifiedTable = datasource.getName() + "." + source.getTable();
-        ResultSet data = q.executeQuery("SELECT * FROM " + qualifiedTable);
+        ExportStatement export = dataFormatFactory.exportStatement();
+        ResultSet data = q.executeQuery(export.generate(qualifiedTable));
         String[] cols = getCols(data);
         while (data.next())
             writeRecord(cols, data, writer);

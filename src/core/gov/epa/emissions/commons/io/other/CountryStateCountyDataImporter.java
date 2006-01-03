@@ -2,15 +2,17 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -29,16 +31,25 @@ public class CountryStateCountyDataImporter implements Importer {
     private Datasource datasource;
 
     private File file;
+    
+    private DataFormatFactory dataFormatFactory;
 
     private CountryStateCountyFileFormatFactory metadataFactory;
 
-    public CountryStateCountyDataImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlType) {
+    public CountryStateCountyDataImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+    }
+    
+    public CountryStateCountyDataImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
+        new FileVerifier().shouldHaveOneFile(filenames);
+        this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
         this.datasource = datasource;
-        this.sqlType = sqlType;
-
+        this.dataFormatFactory = factory;
+        this.sqlType = sqlDataTypes;
         metadataFactory = new CountryStateCountyFileFormatFactory(sqlType);
-        this.file = file;
     }
 
     public void run() throws ImporterException {
@@ -48,10 +59,14 @@ public class CountryStateCountyDataImporter implements Importer {
             while (!isEndOfFile(fileReader)) {
                 String header = readHeader(dataset, fileReader);
                 FileFormat fileFormat = fileFormat(header);
-                FixedColsTableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlType);
+                TableFormat tableFormat = dataFormatFactory.tableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
 
-                new DataTable(dataset, datasource).create(table(header), unit.tableFormat());
+                DataTable dataTable = new DataTable(dataset, datasource);
+                String table = table(header);
+                if(!dataTable.exists(table))
+                    dataTable.create(table, unit.tableFormat());
+                
                 doImport(fileReader, dataset, unit, header);
             }
         } catch (Exception e) {

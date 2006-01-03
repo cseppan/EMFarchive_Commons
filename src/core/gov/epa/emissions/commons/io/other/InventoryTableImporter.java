@@ -2,17 +2,19 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -31,22 +33,30 @@ public class InventoryTableImporter implements Importer {
 
     private Dataset dataset;
 
-    public InventoryTableImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.file = file;
+    public InventoryTableImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+    }
+    
+    public InventoryTableImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
+        new FileVerifier().shouldHaveOneFile(filenames);
+        this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
         this.datasource = datasource;
-        FileFormat fileFormat = new InventoryTableFileFormat(sqlDataTypes, 1);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
 
+        FileFormat fileFormat = new InventoryTableFileFormat(sqlDataTypes, 1);
+        TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
+        formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
         String table = dataTable.name();
-        dataTable.create(formatUnit.tableFormat());
 
         try {
+            if(!dataTable.exists(table))
+                dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             dataTable.drop();

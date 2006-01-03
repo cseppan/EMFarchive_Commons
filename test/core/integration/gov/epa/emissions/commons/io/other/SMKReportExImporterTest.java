@@ -36,58 +36,59 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
-    public void ImportSMKreportDataSemicolon() throws Exception {
-        File file = new File("test/data/other", "smkreport-semicolon-state_scc.txt");
-        SMKReportImporter importer = new SMKReportImporter(file, dataset, datasource, sqlDataTypes);
+    public void testImportSMKreportDataSemicolon() throws Exception {
+        File folder = new File("test/data/other");
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-semicolon-state_scc.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
         assertEquals(34, countRecords());
         
-        File exportfile = new File("test/data/other", "SMKreportSemicolonExported.txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource);
+        File exportfile = File.createTempFile("SMKreportSemicolonExported", ".txt");
+        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
-        
-        exportfile.delete(); 
+        //FIXME: put assert statement
     }
     
     public void testImportSMKreportDataPipe() throws Exception {
-        File file = new File("test/data/other", "smkreport-pipe-hour_scc.txt");
-        SMKReportImporter importer = new SMKReportImporter(file, dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/other");
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-pipe-hour_scc.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
         assertEquals(44, countRecords());
-        File exportfile = new File("test/data/other", "SMKreportPipeExported.txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource);
+        
+        File exportfile = File.createTempFile("SMKreportPipeExported", ".txt");
+        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource, sqlDataTypes);
+        exporter.export(exportfile);
         exporter.setDelimiter("|");
         exporter.setFormatted(true);
         exporter.export(exportfile);
-        
-        exportfile.delete(); 
     }
     
-    public void ImportSMKreportDataQuotes() throws Exception {
-        File file = new File("test/data/other", "smkreport-quotes.txt");
-        SMKReportImporter importer = new SMKReportImporter(file, dataset, datasource, sqlDataTypes);
+    public void testImportSMKreportDataQuotes() throws Exception {
+        File folder = new File("test/data/other");
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-quotes.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
 
-        File exportfile = new File("test/data/other", "SMKreportQuotesExported.txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource);
+        File exportfile = File.createTempFile("SMKreportQuotesExported", ".txt");
+        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource, sqlDataTypes);
+        exporter.export(exportfile);
         exporter.setDelimiter("|");
         exporter.setFormatted(true);
         exporter.export(exportfile);
-        
-        exportfile.delete(); 
     }
     
-    public void ImportSMKreportDataComma() throws Exception {
-        File file = new File("test/data/other", "smkreport-comma.txt");
-        SMKReportImporter importer = new SMKReportImporter(file, dataset, datasource, sqlDataTypes);
+    public void testImportSMKreportDataComma() throws Exception {
+        File folder = new File("test/data/other");
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-comma.txt"},
+                dataset, datasource, sqlDataTypes);
         importer.run();
         assertEquals(67, countRecords());
         
-        File exportfile = new File("test/data/other", "SMKreportCommaExported.txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource);
+        File exportfile = File.createTempFile("SMKreportCommaExported", ".txt");
+        SMKReportExporter exporter = new SMKReportExporter(dataset, datasource, sqlDataTypes);
         exporter.export(exportfile);
-        
-        exportfile.delete();
+        exporter.export(exportfile);
     }
     
     private int countRecords() {

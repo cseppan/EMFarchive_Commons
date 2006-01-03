@@ -4,9 +4,13 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.io.ExportStatement;
+import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,17 +21,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
-public class CountryStateCountyDataExporter {
+public class CountryStateCountyDataExporter implements Exporter {
     private Dataset dataset;
 
     private Datasource datasource;
 
     private CountryStateCountyFileFormatFactory factory;
+    
+    private DataFormatFactory dataFormatFactory;
 
     public CountryStateCountyDataExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+        setup(dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+    }
+    
+    public CountryStateCountyDataExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+            DataFormatFactory factory) {
+        setup(dataset, datasource, types, factory);
+    }
+    
+    private void setup(Dataset dataset, Datasource datasource, SqlDataTypes types,
+            DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
         this.datasource = datasource;
-        factory = new CountryStateCountyFileFormatFactory(sqlDataTypes);
+        factory = new CountryStateCountyFileFormatFactory(types);
+        this.dataFormatFactory = dataFormatFactory;
     }
 
     public void export(File file) throws ExporterException {
@@ -69,7 +86,9 @@ public class CountryStateCountyDataExporter {
 
         for(int i = 0; i < sources.length; i++){
             String table = sources[i].getTable();
-            ResultSet data = q.selectAll(table);
+            String qualifiedTable = datasource.getName() + "." + table;
+            ExportStatement export = dataFormatFactory.exportStatement();
+            ResultSet data = q.executeQuery(export.generate(qualifiedTable));
             Column[] cols = factory.get(table).cols();
             writer.println("/" + table + "/");
 

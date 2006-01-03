@@ -2,10 +2,10 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
@@ -13,7 +13,9 @@ import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -30,19 +32,30 @@ public class PointStackReplacementsImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    public PointStackReplacementsImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this.file = file;
+    public PointStackReplacementsImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+    }
+    
+    public PointStackReplacementsImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
+        new FileVerifier().shouldHaveOneFile(filenames);
+        this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
         this.datasource = datasource;
+
         FileFormat fileFormat = new PointStackReplacementsFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 
     public void run() throws ImporterException {
-        String table = new DataTable(dataset, datasource).name();
+        DataTable dataTable = new DataTable(dataset, datasource);
+        String table = dataTable.name();
 
         try {
+            if(!dataTable.exists(table))
+                dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
