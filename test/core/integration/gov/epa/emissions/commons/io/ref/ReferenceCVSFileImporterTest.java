@@ -7,7 +7,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
-import gov.epa.emissions.commons.io.reference.ReferenceCVSFileImporter;
+import gov.epa.emissions.commons.io.reference.ReferenceCSVFileImporter;
 
 import java.io.File;
 
@@ -35,7 +35,7 @@ public class ReferenceCVSFileImporterTest extends PersistenceTestCase {
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
         File file = new File("test/data/reference", "pollutants.txt");
 
-        Importer importer = new ReferenceCVSFileImporter(file, tableName, datasource, sqlDataTypes);
+        Importer importer = new ReferenceCSVFileImporter(file, tableName, datasource, sqlDataTypes);
         importer.run();
 
         int rows = countRecords();
