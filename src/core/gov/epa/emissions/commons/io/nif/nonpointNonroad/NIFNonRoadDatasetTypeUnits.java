@@ -60,6 +60,9 @@ public abstract class NIFNonRoadDatasetTypeUnits implements NIFDatasetTypeUnits 
     }
 
     protected FormatUnit keyToDatasetTypeUnit(String key) {
+        if (key == null) {
+            return null;
+        }
         key = key.toLowerCase();
         if ("ce".equals(key)) {
             return ceDatasetTypeUnit;

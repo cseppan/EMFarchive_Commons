@@ -12,7 +12,7 @@ public class IDASummary implements SummaryTable {
         this.dataset = dataset;
     }
 
-    public void createSummary() throws Exception {
+    public void createSummary() {
         InternalSource internalSource = dataset.getInternalSources()[0];
         String table = internalSource.getTable();
         InternalSource summarySource = summarySource(table);

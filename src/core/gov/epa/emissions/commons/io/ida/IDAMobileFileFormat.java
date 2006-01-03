@@ -46,7 +46,7 @@ public class IDAMobileFileFormat implements IDAFileFormat {
     private List pollutantCols(String[] pollutants, SqlDataTypes types) {
         List cols = new ArrayList();
         for (int i = 0; i < pollutants.length; i++) {
-            cols.add(new Column("ANN_" + pollutants[i], types.realType(), 10, new RealFormatter()));
+            cols.add(new Column("" + pollutants[i], types.realType(), 10, new RealFormatter()));
             cols.add(new Column("AVD_" + pollutants[i], types.realType(), 10, new RealFormatter()));
         }
         return cols;

@@ -44,7 +44,7 @@ public class IDANonPointNonRoadFileFormat implements IDAFileFormat {
     private List pollutantCols(String[] pollutants, SqlDataTypes types) {
         List cols = new ArrayList();
         for (int i = 0; i < pollutants.length; i++) {
-            cols.add(new Column("ANN_" + pollutants[i], types.realType(), 10, new RealFormatter()));
+            cols.add(new Column("" + pollutants[i], types.realType(), 10, new RealFormatter()));
             cols.add(new Column("AVD_" + pollutants[i], types.realType(), 10, new RealFormatter()));
             cols.add(new Column("EMF_" + pollutants[i], types.realType(), 11, new RealFormatter()));
             cols.add(new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter()));

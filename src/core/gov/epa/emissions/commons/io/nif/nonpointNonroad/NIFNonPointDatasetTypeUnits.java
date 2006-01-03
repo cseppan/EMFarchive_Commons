@@ -38,14 +38,14 @@ public abstract class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits
         peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
                 false);
         delegate = new NIFImportHelper();
-        
+
     }
 
     public FormatUnit[] formatUnits() {
         return new FormatUnit[] { ceDatasetTypeUnit, emDatasetTypeUnit, epDatasetTypeUnit, peDatasetTypeUnit };
     }
-    
-    public String dataTable(){
+
+    public String dataTable() {
         return emDatasetTypeUnit.getInternalSource().getTable();
     }
 
@@ -64,23 +64,26 @@ public abstract class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits
     }
 
     protected FormatUnit keyToDatasetTypeUnit(String key) {
+        if (key == null) {
+            return null;
+        }
         key = key.toLowerCase();
         if ("ce".equals(key)) {
             return ceDatasetTypeUnit;
         }
-    
+
         if ("em".equals(key)) {
             return emDatasetTypeUnit;
         }
-    
+
         if ("ep".equals(key)) {
             return epDatasetTypeUnit;
         }
-    
+
         if ("pe".equals(key)) {
             return peDatasetTypeUnit;
         }
         return null;
     }
-    
+
 }

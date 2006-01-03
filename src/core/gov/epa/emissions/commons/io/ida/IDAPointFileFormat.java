@@ -42,7 +42,7 @@ public class IDAPointFileFormat implements IDAFileFormat {
     private List pollutantsBasedCols(SqlDataTypes types, String[] pollutants) {
         List pollCols = new ArrayList();
         for (int i = 0; i < pollutants.length; i++) {
-            pollCols.add( new Column("ANN_" + pollutants[i], types.realType(), 13, new RealFormatter()));
+            pollCols.add( new Column("" + pollutants[i], types.realType(), 13, new RealFormatter()));
             pollCols.add( new Column("AVD_" + pollutants[i], types.realType(), 13, new RealFormatter()));
             pollCols.add( new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter()));
             pollCols.add( new Column("RE_" + pollutants[i], types.realType(), 3, new RealFormatter()));

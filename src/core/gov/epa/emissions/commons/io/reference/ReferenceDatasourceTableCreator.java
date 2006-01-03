@@ -1,11 +1,10 @@
-package gov.epa.emissions.commons.io.ref;
+package gov.epa.emissions.commons.io.reference;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.reference.ReferenceCSVFileImporter;
 
 import java.io.File;
 
@@ -15,36 +14,38 @@ public class ReferenceDatasourceTableCreator {
     
     private SqlDataTypes sqlDataTypes;
 
-    public ReferenceDatasourceTableCreator(DbServer dbServer){
+    private File folder;
+
+    public ReferenceDatasourceTableCreator(DbServer dbServer, File folder){
         this.reference = dbServer.getReferenceDatasource();
         this.sqlDataTypes = dbServer.getSqlDataTypes();
+        this.folder = folder;
     }
     
     public void create() throws ImporterException{
         Importer importer = null;
-        String refDir = "config/ref";
         
-        File pollutantFile = new File(refDir,"pollutants.txt");
+        File pollutantFile = new File(folder,"pollutants.txt");
         importer = new ReferenceCSVFileImporter(pollutantFile,"pollutants",reference,sqlDataTypes);
         importer.run();
         
-        File countiesFile = new File(refDir,"counties.txt");
+        File countiesFile = new File(folder,"counties.txt");
         importer = new ReferenceCSVFileImporter(countiesFile,"fips",reference,sqlDataTypes);
         importer.run();
         
-        File countriesFile = new File(refDir,"countries.txt");
+        File countriesFile = new File(folder,"countries.txt");
         importer = new ReferenceCSVFileImporter(countriesFile,"countries",reference,sqlDataTypes);
         importer.run();
         
-        File sccFile = new File(refDir,"scc.txt");
+        File sccFile = new File(folder,"scc.txt");
         importer = new ReferenceCSVFileImporter(sccFile,"scc",reference,sqlDataTypes);
         importer.run();
         
-        File sectorsFile = new File(refDir,"sectors.txt");
+        File sectorsFile = new File(folder,"sectors.txt");
         importer = new ReferenceCSVFileImporter(sectorsFile,"sectors",reference,sqlDataTypes);
         importer.run();
         
-        File statesFile = new File(refDir,"states.txt");
+        File statesFile = new File(folder,"states.txt");
         importer = new ReferenceCSVFileImporter(statesFile,"states",reference,sqlDataTypes);
         importer.run();
         

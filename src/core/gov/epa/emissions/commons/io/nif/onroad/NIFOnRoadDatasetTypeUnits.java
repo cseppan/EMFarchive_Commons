@@ -57,6 +57,9 @@ public abstract class NIFOnRoadDatasetTypeUnits implements NIFDatasetTypeUnits {
     }
 
     protected FormatUnit keyToDatasetTypeUnit(String key) {
+        if (key == null) {
+            return null;
+        }
         key = key.toLowerCase();
         if ("em".equals(key)) {
             return emDatasetTypeUnit;
