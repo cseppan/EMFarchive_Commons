@@ -19,13 +19,33 @@ public class DelimitedTokenizer {
         while (m.find()) {
             String token = input.substring(m.start(), m.end()).trim();
 
-            if (token.matches(Tokenizer.SINGLE_QUOTED_TEXT) || token.matches(Tokenizer.DOUBLE_QUOTED_TEXT))// quoted
-                tokens.add(token.substring(1, token.length() - 1));// strip
-            // quotes
-            else
+            if (token.startsWith("\"")) {
+                tokens.add(startWithDoubleQuote(input, m, token));
+            } else if (token.startsWith("'")) {
+                tokens.add(startWithSingleQuote(input, m, token));
+            } else {
                 tokens.add(token);
+            }
         }
 
         return (String[]) tokens.toArray(new String[0]);
+
+    }
+
+    private String startWithDoubleQuote(String input, Matcher m, String token) {
+        return startWithQuote("\"", input, m, token);
+    }
+
+    private String startWithSingleQuote(String input, Matcher m, String token) {
+        return startWithQuote("'", input, m, token);
+    }
+
+    private String startWithQuote(String quote, String input, Matcher m, String token) {
+        int start = m.start();
+        while (!token.endsWith(quote) && m.find()) {
+            token = input.substring(m.start(), m.end()).trim();
+        }
+        token = input.substring(start, m.end()).trim();
+        return token.substring(1, token.length() - 1);
     }
 }

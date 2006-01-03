@@ -3,10 +3,8 @@ package gov.epa.emissions.commons.io.reference;
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
-import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -34,12 +32,8 @@ public class ReferenceCVSFileImporter implements Importer {
 
     private FileFormat fileFormat;
 
-    private Dataset dataset;
-
-    public ReferenceCVSFileImporter(File file, Dataset dataset, String tableName, Datasource datasource,
-            SqlDataTypes sqlDataTypes) throws ImporterException {
+    public ReferenceCVSFileImporter(File file, String tableName, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
         this.file = file;
-        this.dataset = dataset;
         this.tableName = tableName;
         this.datasource = datasource;
         this.sqlDataTypes = sqlDataTypes;
@@ -58,9 +52,17 @@ public class ReferenceCVSFileImporter implements Importer {
         try {
             doImport();
         } catch (Exception e) {
-            new DataTable(dataset, datasource).drop(tableName);
+            dropTable(tableName);
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
         }
+    }
+
+    private void dropTable(String tableName) throws ImporterException {
+        try {
+            datasource.tableDefinition().dropTable(tableName);
+        } catch (SQLException e) {
+            throw new ImporterException("could not drop table '"+tableName+"'");
+        }        
     }
 
     private void doImport() throws IOException, SQLException, ImporterException {

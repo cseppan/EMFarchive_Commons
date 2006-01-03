@@ -7,8 +7,7 @@ public class SemiColonDelimitedTokenizer implements Tokenizer {
     private DelimitedTokenizer delegate;
 
     public SemiColonDelimitedTokenizer() {
-        String pattern = ANY_CHAR_EXCEPT_SEMICOLON + "|" + DOUBLE_QUOTED_TEXT + "|" + SINGLE_QUOTED_TEXT + "|"
-                + INLINE_COMMENTS;
+        String pattern = ANY_CHAR_EXCEPT_SEMICOLON + "|" + INLINE_COMMENTS;
         delegate = new DelimitedTokenizer(pattern);
     }
 

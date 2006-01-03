@@ -6,7 +6,7 @@ public class WhitespaceDelimitedTokenizer implements Tokenizer {
     private DelimitedTokenizer delegate;
 
     public WhitespaceDelimitedTokenizer() {
-        String pattern = DOUBLE_QUOTED_TEXT + "|" +  SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS +"|"+ANY_CHAR_EXCEPT_WHITESPACE;
+        String pattern = INLINE_COMMENTS +"|"+ANY_CHAR_EXCEPT_WHITESPACE;
         delegate = new DelimitedTokenizer(pattern);
     }
 

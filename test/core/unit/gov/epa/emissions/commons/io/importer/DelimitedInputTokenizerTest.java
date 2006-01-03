@@ -68,7 +68,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-9", tokens[9]);
     }
 
-    public void FIXME_testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesCommaDelimited() {
+    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesCommaDelimited() {
         String input = "37119, 0001, \"REXAMINC.; CUSTOM'S   DIVISION, IMMIGRATION\" , 40201301 ,hi$ya,-wE&9,-9,-9,-9,-9";
 
         CommaDelimitedTokenizer tokenizer = new CommaDelimitedTokenizer();
@@ -84,7 +84,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-9", tokens[9]);
     }
 
-    public void FIXME_testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSemiColonDelimited() throws ImporterException {
+    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSemiColonDelimited() throws ImporterException {
         String input = "37119; 0001; \"REXAMINC. ; CUSTOM'S   DIVISION, IMMIGRATION\"; 40201301 ; hi$ya;-wE&9;-9;-9;-9;-9";
 
         Tokenizer tokenizer = new SemiColonDelimitedTokenizer();

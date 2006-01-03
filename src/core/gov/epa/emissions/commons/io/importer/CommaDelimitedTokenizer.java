@@ -2,14 +2,12 @@ package gov.epa.emissions.commons.io.importer;
 
 public class CommaDelimitedTokenizer implements Tokenizer {
 
-    private static final String ANY_CHAR_EXCEPT_COMMA = "[^,]+";
-
     private DelimitedTokenizer delegate;
 
     private String pattern;
 
     public CommaDelimitedTokenizer() {
-        pattern = DOUBLE_QUOTED_TEXT + "|" +  SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS +"|"+ANY_CHAR_EXCEPT_COMMA;
+        pattern = "[^,]+";
         delegate = new DelimitedTokenizer(pattern);
         
     }
