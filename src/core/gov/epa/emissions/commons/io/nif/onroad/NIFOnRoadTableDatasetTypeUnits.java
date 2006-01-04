@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.nif.onroad;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.NIFImportHelper;
@@ -12,8 +13,9 @@ public class NIFOnRoadTableDatasetTypeUnits extends NIFOnRoadDatasetTypeUnits {
 
     private Datasource datasource;
 
-    public NIFOnRoadTableDatasetTypeUnits(String[] tables, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        super(sqlDataTypes);
+    public NIFOnRoadTableDatasetTypeUnits(String[] tables, Datasource datasource, SqlDataTypes sqlDataTypes, 
+            DataFormatFactory factory) {
+        super(sqlDataTypes, factory);
         this.tables = tables;
         this.datasource = datasource;
     }

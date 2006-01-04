@@ -62,7 +62,10 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         try {
-            NIFPointImporter importer = new NIFPointImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+            File folder = new File("test/data/nif/point");
+            String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt",
+                    "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
+            NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, emissionDatasource, sqlDataTypes);
             importer.run();
             SummaryTable summary = new NIFPointSummary(emissionDatasource, referenceDatasource, dataset);
             summary.createSummary();
@@ -77,13 +80,6 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
         } finally {
             dropTables();
         }
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/point";
-        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
-                new File(dir, "ky_er.txt"), new File(dir, "ky_eu.txt"), new File(dir, "ky_pe.txt"),
-                new File(dir, "ky_si.txt") };
     }
 
     private int countRecords(String tableName) {

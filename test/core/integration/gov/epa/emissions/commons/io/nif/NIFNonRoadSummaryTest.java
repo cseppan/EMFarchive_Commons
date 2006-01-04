@@ -50,7 +50,9 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
-        NIFNonRoadImporter importer = new NIFNonRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+        File folder = new File("test/data/nif/nonroad");
+        String[] files = {"ct_em.txt", "ct_ep.txt", "ct_pe.txt"};
+        NIFNonRoadImporter importer = new NIFNonRoadImporter(folder, files, dataset, emissionDatasource, sqlDataTypes);
         importer.run();
         SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
@@ -58,11 +60,6 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
         assertEquals(10, countRecords(tableEP));
         assertEquals(10, countRecords(tablePE));
         assertEquals(0, countRecords("test_summary"));
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/nonroad";
-        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt") };
     }
 
     private int countRecords(String tableName) {

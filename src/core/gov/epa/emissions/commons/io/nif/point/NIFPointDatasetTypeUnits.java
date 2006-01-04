@@ -1,10 +1,11 @@
 package gov.epa.emissions.commons.io.nif.point;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
+import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
 import gov.epa.emissions.commons.io.nif.NIFImportHelper;
@@ -27,34 +28,34 @@ public abstract class NIFPointDatasetTypeUnits implements NIFDatasetTypeUnits {
 
     protected NIFImportHelper delegate;
 
-    public NIFPointDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
+    public NIFPointDatasetTypeUnits(SqlDataTypes sqlDataTypes, DataFormatFactory factory) {
         FileFormat ceFileFormat = new ControlEquipmentFileFormat(sqlDataTypes);
-        ceDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(ceFileFormat, sqlDataTypes), ceFileFormat,
-                false);
+        TableFormat ceTableFormat = factory.tableFormat(ceFileFormat, sqlDataTypes);
+        ceDatasetTypeUnit = new DatasetTypeUnit(ceTableFormat, ceFileFormat, false);
 
         FileFormat emFileFormat = new EmissionRecordsFileFormat(sqlDataTypes);
-        emDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(emFileFormat, sqlDataTypes), emFileFormat,
-                false);
+        TableFormat emTableFormat = factory.tableFormat(emFileFormat, sqlDataTypes);
+        emDatasetTypeUnit = new DatasetTypeUnit(emTableFormat, emFileFormat, false);
 
         FileFormat epFileFormat = new EmissionProcessFileFormat(sqlDataTypes);
-        epDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(epFileFormat, sqlDataTypes), epFileFormat,
-                false);
-
+        TableFormat epTableFormat = factory.tableFormat(epFileFormat, sqlDataTypes);
+        epDatasetTypeUnit = new DatasetTypeUnit(epTableFormat, epFileFormat, false);
+        
         FileFormat erFileFormat = new EmissionReleasesFileFormat(sqlDataTypes);
-        erDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(erFileFormat, sqlDataTypes), erFileFormat,
-                false);
+        TableFormat erTableFormat = factory.tableFormat(erFileFormat, sqlDataTypes);
+        erDatasetTypeUnit = new DatasetTypeUnit(erTableFormat, erFileFormat, false);
 
         FileFormat euFileFormat = new EmissionUnitsFileFormat(sqlDataTypes);
-        euDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(euFileFormat, sqlDataTypes), euFileFormat,
-                false);
+        TableFormat euTableFormat = factory.tableFormat(euFileFormat, sqlDataTypes);
+        euDatasetTypeUnit = new DatasetTypeUnit(euTableFormat, euFileFormat, false);
 
         FileFormat peFileFormat = new EmissionPeriodsFileFormat(sqlDataTypes);
-        peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
-                false);
+        TableFormat peTableFormat = factory.tableFormat(peFileFormat, sqlDataTypes);
+        peDatasetTypeUnit = new DatasetTypeUnit(peTableFormat, peFileFormat, false);
 
         FileFormat siFileFormat = new EmissionSitesFileFormat(sqlDataTypes);
-        siDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(siFileFormat, sqlDataTypes), siFileFormat,
-                false);
+        TableFormat siTableFormat = factory.tableFormat(siFileFormat, sqlDataTypes);
+        siDatasetTypeUnit = new DatasetTypeUnit(siTableFormat, siFileFormat, false);
         delegate = new NIFImportHelper();
     }
 

@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif.onroad;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
@@ -12,8 +13,9 @@ public class NIFOnRoadFileDatasetTypeUnits extends NIFOnRoadDatasetTypeUnits {
 
     private String tablePrefix;
 
-    public NIFOnRoadFileDatasetTypeUnits(File[] files, String tablePrefix, SqlDataTypes sqlDataTypes) {
-        super(sqlDataTypes);
+    public NIFOnRoadFileDatasetTypeUnits(File[] files, String tablePrefix, SqlDataTypes sqlDataTypes, 
+            DataFormatFactory factory) {
+        super(sqlDataTypes, factory);
         this.files = files;
         this.tablePrefix = tablePrefix;
     }

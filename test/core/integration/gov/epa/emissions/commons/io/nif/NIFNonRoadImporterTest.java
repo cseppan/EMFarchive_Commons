@@ -48,7 +48,9 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         try {
-            NIFNonRoadImporter importer = new NIFNonRoadImporter(files(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/nonroad");
+            String[] files = {"ct_em.txt", "ct_ep.txt", "ct_pe.txt"};
+            NIFNonRoadImporter importer = new NIFNonRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
             importer.run();
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tableEP));
@@ -60,23 +62,15 @@ public class NIFNonRoadImporterTest extends PersistenceTestCase {
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
-            new NIFNonRoadImporter(files_EP_PE(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/nonroad");
+            String[] files = {"ct_ep.txt", "ct_pe.txt"};
+            new NIFNonRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonroad import requires following types"));
             return;
         }
 
         fail("Should have failed as required types are unspecified");
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/nonroad";
-        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt") };
-    }
-
-    private File[] files_EP_PE() {
-        String dir = "test/data/nif/nonroad";
-        return new File[] { new File(dir, "ct_ep.txt"), new File(dir, "ct_pe.txt") };
     }
 
     private int countRecords(String tableName) {

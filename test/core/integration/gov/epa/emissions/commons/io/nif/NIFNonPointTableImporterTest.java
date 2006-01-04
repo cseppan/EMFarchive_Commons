@@ -53,7 +53,9 @@ public class NIFNonPointTableImporterTest extends PersistenceTestCase {
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         // first import the files
-        Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/nif/nonpoint");
+        String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
+        Importer importer = new NIFNonPointImporter(folder, files, dataset, datasource, sqlDataTypes);
         importer.run();
         assertEquals(1, countRecords(tableCE));
         assertEquals(21, countRecords(tableEM));
@@ -70,7 +72,9 @@ public class NIFNonPointTableImporterTest extends PersistenceTestCase {
 
     public void testShouldCheckForRequiredTables() throws Exception {
         try {
-            Importer importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/nonpoint");
+            String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
+            Importer importer = new NIFNonPointImporter(folder, files, dataset, datasource, sqlDataTypes);
             importer.run();
 
             String[] tables = { tableCE, tableEP };
@@ -81,12 +85,6 @@ public class NIFNonPointTableImporterTest extends PersistenceTestCase {
         }
 
         fail("Should have failed as not all tables are specified");
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/nonpoint";
-        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
-                new File(dir, "ky_pe.txt") };
     }
 
     private int countRecords(String tableName) {

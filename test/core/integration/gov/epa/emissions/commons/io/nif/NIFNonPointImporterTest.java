@@ -51,7 +51,9 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
         try {
-            NIFNonPointImporter importer = new NIFNonPointImporter(files(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/nonpoint");
+            String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
+            NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, dataset, datasource, sqlDataTypes);
             importer.run();
             assertEquals(1, countRecords(tableCE));
             assertEquals(21, countRecords(tableEM));
@@ -64,24 +66,15 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
-            new NIFNonPointImporter(files_CE_EP(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/nonpoint");
+            String[] files = {"ky_ce.txt", "ky_ep.txt"};
+            new NIFNonPointImporter(folder, files, dataset, datasource, sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types"));
             return;
         }
 
         fail("Should have failed as the required types were not specified");
-    }
-
-    private File[] files_CE_EP() {
-        String dir = "test/data/nif/nonpoint";
-        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_ep.txt") };
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/nonpoint";
-        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
-                new File(dir, "ky_pe.txt") };
     }
 
     private int countRecords(String tableName) {

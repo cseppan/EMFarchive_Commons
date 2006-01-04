@@ -60,7 +60,10 @@ public class NIFPointImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         try {
-            NIFPointImporter importer = new NIFPointImporter(files(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/point");
+            String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", 
+                    "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
+            NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, datasource, sqlDataTypes);
             importer.run();
             assertEquals(92, countRecords(tableCE));
             assertEquals(143, countRecords(tableEM));
@@ -76,25 +79,15 @@ public class NIFPointImporterTest extends PersistenceTestCase {
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
-            new NIFPointImporter(files_CE_EP(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/point");
+            String[] files = {"ky_ce.txt", "ky_ep.txt"};
+            new NIFPointImporter(folder, files, dataset, datasource, sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF point import requires following types"));
             return;
         }
 
         fail("Should have failed as required types are unspecified");
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/point";
-        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_em.txt"), new File(dir, "ky_ep.txt"),
-                new File(dir, "ky_er.txt"), new File(dir, "ky_eu.txt"), new File(dir, "ky_pe.txt"),
-                new File(dir, "ky_si.txt") };
-    }
-
-    private File[] files_CE_EP() {
-        String dir = "test/data/nif/point";
-        return new File[] { new File(dir, "ky_ce.txt"), new File(dir, "ky_ep.txt") };
     }
 
     private int countRecords(String tableName) {

@@ -51,7 +51,9 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         try {
-            NIFOnRoadImporter importer = new NIFOnRoadImporter(files(), dataset, datasource, sqlDataTypes);
+            File folder = new File("test/data/nif/onroad");
+            String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
+            NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
             importer.run();
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tablePE));
@@ -69,7 +71,9 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldCheckForReuiredInternalSources() throws Exception {
-        NIFOnRoadImporter importer = new NIFOnRoadImporter(files(), dataset, datasource, sqlDataTypes);
+        File folder = new File("test/data/nif/onroad");
+        String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
+        NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
         importer.run();
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tablePE));
@@ -86,11 +90,6 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
         }
 
         fail("Should have failed as required types are unspecified");
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/onroad";
-        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_pe.txt"), new File(dir, "ct_tr.txt") };
     }
 
     private int countRecords(String tableName) {

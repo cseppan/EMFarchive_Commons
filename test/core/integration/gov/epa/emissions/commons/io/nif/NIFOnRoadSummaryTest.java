@@ -50,7 +50,9 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
-        NIFOnRoadImporter importer = new NIFOnRoadImporter(files(), dataset, emissionDatasource, sqlDataTypes);
+        File folder = new File("test/data/nif/onroad");
+        String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
+        NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, emissionDatasource, sqlDataTypes);
         importer.run();
         SummaryTable summary = new NIFOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
@@ -58,11 +60,6 @@ public class NIFOnRoadSummaryTest extends PersistenceTestCase {
         assertEquals(10, countRecords(tablePE));
         assertEquals(8, countRecords(tableTR));
         assertEquals(2, countRecords("test_summary"));
-    }
-
-    private File[] files() {
-        String dir = "test/data/nif/onroad";
-        return new File[] { new File(dir, "ct_em.txt"), new File(dir, "ct_pe.txt"), new File(dir, "ct_tr.txt") };
     }
 
     private int countRecords(String tableName) {
