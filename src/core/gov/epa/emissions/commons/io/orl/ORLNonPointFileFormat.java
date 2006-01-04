@@ -72,6 +72,23 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
         cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
         cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
+        // columns in extended orl but not for SMOKE use
+        cols.add(new Column("MACT_FLAG", types.stringType(15), new StringFormatter(15)));
+        cols.add(new Column("PROCESS_MACT_COMPLIANCE_STATUS", types.stringType(6), new StringFormatter(8)));
+        cols.add(new Column("START_DATE", types.stringType(8), new StringFormatter(8)));
+        cols.add(new Column("END_DATE", types.stringType(8), new StringFormatter(8)));
+        cols.add(new Column("WINTER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("SPRING_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("SUMMER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("FALL_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_DAYS_PER_WEEK", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_WEEKS_PER_YEAR", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_HOURS_PER_DAY", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_HOURS_PER_YEAR", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_DAYS_PER_WEEK", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_WEEKS_PER_PERIOD", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_HOURS_PER_DAY", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_HOURS_PER_PERIOD", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
     }

@@ -71,14 +71,14 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("YLOC", types.realType(), new RealFormatter()));
         cols.add(new Column("UTMZ", types.smallInt(), new SmallIntegerFormatter()));
         cols.add(new Column("POLL", types.stringType(16), new StringFormatter(16)));
-
+        cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));
+        
         return (Column[]) cols.toArray(new Column[0]);
     }
 
     public Column[] optionalCols() {
         List cols = new ArrayList();
 
-        cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
@@ -96,7 +96,32 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
         cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
         cols.add(new Column("HORIZONTAL_AREA_FUGITIVE", types.realType(), new RealFormatter()));
         cols.add(new Column("RELEASE_HEIGHT_FUGITIVE", types.realType(), new RealFormatter()));
-
+        //columns in extended orl but not for SMOKE use
+        cols.add(new Column("ZIPCODE", types.stringType(14), new StringFormatter(14)));
+        cols.add(new Column("NAICS_FLAG", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("SIC_FLAG", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("MACT_FLAG", types.stringType(15), new StringFormatter(15)));
+        cols.add(new Column("PROCESS_MACT_COMPLIANCE_STATUS", types.stringType(6), new StringFormatter(6)));
+        cols.add(new Column("IPM_FACILITY", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("IPM_UNIT", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("BART_SOURCE", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("BART_UNIT", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("CONTROL_STATUS", types.stringType(12), new StringFormatter(12)));
+        cols.add(new Column("START_DATE", types.stringType(8), new StringFormatter(8)));
+        cols.add(new Column("END_DATE", types.stringType(8), new StringFormatter(8)));
+        cols.add(new Column("WINTER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("SPRING_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("SUMMER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("FALL_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_DAYS_PER_WEEK", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_WEEKS_PER_YEAR", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_HOURS_PER_DAY", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_HOURS_PER_YEAR", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_DAYS_PER_WEEK", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_WEEKS_PER_PERIOD", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_HOURS_PER_DAY", types.realType(), new RealFormatter()));
+        cols.add(new Column("PERIOD_HOURS_PER_PERIOD", types.realType(), new RealFormatter()));
+        
         return (Column[]) cols.toArray(new Column[0]);
     }
 
