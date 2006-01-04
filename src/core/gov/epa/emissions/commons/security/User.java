@@ -6,15 +6,16 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
- * The User value object encapsulates all of the EMF user data The User object
- * is serialized between the server and client using Apache Axis Web Services
- * (SOAP/HTTP and XML)
+ * The User value object encapsulates all of the EMF user data The User object is serialized between the server and
+ * client using Apache Axis Web Services (SOAP/HTTP and XML)
  * 
  */
 public class User implements Serializable {
 
     // State variables for the User bean
-    private String name;
+    private long id;
+
+    private String fullname;
 
     private String affiliation;
 
@@ -22,7 +23,7 @@ public class User implements Serializable {
 
     private String email;
 
-    private String userName;
+    private String username;
 
     private String encryptedPassword;
 
@@ -39,7 +40,7 @@ public class User implements Serializable {
     public User(String name, String affiliation, String phone, String email, String username, String password,
             boolean beAdmin, boolean disabled) throws UserException {
         this();
-        
+
         setFullName(name);
         setAffiliation(affiliation);
         setPhone(phone);
@@ -56,11 +57,11 @@ public class User implements Serializable {
             return false;
 
         User otherUser = (User) other;
-        return this.userName.equals(otherUser.userName);
+        return this.username.equals(otherUser.username);
     }
 
     public int hashCode() {
-        return userName.hashCode();
+        return username.hashCode();
     }
 
     public boolean isAcctDisabled() {
@@ -101,13 +102,13 @@ public class User implements Serializable {
     }
 
     public String getFullName() {
-        return name;
+        return fullname;
     }
 
     public void setFullName(String name) throws UserException {
         if (name == null || name.length() == 0)
             throw new UserException("Name should be specified");
-        this.name = name;
+        this.fullname = name;
     }
 
     public boolean isInAdminGroup() {
@@ -130,7 +131,7 @@ public class User implements Serializable {
             throw new UserException("One or more characters of password should be a number");
         }
 
-        if (password.equals(userName)) {
+        if (password.equals(username)) {
             throw new UserException("Username should be different from Password");
         }
 
@@ -142,7 +143,7 @@ public class User implements Serializable {
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     public void setUsername(String username) throws UserException {
@@ -155,7 +156,7 @@ public class User implements Serializable {
 
         verifyUsernamePasswordDontMatch(username);
 
-        this.userName = username;
+        this.username = username;
     }
 
     private void verifyUsernamePasswordDontMatch(String username) throws UserException {
@@ -203,5 +204,14 @@ public class User implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
