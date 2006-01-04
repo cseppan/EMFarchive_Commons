@@ -14,7 +14,7 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -36,7 +36,7 @@ public class DaySpecPointInventoryImporter implements Importer {
 
     public DaySpecPointInventoryImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
     public DaySpecPointInventoryImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,

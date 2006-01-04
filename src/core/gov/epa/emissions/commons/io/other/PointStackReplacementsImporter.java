@@ -15,7 +15,7 @@ import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -34,7 +34,7 @@ public class PointStackReplacementsImporter implements Importer {
 
     public PointStackReplacementsImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
     public PointStackReplacementsImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,

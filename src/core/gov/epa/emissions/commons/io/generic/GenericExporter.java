@@ -10,7 +10,7 @@ import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -35,7 +35,7 @@ public class GenericExporter implements Exporter {
     private DataFormatFactory dataFormatFactory;
 
     public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
-        this(dataset, datasource, fileFormat, new FixedDataFormatFactory());
+        this(dataset, datasource, fileFormat, new NonVersionedDataFormatFactory());
     }
 
     public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat,

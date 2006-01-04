@@ -9,7 +9,7 @@ import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -35,7 +35,7 @@ public class SMKReportExporter implements Exporter {
     private DataFormatFactory dataFormatFactory;
     
     public SMKReportExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
-        setup(dataset, datasource, types, new FixedDataFormatFactory());
+        setup(dataset, datasource, types, new NonVersionedDataFormatFactory());
     }
     
     public SMKReportExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,

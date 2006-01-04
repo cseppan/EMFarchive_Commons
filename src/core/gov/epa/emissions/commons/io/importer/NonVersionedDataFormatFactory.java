@@ -8,7 +8,7 @@ import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.SimpleExportStatement;
 import gov.epa.emissions.commons.io.TableFormat;
 
-public class FixedDataFormatFactory implements DataFormatFactory {
+public class NonVersionedDataFormatFactory implements DataFormatFactory {
 
     public TableFormat tableFormat(FileFormat fileFormat, SqlDataTypes sqlDataTypes) {
         return new FixedColsTableFormat(fileFormat, sqlDataTypes);

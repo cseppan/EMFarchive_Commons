@@ -1,13 +1,14 @@
 package gov.epa.emissions.commons.io.nif.nonpointNonroad;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
+import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.nif.NIFImportHelper;
 import gov.epa.emissions.commons.io.nif.NIFDatasetTypeUnits;
+import gov.epa.emissions.commons.io.nif.NIFImportHelper;
 
 public abstract class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits {
 
@@ -21,24 +22,21 @@ public abstract class NIFNonPointDatasetTypeUnits implements NIFDatasetTypeUnits
 
     protected NIFImportHelper delegate;
 
-    public NIFNonPointDatasetTypeUnits(SqlDataTypes sqlDataTypes) {
+    public NIFNonPointDatasetTypeUnits(SqlDataTypes sqlDataTypes, DataFormatFactory factory) {
         FileFormat ceFileFormat = new ControlEfficiencyFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Control Efficiency");
-        ceDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(ceFileFormat, sqlDataTypes), ceFileFormat,
-                false);
+        TableFormat ceTableFormat = factory.tableFormat(ceFileFormat, sqlDataTypes);
+        ceDatasetTypeUnit = new DatasetTypeUnit(ceTableFormat, ceFileFormat, false);
 
         FileFormat emFileFormat = new EmissionRecordsFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Records");
-        emDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(emFileFormat, sqlDataTypes), emFileFormat,
-                false);
+        emDatasetTypeUnit = new DatasetTypeUnit(factory.tableFormat(emFileFormat, sqlDataTypes), emFileFormat, false);
 
         FileFormat epFileFormat = new EmissionProcessFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Process");
-        epDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(epFileFormat, sqlDataTypes), epFileFormat,
-                false);
+        epDatasetTypeUnit = new DatasetTypeUnit(factory.tableFormat(epFileFormat, sqlDataTypes), epFileFormat, false);
 
         FileFormat peFileFormat = new EmissionPeriodsFileFormat(sqlDataTypes, "NIF3.0 Nonpoint Emission Periods");
-        peDatasetTypeUnit = new DatasetTypeUnit(new FixedColsTableFormat(peFileFormat, sqlDataTypes), peFileFormat,
-                false);
-        delegate = new NIFImportHelper();
+        peDatasetTypeUnit = new DatasetTypeUnit(factory.tableFormat(peFileFormat, sqlDataTypes), peFileFormat, false);
 
+        delegate = new NIFImportHelper();
     }
 
     public FormatUnit[] formatUnits() {

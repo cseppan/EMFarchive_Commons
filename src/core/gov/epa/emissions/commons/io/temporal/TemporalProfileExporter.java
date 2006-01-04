@@ -10,7 +10,7 @@ import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.InternalSource;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,7 +31,7 @@ public class TemporalProfileExporter implements Exporter {
     private DataFormatFactory dataFormatFactory;
 
     public TemporalProfileExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this(dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        this(dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
     public TemporalProfileExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,

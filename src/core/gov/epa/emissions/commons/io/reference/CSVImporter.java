@@ -13,7 +13,7 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
@@ -36,7 +36,7 @@ public class CSVImporter implements Importer {
 
     public CSVImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException,IOException,Exception {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
     public CSVImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,

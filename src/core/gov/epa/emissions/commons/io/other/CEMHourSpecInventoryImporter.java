@@ -15,7 +15,7 @@ import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingTokenizer;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
@@ -33,7 +33,7 @@ public class CEMHourSpecInventoryImporter implements Importer {
 
     public CEMHourSpecInventoryImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
     public CEMHourSpecInventoryImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,

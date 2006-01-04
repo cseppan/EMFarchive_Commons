@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 public class TemporalReferenceExporter extends GenericExporter {
 
     public TemporalReferenceExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
-        this(dataset, datasource, types, new FixedDataFormatFactory());
+        this(dataset, datasource, types, new NonVersionedDataFormatFactory());
     }
 
     public TemporalReferenceExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,

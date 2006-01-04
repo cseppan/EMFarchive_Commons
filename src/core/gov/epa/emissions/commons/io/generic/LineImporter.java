@@ -13,7 +13,7 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
@@ -32,7 +32,7 @@ public class LineImporter implements Importer {
 
     public LineImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        create(folder, filenames, dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        create(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
     public LineImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,

@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
-import gov.epa.emissions.commons.io.importer.FixedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.other.SMKReportExporter;
 
 import java.io.File;
@@ -16,7 +16,7 @@ public class CSVExporter implements Exporter {
     private SMKReportExporter delegate;
     
     public CSVExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        setup(dataset, datasource, sqlDataTypes, new FixedDataFormatFactory());
+        setup(dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
     public CSVExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
