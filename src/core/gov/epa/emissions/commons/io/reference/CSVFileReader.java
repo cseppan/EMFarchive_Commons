@@ -109,11 +109,11 @@ public class CSVFileReader implements Reader {
         fileReader.mark((int)file.length()); //FIXME: what if file gets too big?
         
         for(; line != null; line = fileReader.readLine()) {
-            if(line.split(",").length >= 2) 
+            if(!isComment(line) && line.split(",").length >= 2) 
                 tokenizer = new CommaDelimitedTokenizer();
-            else if(line.split(";").length >= 2) 
+            else if(!isComment(line) && line.split(";").length >= 2) 
                 tokenizer = new SemiColonDelimitedTokenizer();
-            else if (bar.split(line).length >= 2) 
+            else if (!isComment(line) && bar.split(line).length >= 2) 
                 tokenizer = new PipeDelimitedTokenizer();
             else
                 header.add(line);
@@ -125,8 +125,10 @@ public class CSVFileReader implements Reader {
         }
         
         fileReader.reset();
-        line = fileReader.readLine();
         tokenizer = new WhitespaceDelimitedTokenizer();
+        line = fileReader.readLine();
+        while(isComment(line))
+            line = fileReader.readLine();
         cols = tokenizer.tokens(line);
         return ;
     }
