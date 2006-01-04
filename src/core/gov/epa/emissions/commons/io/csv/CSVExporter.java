@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.reference;
+package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;

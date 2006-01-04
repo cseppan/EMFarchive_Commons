@@ -7,12 +7,12 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.csv.CSVExporter;
+import gov.epa.emissions.commons.io.csv.CSVImporter;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
-import gov.epa.emissions.commons.io.reference.CSVExporter;
-import gov.epa.emissions.commons.io.reference.CSVImporter;
 import gov.epa.emissions.commons.io.reference.ReferenceCSVFileImporter;
 
 import java.io.BufferedReader;

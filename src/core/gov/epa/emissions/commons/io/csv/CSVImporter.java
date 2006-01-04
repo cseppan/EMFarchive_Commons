@@ -1,4 +1,4 @@
-package gov.epa.emissions.commons.io.reference;
+package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -16,6 +16,7 @@ import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.reference.ReferenceCSVFileFormat;
 
 import java.io.File;
 import java.io.IOException;
