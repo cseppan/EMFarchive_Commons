@@ -31,7 +31,7 @@ public class Mutex {
     }
 
     public boolean isLocked(User user) {
-        return (this.owner.equals(user.getUsername()));
+        return (user.getUsername().equals(owner));
     }
 
     public boolean isLocked() {
