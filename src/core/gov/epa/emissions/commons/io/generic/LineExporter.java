@@ -21,8 +21,7 @@ public class LineExporter extends GenericExporter {
     }
     
     protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        String line = data.getString(cols[0].name());
-        line.replace('_', '-');
+        String line = data.getString(cols[1].name());
         if(line.equalsIgnoreCase("-9"))
             writer.println();
         else

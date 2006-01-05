@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.generic;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
 public class LineFileFormat implements FileFormat {
@@ -22,7 +23,7 @@ public class LineFileFormat implements FileFormat {
     }
 
     private Column[] createCols(SqlDataTypes types) {
-        return new Column[]{new Column("Col_1", types.stringType(256), new StringFormatter(256))};
-
+        return new Column[]{new Column("Line_Number", types.realType(), new RealFormatter()),
+                new Column("Lines", types.stringType(256), new StringFormatter(256))};
     }
 }
