@@ -83,12 +83,16 @@ public class Sector implements Serializable, Lockable {
         return lock.getLockOwner();
     }
 
-    public void setLockOwner(String username) {
-        lock.setLockOwner(username);
+    public void setLockOwner(String owner) {
+        lock.setLockOwner(owner);
     }
 
-    public boolean isLocked(User user) {
-        return lock.isLocked(user);
+    public boolean isLocked(String owner) {
+        return lock.isLocked(owner);
+    }
+
+    public boolean isLocked(User owner) {
+        return lock.isLocked(owner);
     }
 
     public boolean isLocked() {

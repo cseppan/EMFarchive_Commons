@@ -145,8 +145,12 @@ public class DatasetType implements Serializable, Lockable {
         this.lock.setLockDate(lockDate);
     }
 
-    public boolean isLocked(User user) {
-        return lock.isLocked(user);
+    public boolean isLocked(String owner) {
+        return lock.isLocked(owner);
+    }
+
+    public boolean isLocked(User owner) {
+        return lock.isLocked(owner);
     }
 
     public boolean isLocked() {

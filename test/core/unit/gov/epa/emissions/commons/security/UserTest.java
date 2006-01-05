@@ -355,11 +355,11 @@ public class UserTest extends TestCase {
         locked.setLockDate(new Date());
 
         User lockedByUser = new User();
-        lockedByUser.setFullName("user");
-        assertTrue("Should be locked", locked.isLocked(lockedByUser));
+        lockedByUser.setUsername("user");
+        assertTrue("Should be locked", locked.isLocked(lockedByUser.getUsername()));
 
         User notLockedByUser = new User();
-        notLockedByUser.setFullName("user2");
-        assertFalse("Should not be locked", locked.isLocked(notLockedByUser));
+        notLockedByUser.setUsername("user2");
+        assertFalse("Should not be locked", locked.isLocked(notLockedByUser.getUsername()));
     }
 }

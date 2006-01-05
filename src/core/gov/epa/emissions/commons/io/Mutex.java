@@ -26,8 +26,12 @@ public class Mutex {
         this.owner = username;
     }
 
+    public boolean isLocked(String owner) {
+        return (this.owner.equals(owner));
+    }
+
     public boolean isLocked(User user) {
-        return (user.getFullName().equals(owner));
+        return (this.owner.equals(user.getUsername()));
     }
 
     public boolean isLocked() {

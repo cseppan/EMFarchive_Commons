@@ -12,9 +12,11 @@ public interface Lockable {
 
     String getLockOwner();
 
-    void setLockOwner(String username);
+    void setLockOwner(String owner);
 
-    boolean isLocked(User user);
+    boolean isLocked(String owner);
+
+    boolean isLocked(User owner);
 
     boolean isLocked();
 
