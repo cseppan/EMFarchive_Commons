@@ -34,12 +34,12 @@ public class DatasetTypeTest extends TestCase {
 
     public void testShouldBeLockedOnlyIfUsernameAndDateIsSet() {
         DatasetType locked = new DatasetType();
-        locked.setUsername("user");
+        locked.setLockOwner("user");
         locked.setLockDate(new Date());
         assertTrue("Should be locked", locked.isLocked());
 
         DatasetType unlockedAsOnlyUsernameIsSet = new DatasetType();
-        unlockedAsOnlyUsernameIsSet.setUsername("user");
+        unlockedAsOnlyUsernameIsSet.setLockOwner("user");
         assertFalse("Should be unlocked", unlockedAsOnlyUsernameIsSet.isLocked());
 
         DatasetType unlockedAsOnlyLockedDateIsSet = new DatasetType();
@@ -49,7 +49,7 @@ public class DatasetTypeTest extends TestCase {
 
     public void testShouldBeLockedIfUsernameMatches() throws Exception {
         DatasetType locked = new DatasetType();
-        locked.setUsername("user");
+        locked.setLockOwner("user");
         locked.setLockDate(new Date());
 
         User lockedByUser = new User();

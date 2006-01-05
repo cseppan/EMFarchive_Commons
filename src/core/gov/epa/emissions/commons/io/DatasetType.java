@@ -129,12 +129,12 @@ public class DatasetType implements Serializable, Lockable {
         keywordsList.addAll(Arrays.asList(keywords));
     }
 
-    public String getUsername() {
-        return lock.getUsername();
+    public String getLockOwner() {
+        return lock.getLockOwner();
     }
 
-    public void setUsername(String username) {
-        lock.setUsername(username);
+    public void setLockOwner(String username) {
+        lock.setLockOwner(username);
     }
 
     public Date getLockDate() {

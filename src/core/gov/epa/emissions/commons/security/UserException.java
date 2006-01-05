@@ -1,15 +1,12 @@
 package gov.epa.emissions.commons.security;
 
-import gov.epa.emissions.commons.CommonsException;
+public class UserException extends RuntimeException {
 
-public class UserException extends CommonsException {
+    String details;
 
     public UserException(String description, String details, Throwable cause) {
-        super(description, details, cause);
-    }
-
-    public UserException(String description, String details) {
-        super(description, details);
+        super(description, cause);
+        this.details = details;
     }
 
     public UserException(String message) {

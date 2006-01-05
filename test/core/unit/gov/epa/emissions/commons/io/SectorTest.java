@@ -31,12 +31,12 @@ public class SectorTest extends TestCase {
 
     public void testShouldBeLockedOnlyIfUsernameAndDateIsSet() {
         Lockable locked = new Sector();
-        locked.setUsername("user");
+        locked.setLockOwner("user");
         locked.setLockDate(new Date());
         assertTrue("Should be locked", locked.isLocked());
 
         Lockable unlockedAsOnlyUsernameIsSet = new Sector();
-        unlockedAsOnlyUsernameIsSet.setUsername("user");
+        unlockedAsOnlyUsernameIsSet.setLockOwner("user");
         assertFalse("Should be unlocked", unlockedAsOnlyUsernameIsSet.isLocked());
 
         Lockable unlockedAsOnlyLockedDateIsSet = new Sector();
@@ -46,7 +46,7 @@ public class SectorTest extends TestCase {
 
     public void testShouldBeLockedIfUsernameMatches() throws Exception {
         Lockable locked = new Sector();
-        locked.setUsername("user");
+        locked.setLockOwner("user");
         locked.setLockDate(new Date());
 
         User lockedByUser = new User();

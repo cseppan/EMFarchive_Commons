@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Mutex {
 
-    private String username;
+    private String owner;
 
     private Date lockDate;
 
@@ -18,20 +18,20 @@ public class Mutex {
         this.lockDate = lockDate;
     }
 
-    public String getUsername() {
-        return username;
+    public String getLockOwner() {
+        return owner;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLockOwner(String username) {
+        this.owner = username;
     }
 
     public boolean isLocked(User user) {
-        return (user.getFullName().equals(username));
+        return (user.getFullName().equals(owner));
     }
 
     public boolean isLocked() {
-        return username != null && lockDate != null;
+        return owner != null && lockDate != null;
     }
 
 }

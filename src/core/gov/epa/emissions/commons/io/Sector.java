@@ -79,12 +79,12 @@ public class Sector implements Serializable, Lockable {
         this.sectorCriteria = sectorCriteria;
     }
 
-    public String getUsername() {
-        return lock.getUsername();
+    public String getLockOwner() {
+        return lock.getLockOwner();
     }
 
-    public void setUsername(String username) {
-        lock.setUsername(username);
+    public void setLockOwner(String username) {
+        lock.setLockOwner(username);
     }
 
     public boolean isLocked(User user) {

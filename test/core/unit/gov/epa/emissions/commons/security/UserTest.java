@@ -1,5 +1,9 @@
 package gov.epa.emissions.commons.security;
 
+import gov.epa.emissions.commons.io.Lockable;
+
+import java.util.Date;
+
 import junit.framework.TestCase;
 
 public class UserTest extends TestCase {
@@ -330,4 +334,32 @@ public class UserTest extends TestCase {
         fail("should fail when Email is unspecified");
     }
 
+    public void testShouldBeLockedOnlyIfUsernameAndDateIsSet() {
+        Lockable locked = new User();
+        locked.setLockOwner("user");
+        locked.setLockDate(new Date());
+        assertTrue("Should be locked", locked.isLocked());
+
+        Lockable unlockedAsOnlyUsernameIsSet = new User();
+        unlockedAsOnlyUsernameIsSet.setLockOwner("user");
+        assertFalse("Should be unlocked", unlockedAsOnlyUsernameIsSet.isLocked());
+
+        Lockable unlockedAsOnlyLockedDateIsSet = new User();
+        unlockedAsOnlyLockedDateIsSet.setLockDate(new Date());
+        assertFalse("Should be unlocked", unlockedAsOnlyLockedDateIsSet.isLocked());
+    }
+
+    public void testShouldBeLockedIfUsernameMatches() throws Exception {
+        Lockable locked = new User();
+        locked.setLockOwner("user");
+        locked.setLockDate(new Date());
+
+        User lockedByUser = new User();
+        lockedByUser.setFullName("user");
+        assertTrue("Should be locked", locked.isLocked(lockedByUser));
+
+        User notLockedByUser = new User();
+        notLockedByUser.setFullName("user2");
+        assertFalse("Should not be locked", locked.isLocked(notLockedByUser));
+    }
 }

@@ -1,8 +1,11 @@
 package gov.epa.emissions.commons.security;
 
 import gov.epa.emissions.commons.CommonsException;
+import gov.epa.emissions.commons.io.Lockable;
+import gov.epa.emissions.commons.io.Mutex;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -10,7 +13,7 @@ import java.util.regex.Pattern;
  * client using Apache Axis Web Services (SOAP/HTTP and XML)
  * 
  */
-public class User implements Serializable {
+public class User implements Serializable, Lockable {
 
     // State variables for the User bean
     private long id;
@@ -33,8 +36,11 @@ public class User implements Serializable {
 
     private PasswordGenerator passwordGen;
 
+    private Mutex lock;
+
     public User() {// needed for serialization
         this.passwordGen = new PasswordGenerator();
+        lock = new Mutex();
     }
 
     public User(String name, String affiliation, String phone, String email, String username, String password,
@@ -206,7 +212,6 @@ public class User implements Serializable {
         this.encryptedPassword = encryptedPassword;
     }
 
-    
     public long getId() {
         return id;
     }
@@ -214,4 +219,29 @@ public class User implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
+
+    public Date getLockDate() {
+        return lock.getLockDate();
+    }
+
+    public void setLockDate(Date lockDate) {
+        lock.setLockDate(lockDate);
+    }
+
+    public boolean isLocked(User user) {
+        return lock.isLocked(user);
+    }
+
+    public boolean isLocked() {
+        return lock.isLocked();
+    }
+
+    public String getLockOwner() {
+        return lock.getLockOwner();
+    }
+
+    public void setLockOwner(String username) {
+        lock.setLockOwner(username);
+    }
+
 }

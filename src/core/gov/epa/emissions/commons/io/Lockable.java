@@ -10,9 +10,9 @@ public interface Lockable {
 
     void setLockDate(Date lockDate);
 
-    String getUsername();
+    String getLockOwner();
 
-    void setUsername(String username);
+    void setLockOwner(String username);
 
     boolean isLocked(User user);
 
