@@ -19,6 +19,7 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
     }
 
     private void identifyTokenizer(String input) throws ImporterException {
+        initialize = true;
         Tokenizer commaTokenizer = new CommaDelimitedTokenizer();
         String[] tokens = commaTokenizer.tokens(input);
         if (tokens.length >= minTokens) {

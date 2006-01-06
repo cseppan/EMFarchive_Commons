@@ -40,7 +40,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             importer.run();
         } catch (ImporterException e) {
             TableReader tableReader = tableReader(datasource);
-            assertFalse("should have encountered an error(missing cols) on record 5, and dropped the table",
+            assertFalse("should have enctountered an error(missing cols) on record 5, and dropped the table",
                     tableReader.exists(datasource.getName(), dataset.getName()));
             return;
         }

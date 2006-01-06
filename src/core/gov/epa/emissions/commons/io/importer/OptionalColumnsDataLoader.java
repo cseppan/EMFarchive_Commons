@@ -47,6 +47,10 @@ public class OptionalColumnsDataLoader implements DataLoader {
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         DataModifier modifier = datasource.dataModifier();
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
+            int minColsSize = fileFormat.minCols().length;
+            if (record.size() < minColsSize)
+                throw new ImporterException("The number of tokens in the line are " + record.size()
+                        + ", It's less than minimum number of columns expected(" + minColsSize + ")");
             String[] data = data(dataset, record, fileFormat);
             try {
                 modifier.insertRow(table, data);
@@ -58,13 +62,9 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private String[] data(Dataset dataset, Record record, FileFormatWithOptionalCols format) {
         List data = new ArrayList();
-
         data.addAll(record.tokens());
-
         format.fillDefaults(data, dataset.getDatasetid());
-
         massageNullMarkers(data);
-
         return (String[]) data.toArray(new String[0]);
     }
 
