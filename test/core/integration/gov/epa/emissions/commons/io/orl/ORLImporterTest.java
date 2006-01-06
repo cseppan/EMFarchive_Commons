@@ -219,8 +219,11 @@ public class ORLImporterTest extends PersistenceTestCase {
 
     public void testShouldLoadVersionedInternalSourceIntoDatasetOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+//        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+//                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "NonPoint_WithComments.txt" }, dataset,
                 datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+
         importer.run();
 
         InternalSource[] sources = dataset.getInternalSources();
@@ -237,7 +240,7 @@ public class ORLImporterTest extends PersistenceTestCase {
             assertEquals(expectedCols[i], actualCols[i]);
         }
 
-        File file = new File(folder, "small-nonpoint.txt");
+        File file = new File(folder, "NonPoint_WithComments.txt");
         assertEquals(file.getAbsolutePath(), source.getSource());
         assertEquals(file.length(), source.getSourceSize());
     }
