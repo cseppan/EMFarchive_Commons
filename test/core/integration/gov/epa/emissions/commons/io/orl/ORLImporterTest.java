@@ -219,10 +219,11 @@ public class ORLImporterTest extends PersistenceTestCase {
 
     public void testShouldLoadVersionedInternalSourceIntoDatasetOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-//        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
-//                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "NonPoint_WithComments.txt" }, dataset,
-                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        // ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" },
+        // dataset,
+        // datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "NonPoint_WithComments.txt" },
+                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
 
         importer.run();
 
@@ -335,8 +336,7 @@ public class ORLImporterTest extends PersistenceTestCase {
         assertEquals(endCal.getTime(), end);
     }
 
-    // FIXME: test 'pauses' indefinitely
-    public void FIXME_testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
+    public void testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
                 sqlDataTypes);
@@ -360,6 +360,15 @@ public class ORLImporterTest extends PersistenceTestCase {
                 + "#DESC North Carolina data extracted from original file using UNIX grep command.\n"
                 + "#DESC    paste commands. \n" + "#comment 1\n#comment 2\n#comment 3\n#comment 4\n";
         assertEquals(expected, dataset.getDescription());
+    }
+
+    public void testShouldImportExtendedOnRoad() throws Exception {
+        File folder = new File("test/data/orl/extended");
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "orl-extended-onroad.txt" }, dataset,
+                datasource, sqlDataTypes);
+        importer.run();
+        int rows = countRecords();
+        assertEquals(12, rows);
     }
 
     private int countRecords() {
