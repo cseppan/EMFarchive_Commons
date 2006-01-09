@@ -14,7 +14,7 @@ public class CountryFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "Country - Country, state, and county names and data";
+        return "Country, state, and county names and data";
     }
 
     public Column[] cols() {

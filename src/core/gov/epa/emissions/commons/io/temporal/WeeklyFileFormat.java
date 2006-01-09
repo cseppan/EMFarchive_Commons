@@ -14,7 +14,7 @@ public class WeeklyFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "Weekly - Temporal Profile";
+        return "Temporal Profile";
     }
 
     public Column[] cols() {

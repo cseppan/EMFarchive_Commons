@@ -14,7 +14,7 @@ public class MonthlyFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "Monthly - Temporal Profile";
+        return "Temporal Profile";
     }
 
     public Column[] cols() {

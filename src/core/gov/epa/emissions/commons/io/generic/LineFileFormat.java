@@ -15,7 +15,7 @@ public class LineFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "Line Importer";
+        return "Text File";
     }
 
     public Column[] cols() {

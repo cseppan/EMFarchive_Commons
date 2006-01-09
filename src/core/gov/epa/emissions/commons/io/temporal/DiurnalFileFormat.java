@@ -17,7 +17,7 @@ public class DiurnalFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "Diurnal - Temporal Profile";
+        return "Temporal Profile";
     }
 
     public Column[] cols() {

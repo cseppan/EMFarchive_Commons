@@ -15,7 +15,7 @@ public class CountyFileFormat implements FileFormat {
     }
 
     public String identify() {
-        return "County - Country, state, and county names and data";
+        return "Country, state, and county names and data";
     }
 
     //FIXME: The sample input data has shifted from the SMOKE description. Columns
