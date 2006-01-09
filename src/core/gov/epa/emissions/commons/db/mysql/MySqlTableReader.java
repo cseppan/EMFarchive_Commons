@@ -1,4 +1,7 @@
-package gov.epa.emissions.commons.db;
+package gov.epa.emissions.commons.db.mysql;
+
+import gov.epa.emissions.commons.db.DbOperation;
+import gov.epa.emissions.commons.db.TableReader;
 
 import java.sql.Connection;
 

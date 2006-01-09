@@ -1,8 +1,12 @@
 package gov.epa.emissions.commons.db;
 
 import gov.epa.emissions.commons.db.mysql.MySqlDbServer;
+import gov.epa.emissions.commons.db.mysql.MySqlDbUpdate;
+import gov.epa.emissions.commons.db.mysql.MySqlTableReader;
 import gov.epa.emissions.commons.db.postgres.PostgresConnectionFactory;
 import gov.epa.emissions.commons.db.postgres.PostgresDbServer;
+import gov.epa.emissions.commons.db.postgres.PostgresDbUpdate;
+import gov.epa.emissions.commons.db.postgres.PostgresTableReader;
 
 import java.sql.SQLException;
 import java.util.Properties;

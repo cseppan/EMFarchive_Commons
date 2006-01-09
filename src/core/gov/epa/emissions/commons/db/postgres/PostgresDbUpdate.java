@@ -1,6 +1,8 @@
-package gov.epa.emissions.commons.db;
+package gov.epa.emissions.commons.db.postgres;
 
 import gov.epa.emissions.commons.Config;
+import gov.epa.emissions.commons.db.DbOperation;
+import gov.epa.emissions.commons.db.DbUpdate;
 
 import java.sql.Connection;
 import java.sql.SQLException;
