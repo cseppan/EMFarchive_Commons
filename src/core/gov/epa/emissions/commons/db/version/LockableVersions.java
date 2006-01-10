@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
-public class NewVersions {
+public class LockableVersions {
 
     private Datasource datasource;
 
@@ -29,7 +29,7 @@ public class NewVersions {
 
     private PreparedStatement versionsStatement;
 
-    public NewVersions(Datasource datasource) throws SQLException {
+    public LockableVersions(Datasource datasource) throws SQLException {
         this.datasource = datasource;
 
         Connection connection = datasource.getConnection();
@@ -57,28 +57,28 @@ public class NewVersions {
                 ResultSet.CONCUR_READ_ONLY);
     }
 
-    public Version[] getPath(long datasetId, int finalVersion) throws SQLException {
+    public LockableVersion[] getPath(long datasetId, int finalVersion) throws SQLException {
         ResultSet rs = queryVersion(datasetId, finalVersion);
         if (!rs.next())
-            return new Version[0];
+            return new LockableVersion[0];
 
         return doGetPath(datasetId, rs);
     }
 
-    private Version[] doGetPath(long datasetId, ResultSet rs) throws SQLException {
+    private LockableVersion[] doGetPath(long datasetId, ResultSet rs) throws SQLException {
         int[] parentVersions = parseParentVersions(rs.getString("path"));
         List versions = new ArrayList();
         for (int i = 0; i < parentVersions.length; i++) {
-            Version parent = get(datasetId, parentVersions[i]);
+            LockableVersion parent = get(datasetId, parentVersions[i]);
             versions.add(parent);
         }
 
         versions.add(extractVersion(rs));
 
-        return (Version[]) versions.toArray(new Version[0]);
+        return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
     }
 
-    public Version get(long datasetId, int version) throws SQLException {
+    public LockableVersion get(long datasetId, int version) throws SQLException {
         ResultSet rs = queryVersion(datasetId, version);
         if (!rs.next())
             return null;
@@ -94,8 +94,8 @@ public class NewVersions {
         return rs;
     }
 
-    private Version extractVersion(ResultSet rs) throws SQLException {
-        Version version = new Version();
+    private LockableVersion extractVersion(ResultSet rs) throws SQLException {
+        LockableVersion version = new LockableVersion();
         version.setDatasetId(rs.getLong("dataset_id"));
         version.setVersion(rs.getInt("version"));
         version.setName(rs.getString("name"));
@@ -122,7 +122,7 @@ public class NewVersions {
     public int getLastFinalVersion(long datasetId) throws SQLException {
         int versionNumber = 0;
 
-        Version[] allVersionForDataset = get(datasetId);
+        LockableVersion[] allVersionForDataset = get(datasetId);
 
         for (int i = 0; i < allVersionForDataset.length; i++) {
             int versNum = allVersionForDataset[i].getVersion();
@@ -135,25 +135,25 @@ public class NewVersions {
         return versionNumber;
     }
 
-    public Version[] get(long datasetId) throws SQLException {
+    public LockableVersion[] get(long datasetId) throws SQLException {
         // FIXME: convert to long
         versionsStatement.setInt(1, (int) datasetId);
         ResultSet rs = versionsStatement.executeQuery();
 
         List versions = new ArrayList();
         while (rs.next()) {
-            Version version = extractVersion(rs);
+            LockableVersion version = extractVersion(rs);
             versions.add(version);
         }
 
-        return (Version[]) versions.toArray(new Version[0]);
+        return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
     }
 
-    public Version derive(Version base, String name) throws SQLException {
+    public LockableVersion derive(LockableVersion base, String name) throws SQLException {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
 
-        Version version = new Version();
+        LockableVersion version = new LockableVersion();
         int newVersionNum = getNextVersionNumber(base.getDatasetId());
 
         version.setName(name);
@@ -174,7 +174,7 @@ public class NewVersions {
         return get(version.getDatasetId(), version.getVersion());
     }
 
-    public Version markFinal(Version derived) throws SQLException {
+    public LockableVersion markFinal(LockableVersion derived) throws SQLException {
         derived.markFinal();
         derived.setDate(new Date());
 
@@ -188,7 +188,7 @@ public class NewVersions {
         return get(derived.getDatasetId(), derived.getVersion());
     }
 
-    private String path(Version base) {
+    private String path(LockableVersion base) {
         return base.createPathForDerived();
     }
 
