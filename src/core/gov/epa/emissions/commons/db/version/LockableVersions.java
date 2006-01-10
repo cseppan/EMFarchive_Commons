@@ -16,6 +16,11 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 public class LockableVersions {
 
@@ -39,20 +44,20 @@ public class LockableVersions {
 
     private void createPreparedStatements(Datasource datasource, Connection connection) throws SQLException {
         String insert = "INSERT INTO " + datasource.getName()
-                + ".versions (dataset_id,version,name, path,date) VALUES (?,?,?,?,?)";
+                + ".lockable_versions (dataset_id,version,name, path,date) VALUES (?,?,?,?,?)";
         insertStatement = connection.prepareStatement(insert);
 
         String markFinal = "UPDATE " + datasource.getName()
-                + ".versions SET final_version=true AND date=? WHERE dataset_id=? AND version=?";
+                + ".lockable_versions SET final_version=true AND date=? WHERE dataset_id=? AND version=?";
         markFinalStatement = connection.prepareStatement(markFinal);
 
         String selectVersionNumber = "SELECT version FROM " + datasource.getName()
-                + ".versions WHERE dataset_id=? ORDER BY version";
+                + ".lockable_versions WHERE dataset_id=? ORDER BY version";
         nextVersionStatement = connection.prepareStatement(selectVersionNumber, ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
 
         String selectVersions = "SELECT * FROM " + datasource.getName()
-                + ".versions WHERE dataset_id=? ORDER BY version";
+                + ".lockable_versions WHERE dataset_id=? ORDER BY version";
         versionsStatement = connection.prepareStatement(selectVersions, ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
     }
@@ -88,7 +93,7 @@ public class LockableVersions {
 
     private ResultSet queryVersion(long datasetId, int version) throws SQLException {
         DataQuery query = datasource.query();
-        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".versions WHERE dataset_id = "
+        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".lockable_versions WHERE dataset_id = "
                 + datasetId + " AND version = " + version);
 
         return rs;
@@ -149,6 +154,22 @@ public class LockableVersions {
         return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
     }
 
+    public LockableVersion[] get(long datasetId, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria crit = session.createCriteria(LockableVersion.class).add(
+                    Restrictions.eq("datasetId", new Long(datasetId)));
+            List versions = crit.list();
+            tx.commit();
+
+            return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
+    }
+
     public LockableVersion derive(LockableVersion base, String name) throws SQLException {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
@@ -179,7 +200,7 @@ public class LockableVersions {
         derived.setDate(new Date());
 
         // FIXME: need to add 'date' to the update statement
-        String update = "UPDATE " + datasource.getName() + ".versions SET final_version=true WHERE dataset_id="
+        String update = "UPDATE " + datasource.getName() + ".lockable_versions SET final_version=true WHERE dataset_id="
                 + derived.getDatasetId() + " AND version=" + derived.getVersion();
 
         Statement stmt = datasource.getConnection().createStatement();

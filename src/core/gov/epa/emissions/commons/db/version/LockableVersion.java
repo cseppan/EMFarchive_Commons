@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class LockableVersion implements Lockable {
 
+    private long id;
+
     private long datasetId;
 
     private int version;
@@ -133,5 +135,13 @@ public class LockableVersion implements Lockable {
 
     public void setLockOwner(String username) {
         lock.setLockOwner(username);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

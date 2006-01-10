@@ -11,8 +11,8 @@ public abstract class HibernateTestCase extends PersistenceTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        SessionFactory sessionFactory = sessionFactory();
-        session = sessionFactory.openSession();
+        HibernateSessionFactory sessionFactory = new HibernateSessionFactory(sessionFactory());
+        session = sessionFactory.getSession();
     }
 
     protected void doTearDown() throws Exception {

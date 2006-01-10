@@ -21,7 +21,7 @@ public class LockableVersionsTest extends HibernateTestCase {
 
         DbServer dbServer = dbSetup.getDbServer();
         datasource = dbServer.getEmissionsDatasource();
-        versionsTable = "versions";
+        versionsTable = "lockable_versions";
 
         setupData(datasource, versionsTable);
 
@@ -34,7 +34,7 @@ public class LockableVersionsTest extends HibernateTestCase {
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { "1", "0", "version zero", "", "true" });
+        addRecord(datasource, table, new String[] { "1", "1", "0", "version zero", "", "true" });
     }
 
     private void addRecord(Datasource datasource, String table, String[] data) throws SQLException {
@@ -99,6 +99,14 @@ public class LockableVersionsTest extends HibernateTestCase {
         assertEquals(1, allVersions[1].getVersion());
         assertEquals("version one", allVersions[1].getName());
     }
+    
+    public void testShouldGetAllVersionsOfADatasetUsingHibernate() throws Exception {
+        LockableVersion[] allVersions = versions.get(1, session);
+        
+        assertNotNull("Should get all versions of a Dataset", allVersions);
+        assertEquals(1, allVersions.length);
+        assertEquals(0, allVersions[0].getVersion());
+    }
 
     public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
         LockableVersion base = versions.get(1, 0);
@@ -137,10 +145,10 @@ public class LockableVersionsTest extends HibernateTestCase {
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
-        String[] versionOneData = { "1", "1", "ver 1", "0" };
+        String[] versionOneData = { "2", "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionFourData = { "1", "4", "ver 4", "0,1" };
+        String[] versionFourData = { "3", "1", "4", "ver 4", "0,1" };
         addRecord(datasource, versionsTable, versionFourData);
 
         LockableVersion[] path = versions.getPath(1, 4);
@@ -152,13 +160,13 @@ public class LockableVersionsTest extends HibernateTestCase {
     }
 
     public void testLinearVersionThreeShouldHaveZeroOneAndTwoInThePath() throws Exception {
-        String[] versionOneData = { "1", "1", "ver 1", "0" };
+        String[] versionOneData = { "2", "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionTwoData = { "1", "2", "ver 2", "0,1" };
+        String[] versionTwoData = { "3", "1", "2", "ver 2", "0,1" };
         addRecord(datasource, versionsTable, versionTwoData);
 
-        String[] versionThreeData = { "1", "3", "ver 3", "0,1,2" };
+        String[] versionThreeData = { "4", "1", "3", "ver 3", "0,1,2" };
         addRecord(datasource, versionsTable, versionThreeData);
 
         LockableVersion[] path = versions.getPath(1, 3);
