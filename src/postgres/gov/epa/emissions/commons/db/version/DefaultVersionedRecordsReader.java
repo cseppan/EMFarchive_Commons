@@ -37,23 +37,16 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         String versions = fetchCommaSeparatedVersionSequence(version);
         String deleteClause = createDeleteClause(versions);
 
-        //FIXME:  FOR BETA DEPLOYMENT ONLY:  The sort is ordered by the first data column
+        // FIXME: FOR BETA DEPLOYMENT ONLY: The sort is ordered by the first data column
         // After Beta the sort will have to use the sort order utility mapping
         Column sortColumn = datasource.dataModifier().getColumns(table)[5];
         sortOrder = sortColumn.name();
-        
-//        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
-//                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
-//                + "ORDER BY version, record_id";
 
-      String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
-      + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
-      + "ORDER BY version, record_id";
+        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
+                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
+                + "ORDER BY version, record_id";
 
-      //Append the sort order criteria.
-      // In this case append the name of the first data column i.e. column #5 since the first
-      // columns are non-data related versioning metadata columns
-      if (sortOrder != null)
+        if (sortOrder != null)
             queryString += "," + sortOrder;
 
         ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);

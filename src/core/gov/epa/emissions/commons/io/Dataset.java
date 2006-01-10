@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 public interface Dataset extends Serializable {
 
@@ -59,12 +58,6 @@ public interface Dataset extends Serializable {
 
     void setDescription(String description);
 
-    // FIXME: legacy code
-    Map getTablesMap();
-
-    // FIXME: never used ?
-    void setTablesMap(Map datatables);
-
     // Datasets for non-external files will have a list of
     // Internal Source objects. An internal source object will
     // contain details of each table name/table type/ source/ size
@@ -82,18 +75,9 @@ public interface Dataset extends Serializable {
     void setExternalSources(ExternalSource[] externalSources);
 
     void addExternalSource(ExternalSource source);
-    
+
     void setSummarySource(InternalSource summary);
-    
+
     public InternalSource getSummarySource();
-
-    // FIXME: used in legacy code - convenience methods
-    Table getTable(String tableType);
-
-    // FIXME: used in legacy code
-    void addTable(Table importedTable);
-    
-    // FIXME: used in legacy code
-    public Table[] getTables();
 
 }

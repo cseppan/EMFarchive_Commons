@@ -3,10 +3,7 @@ package gov.epa.emissions.commons.io;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class SimpleDataset implements Dataset {
     private long datasetid;
@@ -39,8 +36,6 @@ public class SimpleDataset implements Dataset {
 
     private List externalSources;
 
-    private List tables;
-
     private DatasetType datasetType;
 
     private InternalSource summarySource;
@@ -49,7 +44,6 @@ public class SimpleDataset implements Dataset {
      * No argument constructor needed for hibernate bean mapping
      */
     public SimpleDataset() {
-        tables = new ArrayList();
         internalSources = new ArrayList();
         externalSources = new ArrayList();
 
@@ -99,34 +93,8 @@ public class SimpleDataset implements Dataset {
         this.description = description;
     }
 
-    public Table getTable(String tableType) {
-        for (Iterator iter = tables.iterator(); iter.hasNext();) {
-            Table element = (Table) iter.next();
-            if (element.getType().equals(tableType))
-                return element;
-        }
-
-        return null;
-    }
-
-    // TODO: return a list. Also, change the Hibernate mapping
-    public Map getTablesMap() {
-        Map tablesMap = new HashMap();
-
-        for (Iterator iter = tables.iterator(); iter.hasNext();) {
-            Table element = (Table) iter.next();
-            tablesMap.put(element.getType(), element.getName());
-        }
-
-        return tablesMap;
-    }
-
     public void setDatasetTypeName(String datasetType) {
         this.datasetTypeName = datasetType;
-    }
-
-    public void addTable(Table table) {
-        tables.add(table);
     }
 
     public String getCountry() {
@@ -139,15 +107,6 @@ public class SimpleDataset implements Dataset {
 
     public String getUnits() {
         return units;
-    }
-
-    public void setTablesMap(Map tablesMap) {
-        tables.clear();
-
-        for (Iterator iter = tablesMap.keySet().iterator(); iter.hasNext();) {
-            String tableType = (String) iter.next();
-            tables.add(new Table((String) tablesMap.get(tableType), tableType));
-        }
     }
 
     public void setCreator(String creator) {
@@ -192,10 +151,6 @@ public class SimpleDataset implements Dataset {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Table[] getTables() {
-        return (Table[]) tables.toArray(new Table[0]);
     }
 
     public boolean equals(Object other) {
@@ -244,7 +199,7 @@ public class SimpleDataset implements Dataset {
 
     public void setSummarySource(InternalSource summarySource) {
         this.summarySource = summarySource;
-        
+
     }
 
     public InternalSource getSummarySource() {
