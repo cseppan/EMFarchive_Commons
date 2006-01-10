@@ -49,9 +49,22 @@ public class LockableVersionsTest extends HibernateTestCase {
         assertEquals(0, path[0].getVersion());
         assertEquals(1, path[0].getDatasetId());
     }
+    
+    public void testFetchVersionZeroUsingHibernate() throws Exception {
+        LockableVersion[] path = versions.getPath(1, 0, session);
+        
+        assertEquals(1, path.length);
+        assertEquals(0, path[0].getVersion());
+        assertEquals(1, path[0].getDatasetId());
+    }
 
     public void testGetsLastFinalVersionForDataset() throws Exception {
         int finalVersion = versions.getLastFinalVersion(1);
+        assertEquals(0, finalVersion);
+    }
+
+    public void testGetsLastFinalVersionForDatasetUsingHibernate() throws Exception {
+        int finalVersion = versions.getLastFinalVersion(1, session);
         assertEquals(0, finalVersion);
     }
 
@@ -73,6 +86,21 @@ public class LockableVersionsTest extends HibernateTestCase {
         assertEquals(derived.getVersion(), finalVersion);
     }
 
+    public void testSeveralMarksDerivedVersionAsFinalUsingHibernate() throws Exception {
+        long datasetId = 1;
+        LockableVersion base = versions.get(datasetId, 0, session);
+
+        LockableVersion derivedFromBase = versions.derive(base, "version one", session);
+        versions.markFinal(derivedFromBase, session);
+        int versionOne = versions.getLastFinalVersion(datasetId, session);
+        assertEquals(derivedFromBase.getVersion(), versionOne);
+
+        LockableVersion derivedFromOne = versions.derive(derivedFromBase, "version two", session);
+        versions.markFinal(derivedFromOne, session);
+        int versionTwo = versions.getLastFinalVersion(datasetId, session);
+        assertEquals(derivedFromOne.getVersion(), versionTwo);
+    }
+
     public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
         LockableVersion base = versions.get(1, 0);
 
@@ -84,6 +112,29 @@ public class LockableVersionsTest extends HibernateTestCase {
         assertEquals("0", derived.getPath());
         assertFalse("Derived version should be non-final", derived.isFinalVersion());
         assertNotNull(derived.getDate());
+    }
+
+    public void testShouldDeriveVersionFromAFinalVersionUsingHibernate() throws Exception {
+        LockableVersion base = versions.get(1, 0, session);
+
+        LockableVersion derived = versions.derive(base, "version one", session);
+
+        assertNotNull("Should be able to derive from a Final version", derived);
+        assertEquals(1, derived.getDatasetId());
+        assertEquals(1, derived.getVersion());
+        assertEquals("0", derived.getPath());
+        assertFalse("Derived version should be non-final", derived.isFinalVersion());
+        assertNotNull(derived.getDate());
+    }
+
+    public void testShouldGetAVersionUsingHibernate() throws Exception {
+        LockableVersion base = versions.get(1, 0, session);
+
+        assertEquals(1, base.getDatasetId());
+        assertEquals(0, base.getVersion());
+        assertEquals("", base.getPath());
+        assertTrue("Version zero should be final", base.isFinalVersion());
+        assertNotNull(base.getDate());
     }
 
     public void testShouldGetAllVersionsOfADataset() throws Exception {
@@ -99,10 +150,10 @@ public class LockableVersionsTest extends HibernateTestCase {
         assertEquals(1, allVersions[1].getVersion());
         assertEquals("version one", allVersions[1].getName());
     }
-    
+
     public void testShouldGetAllVersionsOfADatasetUsingHibernate() throws Exception {
         LockableVersion[] allVersions = versions.get(1, session);
-        
+
         assertNotNull("Should get all versions of a Dataset", allVersions);
         assertEquals(1, allVersions.length);
         assertEquals(0, allVersions[0].getVersion());

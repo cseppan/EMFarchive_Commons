@@ -70,6 +70,27 @@ public class LockableVersions {
         return doGetPath(datasetId, rs);
     }
 
+    public LockableVersion[] getPath(long datasetId, int finalVersion, Session session) {
+        LockableVersion version = get(datasetId, finalVersion, session);
+        if (version == null)
+            return new LockableVersion[0];
+
+        return doGetPath(version, session);
+    }
+
+    private LockableVersion[] doGetPath(LockableVersion version, Session session) {
+        int[] parentVersions = parseParentVersions(version.getPath());
+        List versions = new ArrayList();
+        for (int i = 0; i < parentVersions.length; i++) {
+            LockableVersion parent = get(version.getDatasetId(), parentVersions[i], session);
+            versions.add(parent);
+        }
+
+        versions.add(version);
+
+        return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
+    }
+
     private LockableVersion[] doGetPath(long datasetId, ResultSet rs) throws SQLException {
         int[] parentVersions = parseParentVersions(rs.getString("path"));
         List versions = new ArrayList();
@@ -91,10 +112,26 @@ public class LockableVersions {
         return extractVersion(rs);
     }
 
+    public LockableVersion get(long datasetId, int version, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria crit = session.createCriteria(LockableVersion.class);
+            Criteria fullCrit = crit.add(Restrictions.eq("datasetId", new Long(datasetId))).add(
+                    Restrictions.eq("version", new Integer(version)));
+            tx.commit();
+
+            return (LockableVersion) fullCrit.uniqueResult();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
+    }
+
     private ResultSet queryVersion(long datasetId, int version) throws SQLException {
         DataQuery query = datasource.query();
-        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".lockable_versions WHERE dataset_id = "
-                + datasetId + " AND version = " + version);
+        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName()
+                + ".lockable_versions WHERE dataset_id = " + datasetId + " AND version = " + version);
 
         return rs;
     }
@@ -134,6 +171,22 @@ public class LockableVersions {
 
             if (versNum > versionNumber) {
                 versionNumber = allVersionForDataset[i].getVersion();
+            }
+        }
+
+        return versionNumber;
+    }
+
+    public int getLastFinalVersion(long datasetId, Session session) {
+        int versionNumber = 0;
+
+        LockableVersion[] versions = get(datasetId, session);
+
+        for (int i = 0; i < versions.length; i++) {
+            int versNum = versions[i].getVersion();
+
+            if (versNum > versionNumber) {
+                versionNumber = versions[i].getVersion();
             }
         }
 
@@ -195,18 +248,57 @@ public class LockableVersions {
         return get(version.getDatasetId(), version.getVersion());
     }
 
+    public LockableVersion derive(LockableVersion base, String name, Session session) throws SQLException {
+        if (!base.isFinalVersion())
+            throw new RuntimeException("cannot derive a new version from a non-final version");
+
+        LockableVersion version = new LockableVersion();
+        int newVersionNum = getNextVersionNumber(base.getDatasetId());
+
+        version.setName(name);
+        version.setVersion(newVersionNum);
+        version.setPath(path(base));
+        version.setDatasetId(base.getDatasetId());
+        version.setDate(new Date());
+        // version.setCreator(user); TODO
+
+        save(version, session);
+
+        return version;
+    }
+
+    private void save(LockableVersion version, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(version);
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
+    }
+
     public LockableVersion markFinal(LockableVersion derived) throws SQLException {
         derived.markFinal();
         derived.setDate(new Date());
 
         // FIXME: need to add 'date' to the update statement
-        String update = "UPDATE " + datasource.getName() + ".lockable_versions SET final_version=true WHERE dataset_id="
-                + derived.getDatasetId() + " AND version=" + derived.getVersion();
+        String update = "UPDATE " + datasource.getName()
+                + ".lockable_versions SET final_version=true WHERE dataset_id=" + derived.getDatasetId()
+                + " AND version=" + derived.getVersion();
 
         Statement stmt = datasource.getConnection().createStatement();
         stmt.executeUpdate(update);
 
         return get(derived.getDatasetId(), derived.getVersion());
+    }
+
+    public void markFinal(LockableVersion derived, Session session) {
+        derived.markFinal();
+        derived.setDate(new Date());
+
+        save(derived, session);
     }
 
     private String path(LockableVersion base) {
