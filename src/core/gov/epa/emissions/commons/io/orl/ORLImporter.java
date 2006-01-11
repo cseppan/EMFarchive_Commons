@@ -33,6 +33,10 @@ public class ORLImporter {
 
     private FormatUnit formatUnit;
 
+    private DataTable dataTable;
+
+    private DatasetLoader loader;
+
     public ORLImporter(File folder, String[] filePatterns, Dataset dataset, DatasetTypeUnit formatUnit,
             Datasource datasource) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filePatterns);
@@ -41,12 +45,13 @@ public class ORLImporter {
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
+        dataTable = new DataTable(dataset, datasource);
+        loader = new DatasetLoader(dataset);
+        loader.internalSource(file, dataTable.name(), formatUnit.tableFormat());
     }
 
     public void run() throws ImporterException {
         importAttributes(file, dataset);
-
-        DataTable dataTable = new DataTable(dataset, datasource);
         dataTable.create(formatUnit.tableFormat());
 
         try {
@@ -64,12 +69,10 @@ public class ORLImporter {
         Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
         loader.load(reader, dataset, table);
 
-        loadDataset(file, table, tableFormat, reader.comments(), dataset);
+        loadDataset(reader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, TableFormat tableFormat, List comments, Dataset dataset) {
-        DatasetLoader loader = new DatasetLoader(dataset);
-        loader.internalSource(file, table, tableFormat);
+    private void loadDataset(List comments, Dataset dataset) {
         dataset.setUnits("short tons/year");
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
         dataset.setDescription(new Comments(comments).all());
