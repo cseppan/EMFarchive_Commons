@@ -34,7 +34,7 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     private void setupData(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { "1", "0", "version zero", "", "true" });
+        addRecord(datasource, table, new String[] { null, "1", "0", "version zero", "", "true" });
     }
 
     private void addRecord(Datasource datasource, String table, String[] data) throws SQLException {
@@ -50,29 +50,29 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals(1, path[0].getDatasetId());
     }
 
-    public void testGetsLastFinalVersionForDataset() throws Exception{
+    public void testGetsLastFinalVersionForDataset() throws Exception {
         int finalVersion = versions.getLastFinalVersion(1);
-        assertEquals(0,finalVersion);
+        assertEquals(0, finalVersion);
     }
-    
-    public void testSeveralMarksDerivedVersionAsFinal() throws Exception{
+
+    public void testSeveralMarksDerivedVersionAsFinal() throws Exception {
         long datasetId = 1;
         Version base = versions.get(datasetId, 0);
 
         Version derived = versions.derive(base, "version one");
         versions.markFinal(derived);
         int finalVersion = versions.getLastFinalVersion(datasetId);
-        assertEquals(derived.getVersion(),finalVersion);
-        derived = versions.derive(derived,"version two");
+        assertEquals(derived.getVersion(), finalVersion);
+        derived = versions.derive(derived, "version two");
         versions.markFinal(derived);
         finalVersion = versions.getLastFinalVersion(datasetId);
-        assertEquals(derived.getVersion(),finalVersion);
-        derived = versions.derive(derived,"version two");
+        assertEquals(derived.getVersion(), finalVersion);
+        derived = versions.derive(derived, "version two");
         versions.markFinal(derived);
         finalVersion = versions.getLastFinalVersion(datasetId);
-        assertEquals(derived.getVersion(),finalVersion);
+        assertEquals(derived.getVersion(), finalVersion);
     }
-    
+
     public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
         Version base = versions.get(1, 0);
 
@@ -137,10 +137,10 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
-        String[] versionOneData = { "1", "1", "ver 1", "0" };
+        String[] versionOneData = { null, "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionFourData = { "1", "4", "ver 4", "0,1" };
+        String[] versionFourData = { null, "1", "4", "ver 4", "0,1" };
         addRecord(datasource, versionsTable, versionFourData);
 
         Version[] path = versions.getPath(1, 4);
@@ -152,13 +152,13 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testLinearVersionThreeShouldHaveZeroOneAndTwoInThePath() throws Exception {
-        String[] versionOneData = { "1", "1", "ver 1", "0" };
+        String[] versionOneData = { null, "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionTwoData = { "1", "2", "ver 2", "0,1" };
+        String[] versionTwoData = { null, "1", "2", "ver 2", "0,1" };
         addRecord(datasource, versionsTable, versionTwoData);
 
-        String[] versionThreeData = { "1", "3", "ver 3", "0,1,2" };
+        String[] versionThreeData = { null, "1", "3", "ver 3", "0,1,2" };
         addRecord(datasource, versionsTable, versionThreeData);
 
         Version[] path = versions.getPath(1, 3);

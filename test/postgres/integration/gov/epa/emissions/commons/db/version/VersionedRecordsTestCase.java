@@ -3,18 +3,18 @@ package gov.epa.emissions.commons.db.version;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public abstract class VersionedRecordsTestCase extends PersistenceTestCase {
+public abstract class VersionedRecordsTestCase extends HibernateTestCase {
 
     protected Datasource datasource;
 

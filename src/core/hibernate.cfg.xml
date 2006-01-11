@@ -22,7 +22,7 @@
         <property name="hibernate.generate_statistics">false</property>
         
         <!-- Mappings -->
-        <mapping resource="gov/epa/emissions/commons/db/version/LockableVersion.hbm.xml"/>
+        <mapping resource="gov/epa/emissions/commons/db/version/Version.hbm.xml"/>
         
     </session-factory>
     

@@ -16,37 +16,37 @@ import org.hibernate.criterion.Restrictions;
 
 public class LockableVersions {
 
-    public LockableVersion[] getPath(long datasetId, int finalVersion, Session session) {
-        LockableVersion version = get(datasetId, finalVersion, session);
+    public Version[] getPath(long datasetId, int finalVersion, Session session) {
+        Version version = get(datasetId, finalVersion, session);
         if (version == null)
-            return new LockableVersion[0];
+            return new Version[0];
 
         return doGetPath(version, session);
     }
 
-    private LockableVersion[] doGetPath(LockableVersion version, Session session) {
+    private Version[] doGetPath(Version version, Session session) {
         int[] parentVersions = parseParentVersions(version.getPath());
         List versions = new ArrayList();
         for (int i = 0; i < parentVersions.length; i++) {
-            LockableVersion parent = get(version.getDatasetId(), parentVersions[i], session);
+            Version parent = get(version.getDatasetId(), parentVersions[i], session);
             versions.add(parent);
         }
 
         versions.add(version);
 
-        return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
+        return (Version[]) versions.toArray(new Version[0]);
     }
 
-    public LockableVersion get(long datasetId, int version, Session session) {
+    public Version get(long datasetId, int version, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            Criteria crit = session.createCriteria(LockableVersion.class);
+            Criteria crit = session.createCriteria(Version.class);
             Criteria fullCrit = crit.add(Restrictions.eq("datasetId", new Long(datasetId))).add(
                     Restrictions.eq("version", new Integer(version)));
             tx.commit();
 
-            return (LockableVersion) fullCrit.uniqueResult();
+            return (Version) fullCrit.uniqueResult();
         } catch (HibernateException e) {
             tx.rollback();
             throw e;
@@ -68,7 +68,7 @@ public class LockableVersions {
     public int getLastFinalVersion(long datasetId, Session session) {
         int versionNumber = 0;
 
-        LockableVersion[] versions = get(datasetId, session);
+        Version[] versions = get(datasetId, session);
 
         for (int i = 0; i < versions.length; i++) {
             int versNum = versions[i].getVersion();
@@ -81,27 +81,27 @@ public class LockableVersions {
         return versionNumber;
     }
 
-    public LockableVersion[] get(long datasetId, Session session) {
+    public Version[] get(long datasetId, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            Criteria crit = session.createCriteria(LockableVersion.class).add(
+            Criteria crit = session.createCriteria(Version.class).add(
                     Restrictions.eq("datasetId", new Long(datasetId)));
             List versions = crit.list();
             tx.commit();
 
-            return (LockableVersion[]) versions.toArray(new LockableVersion[0]);
+            return (Version[]) versions.toArray(new Version[0]);
         } catch (HibernateException e) {
             tx.rollback();
             throw e;
         }
     }
 
-    public LockableVersion derive(LockableVersion base, String name, Session session) {
+    public Version derive(Version base, String name, Session session) {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
 
-        LockableVersion version = new LockableVersion();
+        Version version = new Version();
         int newVersionNum = getNextVersionNumber(base.getDatasetId(), session);
 
         version.setName(name);
@@ -116,7 +116,7 @@ public class LockableVersions {
         return version;
     }
 
-    private void save(LockableVersion version, Session session) {
+    private void save(Version version, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -128,7 +128,7 @@ public class LockableVersions {
         }
     }
 
-    public LockableVersion markFinal(LockableVersion derived, Session session) {
+    public Version markFinal(Version derived, Session session) {
         derived.markFinal();
         derived.setDate(new Date());
 
@@ -137,7 +137,7 @@ public class LockableVersions {
         return derived;
     }
 
-    private String path(LockableVersion base) {
+    private String path(Version base) {
         return base.createPathForDerived();
     }
 
@@ -145,13 +145,13 @@ public class LockableVersions {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            Criteria base = session.createCriteria(LockableVersion.class);
+            Criteria base = session.createCriteria(Version.class);
             Criteria fullCrit = base.add(Restrictions.eq("datasetId", new Long(datasetId))).addOrder(
                     Order.desc("version"));
             List versions = fullCrit.list();
             tx.commit();
 
-            LockableVersion latest = (LockableVersion) versions.get(0);
+            Version latest = (Version) versions.get(0);
             return (latest).getVersion() + 1;
         } catch (HibernateException e) {
             tx.rollback();

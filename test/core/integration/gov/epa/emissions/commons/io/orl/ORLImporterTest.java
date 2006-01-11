@@ -3,10 +3,11 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
+import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.LockableVersions;
 import gov.epa.emissions.commons.db.version.Version;
-import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FixedColsTableFormat;
@@ -14,7 +15,6 @@ import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
@@ -30,7 +30,7 @@ import java.util.Random;
 
 import org.dbunit.dataset.ITable;
 
-public class ORLImporterTest extends PersistenceTestCase {
+public class ORLImporterTest extends HibernateTestCase {
 
     private Datasource datasource;
 
@@ -149,8 +149,8 @@ public class ORLImporterTest extends PersistenceTestCase {
     }
 
     private void verifyVersionZeroEntryInVersionsTable() throws Exception {
-        Versions versions = new Versions(datasource);
-        Version[] onRoadVersions = versions.get(dataset.getDatasetid());
+        LockableVersions versions = new LockableVersions();
+        Version[] onRoadVersions = versions.get(dataset.getDatasetid(), session);
         assertEquals(1, onRoadVersions.length);
 
         Version versionZero = onRoadVersions[0];

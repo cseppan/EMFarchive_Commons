@@ -27,7 +27,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { "1", "0", "ver 0", "", "true" });
+        addRecord(datasource, table, new String[] { null, "1", "0", "ver 0", "", "true" });
     }
 
     private void setupVersionZeroData(Datasource datasource, String table) throws SQLException {
@@ -73,7 +73,6 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         changeset.addUpdated(records[1]);
 
         writer.update(changeset);
-        
 
         Version version = versions.get(1, 1);
         assertEquals(1, version.getVersion());

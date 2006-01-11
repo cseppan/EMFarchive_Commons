@@ -1,10 +1,14 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.io.Lockable;
+import gov.epa.emissions.commons.io.Mutex;
 import gov.epa.emissions.commons.security.User;
 
 import java.util.Date;
 
-public class Version {
+public class Version implements Lockable {
+
+    private long id;
 
     private long datasetId;
 
@@ -19,6 +23,12 @@ public class Version {
     private Date date;
 
     private User creator;
+
+    private Mutex lock;
+
+    public Version() {
+        lock = new Mutex();
+    }
 
     public boolean isFinalVersion() {
         return finalVersion;
@@ -97,5 +107,41 @@ public class Version {
 
     public String toString() {
         return "Version " + version + " of Dataset - " + datasetId;
+    }
+
+    public Date getLockDate() {
+        return lock.getLockDate();
+    }
+
+    public void setLockDate(Date lockDate) {
+        lock.setLockDate(lockDate);
+    }
+
+    public boolean isLocked(String owner) {
+        return lock.isLocked(owner);
+    }
+
+    public boolean isLocked(User owner) {
+        return lock.isLocked(owner);
+    }
+
+    public boolean isLocked() {
+        return lock.isLocked();
+    }
+
+    public String getLockOwner() {
+        return lock.getLockOwner();
+    }
+
+    public void setLockOwner(String username) {
+        lock.setLockOwner(username);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
