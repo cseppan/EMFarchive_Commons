@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.external;
 
-import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -10,14 +10,14 @@ import java.io.File;
 
 public class ShapeFilesImporter extends AbstractExternalFilesImporter {
 
-    public ShapeFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public ShapeFilesImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        this(folder, filePatterns, dataset, datasource, sqlDataTypes, null);
+        this(folder, filePatterns, dataset, dbServer, sqlDataTypes, null);
     }
 
-    public ShapeFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public ShapeFilesImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
-        super(folder, filePatterns, dataset, datasource, sqlDataTypes, factory);
+        super(folder, filePatterns, dataset, dbServer, sqlDataTypes, factory);
         importerName = "Shape Files Importer";
     }
 }

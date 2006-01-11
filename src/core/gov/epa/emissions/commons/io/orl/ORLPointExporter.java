@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.orl;
 
-import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -14,13 +14,13 @@ public class ORLPointExporter implements Exporter {
 
     private ORLExporter delegate;
 
-    public ORLPointExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        delegate = new ORLExporter(dataset, datasource, fileFormat(sqlDataTypes));
+    public ORLPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
+        delegate = new ORLExporter(dataset, dbServer.getEmissionsDatasource(), fileFormat(sqlDataTypes));
     }
 
-    public ORLPointExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+    public ORLPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, datasource, fileFormat(sqlDataTypes), formatFactory.exportStatement());
+        delegate = new ORLExporter(dataset, dbServer.getEmissionsDatasource() , fileFormat(sqlDataTypes), formatFactory.exportStatement());
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

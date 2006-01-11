@@ -21,27 +21,28 @@ import java.util.Random;
 
 public class TemporalProfileTest extends PersistenceTestCase {
 
-    private Datasource datasource;
 
     private SqlDataTypes typeMapper;
 
     private TableReader tableReader;
     
     private Dataset dataset;
+
+    private DbServer dbServer;
     
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-        tableReader = tableReader(datasource);
+        tableReader = tableReader(dbServer.getEmissionsDatasource());
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         String schema = datasource.getName();
         
@@ -61,14 +62,14 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/small.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper);
+                .getName() }, dataset, dbServer, typeMapper);
         importer.run();
 
         // assert
         assertEquals(10, countRecords("Monthly"));
         assertEquals(13, countRecords("WEEKLY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         
@@ -96,15 +97,15 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/small.txt");
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper, new VersionedDataFormatFactory(0));
-        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, datasource);
+                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(0));
+        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer);
         importer.run();
 
         // assert
         assertEquals(10, countRecords("Monthly"));
         assertEquals(13, countRecords("WEEKLY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer , typeMapper,
                 new VersionedDataFormatFactory(0));
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
@@ -133,13 +134,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper);
+                .getName() }, dataset, dbServer, typeMapper);
         importer.run();
 
         // assert
         assertEquals(20, countRecords("DIURNAL_WEEKDAY"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         
@@ -158,14 +159,14 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper, new VersionedDataFormatFactory(0));
-        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, datasource);
+                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(0));
+        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer);
         importer.run();
 
         // assert
         assertEquals(20, countRecords("DIURNAL_WEEKDAY"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
                 new VersionedDataFormatFactory(0));
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
@@ -185,13 +186,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/diurnal-weekend.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper);
+                .getName() }, dataset, dbServer, typeMapper);
         importer.run();
 
         // assert
         assertEquals(20, countRecords("DIURNAL_WEEKEND"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         
@@ -209,14 +210,14 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/diurnal-weekend.txt");
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper, new VersionedDataFormatFactory(0));
-        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, datasource);
+                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(0));
+        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer);
         importer.run();
 
         // assert
         assertEquals(20, countRecords("DIURNAL_WEEKEND"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
                 new VersionedDataFormatFactory(0));
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
@@ -235,13 +236,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/monthly.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper);
+                .getName() }, dataset, dbServer, typeMapper);
         importer.run();
 
         // assert
         assertEquals(10, countRecords("MONTHLY"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         
@@ -259,14 +260,14 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/monthly.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper, new VersionedDataFormatFactory(0));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, datasource);
+                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(0));
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
         // assert
         assertEquals(10, countRecords("MONTHLY"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
                 new VersionedDataFormatFactory(0));
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
@@ -285,13 +286,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/weekly.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper);
+                .getName() }, dataset, dbServer, typeMapper);
         importer.run();
 
         // assert
         assertEquals(13, countRecords("WEEKLY"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -309,14 +310,14 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles/weekly.txt");
 
         TemporalProfileImporter temporalProfileImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, typeMapper, new VersionedDataFormatFactory(0));
-        VersionedImporter importer = new VersionedImporter(temporalProfileImporter, dataset, datasource);
+                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(0));
+        VersionedImporter importer = new VersionedImporter(temporalProfileImporter, dataset, dbServer);
         importer.run();
 
         // assert
         assertEquals(13, countRecords("WEEKLY"));
        
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, datasource, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
                 new VersionedDataFormatFactory(0));
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
@@ -332,6 +333,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
     
     private int countRecords(String table) {    
+        Datasource datasource = dbServer.getEmissionsDatasource();
         return tableReader.count(datasource.getName(), table);
     }
     

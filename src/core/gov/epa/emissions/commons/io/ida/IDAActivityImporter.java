@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.ida;
 
-import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -12,9 +12,9 @@ public class IDAActivityImporter implements Importer {
 
     private IDAImporter delegate;
 
-    public IDAActivityImporter(File file, Dataset dataset, Datasource emissionDatasource,
-            Datasource referenceDatasource, SqlDataTypes sqlDataTypes) throws ImporterException {
-        delegate = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
+    public IDAActivityImporter(File file, Dataset dataset, DbServer dbServer,
+            SqlDataTypes sqlDataTypes) throws ImporterException {
+        delegate = new IDAImporter(dataset, dbServer, sqlDataTypes);
         delegate.setup(file, new IDAActivityFileFormat(sqlDataTypes));
     }
 

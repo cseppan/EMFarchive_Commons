@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.orl;
 
-import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
@@ -18,30 +18,30 @@ public class ORLNonPointImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLNonPointImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public ORLNonPointImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = fileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat(sqlDataTypes), sqlDataTypes);
 
-        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, dbServer, fileFormat, tableFormat);
     }
 
-    public ORLNonPointImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public ORLNonPointImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = fileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
 
-        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, dbServer, fileFormat, tableFormat);
     }
 
     private FileFormatWithOptionalCols fileFormat(SqlDataTypes sqlDataTypes, FillDefaultValues filler) {
         return new ORLNonPointFileFormat(sqlDataTypes, filler);
     }
 
-    private void create(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    private void create(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             FileFormatWithOptionalCols fileFormat, TableFormat tableFormat) throws ImporterException {
         DatasetTypeUnit formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
-        delegate = new ORLImporter(folder, filePatterns, dataset, formatUnit, datasource);
+        delegate = new ORLImporter(folder, filePatterns, dataset, formatUnit, dbServer.getEmissionsDatasource());
     }
 
     private FileFormatWithOptionalCols fileFormat(SqlDataTypes sqlDataTypes) {

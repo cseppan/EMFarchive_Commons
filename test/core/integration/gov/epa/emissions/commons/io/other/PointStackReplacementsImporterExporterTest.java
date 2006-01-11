@@ -15,18 +15,18 @@ import java.io.File;
 import java.util.Random;
 
 public class PointStackReplacementsImporterExporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -34,6 +34,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -41,10 +42,10 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
     public void testExportPointStackReplacementsData() throws Exception {
         File folder = new File("test/data/other");
         PointStackReplacementsImporter importer = new PointStackReplacementsImporter(folder, new String[]{"pstk.m3.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, datasource, sqlDataTypes);
+        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, sqlDataTypes);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);
@@ -55,11 +56,11 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
     public void testExportVersionedPointStackReplacementsData() throws Exception {
         File folder = new File("test/data/other");
         PointStackReplacementsImporter importer = new PointStackReplacementsImporter(folder, new String[]{"pstk.m3.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
-        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, datasource, 
+        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 
                 sqlDataTypes, new VersionedDataFormatFactory(0));
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
@@ -69,6 +70,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
     }
     
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

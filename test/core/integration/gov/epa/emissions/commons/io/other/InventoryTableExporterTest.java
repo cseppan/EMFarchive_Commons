@@ -15,18 +15,18 @@ import java.io.File;
 import java.util.Random;
 
 public class InventoryTableExporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -34,6 +34,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -41,11 +42,11 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     public void testExportChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                datasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
@@ -55,12 +56,12 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     public void testExportVersionedChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
@@ -68,6 +69,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     }
     
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

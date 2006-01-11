@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.other;
 
-import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -12,13 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SurrogatesDescriptionExporter extends GenericExporter {
-    public SurrogatesDescriptionExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
-        super(dataset, datasource, new SurrogatesDescriptionFileFormat(types));
+    
+    public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
+        super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types));
     }
     
-    public SurrogatesDescriptionExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+    public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory) {
-        super(dataset, datasource, new SurrogatesDescriptionFileFormat(types), factory);
+        super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types), factory);
     }
     
     protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {

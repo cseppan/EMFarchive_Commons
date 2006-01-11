@@ -15,18 +15,18 @@ import java.io.File;
 import java.util.Random;
 
 public class GridCrossReferenceImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -34,14 +34,16 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testImportGridCrossReferenceData() throws Exception {
+        
         File folder = new File("test/data/spatial");
         GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
         assertEquals(22, countRecords());
@@ -50,14 +52,15 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
     public void testImportVersionedGridCrossReferenceData() throws Exception {
         File folder = new File("test/data/spatial");
         GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         assertEquals(22, countRecords());
     }
 
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

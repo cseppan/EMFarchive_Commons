@@ -17,8 +17,6 @@ import java.util.Random;
 
 public class NIFOnRoadImporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
@@ -29,12 +27,13 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
 
     private String tableTR;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -50,7 +49,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/nif/onroad");
             String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
-            NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
+            NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, dbServer, sqlDataTypes);
             importer.run();
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tablePE));
@@ -64,7 +63,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/nif/onroad");
             String[] files = {"ct_pe.txt"};
-            new NIFOnRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
+            new NIFOnRoadImporter(folder, files, dataset, dbServer, sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF onroad import requires following types"));
             return;
@@ -74,6 +73,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
@@ -83,6 +83,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
     }
 
     private void dropTables() throws Exception, SQLException {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableEM);
         dbUpdate.dropTable(datasource.getName(), tablePE);

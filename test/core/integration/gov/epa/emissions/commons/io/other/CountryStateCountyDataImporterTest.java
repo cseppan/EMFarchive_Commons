@@ -14,18 +14,18 @@ import java.io.File;
 import java.util.Random;
 
 public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -33,6 +33,7 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "country");
         dbUpdate.dropTable(datasource.getName(), "state");
@@ -42,15 +43,15 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
     public void testImportCountryStateCountyData() throws Exception {
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
     }
     
     public void testImportVersionedCountryStateCountyData() throws Exception {
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
     }
     

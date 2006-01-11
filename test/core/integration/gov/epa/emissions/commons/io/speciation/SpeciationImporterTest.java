@@ -16,18 +16,17 @@ import java.util.Random;
 
 public class SpeciationImporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -35,6 +34,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -42,7 +42,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
     public void testImportChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
         assertEquals(88, countRecords());
@@ -51,8 +51,8 @@ public class SpeciationImporterTest extends PersistenceTestCase {
     public void testImportVersionedChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
         assertEquals(88, countRecords());
@@ -60,6 +60,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
 
 
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

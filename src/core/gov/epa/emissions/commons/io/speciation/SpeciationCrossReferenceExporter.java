@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -25,14 +26,14 @@ public class SpeciationCrossReferenceExporter extends GenericExporter {
     
     private SqlDataTypes types;
     
-    public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
-        super(dataset, datasource, new SpeciationProfileFileFormat(types));
+    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
+        super(dataset, dbServer, new SpeciationProfileFileFormat(types));
         create(types);
     }
     
-    public SpeciationCrossReferenceExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory) {
-        super(dataset, datasource, new SpeciationProfileFileFormat(types), factory);
+        super(dataset, dbServer, new SpeciationProfileFileFormat(types), factory);
         create(types);
     }
     

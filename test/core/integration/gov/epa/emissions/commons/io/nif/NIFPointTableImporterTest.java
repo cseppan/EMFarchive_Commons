@@ -66,7 +66,7 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
             File folder = new File("test/data/nif/point");
             String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt",
                     "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
-            NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, datasource, sqlDataTypes);
+            NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, dbServer(), sqlDataTypes);
             importer.run();
             assertEquals(92, countRecords(tableCE));
             assertEquals(143, countRecords(tableEM));
@@ -91,7 +91,7 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/nif/point");
         String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt",
                 "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
-        NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, datasource, sqlDataTypes);
+        NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, dbServer(), sqlDataTypes);
         importer.run();
         assertEquals(92, countRecords(tableCE));
         assertEquals(143, countRecords(tableEM));

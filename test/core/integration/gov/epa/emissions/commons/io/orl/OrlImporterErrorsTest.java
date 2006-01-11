@@ -14,18 +14,17 @@ import java.util.Random;
 
 public class OrlImporterErrorsTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -36,9 +35,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/orl/nc");
             ORLPointImporter importer = new ORLPointImporter(folder, new String[] { "BAD-point.txt" }, dataset,
-                    datasource, sqlDataTypes);
+                    dbServer, sqlDataTypes);
             importer.run();
         } catch (ImporterException e) {
+            Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have enctountered an error(missing cols) on record 5, and dropped the table",
                     tableReader.exists(datasource.getName(), dataset.getName()));
@@ -52,9 +52,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/orl/nc");
             ORLPointImporter importer = new ORLPointImporter(folder,
-                    new String[] { "MISSING-ORL-TAG-IN-HEADER-point.txt" }, dataset, datasource, sqlDataTypes);
+                    new String[] { "MISSING-ORL-TAG-IN-HEADER-point.txt" }, dataset, dbServer, sqlDataTypes);
             importer.run();
         } catch (ImporterException e) {
+            Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to missing 'ORL' tag, and dropped the table", tableReader
                     .exists(datasource.getName(), dataset.getName()));
@@ -68,9 +69,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/orl/nc");
             ORLPointImporter importer = new ORLPointImporter(folder,
-                    new String[] { "MISSING-COUNTRY-TAG-IN-HEADER-point.txt" }, dataset, datasource, sqlDataTypes);
+                    new String[] { "MISSING-COUNTRY-TAG-IN-HEADER-point.txt" }, dataset, dbServer, sqlDataTypes);
             importer.run();
         } catch (ImporterException e) {
+            Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to missing 'COUNTRY' tag, and dropped the table",
                     tableReader.exists(datasource.getName(), dataset.getName()));
@@ -84,9 +86,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/orl/nc");
             ORLPointImporter importer = new ORLPointImporter(folder,
-                    new String[] { "MISSING-COUNTRY-TAG-IN-HEADER-point.txt" }, dataset, datasource, sqlDataTypes);
+                    new String[] { "MISSING-COUNTRY-TAG-IN-HEADER-point.txt" }, dataset, dbServer, sqlDataTypes);
             importer.run();
         } catch (ImporterException e) {
+            Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to empty 'COUNTRY' tag, and dropped the table",
                     tableReader.exists(datasource.getName(), dataset.getName()));
@@ -100,10 +103,11 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/orl/nc");
             ORLPointImporter importer = new ORLPointImporter(folder,
-                    new String[] { "MISSING-YEAR-TAG-IN-HEADER-point.txt" }, dataset, datasource, sqlDataTypes);
+                    new String[] { "MISSING-YEAR-TAG-IN-HEADER-point.txt" }, dataset, dbServer, sqlDataTypes);
 
             importer.run();
         } catch (ImporterException e) {
+            Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to missing 'YEAR' tag, and dropped the table",
                     tableReader.exists(datasource.getName(), dataset.getName()));
@@ -117,9 +121,10 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/orl/nc");
             ORLPointImporter importer = new ORLPointImporter(folder,
-                    new String[] { "MISSING-YEAR-TAG-IN-HEADER-point.txt" }, dataset, datasource, sqlDataTypes);
+                    new String[] { "MISSING-YEAR-TAG-IN-HEADER-point.txt" }, dataset, dbServer, sqlDataTypes);
             importer.run();
         } catch (ImporterException e) {
+            Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to empty 'YEAR' tag, and dropped the table", tableReader
                     .exists(datasource.getName(), dataset.getName()));

@@ -19,18 +19,18 @@ import java.util.List;
 import java.util.Random;
 
 public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -38,6 +38,7 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -45,11 +46,11 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
     public void testExportImportCEMpthourData() throws Exception {
         File folder = new File("test/data/other");
         SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(folder, new String[]{"SRGDESC.txt"}, 
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
-        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, datasource, sqlDataTypes);
+        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, dbServer, sqlDataTypes);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -66,12 +67,12 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
     public void testExportImportVersionedCEMpthourData() throws Exception {
         File folder = new File("test/data/other");
         SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(folder, new String[]{"SRGDESC.txt"}, 
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
-        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, datasource, 
+        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, dbServer, 
                 sqlDataTypes, new VersionedDataFormatFactory(0));
         exporter.export(exportfile);
 

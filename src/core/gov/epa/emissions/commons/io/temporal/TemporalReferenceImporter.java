@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -32,17 +33,17 @@ public class TemporalReferenceImporter implements Importer {
 
     private FormatUnit unit;
 
-    public TemporalReferenceImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public TemporalReferenceImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
+        this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
-    public TemporalReferenceImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public TemporalReferenceImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filePatterns);
         this.file = new File(folder, filePatterns[0]);
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
 
         FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);

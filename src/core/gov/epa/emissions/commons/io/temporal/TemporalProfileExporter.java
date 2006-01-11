@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -30,14 +31,14 @@ public class TemporalProfileExporter implements Exporter {
 
     private DataFormatFactory dataFormatFactory;
 
-    public TemporalProfileExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        this(dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
+    public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
+        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
-    public TemporalProfileExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes,
+    public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         this.fileFormatFactory = new TemporalFileFormatFactory(sqlDataTypes);
         this.dataFormatFactory = dataFormatFactory;
     }

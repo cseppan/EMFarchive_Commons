@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
@@ -32,11 +33,11 @@ public class FIX_THE_TEST_PointTemporalReferenceImporter implements Importer {
     /**
      * Expects table 'POINT_SOURCE' to be available in Datasource
      */
-    public FIX_THE_TEST_PointTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource,
+    public FIX_THE_TEST_PointTemporalReferenceImporter(File file, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) {
         this.file = file;
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         PointTemporalReferenceFileFormat fileFormat = new PointTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);

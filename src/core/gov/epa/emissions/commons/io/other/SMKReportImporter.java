@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -38,17 +39,17 @@ public class SMKReportImporter implements Importer {
 
     private String delimiter;
 
-    public SMKReportImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public SMKReportImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException,IOException,Exception {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
+        this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
-    public SMKReportImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public SMKReportImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory) throws ImporterException,IOException,Exception {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         this.factory = new SMKReportFileFormatFactory(file, sqlDataTypes);
         this.delimiter = factory.getDelimiter();
 

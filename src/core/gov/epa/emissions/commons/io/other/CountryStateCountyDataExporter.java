@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -30,19 +31,19 @@ public class CountryStateCountyDataExporter implements Exporter {
     
     private DataFormatFactory dataFormatFactory;
 
-    public CountryStateCountyDataExporter(Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
-        setup(dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
+    public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
+        setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
-    public CountryStateCountyDataExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+    public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory) {
-        setup(dataset, datasource, types, factory);
+        setup(dataset, dbServer, types, factory);
     }
     
-    private void setup(Dataset dataset, Datasource datasource, SqlDataTypes types,
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         factory = new CountryStateCountyFileFormatFactory(types);
         this.dataFormatFactory = dataFormatFactory;
     }

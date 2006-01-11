@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -34,14 +35,14 @@ public class GenericExporter implements Exporter {
 
     private DataFormatFactory dataFormatFactory;
 
-    public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
-        this(dataset, datasource, fileFormat, new NonVersionedDataFormatFactory());
+    public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
+        this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory());
     }
 
-    public GenericExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat,
+    public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
             DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         this.fileFormat = fileFormat;
         this.dataFormatFactory = dataFormatFactory;
 

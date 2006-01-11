@@ -20,35 +20,35 @@ import java.util.List;
 import java.util.Random;
 
 public class LineExporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testExportSmallLineFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, datasource, sqlDataTypes);
+        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        LineExporter exporter = new LineExporter(dataset, datasource, sqlDataTypes);
+        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());
@@ -69,12 +69,12 @@ public class LineExporterTest extends PersistenceTestCase {
     
     public void testExportVersionedSmallLineFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, datasource, sqlDataTypes,
+        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(0));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, datasource);
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
-        LineExporter exporter = new LineExporter(dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
         File file = new File("C:\\lineexporter.txt");
         exporter.export(file);
         assertEquals(22, countRecords());
@@ -94,6 +94,7 @@ public class LineExporterTest extends PersistenceTestCase {
     }
 
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

@@ -20,18 +20,18 @@ import org.dbunit.dataset.ITable;
 
 public class LineImporterTest extends HibernateTestCase {
 
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -39,13 +39,14 @@ public class LineImporterTest extends HibernateTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testShouldImportASmallLineFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, datasource,
+        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -54,9 +55,9 @@ public class LineImporterTest extends HibernateTestCase {
 
     public void testShouldImportASmallVersionedLineFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, datasource,
+        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, datasource);
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
         int rows = countRecords();
@@ -65,6 +66,7 @@ public class LineImporterTest extends HibernateTestCase {
     }
 
     private int countRecords() {
+        Datasource datasource =dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
@@ -75,6 +77,7 @@ public class LineImporterTest extends HibernateTestCase {
     }
 
     private void verifyVersionCols(String table, int rows) throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
 
         ITable tableRef = tableReader.table(datasource.getName(), table);

@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
@@ -27,10 +28,10 @@ public class MobileTemporalReferenceImporter implements Importer {
 
     private DatasetTypeUnit unit;
 
-    public MobileTemporalReferenceImporter(File file, Dataset dataset, Datasource datasource, SqlDataTypes sqlDataTypes) {
+    public MobileTemporalReferenceImporter(File file, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
         this.file = file;
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         MobileTemporalReferenceFileFormat fileFormat = new MobileTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);

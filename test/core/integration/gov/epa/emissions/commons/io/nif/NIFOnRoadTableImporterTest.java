@@ -53,7 +53,7 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/nif/onroad");
             String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
-            NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
+            NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, dbServer(), sqlDataTypes);
             importer.run();
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tablePE));
@@ -73,7 +73,7 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         File folder = new File("test/data/nif/onroad");
         String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
-        NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
+        NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, dbServer(), sqlDataTypes);
         importer.run();
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tablePE));

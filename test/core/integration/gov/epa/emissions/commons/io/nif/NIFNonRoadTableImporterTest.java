@@ -52,7 +52,7 @@ public class NIFNonRoadTableImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/nif/nonroad");
             String[] files = {"ct_em.txt", "ct_ep.txt", "ct_pe.txt"};
-            NIFNonRoadImporter importer = new NIFNonRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
+            NIFNonRoadImporter importer = new NIFNonRoadImporter(folder, files, dataset, dbServer(), sqlDataTypes);
             importer.run();
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tableEP));
@@ -73,7 +73,7 @@ public class NIFNonRoadTableImporterTest extends PersistenceTestCase {
     public void testShouldCheckForReuiredTables() throws Exception {
         File folder = new File("test/data/nif/nonroad");
         String[] files = {"ct_em.txt", "ct_ep.txt", "ct_pe.txt"};
-        NIFNonRoadImporter importer = new NIFNonRoadImporter(folder, files, dataset, datasource, sqlDataTypes);
+        NIFNonRoadImporter importer = new NIFNonRoadImporter(folder, files, dataset, dbServer(), sqlDataTypes);
         importer.run();
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tableEP));

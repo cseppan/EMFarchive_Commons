@@ -19,18 +19,18 @@ import java.util.List;
 import java.util.Random;
 
 public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -38,6 +38,7 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -45,12 +46,12 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     public void testImportCEMpthourData() throws Exception {
         File folder = new File("test/data/other");
         DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
-        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, datasource, sqlDataTypes);
+        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, sqlDataTypes);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -64,13 +65,13 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     public void testImportVersionedCEMpthourData() throws Exception {
         File folder = new File("test/data/other");
         DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
-        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, datasource, 
+        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, 
                 sqlDataTypes, new VersionedDataFormatFactory(0));
         exporter.export(exportfile);
 

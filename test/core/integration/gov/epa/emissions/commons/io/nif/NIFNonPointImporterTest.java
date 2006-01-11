@@ -17,8 +17,6 @@ import java.util.Random;
 
 public class NIFNonPointImporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
@@ -31,12 +29,13 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
 
     private String tablePE;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -53,7 +52,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/nif/nonpoint");
             String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
-            NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, dataset, datasource, sqlDataTypes);
+            NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, dataset, dbServer, sqlDataTypes);
             importer.run();
             assertEquals(1, countRecords(tableCE));
             assertEquals(21, countRecords(tableEM));
@@ -68,7 +67,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/nif/nonpoint");
             String[] files = {"ky_ce.txt", "ky_ep.txt"};
-            new NIFNonPointImporter(folder, files, dataset, datasource, sqlDataTypes);
+            new NIFNonPointImporter(folder, files, dataset, dbServer, sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types"));
             return;
@@ -78,6 +77,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String tableName) {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
     }
@@ -86,6 +86,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
     }
 
     private void dropTables() throws Exception, SQLException {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableCE);
         dbUpdate.dropTable(datasource.getName(), tableEM);

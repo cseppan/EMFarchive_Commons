@@ -24,9 +24,11 @@ public class ORLNonRoadOnRoadSummaryTest extends PersistenceTestCase {
 
     private Datasource referenceDatasource;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         emissionDatasource = dbServer.getEmissionsDatasource();
         referenceDatasource = dbServer.getReferenceDatasource();
@@ -46,7 +48,7 @@ public class ORLNonRoadOnRoadSummaryTest extends PersistenceTestCase {
     public void testShouldImportASmallAndSimpleNonRoadAndCreateSummary() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset,
-                emissionDatasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         importer.run();
 
         SummaryTable summary = new ORLNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);
@@ -59,7 +61,7 @@ public class ORLNonRoadOnRoadSummaryTest extends PersistenceTestCase {
     public void testShouldImportASmallAndSimpleOnRoadAndCreateSummary() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset,
-                emissionDatasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         importer.run();
 
         SummaryTable summary = new ORLNonRoadOnRoadSummary(emissionDatasource, referenceDatasource, dataset);

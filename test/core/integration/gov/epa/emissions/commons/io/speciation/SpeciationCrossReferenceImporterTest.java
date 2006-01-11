@@ -16,18 +16,17 @@ import java.util.Random;
 
 public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -35,6 +34,7 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -42,7 +42,7 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     public void testImportSpeciationCrossRefData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref-point.txt"}, dataset, datasource, sqlDataTypes);
+                new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         assertEquals(153, countRecords());
@@ -51,15 +51,16 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     public void testImportVersionedSpeciationCrossRefData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref-point.txt"}, dataset, datasource, sqlDataTypes,
+                new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         assertEquals(153, countRecords());
     }
 
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

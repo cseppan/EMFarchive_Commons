@@ -22,20 +22,19 @@ import java.util.regex.Pattern;
 
 public class ORLOnRoadExporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
     private Exporter exporter;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -43,17 +42,18 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
 
         doImport();
 
-        exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
+        exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes);
     }
 
     private void doImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }

@@ -15,18 +15,18 @@ import java.io.File;
 import java.util.Random;
 
 public class GridCrossReferenceExporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -34,6 +34,7 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
@@ -41,10 +42,10 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     public void testExportGridCrossRefData() throws Exception {
         File folder = new File("test/data/spatial");
         GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, datasource, sqlDataTypes);
+        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, dbServer, sqlDataTypes);
         File file = File.createTempFile("GridCrossRefExported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.
@@ -54,11 +55,11 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     public void testExportVersionedGridCrossRefData() throws Exception {
         File folder = new File("test/data/spatial");
         GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
         
-        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, datasource, sqlDataTypes,
+        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(0));
         File file = File.createTempFile("GridCrossRefExported", ".txt");
         exporter.export(file);
@@ -67,6 +68,7 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     }
 
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

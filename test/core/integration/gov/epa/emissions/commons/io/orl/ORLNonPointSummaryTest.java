@@ -24,9 +24,11 @@ public class ORLNonPointSummaryTest extends PersistenceTestCase {
 
     private Datasource referenceDatasource;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         emissionDatasource = dbServer.getEmissionsDatasource();
         referenceDatasource = dbServer.getReferenceDatasource();
@@ -46,7 +48,7 @@ public class ORLNonPointSummaryTest extends PersistenceTestCase {
     public void testShouldImportASmallAndSimpleNonPointFilesAndCreateSummary() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
-                emissionDatasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         importer.run();
         SummaryTable summary = new ORLNonPointSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();

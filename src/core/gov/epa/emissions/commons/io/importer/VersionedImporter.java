@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Dataset;
 
 import java.sql.SQLException;
@@ -13,10 +14,10 @@ public class VersionedImporter implements Importer {
 
     private Datasource datasource;
 
-    public VersionedImporter(Importer delegate, Dataset dataset, Datasource datasource) {
+    public VersionedImporter(Importer delegate, Dataset dataset, DbServer dbServer) {
         this.delegate = delegate;
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
     }
 
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {

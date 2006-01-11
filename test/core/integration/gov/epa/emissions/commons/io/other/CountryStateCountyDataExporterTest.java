@@ -21,18 +21,18 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
+
+    private DbServer dbServer;
     
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -40,6 +40,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), "country");
         dbUpdate.dropTable(datasource.getName(), "state");
@@ -49,11 +50,11 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
     public void testExportCountryStateCountyData() throws Exception {
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
-                datasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
         
@@ -72,12 +73,12 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
     public void testExportVersionedCountryStateCountyData() throws Exception {
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
-                datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
         

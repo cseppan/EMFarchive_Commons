@@ -14,18 +14,18 @@ import java.io.File;
 import java.util.Random;
 
 public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -33,16 +33,16 @@ public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
 
         AreaTemporalReferenceFileFormat base = new AreaTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);
-        createTable("AREA_SOURCE", datasource, tableFormat);
+        createTable("AREA_SOURCE", dbServer.getEmissionsDatasource(), tableFormat);
     }
 
     protected void doTearDown() throws Exception {
-        dropTable("AREA_SOURCE", datasource);
+        dropTable("AREA_SOURCE", dbServer.getEmissionsDatasource());
     }
 
     public void testShouldImportAFileWithVariableCols() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
-        AreaTemporalReferenceImporter importer = new AreaTemporalReferenceImporter(file, dataset, datasource,
+        AreaTemporalReferenceImporter importer = new AreaTemporalReferenceImporter(file, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -50,6 +50,7 @@ public class AreaTemporalReferenceImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords(String table) {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), table);
     }

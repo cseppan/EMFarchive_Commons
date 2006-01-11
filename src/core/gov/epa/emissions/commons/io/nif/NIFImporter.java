@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
@@ -35,11 +36,11 @@ public class NIFImporter {
 
     private FileVerifier fileVerifier;
 
-    public NIFImporter(File[] files, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource)
+    public NIFImporter(File[] files, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, DbServer dbServer)
             throws ImporterException {
         this.dataset = dataset;
         this.datasetTypeUnits = datasetTypeUnits;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         this.tableNames = new ArrayList();
         this.fileVerifier = new FileVerifier();
         setup(files);

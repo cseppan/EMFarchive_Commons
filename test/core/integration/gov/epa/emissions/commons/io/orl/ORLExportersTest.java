@@ -24,18 +24,17 @@ import java.util.regex.Pattern;
 
 public class ORLExportersTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -43,17 +42,18 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testShouldExportOnRoad() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, datasource,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers
@@ -72,10 +72,10 @@ public class ORLExportersTest extends PersistenceTestCase {
         File importFile = new File("test/data/orl/nc", "small-onroad.txt");
         DataFormatFactory formatFactory = new VersionedDataFormatFactory(0);
         Importer importer = new ORLOnRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
-                dataset, datasource, sqlDataTypes, formatFactory);
+                dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();
 
-        Exporter exporter = new ORLOnRoadExporter(dataset, datasource, sqlDataTypes, formatFactory);
+        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory);
         File file = doExport(exporter);
 
         // assert headers
@@ -92,11 +92,11 @@ public class ORLExportersTest extends PersistenceTestCase {
 
     public void testShouldExportNonRoad() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset, datasource,
+        Importer importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLNonRoadExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLNonRoadExporter(dataset, dbServer, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers
@@ -113,11 +113,11 @@ public class ORLExportersTest extends PersistenceTestCase {
 
     public void testShouldExportNonPoint() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset, datasource,
+        Importer importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLNonPointExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLNonPointExporter(dataset, dbServer, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers
@@ -137,11 +137,11 @@ public class ORLExportersTest extends PersistenceTestCase {
 
     public void testShouldExportPoint() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset, datasource,
+        Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLPointExporter(dataset, datasource, sqlDataTypes);
+        Exporter exporter = new ORLPointExporter(dataset, dbServer, sqlDataTypes);
         File file = doExport(exporter);
 
         // assert headers

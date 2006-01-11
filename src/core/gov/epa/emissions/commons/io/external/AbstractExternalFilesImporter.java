@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.external;
 
-import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -27,12 +27,12 @@ public abstract class AbstractExternalFilesImporter implements Importer {
 
     private Dataset dataset;
 
-    public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataType) throws ImporterException {
-        this(folder, filePatterns, dataset, datasource, sqlDataType, null);
+        this(folder, filePatterns, dataset, dbServer, sqlDataType, null);
     }
 
-    public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, Datasource datasource,
+    public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         this.dataset = dataset;
         init(folder, filePatterns, dataset);

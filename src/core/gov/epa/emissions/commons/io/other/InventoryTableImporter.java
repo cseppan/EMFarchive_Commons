@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -33,17 +34,17 @@ public class InventoryTableImporter implements Importer {
 
     private Dataset dataset;
 
-    public InventoryTableImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public InventoryTableImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        this(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
+        this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
-    public InventoryTableImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public InventoryTableImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
 
         FileFormat fileFormat = new InventoryTableFileFormat(sqlDataTypes, 1);
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);

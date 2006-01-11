@@ -15,23 +15,23 @@ import java.util.Random;
 
 //Remove 'abstract' modifier, and remove 'TestCase' suffix to run the test
 public abstract class TemporalReferenceExportersTestCase extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
-
+        
+        Datasource datasource = dbServer.getEmissionsDatasource();
         PointTemporalReferenceFileFormat base = new PointTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);
         createTable("POINT_SOURCE", datasource, tableFormat);
@@ -46,6 +46,7 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         dropTable("POINT_SOURCE", datasource);
         dropTable("AREA_SOURCE", datasource);
         dropTable("MOBILE_SOURCE", datasource);
@@ -53,12 +54,12 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
 
     public void testShouldExportAFileWithVariableCols() throws Exception {
         File file = new File("test/data/temporal-crossreference", "point-source-VARIABLE-COLS.txt");
-        FIX_THE_TEST_PointTemporalReferenceImporter importer = new FIX_THE_TEST_PointTemporalReferenceImporter(file, dataset, datasource,
+        FIX_THE_TEST_PointTemporalReferenceImporter importer = new FIX_THE_TEST_PointTemporalReferenceImporter(file, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
         FIX_THE_TEST_PointTemporalReferenceExporter exporter = new FIX_THE_TEST_PointTemporalReferenceExporter(dataset,
-                datasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference", "point-cross-ref-exported.txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
@@ -68,13 +69,13 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
 
     public void testShouldExportAreaReferenceData() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
-        AreaTemporalReferenceImporter importer = new AreaTemporalReferenceImporter(file, dataset, datasource,
+        AreaTemporalReferenceImporter importer = new AreaTemporalReferenceImporter(file, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
         assertEquals(28, countRecords("AREA_SOURCE"));
 
-        AreaTemporalReferenceExporter exporter = new AreaTemporalReferenceExporter(dataset, datasource, sqlDataTypes);
+        AreaTemporalReferenceExporter exporter = new AreaTemporalReferenceExporter(dataset, dbServer, sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference", "area-cross-ref-exported.txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
@@ -84,13 +85,13 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
 
     public void testShouldExportMobileReferenceData() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
-        MobileTemporalReferenceImporter importer = new MobileTemporalReferenceImporter(file, dataset, datasource,
+        MobileTemporalReferenceImporter importer = new MobileTemporalReferenceImporter(file, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
         assertEquals(28, countRecords("MOBILE_SOURCE"));
 
-        MobileTemporalReferenceExporter exporter = new MobileTemporalReferenceExporter(dataset, datasource,
+        MobileTemporalReferenceExporter exporter = new MobileTemporalReferenceExporter(dataset, dbServer,
                 sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference", "mobile-cross-ref-exported.txt");
         exporter.export(exportfile);
@@ -100,6 +101,7 @@ public abstract class TemporalReferenceExportersTestCase extends PersistenceTest
     }
 
     private int countRecords(String table) {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), table);
     }

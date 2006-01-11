@@ -15,18 +15,18 @@ import java.io.File;
 import java.util.Random;
 
 public class SpatialSurrogatesImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -34,13 +34,14 @@ public class SpatialSurrogatesImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testImportSpetialSurrogatesData() throws Exception {
         File folder = new File("test/data/spatial");
-        SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, dataset, datasource, sqlDataTypes);
+        SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         assertEquals(43, countRecords());
@@ -49,8 +50,8 @@ public class SpatialSurrogatesImporterTest extends PersistenceTestCase {
     public void testImportVersionedSpetialSurrogatesData() throws Exception {
         File folder = new File("test/data/spatial");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, 
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         assertEquals(43, countRecords());
@@ -58,6 +59,7 @@ public class SpatialSurrogatesImporterTest extends PersistenceTestCase {
 
     
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

@@ -14,20 +14,16 @@ import java.util.Random;
 
 public class IDAImporterTest extends PersistenceTestCase {
 
-    private Datasource datasource;
-
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
-    private Datasource referenceDatasource;
+    private DbServer dbServer;
 
     protected void setUp() throws Exception {
         super.setUp();
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
-        referenceDatasource = dbServer.getReferenceDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -35,36 +31,39 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testShouldImportASmallAreaFile() throws Exception {
         File file = new File("test/data/ida", "small-area.txt");
-        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(file, dataset, datasource,
-                referenceDatasource, sqlDataTypes);
+        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(file, dataset, dbServer,
+                sqlDataTypes);
         importer.run();
         // assert
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
     public void testShouldImportASmallPointFile() throws Exception {
         File file = new File("test/data/ida", "small-point.txt");
-        IDAPointImporter importer = new IDAPointImporter(file, dataset, datasource, referenceDatasource,
-                sqlDataTypes);
+        IDAPointImporter importer = new IDAPointImporter(file, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         // assert
-        TableReader tableReader = tableReader(datasource);        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        TableReader tableReader = tableReader(datasource);
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
     public void testShouldImportASmallMobileFile() throws Exception {
         File file = new File("test/data/ida", "small-mobile.txt");
-        IDAMobileImporter importer = new IDAMobileImporter(file, dataset, datasource, referenceDatasource,
-                sqlDataTypes);
+        IDAMobileImporter importer = new IDAMobileImporter(file, dataset, dbServer, sqlDataTypes);
         importer.run();
         // assert
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
@@ -72,11 +71,12 @@ public class IDAImporterTest extends PersistenceTestCase {
     public void FIXME_testShouldImportASmallActivityFile() throws Exception {
         File file = new File("test/data/ida/small-activity.txt");
 
-        IDAActivityImporter importer = new IDAActivityImporter(file, dataset, datasource, referenceDatasource,
+        IDAActivityImporter importer = new IDAActivityImporter(file, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
         // assert
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }

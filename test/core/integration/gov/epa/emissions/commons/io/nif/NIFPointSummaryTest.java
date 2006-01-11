@@ -65,7 +65,7 @@ public class NIFPointSummaryTest extends PersistenceTestCase {
             File folder = new File("test/data/nif/point");
             String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt",
                     "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
-            NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, emissionDatasource, sqlDataTypes);
+            NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, dbServer(), sqlDataTypes);
             importer.run();
             SummaryTable summary = new NIFPointSummary(emissionDatasource, referenceDatasource, dataset);
             summary.createSummary();

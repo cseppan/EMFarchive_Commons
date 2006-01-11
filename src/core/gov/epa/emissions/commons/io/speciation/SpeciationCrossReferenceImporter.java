@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -31,26 +32,26 @@ public class SpeciationCrossReferenceImporter implements Importer {
 
     private Dataset dataset;
     
-    public SpeciationCrossReferenceImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public SpeciationCrossReferenceImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
-        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, dbServer, fileFormat, tableFormat);
     }
 
-    public SpeciationCrossReferenceImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public SpeciationCrossReferenceImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
-        create(folder, filenames, dataset, datasource, fileFormat, tableFormat);
+        create(folder, filenames, dataset, dbServer, fileFormat, tableFormat);
     }
     
-    private void create(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    private void create(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             FileFormatWithOptionalCols fileFormat, TableFormat tableFormat) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
     

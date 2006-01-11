@@ -32,12 +32,14 @@ public class ReferenceCVSFileImporterTest extends PersistenceTestCase {
 
     private String tableName;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
         tableName = "test";
         dataset = new SimpleDataset();
         dataset.setName("test");
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
     }
@@ -47,7 +49,7 @@ public class ReferenceCVSFileImporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), tableName);
     }
 
-    public void testShouldImportASmallAndSimplePointFile() throws Exception {
+    public void testShouldImportSmallReferenceFile() throws Exception {
         File file = new File("test/data/reference", "pollutants.txt");
 
         Importer importer = new ReferenceCSVFileImporter(file, tableName, datasource, sqlDataTypes);
@@ -60,14 +62,14 @@ public class ReferenceCVSFileImporterTest extends PersistenceTestCase {
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
         File folder = new File("test/data/reference");
         Importer importer = new CSVImporter(folder, new String[]{"pollutants.txt"},
-                dataset, datasource, sqlDataTypes);
+                dataset, dbServer, sqlDataTypes);
         importer.run();
         
         int rows = countRecords();
         assertEquals(8, rows);
         
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, datasource, sqlDataTypes);
+        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes);
         exporter.export(file);
         
         List data = readData(file);
@@ -78,15 +80,15 @@ public class ReferenceCVSFileImporterTest extends PersistenceTestCase {
     public void testImportASmallAndSimplePointFileWithVersionedCSVImporter() throws Exception {
         File folder = new File("test/data/reference");
         Importer importer = new CSVImporter(folder, new String[]{"pollutants.txt"},
-                dataset, datasource, sqlDataTypes, new VersionedDataFormatFactory(0));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, datasource);
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         int rows = countRecords();
         assertEquals(8, rows);
         
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, datasource, sqlDataTypes,
+        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(0));
         exporter.export(file);
         

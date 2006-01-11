@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -34,19 +35,19 @@ public class SMKReportExporter implements Exporter {
     
     private DataFormatFactory dataFormatFactory;
     
-    public SMKReportExporter(Dataset dataset, Datasource datasource, SqlDataTypes types) {
-        setup(dataset, datasource, types, new NonVersionedDataFormatFactory());
+    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
+        setup(dataset, dbServer, types, new NonVersionedDataFormatFactory());
     }
     
-    public SMKReportExporter(Dataset dataset, Datasource datasource, SqlDataTypes types,
+    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory) {
-        setup(dataset, datasource, types, factory);
+        setup(dataset, dbServer, types, factory);
     }
 
-    private void setup(Dataset dataset, Datasource datasource, SqlDataTypes types,
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
         setDelimiter(";");
     }

@@ -13,18 +13,18 @@ import java.io.File;
 import java.util.Random;
 
 public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
-    private Datasource datasource;
 
     private SqlDataTypes sqlDataTypes;
 
     private Dataset dataset;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
 
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        datasource = dbServer.getEmissionsDatasource();
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -32,6 +32,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
     }
 
     protected void doTearDown() throws Exception {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getName());
 
@@ -41,13 +42,13 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
     public void testShouldImportReferenceFile() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
         TemporalReferenceImporter importer = new TemporalReferenceImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, datasource, sqlDataTypes);
+                .getName() }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         int rows = countRecords();
         assertEquals(34, rows);
 
-        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, datasource, sqlDataTypes);
+        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, dbServer, sqlDataTypes);
         File exportfile = new File("test/data/temporal-crossreference", "VersionedCrossRefExported.txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
@@ -55,6 +56,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
     }
 
     private int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }

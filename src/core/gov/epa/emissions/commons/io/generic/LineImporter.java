@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
@@ -30,22 +31,22 @@ public class LineImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    public LineImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public LineImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        create(folder, filenames, dataset, datasource, sqlDataTypes, new NonVersionedDataFormatFactory());
+        create(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
-    public LineImporter(File folder, String[] filenames, Dataset dataset, Datasource datasource,
+    public LineImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
-        create(folder, filenames, dataset, datasource, sqlDataTypes, factory);
+        create(folder, filenames, dataset, dbServer, sqlDataTypes, factory);
     }
     
-    private void create(File folder, String[] filenames, Dataset dataset, Datasource datasource, 
+    private void create(File folder, String[] filenames, Dataset dataset, DbServer dbServer, 
             SqlDataTypes types, DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         FileFormat fileFormat = new LineFileFormat(types);
         TableFormat tableFormat = factory.tableFormat(fileFormat, types);
         this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);

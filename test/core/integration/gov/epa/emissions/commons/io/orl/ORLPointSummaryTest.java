@@ -24,9 +24,11 @@ public class ORLPointSummaryTest extends PersistenceTestCase {
 
     private Datasource referenceDatasource;
 
+    private DbServer dbServer;
+
     protected void setUp() throws Exception {
         super.setUp();
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         emissionDatasource = dbServer.getEmissionsDatasource();
         referenceDatasource = dbServer.getReferenceDatasource();
@@ -46,7 +48,7 @@ public class ORLPointSummaryTest extends PersistenceTestCase {
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset,
-                emissionDatasource, sqlDataTypes);
+                dbServer, sqlDataTypes);
         importer.run();
 
         SummaryTable summary = new ORLPointSummary(emissionDatasource, referenceDatasource, dataset);

@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
@@ -38,11 +39,10 @@ public class IDAImporter {
 
     private DataTable dataTable;
 
-    public IDAImporter(Dataset dataset, Datasource emissionDatasource, Datasource referenceDatasource,
-            SqlDataTypes sqlDataTypes) {
+    public IDAImporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
-        this.emissionDatasource = emissionDatasource;
-        this.referenceDatasource = referenceDatasource;
+        this.emissionDatasource = dbServer.getEmissionsDatasource();
+        this.referenceDatasource = dbServer.getReferenceDatasource();
         this.sqlDataTypes = sqlDataTypes;
         this.fileVerifier = new FileVerifier();
     }

@@ -15,18 +15,15 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
 
     private SqlDataTypes sqlDataTypes;
 
-    private Datasource emissionDatasource;
-
     private SimpleDataset dataset;
 
-    private Datasource referenceDatasource;
+    private DbServer dbServer;
 
     protected void setUp() throws Exception {
         super.setUp();
-        DbServer dbServer = dbSetup.getDbServer();
+        dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        emissionDatasource = dbServer.getEmissionsDatasource();
-        referenceDatasource = dbServer.getReferenceDatasource();
+
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setDatasetid(Math.abs(new Random().nextInt()));
@@ -36,13 +33,14 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     }
 
     private void dropTable() throws Exception, SQLException {
-        DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
-        dbUpdate.dropTable(emissionDatasource.getName(), dataset.getName());
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
+        dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 
     public void testShouldIdentifyAllRequiredTags() throws Exception {
         File file = new File("test/data/ida/small-area.txt");
-        IDAImporter importer = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
+        IDAImporter importer = new IDAImporter(dataset, dbServer, sqlDataTypes);
         importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
         importer.run();
         dropTable();
@@ -51,7 +49,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     public void testShouldIdentifyNoIDATag() throws Exception {
         File file = new File("test/data/ida/noIDATags.txt");
         try {
-            IDAImporter importer = new IDAImporter(dataset, emissionDatasource, referenceDatasource, sqlDataTypes);
+            IDAImporter importer = new IDAImporter(dataset, dbServer, sqlDataTypes);
             importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
             importer.run();
         } catch (Exception e) {

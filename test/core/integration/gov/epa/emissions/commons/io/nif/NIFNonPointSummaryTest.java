@@ -56,7 +56,7 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
         File folder = new File("test/data/nif/nonpoint");
         String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
         NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, 
-                dataset, emissionDatasource, sqlDataTypes);
+                dataset, dbServer(), sqlDataTypes);
         SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
         importer.run();
         summary.createSummary();
