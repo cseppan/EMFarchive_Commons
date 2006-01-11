@@ -132,7 +132,15 @@ public class LockableVersions {
         derived.markFinal();
         derived.setDate(new Date());
 
-        save(derived, session);
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(derived);
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
 
         return derived;
     }

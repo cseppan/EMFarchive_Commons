@@ -148,6 +148,9 @@ public class LockableVersionsTest extends HibernateTestCase {
 
         Date finalDate = results.getDate();
         assertTrue("Creation Date should be different from Final Date", !finalDate.before(creationDate));
+        
+        Version[] all = versions.get(1, session);
+        assertEquals(2, all.length);
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
