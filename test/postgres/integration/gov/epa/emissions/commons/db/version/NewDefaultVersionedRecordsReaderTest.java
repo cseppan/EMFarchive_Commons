@@ -4,9 +4,9 @@ import gov.epa.emissions.commons.db.Datasource;
 
 import java.sql.SQLException;
 
-public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
+public class NewDefaultVersionedRecordsReaderTest extends VersionedRecordsTestCase {
 
-    private VersionedRecordsReader reader;
+    private NewDefaultVersionedRecordsReader reader;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -14,12 +14,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        reader = new DefaultVersionedRecordsReader(datasource);
-    }
-
-    protected void doTearDown() throws Exception {
-        reader.close();
-        super.doTearDown();
+        reader = new NewDefaultVersionedRecordsReader(datasource);
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
@@ -39,7 +34,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         versionZero.setDatasetId(1);
         versionZero.setVersion(0);
 
-        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable);
+        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, session);
 
         assertEquals(5, records.length);
 
@@ -59,7 +54,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         versionTwo.setDatasetId(1);
         versionTwo.setVersion(2);
 
-        VersionedRecord[] records = reader.fetchAll(versionTwo, dataTable);
+        VersionedRecord[] records = reader.fetchAll(versionTwo, dataTable, session);
 
         assertEquals(5, records.length);
 
@@ -101,7 +96,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(3);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, session);
 
         assertEquals(6, records.length);
 
@@ -118,7 +113,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, session);
 
         assertEquals(10, records.length);
 
@@ -139,7 +134,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(4);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, session);
 
         assertEquals(8, records.length);
 
@@ -183,7 +178,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(3);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, session);
 
         assertEquals(6, records.length);
 
@@ -200,7 +195,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(5);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, session);
 
         assertEquals(10, records.length);
 
@@ -221,7 +216,7 @@ public class VersionedRecordsReaderTest extends VersionedRecordsTestCase {
         version.setDatasetId(1);
         version.setVersion(2);
 
-        VersionedRecord[] records = reader.fetchAll(version, dataTable);
+        VersionedRecord[] records = reader.fetchAll(version, dataTable, session);
 
         assertEquals(6, records.length);
 

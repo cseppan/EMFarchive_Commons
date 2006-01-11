@@ -43,6 +43,8 @@ public abstract class VersionedRecordsTestCase extends HibernateTestCase {
 
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(dataTable);
+
+        super.doTearDown();
     }
 
     protected void addRecord(Datasource datasource, String table, String[] data) throws SQLException {
