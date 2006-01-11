@@ -48,7 +48,8 @@ public class DataTable {
     private void checkTableExist(TableDefinition tableDefinition, String table) throws ImporterException {
         try {
             if (tableDefinition.tableExists(table)) {
-                throw new ImporterException("Table '" + table + "' is exist in the database");
+                throw new ImporterException("Table '" + table
+                        + "' already exists in the database, and cannot be created");
             }
         } catch (Exception e) {
             throw new ImporterException("Could not check table '" + table + "' exist or not\n" + e.getMessage());

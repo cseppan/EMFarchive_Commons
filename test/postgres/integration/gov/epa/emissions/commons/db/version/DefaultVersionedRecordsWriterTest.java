@@ -8,7 +8,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
     private VersionedRecordsWriter writer;
 
-    private Versions versions;
+    private LockableVersions versions;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -17,11 +17,10 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         setupVersionZeroData(datasource, dataTable);
 
         writer = new DefaultVersionedRecordsWriter(datasource, dataTable);
-        versions = new Versions(datasource);
+        versions = new LockableVersions();
     }
 
     protected void doTearDown() throws Exception {
-        versions.close();
         writer.close();
         super.doTearDown();
     }
@@ -41,8 +40,8 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
     public void testChangeSetWithTwoUpdatesInGivenVersion() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
-        Version baseVersion = versions.get(1, 0);
-        Version versionOne = versions.derive(baseVersion, "version one");
+        Version baseVersion = versions.get(1, 0, session);
+        Version versionOne = versions.derive(baseVersion, "version one", session);
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
@@ -54,15 +53,15 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
         writer.update(changeset);
 
-        Version version = versions.get(1, versionOne.getVersion());
+        Version version = versions.get(1, versionOne.getVersion(), session);
         assertEquals(1, version.getVersion());
     }
 
     public void testUpdate() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
-        Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero, "version one");
+        Version versionZero = versions.get(1, 0, session);
+        Version versionOne = versions.derive(versionZero, "version one", session);
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
@@ -74,7 +73,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
         writer.update(changeset);
 
-        Version version = versions.get(1, 1);
+        Version version = versions.get(1, 1, session);
         assertEquals(1, version.getVersion());
         assertFalse("Should me marked as Final", version.isFinalVersion());
 
@@ -92,8 +91,8 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         // version one (based on version zero): 4 deleted, add new 6 & 7
         ChangeSet changeSetForVersionOne = new ChangeSet();
 
-        Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero, "version one");
+        Version versionZero = versions.get(1, 0, session);
+        Version versionOne = versions.derive(versionZero, "version one", session);
         changeSetForVersionOne.setVersion(versionOne);
 
         VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
@@ -109,11 +108,11 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         changeSetForVersionOne.addNew(record7);
 
         writer.update(changeSetForVersionOne);
-        versions.markFinal(versionOne);
+        versions.markFinal(versionOne, session);
 
         // version two (based on version zero): update 3, add (new) 8
         ChangeSet changeSetForVersionTwo = new ChangeSet();
-        Version versionTwo = versions.derive(versionZero, "version two");
+        Version versionTwo = versions.derive(versionZero, "version two", session);
         changeSetForVersionTwo.setVersion(versionTwo);
 
         VersionedRecord record3 = versionZeroRecords[2];
@@ -143,8 +142,8 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
     public void testChangeSetWithAllUpdatesInGivenVersion() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
-        Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero, "version one");
+        Version versionZero = versions.get(1, 0, session);
+        Version versionOne = versions.derive(versionZero, "version one", session);
         changeset.setVersion(versionOne);
 
         VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
@@ -157,13 +156,13 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
         writer.update(changeset);
 
-        Version version = versions.get(1, versionOne.getVersion());
+        Version version = versions.get(1, versionOne.getVersion(), session);
         assertEquals(1, version.getVersion());
     }
 
     public void testChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
-        Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero, "version one");
+        Version versionZero = versions.get(1, 0, session);
+        Version versionOne = versions.derive(versionZero, "version one", session);
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -177,7 +176,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         changeset.addNew(record7);
 
         writer.update(changeset);
-        Version version = versions.get(1, versionOne.getVersion());
+        Version version = versions.get(1, versionOne.getVersion(), session);
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
@@ -193,8 +192,8 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
     public void testChangeSetWithRecordsDeleteShouldResultInNewVersionWithoutThoseRecords() throws Exception {
         VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
 
-        Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero, "version one");
+        Version versionZero = versions.get(1, 0, session);
+        Version versionOne = versions.derive(versionZero, "version one", session);
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -208,7 +207,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
         writer.update(changeset);
 
-        Version version = versions.get(1, versionOne.getVersion());
+        Version version = versions.get(1, versionOne.getVersion(), session);
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
@@ -225,8 +224,8 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
     public void testChangeSetWithAddedAndDeletedRecords() throws Exception {
         VersionedRecordsReader reader = new DefaultVersionedRecordsReader(datasource);
 
-        Version versionZero = versions.get(1, 0);
-        Version versionOne = versions.derive(versionZero, "version one");
+        Version versionZero = versions.get(1, 0, session);
+        Version versionOne = versions.derive(versionZero, "version one", session);
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -236,7 +235,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
         writer.update(changeset);
 
-        Version version = versions.get(1, versionOne.getVersion());
+        Version version = versions.get(1, versionOne.getVersion(), session);
         assertNotNull("Should return version of changeset", version);
         assertEquals(1, version.getVersion());
 
