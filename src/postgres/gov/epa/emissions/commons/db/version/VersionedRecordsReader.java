@@ -2,15 +2,16 @@ package gov.epa.emissions.commons.db.version;
 
 import java.sql.SQLException;
 
+import org.hibernate.Session;
+
 public interface VersionedRecordsReader {
 
-    void close() throws SQLException;
+    VersionedRecord[] fetchAll(Version version, String table, Session session) throws SQLException;
 
-    VersionedRecord[] fetchAll(Version version, String table) throws SQLException;
+    VersionedRecord[] fetchAll(Version version, String table, String sortOrder, Session session) throws SQLException;
 
-    VersionedRecord[] fetchAll(Version version, String table, String sortOrder) throws SQLException;
+    ScrollableVersionedRecords fetch(Version version, String table, Session session) throws SQLException;
 
-    ScrollableVersionedRecords fetch(Version version, String table) throws SQLException;
-
-    ScrollableVersionedRecords fetch(Version version, String table, String sortOrder) throws SQLException;
+    ScrollableVersionedRecords fetch(Version version, String table, String sortOrder, Session session)
+            throws SQLException;
 }

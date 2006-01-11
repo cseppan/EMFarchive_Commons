@@ -6,35 +6,35 @@ import gov.epa.emissions.commons.io.Column;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
+import org.hibernate.Session;
+
 public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
 
     private Datasource datasource;
 
     private Versions versions;
 
-    public DefaultVersionedRecordsReader(Datasource datasource) throws SQLException {
+    public DefaultVersionedRecordsReader(Datasource datasource) {
         this.datasource = datasource;
-        versions = new Versions(datasource);
+        versions = new Versions();
     }
 
-    public void close() throws SQLException {
-        versions.close();
+    public VersionedRecord[] fetchAll(Version version, String table, Session session) throws SQLException {
+        return fetchAll(version, table, null, session);
     }
 
-    public VersionedRecord[] fetchAll(Version version, String table) throws SQLException {
-        return fetchAll(version, table, null);
+    public VersionedRecord[] fetchAll(Version version, String table, String sortOrder, Session session)
+            throws SQLException {
+        return fetch(version, table, sortOrder, session).all();
     }
 
-    public VersionedRecord[] fetchAll(Version version, String table, String sortOrder) throws SQLException {
-        return fetch(version, table, sortOrder).all();
+    public ScrollableVersionedRecords fetch(Version version, String table, Session session) throws SQLException {
+        return fetch(version, table, null, session);
     }
 
-    public ScrollableVersionedRecords fetch(Version version, String table) throws SQLException {
-        return fetch(version, table, null);
-    }
-
-    public ScrollableVersionedRecords fetch(Version version, String table, String sortOrder) throws SQLException {
-        String versions = fetchCommaSeparatedVersionSequence(version);
+    public ScrollableVersionedRecords fetch(Version version, String table, String sortOrder, Session session)
+            throws SQLException {
+        String versions = fetchCommaSeparatedVersionSequence(version, session);
         String deleteClause = createDeleteClause(versions);
 
         // FIXME: FOR BETA DEPLOYMENT ONLY: The sort is ordered by the first data column
@@ -72,8 +72,8 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         return buffer.toString();
     }
 
-    private String fetchCommaSeparatedVersionSequence(Version finalVersion) throws SQLException {
-        Version[] path = versions.getPath(finalVersion.getDatasetId(), finalVersion.getVersion());
+    private String fetchCommaSeparatedVersionSequence(Version finalVersion, Session session) {
+        Version[] path = versions.getPath(finalVersion.getDatasetId(), finalVersion.getVersion(), session);
 
         StringBuffer result = new StringBuffer();
         for (int i = 0; i < path.length; i++) {

@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
-import gov.epa.emissions.commons.db.version.LockableVersions;
+import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
@@ -149,7 +149,7 @@ public class ORLImporterTest extends HibernateTestCase {
     }
 
     private void verifyVersionZeroEntryInVersionsTable() throws Exception {
-        LockableVersions versions = new LockableVersions();
+        Versions versions = new Versions();
         Version[] onRoadVersions = versions.get(dataset.getDatasetid(), session);
         assertEquals(1, onRoadVersions.length);
 

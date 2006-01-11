@@ -3,12 +3,12 @@ package gov.epa.emissions.commons.db.version;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.db.HibernateTestCase;
 
 import java.sql.SQLException;
 import java.util.Date;
 
-public class VersionsTest extends PersistenceTestCase {
+public class VersionsTest extends HibernateTestCase {
 
     private Datasource datasource;
 
@@ -25,11 +25,10 @@ public class VersionsTest extends PersistenceTestCase {
 
         setupData(datasource, versionsTable);
 
-        versions = new Versions(datasource);
+        versions = new Versions();
     }
 
     protected void doTearDown() throws Exception {
-        versions.close();
         dropData(versionsTable, datasource);
     }
 
@@ -43,7 +42,7 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testFetchVersionZero() throws Exception {
-        Version[] path = versions.getPath(1, 0);
+        Version[] path = versions.getPath(1, 0, session);
 
         assertEquals(1, path.length);
         assertEquals(0, path[0].getVersion());
@@ -51,32 +50,29 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testGetsLastFinalVersionForDataset() throws Exception {
-        int finalVersion = versions.getLastFinalVersion(1);
+        int finalVersion = versions.getLastFinalVersion(1, session);
         assertEquals(0, finalVersion);
     }
 
     public void testSeveralMarksDerivedVersionAsFinal() throws Exception {
         long datasetId = 1;
-        Version base = versions.get(datasetId, 0);
+        Version base = versions.get(datasetId, 0, session);
 
-        Version derived = versions.derive(base, "version one");
-        versions.markFinal(derived);
-        int finalVersion = versions.getLastFinalVersion(datasetId);
-        assertEquals(derived.getVersion(), finalVersion);
-        derived = versions.derive(derived, "version two");
-        versions.markFinal(derived);
-        finalVersion = versions.getLastFinalVersion(datasetId);
-        assertEquals(derived.getVersion(), finalVersion);
-        derived = versions.derive(derived, "version two");
-        versions.markFinal(derived);
-        finalVersion = versions.getLastFinalVersion(datasetId);
-        assertEquals(derived.getVersion(), finalVersion);
+        Version derivedFromBase = versions.derive(base, "version one", session);
+        versions.markFinal(derivedFromBase, session);
+        int versionOne = versions.getLastFinalVersion(datasetId, session);
+        assertEquals(derivedFromBase.getVersion(), versionOne);
+
+        Version derivedFromOne = versions.derive(derivedFromBase, "version two", session);
+        versions.markFinal(derivedFromOne, session);
+        int versionTwo = versions.getLastFinalVersion(datasetId, session);
+        assertEquals(derivedFromOne.getVersion(), versionTwo);
     }
 
     public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
-        Version base = versions.get(1, 0);
+        Version base = versions.get(1, 0, session);
 
-        Version derived = versions.derive(base, "version one");
+        Version derived = versions.derive(base, "version one", session);
 
         assertNotNull("Should be able to derive from a Final version", derived);
         assertEquals(1, derived.getDatasetId());
@@ -86,11 +82,21 @@ public class VersionsTest extends PersistenceTestCase {
         assertNotNull(derived.getDate());
     }
 
-    public void testShouldGetAllVersionsOfADataset() throws Exception {
-        Version base = versions.get(1, 0);
-        Version derived = versions.derive(base, "version one");
+    public void testShouldGetAVersionUsingHibernate() throws Exception {
+        Version base = versions.get(1, 0, session);
 
-        Version[] allVersions = versions.get(1);
+        assertEquals(1, base.getDatasetId());
+        assertEquals(0, base.getVersion());
+        assertEquals("", base.getPath());
+        assertTrue("Version zero should be final", base.isFinalVersion());
+        assertNotNull(base.getDate());
+    }
+
+    public void testShouldGetAllVersionsBasedOnADerivedVersion() throws Exception {
+        Version base = versions.get(1, 0, session);
+        Version derived = versions.derive(base, "version one", session);
+
+        Version[] allVersions = versions.get(1, session);
 
         assertNotNull("Should get all versions of a Dataset", allVersions);
         assertEquals(2, allVersions.length);
@@ -100,12 +106,20 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals("version one", allVersions[1].getName());
     }
 
-    public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
-        Version base = versions.get(1, 0);
+    public void testShouldGetAllVersions() throws Exception {
+        Version[] allVersions = versions.get(1, session);
 
-        Version derived = versions.derive(base, "version one");
+        assertNotNull("Should get all versions of a Dataset", allVersions);
+        assertEquals(1, allVersions.length);
+        assertEquals(0, allVersions[0].getVersion());
+    }
+
+    public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
+        Version base = versions.get(1, 0, session);
+
+        Version derived = versions.derive(base, "version one", session);
         try {
-            versions.derive(derived, "version two");
+            versions.derive(derived, "version two", session);
         } catch (Exception e) {
             return;
         }
@@ -114,11 +128,11 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testShouldBeAbleToMarkADerivedVersionAsFinal() throws Exception {
-        Version base = versions.get(1, 0);
-        Version derived = versions.derive(base, "version one");
+        Version base = versions.get(1, 0, session);
+        Version derived = versions.derive(base, "version one", session);
         Date creationDate = derived.getDate();
 
-        Version finalVersion = versions.markFinal(derived);
+        Version finalVersion = versions.markFinal(derived, session);
 
         assertNotNull("Should be able to mark a 'derived' as a Final version", derived);
         assertEquals(derived.getDatasetId(), finalVersion.getDatasetId());
@@ -126,7 +140,7 @@ public class VersionsTest extends PersistenceTestCase {
         assertEquals("0", finalVersion.getPath());
         assertTrue("Derived version should be final on being marked 'final'", finalVersion.isFinalVersion());
 
-        Version results = versions.get(1, derived.getVersion());
+        Version results = versions.get(1, derived.getVersion(), session);
         assertEquals(derived.getDatasetId(), results.getDatasetId());
         assertEquals(derived.getVersion(), results.getVersion());
         assertEquals(derived.getPath(), results.getPath());
@@ -134,16 +148,19 @@ public class VersionsTest extends PersistenceTestCase {
 
         Date finalDate = results.getDate();
         assertTrue("Creation Date should be different from Final Date", !finalDate.before(creationDate));
+        
+        Version[] all = versions.get(1, session);
+        assertEquals(2, all.length);
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {
-        String[] versionOneData = { null, "1", "1", "ver 1", "0" };
+        String[] versionOneData = { "2", "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionFourData = { null, "1", "4", "ver 4", "0,1" };
+        String[] versionFourData = { "3", "1", "4", "ver 4", "0,1" };
         addRecord(datasource, versionsTable, versionFourData);
 
-        Version[] path = versions.getPath(1, 4);
+        Version[] path = versions.getPath(1, 4, session);
 
         assertEquals(3, path.length);
         assertEquals(0, path[0].getVersion());
@@ -152,16 +169,16 @@ public class VersionsTest extends PersistenceTestCase {
     }
 
     public void testLinearVersionThreeShouldHaveZeroOneAndTwoInThePath() throws Exception {
-        String[] versionOneData = { null, "1", "1", "ver 1", "0" };
+        String[] versionOneData = { "2", "1", "1", "ver 1", "0" };
         addRecord(datasource, versionsTable, versionOneData);
 
-        String[] versionTwoData = { null, "1", "2", "ver 2", "0,1" };
+        String[] versionTwoData = { "3", "1", "2", "ver 2", "0,1" };
         addRecord(datasource, versionsTable, versionTwoData);
 
-        String[] versionThreeData = { null, "1", "3", "ver 3", "0,1,2" };
+        String[] versionThreeData = { "4", "1", "3", "ver 3", "0,1,2" };
         addRecord(datasource, versionsTable, versionThreeData);
 
-        Version[] path = versions.getPath(1, 3);
+        Version[] path = versions.getPath(1, 3, session);
 
         assertEquals(4, path.length);
         assertEquals(0, path[0].getVersion());

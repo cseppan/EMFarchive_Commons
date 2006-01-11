@@ -1,14 +1,5 @@
 package gov.epa.emissions.commons.db.version;
 
-import gov.epa.emissions.commons.db.DataQuery;
-import gov.epa.emissions.commons.db.Datasource;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,95 +7,50 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 public class Versions {
 
-    private Datasource datasource;
-
-    private PreparedStatement insertStatement;
-
-    private PreparedStatement nextVersionStatement;
-
-    private PreparedStatement markFinalStatement;
-
-    private PreparedStatement versionsStatement;
-
-    public Versions(Datasource datasource) throws SQLException {
-        this.datasource = datasource;
-
-        Connection connection = datasource.getConnection();
-        connection.setAutoCommit(true);
-        createPreparedStatements(datasource, connection);
-    }
-
-    private void createPreparedStatements(Datasource datasource, Connection connection) throws SQLException {
-        String insert = "INSERT INTO " + datasource.getName()
-                + ".versions (dataset_id,version,name, path,date) VALUES (?,?,?,?,?)";
-        insertStatement = connection.prepareStatement(insert);
-
-        String markFinal = "UPDATE " + datasource.getName()
-                + ".versions SET final_version=true AND date=? WHERE dataset_id=? AND version=?";
-        markFinalStatement = connection.prepareStatement(markFinal);
-
-        String selectVersionNumber = "SELECT version FROM " + datasource.getName()
-                + ".versions WHERE dataset_id=? ORDER BY version";
-        nextVersionStatement = connection.prepareStatement(selectVersionNumber, ResultSet.TYPE_SCROLL_SENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-
-        String selectVersions = "SELECT * FROM " + datasource.getName()
-                + ".versions WHERE dataset_id=? ORDER BY version";
-        versionsStatement = connection.prepareStatement(selectVersions, ResultSet.TYPE_SCROLL_SENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-    }
-
-    public Version[] getPath(long datasetId, int finalVersion) throws SQLException {
-        ResultSet rs = queryVersion(datasetId, finalVersion);
-        if (!rs.next())
+    public Version[] getPath(long datasetId, int finalVersion, Session session) {
+        Version version = get(datasetId, finalVersion, session);
+        if (version == null)
             return new Version[0];
 
-        return doGetPath(datasetId, rs);
+        return doGetPath(version, session);
     }
 
-    private Version[] doGetPath(long datasetId, ResultSet rs) throws SQLException {
-        int[] parentVersions = parseParentVersions(rs.getString("path"));
+    private Version[] doGetPath(Version version, Session session) {
+        int[] parentVersions = parseParentVersions(version.getPath());
         List versions = new ArrayList();
         for (int i = 0; i < parentVersions.length; i++) {
-            Version parent = get(datasetId, parentVersions[i]);
+            Version parent = get(version.getDatasetId(), parentVersions[i], session);
             versions.add(parent);
         }
 
-        versions.add(extractVersion(rs));
+        versions.add(version);
 
         return (Version[]) versions.toArray(new Version[0]);
     }
 
-    public Version get(long datasetId, int version) throws SQLException {
-        ResultSet rs = queryVersion(datasetId, version);
-        if (!rs.next())
-            return null;
+    public Version get(long datasetId, int version, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria crit = session.createCriteria(Version.class);
+            Criteria fullCrit = crit.add(Restrictions.eq("datasetId", new Long(datasetId))).add(
+                    Restrictions.eq("version", new Integer(version)));
+            tx.commit();
 
-        return extractVersion(rs);
-    }
-
-    private ResultSet queryVersion(long datasetId, int version) throws SQLException {
-        DataQuery query = datasource.query();
-        ResultSet rs = query.executeQuery("SELECT * FROM " + datasource.getName() + ".versions WHERE dataset_id = "
-                + datasetId + " AND version = " + version);
-
-        return rs;
-    }
-
-    private Version extractVersion(ResultSet rs) throws SQLException {
-        Version version = new Version();
-        version.setDatasetId(rs.getLong("dataset_id"));
-        version.setVersion(rs.getInt("version"));
-        version.setName(rs.getString("name"));
-        version.setPath(rs.getString("path"));
-        if (rs.getBoolean("final_version"))
-            version.markFinal();
-        version.setDate(rs.getTimestamp("date"));
-
-        return version;
+            return (Version) fullCrit.uniqueResult();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
     }
 
     private int[] parseParentVersions(String versionsList) {
@@ -119,42 +65,44 @@ public class Versions {
         return versions.toArray();
     }
 
-    public int getLastFinalVersion(long datasetId) throws SQLException {
+    public int getLastFinalVersion(long datasetId, Session session) {
         int versionNumber = 0;
 
-        Version[] allVersionForDataset = get(datasetId);
+        Version[] versions = get(datasetId, session);
 
-        for (int i = 0; i < allVersionForDataset.length; i++) {
-            int versNum = allVersionForDataset[i].getVersion();
+        for (int i = 0; i < versions.length; i++) {
+            int versNum = versions[i].getVersion();
 
             if (versNum > versionNumber) {
-                versionNumber = allVersionForDataset[i].getVersion();
+                versionNumber = versions[i].getVersion();
             }
         }
 
         return versionNumber;
     }
 
-    public Version[] get(long datasetId) throws SQLException {
-        // FIXME: convert to long
-        versionsStatement.setInt(1, (int) datasetId);
-        ResultSet rs = versionsStatement.executeQuery();
+    public Version[] get(long datasetId, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria crit = session.createCriteria(Version.class).add(
+                    Restrictions.eq("datasetId", new Long(datasetId)));
+            List versions = crit.list();
+            tx.commit();
 
-        List versions = new ArrayList();
-        while (rs.next()) {
-            Version version = extractVersion(rs);
-            versions.add(version);
+            return (Version[]) versions.toArray(new Version[0]);
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
         }
-
-        return (Version[]) versions.toArray(new Version[0]);
     }
 
-    public Version derive(Version base, String name) throws SQLException {
+    public Version derive(Version base, String name, Session session) {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
 
         Version version = new Version();
-        int newVersionNum = getNextVersionNumber(base.getDatasetId());
+        int newVersionNum = getNextVersionNumber(base.getDatasetId(), session);
 
         version.setName(name);
         version.setVersion(newVersionNum);
@@ -163,48 +111,60 @@ public class Versions {
         version.setDate(new Date());
         // version.setCreator(user); TODO
 
-        insertStatement.setLong(1, version.getDatasetId());
-        insertStatement.setInt(2, version.getVersion());
-        insertStatement.setString(3, version.getName());
-        insertStatement.setString(4, version.getPath());
-        insertStatement.setTimestamp(5, new Timestamp(version.getDate().getTime()));
+        save(version, session);
 
-        insertStatement.executeUpdate();
-
-        return get(version.getDatasetId(), version.getVersion());
+        return version;
     }
 
-    public Version markFinal(Version derived) throws SQLException {
+    private void save(Version version, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(version);
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
+    }
+
+    public Version markFinal(Version derived, Session session) {
         derived.markFinal();
         derived.setDate(new Date());
 
-        // FIXME: need to add 'date' to the update statement
-        String update = "UPDATE " + datasource.getName() + ".versions SET final_version=true WHERE dataset_id="
-                + derived.getDatasetId() + " AND version=" + derived.getVersion();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(derived);
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
 
-        Statement stmt = datasource.getConnection().createStatement();
-        stmt.executeUpdate(update);
-
-        return get(derived.getDatasetId(), derived.getVersion());
+        return derived;
     }
 
     private String path(Version base) {
         return base.createPathForDerived();
     }
 
-    private int getNextVersionNumber(long datasetId) throws SQLException {
-        nextVersionStatement.setLong(1, datasetId);
-        ResultSet rs = nextVersionStatement.executeQuery();
-        rs.last();
+    private int getNextVersionNumber(long datasetId, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria base = session.createCriteria(Version.class);
+            Criteria fullCrit = base.add(Restrictions.eq("datasetId", new Long(datasetId))).addOrder(
+                    Order.desc("version"));
+            List versions = fullCrit.list();
+            tx.commit();
 
-        return rs.getInt("version") + 1;
-    }
-
-    public void close() throws SQLException {
-        insertStatement.close();
-        nextVersionStatement.close();
-        markFinalStatement.close();
-        versionsStatement.close();
+            Version latest = (Version) versions.get(0);
+            return (latest).getVersion() + 1;
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
     }
 
 }
