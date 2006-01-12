@@ -47,5 +47,18 @@ public class FilePatternMatcherTest extends TestCase {
         assertEquals(names[2], matchingNames[2]);
         assertEquals(names[4], matchingNames[3]);
     }
+    
+    public void testNamesWithHyphens() throws ImporterException {
+        String filePattern = "*.*";
+        String[] names = { "test-1.txt", "test-2.txt", "tes01.exe", "cep.txt", "test02.txt" };
+        FilePatternMatcher patternMatcher = new FilePatternMatcher(filePattern);
+        String[] matchingNames = patternMatcher.matchingNames(names);
 
+        assertEquals(5, matchingNames.length);
+        assertEquals(names[0], matchingNames[0]);
+        assertEquals(names[1], matchingNames[1]);
+        assertEquals(names[2], matchingNames[2]);
+        assertEquals(names[3], matchingNames[3]);
+        assertEquals(names[4], matchingNames[4]);
+    }
 }
