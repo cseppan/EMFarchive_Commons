@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.ExportStatement;
@@ -28,15 +29,15 @@ public class ORLExporter {
 
     private ExportStatement exportStatement;
 
-    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat, ExportStatement exportStatement) {
+    public ORLExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, ExportStatement exportStatement) {
         this.dataset = dataset;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         this.fileFormat = fileFormat;
         this.exportStatement = exportStatement;
     }
 
-    public ORLExporter(Dataset dataset, Datasource datasource, FileFormat fileFormat) {
-        this(dataset, datasource, fileFormat, new SimpleExportStatement());
+    public ORLExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
+        this(dataset, dbServer, fileFormat, new SimpleExportStatement());
     }
 
     public void export(File file) throws ExporterException {

@@ -15,12 +15,12 @@ public class ORLNonPointExporter implements Exporter {
     private ORLExporter delegate;
 
     public ORLNonPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
-        delegate = new ORLExporter(dataset, dbServer.getEmissionsDatasource(), fileFormat(sqlDataTypes));
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes));
     }
 
     public ORLNonPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, dbServer.getEmissionsDatasource(), fileFormat(sqlDataTypes), formatFactory.exportStatement());
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory.exportStatement());
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {
