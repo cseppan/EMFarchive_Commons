@@ -59,7 +59,7 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
             assertEquals(10, countRecords(tablePE));
             assertEquals(8, countRecords(tableTR));
             String tables[] = {tableEM,tablePE,tableTR};
-            Importer tableImporter = new NIFOnRoadTableImporter(tables,dataset,datasource,sqlDataTypes);
+            Importer tableImporter = new NIFOnRoadTableImporter(tables,dataset,dbServer(),sqlDataTypes);
             tableImporter.run();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
             assertEquals("19990101 0000", dateFormat.format(dataset.getStartDateTime()));
@@ -81,7 +81,7 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
         String tables[] = {tablePE};
         
         try {
-            new NIFOnRoadTableImporter(tables,dataset,datasource,sqlDataTypes);
+            new NIFOnRoadTableImporter(tables,dataset,dbServer(),sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF onroad import requires following types"));
             return;

@@ -6,8 +6,8 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
-import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FixedColsTableFormat;
@@ -340,7 +340,7 @@ public class ORLImporterTest extends HibernateTestCase {
         assertEquals(endCal.getTime(), end);
     }
 
-    public void testShouldLoadTemporalResolutionAndUnitsIntoDatasetOnImport() throws Exception {
+    public void testShouldImportORLOnRoad() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
                 sqlDataTypes);
@@ -350,7 +350,7 @@ public class ORLImporterTest extends HibernateTestCase {
         assertEquals(TemporalResolution.ANNUAL.getName(), dataset.getTemporalResolution());
         assertEquals("short tons/year", dataset.getUnits());
     }
-
+    
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,

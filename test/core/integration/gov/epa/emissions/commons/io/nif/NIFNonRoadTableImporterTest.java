@@ -58,7 +58,7 @@ public class NIFNonRoadTableImporterTest extends PersistenceTestCase {
             assertEquals(10, countRecords(tableEP));
             assertEquals(10, countRecords(tablePE));
             String[] tables = { tableEM, tableEP, tablePE };
-            Importer tableImporter = new NIFNonRoadTableImporter(tables, dataset, datasource, sqlDataTypes);
+            Importer tableImporter = new NIFNonRoadTableImporter(tables, dataset, dbServer(), sqlDataTypes);
             tableImporter.run();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
             assertEquals("19990101 0000", dateFormat.format(dataset.getStartDateTime()));
@@ -80,7 +80,7 @@ public class NIFNonRoadTableImporterTest extends PersistenceTestCase {
         assertEquals(10, countRecords(tablePE));
         String[] tables = { tableEP, tablePE };
         try {
-            new NIFNonRoadTableImporter(tables, dataset, datasource, sqlDataTypes);
+            new NIFNonRoadTableImporter(tables, dataset, dbServer(), sqlDataTypes);
         } catch (Exception e) {
             assertTrue(e.getMessage().startsWith("NIF nonroad import requires following types "));
             return;

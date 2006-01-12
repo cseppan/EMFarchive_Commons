@@ -76,7 +76,7 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
             assertEquals(26, countRecords(tablePE));
             assertEquals(1, countRecords(tableSI));
             String[] tables = { tableCE, tableEM, tableEP, tableER, tableEU, tablePE, tableSI };
-            Importer tableImporter = new NIFPointTableImporter(tables, dataset, datasource, sqlDataTypes);
+            Importer tableImporter = new NIFPointTableImporter(tables, dataset, dbServer(), sqlDataTypes);
             tableImporter.run();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
             assertEquals("20020101 0000", dateFormat.format(dataset.getStartDateTime()));
@@ -103,7 +103,7 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
         String[] tables = { tableCE,tableEP};
         
         try {
-            new NIFPointTableImporter(tables, dataset, datasource, sqlDataTypes);
+            new NIFPointTableImporter(tables, dataset, dbServer(), sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF point import requires following types"));
             return;

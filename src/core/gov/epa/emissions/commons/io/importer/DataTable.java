@@ -13,12 +13,19 @@ public class DataTable {
 
     private Datasource datasource;
 
+    private String name;
+
     public DataTable(Dataset dataset, Datasource datasource) {
         this.dataset = dataset;
         this.datasource = datasource;
+        this.name = createName();
     }
 
     public String name() {
+        return name;
+    }
+
+    private String createName() {
         String result = dataset.getName();
 
         for (int i = 0; i < result.length(); i++) {

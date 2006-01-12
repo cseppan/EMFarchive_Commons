@@ -185,7 +185,8 @@ public class DataModifier {
 
     public Column[] getColumns(String table) throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
-        ResultSet rs = meta.getColumns(null, schema, table, null);
+        // postgres driver creates table with lower case lettes and case sensitive
+        ResultSet rs = meta.getColumns(null, schema, table.toLowerCase(), null);
 
         List cols = new ArrayList();
         try {

@@ -1,9 +1,5 @@
 package gov.epa.emissions.commons.io.nif;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Random;
-
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
@@ -16,6 +12,10 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointImporter;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonPointTableImporter;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Random;
 
 public class NIFNonPointTableImporterTest extends PersistenceTestCase {
 
@@ -62,7 +62,7 @@ public class NIFNonPointTableImporterTest extends PersistenceTestCase {
         assertEquals(4, countRecords(tableEP));
         assertEquals(4, countRecords(tablePE));
         String[] tables = { tableCE, tableEM, tableEP, tablePE };
-        Importer tableImporter = new NIFNonPointTableImporter(tables, dataset, datasource, sqlDataTypes);
+        Importer tableImporter = new NIFNonPointTableImporter(tables, dataset, dbServer(), sqlDataTypes);
         tableImporter.run();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
         assertEquals("20020101 0000", dateFormat.format(dataset.getStartDateTime()));
@@ -78,7 +78,7 @@ public class NIFNonPointTableImporterTest extends PersistenceTestCase {
             importer.run();
 
             String[] tables = { tableCE, tableEP };
-            new NIFNonPointTableImporter(tables, dataset, datasource, sqlDataTypes);
+            new NIFNonPointTableImporter(tables, dataset, dbServer(), sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF nonpoint import requires following types "));
             return;

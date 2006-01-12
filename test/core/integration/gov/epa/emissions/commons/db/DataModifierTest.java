@@ -20,7 +20,7 @@ public class DataModifierTest extends PersistenceTestCase {
         super.setUp();
 
         datasource = emissions();
-        table = "modifier_test";
+        table = "Modifier_Test";
         createTable(table, datasource);
     }
 
@@ -101,6 +101,20 @@ public class DataModifierTest extends PersistenceTestCase {
         assertEquals("", rs.getString(7)); // in line comments
 
         rs.close();
+    }
+    
+    public void testGetColumns() throws SQLException{
+        DataModifier modifier = datasource.dataModifier();
+        Column [] cols = modifier.getColumns(table);
+        
+        assertEquals(7,cols.length);
+        assertEquals(cols[0].name(),"record_id");
+        assertEquals(cols[1].name(),"dataset_id");
+        assertEquals(cols[2].name(),"version");
+        assertEquals(cols[3].name(),"delete_versions");
+        assertEquals(cols[4].name(),"p1");
+        assertEquals(cols[5].name(),"p2");
+        assertEquals(cols[6].name(),"comments");
     }
 
 }

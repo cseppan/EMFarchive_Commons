@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
@@ -19,10 +20,10 @@ public class NIFTableImporter {
 
     private Datasource datasource;
 
-    public NIFTableImporter(String[] tables, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, Datasource datasource) throws ImporterException {
+    public NIFTableImporter(String[] tables, Dataset dataset, NIFDatasetTypeUnits datasetTypeUnits, DbServer dbServer) throws ImporterException {
         this.dataset = dataset;
         this.datasetTypeUnits = datasetTypeUnits;
-        this.datasource = datasource;
+        this.datasource = dbServer.getEmissionsDatasource();
         validate(tables);
     }
 
