@@ -14,13 +14,12 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.reference.ReferenceCSVFileFormat;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class CSVImporter implements Importer {
@@ -37,12 +36,12 @@ public class CSVImporter implements Importer {
     private SqlDataTypes sqlDataTypes;
 
     public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes) throws ImporterException,IOException,Exception {
+            SqlDataTypes sqlDataTypes) throws ImporterException {
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
     public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory) throws ImporterException,IOException,Exception {
+            SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory) throws ImporterException{
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
@@ -70,7 +69,7 @@ public class CSVImporter implements Importer {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
+    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws ImporterException {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         List comments = getComments(reader);
         loader.load(reader, dataset, table);
