@@ -51,7 +51,6 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
         assertEquals(153, countRecords());
-        exportfile.delete();
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
@@ -68,7 +67,6 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
         assertEquals(153, countRecords());
-        exportfile.delete();
     }
     
     private int countRecords() {

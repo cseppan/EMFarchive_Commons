@@ -42,10 +42,10 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     public void testImportSpeciationCrossRefData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes);
+                new String[]{"gsref.cmaq.cb4p25.txt"}, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        assertEquals(153, countRecords());
+        assertEquals(2000, countRecords());
     }
     
     public void testImportVersionedSpeciationCrossRefData() throws Exception {

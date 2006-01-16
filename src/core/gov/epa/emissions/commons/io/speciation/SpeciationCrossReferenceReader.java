@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SpeciationCrossReferenceReader implements Reader {
     
-    private FileFormat fileFormat;
+//    private FileFormat fileFormat;
     
     private BufferedReader fileReader;
 
@@ -31,7 +31,7 @@ public class SpeciationCrossReferenceReader implements Reader {
     private String line;
     
     public SpeciationCrossReferenceReader(File file, FileFormat format, Tokenizer tokenizer) throws FileNotFoundException {
-        fileFormat = format;
+        //fileFormat = format;
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
         this.tokenizer = tokenizer;
@@ -67,26 +67,27 @@ public class SpeciationCrossReferenceReader implements Reader {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
         
-        int numCols = fileFormat.cols().length;
-        int numTokens = tokens.length;
-        String lastToken = tokens[numTokens - 1].trim();
-        String[] newTokens = new String[numCols + 1];    
-        
-        for(int i = 0; i < numCols; i++){
-            if(i < numTokens)
-                newTokens[i] = tokens[i].trim();
-            else
-                newTokens[i] = "";
-        }
-        
-        if(lastToken.startsWith("!")){
-            newTokens[numTokens - 1] = "";
-            newTokens[numCols] = lastToken;
-        }else{
-            newTokens[numCols] = "";
-        }
-        
-        record.add(Arrays.asList(newTokens));
+//        int numCols = fileFormat.cols().length;
+//        int numTokens = tokens.length;
+//        String lastToken = tokens[numTokens - 1].trim();
+//        String[] newTokens = new String[numCols + 1];    
+//        
+//        for(int i = 0; i < numCols; i++){
+//            if(i < numTokens)
+//                newTokens[i] = tokens[i].trim();
+//            else
+//                newTokens[i] = "";
+//        }
+//        
+//        if(lastToken.startsWith("!")){
+//            newTokens[numTokens - 1] = "";
+//            newTokens[numCols] = lastToken;
+//        }else{
+//            newTokens[numCols] = "";
+//        }
+//        
+//        record.add(Arrays.asList(newTokens));
+        record.add(Arrays.asList(tokens));
 
         return record;
     }
