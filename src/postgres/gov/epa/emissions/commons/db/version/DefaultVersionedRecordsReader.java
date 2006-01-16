@@ -42,12 +42,12 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         Column sortColumn = datasource.dataModifier().getColumns(table)[5];
         sortOrder = sortColumn.name();
 
-        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
-                + "ORDER BY version, record_id";
+      String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
+      + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
+      + "ORDER BY ";
 
         if (sortOrder != null)
-            queryString += "," + sortOrder;
+            queryString += sortOrder;
 
         ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);
         records.execute();
