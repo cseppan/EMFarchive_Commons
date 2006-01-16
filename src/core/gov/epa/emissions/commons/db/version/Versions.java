@@ -48,6 +48,7 @@ public class Versions {
 
             return (Version) fullCrit.uniqueResult();
         } catch (HibernateException e) {
+            e.printStackTrace();
             tx.rollback();
             throw e;
         }

@@ -38,5 +38,20 @@ public class VersionTest extends TestCase {
         versionZero.setPath("");
         assertEquals(0, versionZero.getBase());
     }
+    
+    public void testShouldBeEqualIfIdsMatch() {
+        Version a = new Version();
+        a.setId(0);
+        
+        Version b = new Version();
+        b.setId(1);
+
+        Version c = new Version();
+        c.setId(1);
+        
+        assertFalse(a.equals(b));
+        assertFalse(a.equals(c));
+        assertEquals(b, c);
+    }
 
 }

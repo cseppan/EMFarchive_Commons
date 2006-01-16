@@ -144,4 +144,12 @@ public class Version implements Lockable {
     public void setId(long id) {
         this.id = id;
     }
+
+    public boolean equals(Object other) {
+        return (other instanceof Version) && (((Version) other).id == id);
+    }
+
+    public int hashCode() {
+        return (int) id;
+    }
 }
