@@ -92,6 +92,17 @@ public class VersionsTest extends HibernateTestCase {
         assertNotNull(base.getDate());
     }
 
+    public void testShouldBeAbleToFetchCurrentVersion() throws Exception {
+        Version version = versions.get(1, 0, session);
+        session.clear();// flush hibernate cache
+
+        Version current = versions.current(version, session);
+
+        assertEquals(version.getVersion(), current.getVersion());
+        assertEquals(version.getDatasetId(), current.getDatasetId());
+        assertTrue("Current should be loaded from db", version != current);
+    }
+
     public void testShouldGetAllVersionsBasedOnADerivedVersion() throws Exception {
         Version base = versions.get(1, 0, session);
         Version derived = versions.derive(base, "version one", session);
@@ -148,7 +159,7 @@ public class VersionsTest extends HibernateTestCase {
 
         Date finalDate = results.getDate();
         assertTrue("Creation Date should be different from Final Date", !finalDate.before(creationDate));
-        
+
         Version[] all = versions.get(1, session);
         assertEquals(2, all.length);
     }

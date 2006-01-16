@@ -85,8 +85,8 @@ public class Versions {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            Criteria crit = session.createCriteria(Version.class).add(
-                    Restrictions.eq("datasetId", new Long(datasetId)));
+            Criteria crit = session.createCriteria(Version.class)
+                    .add(Restrictions.eq("datasetId", new Long(datasetId)));
             List versions = crit.list();
             tx.commit();
 
@@ -165,6 +165,10 @@ public class Versions {
             tx.rollback();
             throw e;
         }
+    }
+
+    public Version current(Version version, Session session) {
+        return get(version.getDatasetId(), version.getVersion(), session);
     }
 
 }
