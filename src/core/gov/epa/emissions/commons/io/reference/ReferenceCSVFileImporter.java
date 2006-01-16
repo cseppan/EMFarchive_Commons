@@ -96,11 +96,11 @@ public class ReferenceCSVFileImporter implements Importer {
         }
     }
 
-    private ReferenceCSVFileFormat fileFormat(Reader reader) throws ImporterException {
+    private CSVFileFormat fileFormat(Reader reader) throws ImporterException {
         try {
             Record record = reader.read();
             String[] tokens = record.getTokens();
-            return new ReferenceCSVFileFormat(sqlDataTypes, tokens);
+            return new CSVFileFormat(sqlDataTypes, tokens);
         } catch (IOException e) {
             throw new ImporterException(e.getMessage());
         }

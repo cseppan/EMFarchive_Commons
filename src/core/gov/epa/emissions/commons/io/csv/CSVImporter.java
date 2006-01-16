@@ -17,7 +17,7 @@ import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
-import gov.epa.emissions.commons.io.reference.ReferenceCSVFileFormat;
+import gov.epa.emissions.commons.io.reference.CSVFileFormat;
 
 import java.io.File;
 import java.util.List;
@@ -36,7 +36,7 @@ public class CSVImporter implements Importer {
     private SqlDataTypes sqlDataTypes;
 
     public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes) throws ImporterException {
+            SqlDataTypes sqlDataTypes) throws ImporterException{
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
     
@@ -69,7 +69,7 @@ public class CSVImporter implements Importer {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws ImporterException {
+    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         List comments = getComments(reader);
         loader.load(reader, dataset, table);
@@ -87,8 +87,8 @@ public class CSVImporter implements Importer {
         return reader.getHeader();
     }
 
-    private ReferenceCSVFileFormat fileFormat(CSVFileReader reader) {
-        return new ReferenceCSVFileFormat(sqlDataTypes, reader.getCols());
+    private CSVFileFormat fileFormat(CSVFileReader reader) {
+        return new CSVFileFormat(sqlDataTypes, reader.getCols());
     }
     
 }

@@ -8,14 +8,14 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReferenceCSVFileFormat implements FileFormat {
+public class CSVFileFormat implements FileFormat {
 
     private Column[] cols;
     
     private SqlDataTypes types;
 
 
-    public ReferenceCSVFileFormat(SqlDataTypes types, String[] colNames) {
+    public CSVFileFormat(SqlDataTypes types, String[] colNames) {
         this.types = types;
         cols = createCols(colNames);
     }
