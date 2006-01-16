@@ -96,6 +96,7 @@ public class SMKReportExporter implements Exporter {
         ExportStatement export = dataFormatFactory.exportStatement();
         ResultSet data = q.executeQuery(export.generate(qualifiedTable));
         String[] cols = getCols(data);
+        writeCols(writer, cols);
         while (data.next())
             writeRecord(cols, data, writer);
         if(tableframe != null)
@@ -103,19 +104,19 @@ public class SMKReportExporter implements Exporter {
     }
 
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        int i = 2;
-        if(cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions"))
-            i = 5;
+        int i = startCol(cols) + 1;
         
         for (; i < cols.length; i++) {
-           if(cols[i-1].equalsIgnoreCase("sccdesc") || containsDelimiter(cols[i]))
-                writer.print("\"" + data.getObject(i).toString().trim() + "\"");
-           else {
-               if(data.getObject(i) != null)
-                   writer.print(data.getObject(i).toString().trim());
-               else
-                   writer.print("");
-           }
+            if(data.getObject(i) != null) {
+                String colValue = data.getObject(i).toString().trim();
+                if(cols[i-1].equalsIgnoreCase("sccdesc") || containsDelimiter("" + colValue))
+                    writer.print("\"" + colValue + "\"");
+                else {
+                    writer.print(colValue);
+                }
+            } else {
+                writer.print("");
+            }
             
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -138,6 +139,25 @@ public class SMKReportExporter implements Exporter {
     
     private boolean containsDelimiter(String s){
         return s.indexOf(delimiter) >= 0;
+    }
+    
+    private void writeCols(PrintWriter writer, String[] cols) {
+        int i = startCol(cols);
+        for(; i < cols.length-1; i++){
+            writer.print(cols[i]);
+            if (i + 2 < cols.length)
+                writer.print(delimiter);// delimiter
+        }
+        
+        writer.println();
+    }
+    
+    private int startCol(String[] cols) {
+        int i = 1;
+        if(cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions"))
+            i = 4;
+        
+        return i;
     }
     
 }
