@@ -108,10 +108,14 @@ public class SMKReportExporter implements Exporter {
             i = 5;
         
         for (; i < cols.length; i++) {
-           if(cols[i-1].equalsIgnoreCase("sccdesc"))
+           if(cols[i-1].equalsIgnoreCase("sccdesc") || containsDelimiter(cols[i]))
                 writer.print("\"" + data.getObject(i).toString().trim() + "\"");
-           else
-                writer.print(data.getObject(i).toString().trim());
+           else {
+               if(data.getObject(i) != null)
+                   writer.print(data.getObject(i).toString().trim());
+               else
+                   writer.print("");
+           }
             
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -130,6 +134,10 @@ public class SMKReportExporter implements Exporter {
     
     public void setDelimiter(String del) {
         this.delimiter = del;
+    }
+    
+    private boolean containsDelimiter(String s){
+        return s.indexOf(delimiter) >= 0;
     }
     
 }

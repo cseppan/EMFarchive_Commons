@@ -38,6 +38,9 @@ public class CSVFileReader implements Reader {
     
     private File file;
     
+    private String[] existedCols = {"Record_Id", "Dataset_Id", "Version",
+                "Delete_Versions", "Comments"};
+    
     public CSVFileReader(File file) throws FileNotFoundException,IOException,ImporterException {
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
@@ -52,7 +55,7 @@ public class CSVFileReader implements Reader {
 
     public Record read() throws IOException, ImporterException {
         String line = fileReader.readLine();
-
+        
         while (line != null) {
             lineNumber++;
             this.line = line;
@@ -74,6 +77,11 @@ public class CSVFileReader implements Reader {
     private Record doRead(String line) throws ImporterException {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
+        for(int i =0; i< tokens.length; i++){
+            if(tokens[i].indexOf(":\\") >= 0){
+                    tokens[i] = checkBackSlash(tokens[i]);
+            }
+        }
         record.add(Arrays.asList(tokens));
 
         return record;
@@ -104,10 +112,24 @@ public class CSVFileReader implements Reader {
     }
  
     private void detectDelimiter() throws IOException,ImporterException {
-        Pattern bar = Pattern.compile("[|]");
         String line = fileReader.readLine();
         fileReader.mark((int)file.length()); //FIXME: what if file gets too big?
         
+        if(getTokenizer(line))
+            return;
+        
+        fileReader.reset();
+        tokenizer = new WhitespaceDelimitedTokenizer();
+        line = fileReader.readLine();
+        while(isComment(line))
+            line = fileReader.readLine();
+        cols = underScoreTheSpace(tokenizer.tokens(line));
+        
+        return ;
+    }
+    
+    private boolean getTokenizer(String line) throws IOException,ImporterException {
+        Pattern bar = Pattern.compile("[|]");
         for(; line != null; line = fileReader.readLine()) {
             if(!isComment(line) && line.split(",").length >= 2) 
                 tokenizer = new CommaDelimitedTokenizer();
@@ -119,18 +141,32 @@ public class CSVFileReader implements Reader {
                 header.add(line);
             
             if(tokenizer != null) {
-                cols = tokenizer.tokens(line);
-                return ;
+                cols = underScoreTheSpace(tokenizer.tokens(line));
+                return true;
             }
         }
         
-        fileReader.reset();
-        tokenizer = new WhitespaceDelimitedTokenizer();
-        line = fileReader.readLine();
-        while(isComment(line))
-            line = fileReader.readLine();
-        cols = tokenizer.tokens(line);
-        return ;
+        return false;
+    }
+    
+    private String[] underScoreTheSpace(String[] cols) {
+        for(int i = 0; i < cols.length; i++) {
+            cols[i] = cols[i].replace(' ', '_');
+            cols[i] = checkExistCols(cols[i]);
+        }
+        
+        return cols;
+    }
+    
+    private String checkExistCols(String col) {
+        for(int i = 0; i < existedCols.length; i++)
+            if(col.equalsIgnoreCase(existedCols[i]))
+                col += "_X";
+        return col;
+    }
+    
+    private String checkBackSlash(String col) {
+        return col.replaceAll("\\\\", "\\\\\\\\");
     }
     
 }
