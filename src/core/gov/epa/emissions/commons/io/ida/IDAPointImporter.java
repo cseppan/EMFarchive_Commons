@@ -12,10 +12,10 @@ public class IDAPointImporter implements Importer {
 
     private IDAImporter delegate;
 
-    public IDAPointImporter(File file, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public IDAPointImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new IDAImporter(dataset, dbServer, sqlDataTypes);
         IDAFileFormat fileFormat = new IDAPointFileFormat(sqlDataTypes);
-        delegate.setup(file, fileFormat);
+        delegate.setup(folder, fileNames, fileFormat);
     }
 
     public void run() throws ImporterException {

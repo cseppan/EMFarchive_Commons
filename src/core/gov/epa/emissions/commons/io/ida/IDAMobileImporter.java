@@ -12,9 +12,9 @@ public class IDAMobileImporter implements Importer {
 
     private IDAImporter delegate;
 
-    public IDAMobileImporter(File file, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public IDAMobileImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new IDAImporter(dataset, dbServer, sqlDataTypes);
-        delegate.setup(file, new IDAMobileFileFormat(sqlDataTypes));
+        delegate.setup(folder, fileNames, new IDAMobileFileFormat(sqlDataTypes));
     }
 
     public void run() throws ImporterException {

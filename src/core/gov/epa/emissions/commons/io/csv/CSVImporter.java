@@ -66,7 +66,7 @@ public class CSVImporter implements Importer {
         } catch (Exception e) {
             dataTable.drop();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName());
+                    + dataset.getName()+ "\n"+ e.getMessage());
         }
     }
 

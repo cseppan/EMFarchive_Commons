@@ -39,18 +39,21 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
     }
 
     public void testShouldIdentifyAllRequiredTags() throws Exception {
-        File file = new File("test/data/ida/small-area.txt");
+        File folder = new File("test/data/ida");
+        String[] fileNames = {"small-area.txt"};
+                
         IDAImporter importer = new IDAImporter(dataset, dbServer, sqlDataTypes);
-        importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
+        importer.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes));
         importer.run();
         dropTable();
     }
 
     public void testShouldIdentifyNoIDATag() throws Exception {
-        File file = new File("test/data/ida/noIDATags.txt");
+        File folder = new File("test/data/ida");
+        String[] fileNames = {"noIDATags.txt"};
         try {
             IDAImporter importer = new IDAImporter(dataset, dbServer, sqlDataTypes);
-            importer.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
+            importer.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes));
             importer.run();
         } catch (Exception e) {
             assertTrue(e.getMessage().startsWith("The tag - 'IDA' is mandatory"));

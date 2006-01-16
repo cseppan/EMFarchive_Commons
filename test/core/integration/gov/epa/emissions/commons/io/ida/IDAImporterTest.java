@@ -37,9 +37,10 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAreaFile() throws Exception {
-        File file = new File("test/data/ida", "small-area.txt");
-        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(file, dataset, dbServer,
-                sqlDataTypes);
+        File folder = new File("test/data/ida" );
+        String[] fileNames = {"small-area.txt"};
+        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset,
+                dbServer, sqlDataTypes);
         importer.run();
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
@@ -48,8 +49,9 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallPointFile() throws Exception {
-        File file = new File("test/data/ida", "small-point.txt");
-        IDAPointImporter importer = new IDAPointImporter(file, dataset, dbServer, sqlDataTypes);
+        File folder = new File("test/data/ida");
+        String[] fileNames = {"small-point.txt"};
+        IDAPointImporter importer = new IDAPointImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         // assert
@@ -59,8 +61,9 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallMobileFile() throws Exception {
-        File file = new File("test/data/ida", "small-mobile.txt");
-        IDAMobileImporter importer = new IDAMobileImporter(file, dataset, dbServer, sqlDataTypes);
+        File folder = new File("test/data/ida");
+        String[] fileNames = {"small-mobile.txt"};
+        IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
@@ -69,10 +72,10 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     public void FIXME_testShouldImportASmallActivityFile() throws Exception {
-        File file = new File("test/data/ida/small-activity.txt");
-
-        IDAActivityImporter importer = new IDAActivityImporter(file, dataset, dbServer,
-                sqlDataTypes);
+        File folder = new File("test/data/ida");
+        String[] fileNames = {"small-activity.txt"};
+        IDAActivityImporter importer = new IDAActivityImporter(folder, fileNames, dataset,
+                dbServer, sqlDataTypes);
         importer.run();
 
         // assert

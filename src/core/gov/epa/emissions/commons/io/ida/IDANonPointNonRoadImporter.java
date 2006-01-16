@@ -12,10 +12,10 @@ public class IDANonPointNonRoadImporter implements Importer {
 
     private IDAImporter delegate;
 
-    public IDANonPointNonRoadImporter(File file, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes) throws ImporterException {
+    public IDANonPointNonRoadImporter(File folder, String[] fileNames, Dataset dataset,
+            DbServer dbServer, SqlDataTypes sqlDataTypes) throws ImporterException {
         delegate = new IDAImporter(dataset, dbServer, sqlDataTypes);
-        delegate.setup(file, new IDANonPointNonRoadFileFormat(sqlDataTypes));
+        delegate.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes));
     }
 
     public void run() throws ImporterException {
