@@ -24,7 +24,7 @@ public class FilePatternMatcher {
             if (lastIndex > -1 && lastIndex != index + 1) {
                 throw new ImporterException("Only one '.' is allowed in the expression for file patterns");
             }
-            replacePattern = "[\\w\\-]*";
+            replacePattern = "[\\w\\-\\.]*";
         }
 
         for (int i = 0; i < sb.length(); i++) {

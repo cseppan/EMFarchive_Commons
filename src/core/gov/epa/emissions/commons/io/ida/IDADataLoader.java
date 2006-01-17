@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
+import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -61,17 +62,34 @@ public class IDADataLoader implements DataLoader {
     }
 
     private String[] data(Dataset dataset, Record record) throws SQLException, ImporterException {
+        int stateIndex = 1;
+        int fipsIndex = 2;
         List data = new ArrayList();
-        data.add("" + dataset.getDatasetid());
+        //FIXME: demo code
+        if (tableFormat instanceof VersionedTableFormat){
+            addVersionData(data, dataset.getDatasetid(), 0);
+            stateIndex=4;
+            fipsIndex =5;
+        }
+        else{
+            data.add("" + dataset.getDatasetid());
+        }
         String stateID = record.token(0);
         String fips = fips(stateID, record.token(1));
-        data.add(1, stateAbbr(referenceDatasource, fips));
-        data.add(2, fips);
+        data.add(stateIndex, stateAbbr(referenceDatasource, fips));
+        data.add(fipsIndex, fips);
         for (int i = 0; i < record.size(); i++)
             data.add(record.token(i));
 
         addEmptyLineCommentIfNotThere(data,tableFormat);
         return (String[]) data.toArray(new String[0]);
+    }
+    
+    private void addVersionData(List data, long datasetId, int version) {
+        data.add(0, "");// record id
+        data.add(1, datasetId + "");
+        data.add(2, version + "");// version
+        data.add(3, "");// delete versions
     }
 
     private void addEmptyLineCommentIfNotThere(List data, TableFormat tableFormat) throws ImporterException {

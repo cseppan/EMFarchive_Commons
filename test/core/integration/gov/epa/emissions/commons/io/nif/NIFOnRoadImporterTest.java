@@ -62,7 +62,7 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
     public void testShouldCheckForReuiredInternalSources() throws Exception {
         try {
             File folder = new File("test/data/nif/onroad");
-            String[] files = {"ct_pe.txt"};
+            String[] files = {"ct_tr.txt","ct_pe.txt"};
             new NIFOnRoadImporter(folder, files, dataset, dbServer, sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF onroad import requires following types"));
