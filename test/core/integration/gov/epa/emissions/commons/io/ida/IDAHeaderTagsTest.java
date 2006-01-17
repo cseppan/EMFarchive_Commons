@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
         String[] fileNames = {"small-area.txt"};
                 
         IDAImporter importer = new IDAImporter(dataset, dbServer, sqlDataTypes);
-        importer.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes));
+        importer.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes), new NonVersionedDataFormatFactory());
         importer.run();
         dropTable();
     }
@@ -53,7 +54,7 @@ public class IDAHeaderTagsTest extends PersistenceTestCase {
         String[] fileNames = {"noIDATags.txt"};
         try {
             IDAImporter importer = new IDAImporter(dataset, dbServer, sqlDataTypes);
-            importer.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes));
+            importer.setup(folder, fileNames, new IDANonPointNonRoadFileFormat(sqlDataTypes), new NonVersionedDataFormatFactory());
             importer.run();
         } catch (Exception e) {
             assertTrue(e.getMessage().startsWith("The tag - 'IDA' is mandatory"));

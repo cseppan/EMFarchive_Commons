@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.ida;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.TableFormat;
 
@@ -34,17 +33,17 @@ public class IDATableFormat implements TableFormat {
         List cols = new ArrayList();
         cols.addAll(Arrays.asList(base.cols()));
 
-        Column datasetId = new Column(key(), types.longType(), new LongFormatter());
-        cols.add(0, datasetId);
+        //Column datasetId = new Column(key(), types.longType(), new LongFormatter());
+        //cols.add(0, datasetId);
 
         Column state = new Column("STATE", types.stringType(2), new StringFormatter(2));
-        cols.add(1, state);
+        cols.add(0, state);
 
         Column fips = new Column("FIPS", types.stringType(5), new StringFormatter(5));
-        cols.add(2, fips);
+        cols.add(1, fips);
 
-        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
-        cols.add(inlineComments);
+        //Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
+        //cols.add(inlineComments);
 
         return (Column[]) cols.toArray(new Column[0]);
     }

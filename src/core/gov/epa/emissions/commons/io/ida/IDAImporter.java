@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.ida;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.InternalSource;
@@ -47,7 +48,7 @@ public class IDAImporter {
         this.fileVerifier = new FileVerifier();
     }
 
-    public void setup(File folder, String[] fileNames, IDAFileFormat fileFormat) throws ImporterException {
+    public void setup(File folder, String[] fileNames, IDAFileFormat fileFormat, DataFormatFactory formatFactory) throws ImporterException {
         File file = new File(folder,fileNames[0]);
         fileVerifier.shouldExist(file);
         this.file = file;
@@ -56,7 +57,8 @@ public class IDAImporter {
         headerReader.close();
 
         fileFormat.addPollutantCols(headerReader.polluntants());
-        IDATableFormat tableFormat = new IDATableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new IDATableFormat(fileFormat,sqlDataTypes); 
+        tableFormat = formatFactory.tableFormat(tableFormat, sqlDataTypes);
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         DatasetLoader loader = new DatasetLoader(dataset);
