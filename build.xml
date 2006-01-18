@@ -307,5 +307,25 @@
     </target>
     <!-- ================END Distribution Targets ========================= -->
 
+	<!--  ===============START Commons-dependent modules ============================== -->
+	<!-- Analysis Engine -->
+	<target name="analysisengine.basedir.check">
+		<property name="analysisengine.basedir" value="${basedir}/../AnalysisEngine" />
+		<available file="${analysisengine.basedir}" property="analysisengine.basedir.present" />
+	</target>
+
+	<target name="analysisengine-dist-warning" depends="analysisengine.basedir.check" unless="analysisengine.basedir.present">
+		<echo message="You need to checkout AnalysisEngine module from CVS in the same parent folder as EMF before attempting to build AnalysisEngine" />
+	</target>
+
+	<target name="analysisengine-dist" depends="analysisengine.basedir.check, analysisengine-dist-warning" if="analysisengine.basedir.present">
+		<ant dir="${analysisengine.basedir}" target="do-dist" inheritall="false" />
+		<copy todir="${lib.dir}">
+			<fileset dir="${analysisengine.basedir}/build/sandbox" includes="*.jar" />
+		</copy>
+	</target>
+
+	<!--  ===============END Commons-dependent modules ============================== -->
+
 </project>
 
