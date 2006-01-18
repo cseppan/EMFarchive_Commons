@@ -37,9 +37,9 @@ public class LineReader implements Reader {
         if (line != null) {
             this.line = line;
             Record record = new Record();
+            lineNumber++;
             record.add("" + lineNumber);
             record.add(line);
-            lineNumber++;
             return record;
         }
         return new TerminatorRecord();
