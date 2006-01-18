@@ -27,28 +27,8 @@ public abstract class AbstractExternalFilesImporter implements Importer {
     public AbstractExternalFilesImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         this.dataset = dataset;
-        checkPatterns(filePatterns);
-        files = new FilesFromPattern(folder,filePatterns,dataset).files();
-        int minFiles = dataset.getDatasetType().getMinfiles();
-        if (files.length < minFiles) {
-            throw new ImporterException(importerName + " importer requires " + minFiles + " files");
-        }
+        files = new FilesFromPattern(folder, filePatterns, dataset).files();
         importerName = "Abstract External Files Importer";
-        
-    }
-
-    /* 
-     *Error checking for filePatterns 
-     */
-    private void checkPatterns(String[] filePatterns) throws ImporterException {
-        if (filePatterns.length > 1) {
-            throw new ImporterException("Too many parameters for importer: " + importerName
-                    + " requires only one file pattern or filename");
-        }
-        if (filePatterns[0].length() == 0) {
-            throw new ImporterException(importerName + " importer requires a file pattern or filename");
-        }
-        
     }
 
     public void run() {
@@ -60,6 +40,5 @@ public abstract class AbstractExternalFilesImporter implements Importer {
             dataset.addExternalSource(extSrc);
         }
     }
-
 
 }
