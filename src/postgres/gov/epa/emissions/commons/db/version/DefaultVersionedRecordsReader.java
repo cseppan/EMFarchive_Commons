@@ -6,13 +6,9 @@ import gov.epa.emissions.commons.io.Column;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 
 public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
-    private static Log log = LogFactory.getLog(DefaultVersionedRecordsReader.class);
-
     private Datasource datasource;
 
     private Versions versions;
@@ -40,25 +36,15 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         String versions = fetchCommaSeparatedVersionSequence(version, session);
         String deleteClause = createDeleteClause(versions);
 
-        // FIXME: FOR BETA DEPLOYMENT ONLY: The sort is ordered by the first data column
-        // After Beta the sort will have to use the sort order utility mapping
-        for (int i = 0; i < datasource.dataModifier().getColumns(table).length; i++) {
-            log.debug(i+ ": sort order column name= " + datasource.dataModifier().getColumns(table)[i].name());            
-        }
         Column sortColumn = datasource.dataModifier().getColumns(table)[4];
         sortOrder = sortColumn.name();
 
-        log.debug("@@@: sort order column name= " + sortOrder);
-        
-      String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
-      + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " "
-      + "ORDER BY ";
+        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
+                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " " + "ORDER BY ";
 
         if (sortOrder != null)
             queryString += sortOrder;
 
-        log.debug("sortOrder query= " + queryString);
-        
         ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);
         records.execute();
 
