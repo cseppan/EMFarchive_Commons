@@ -19,7 +19,7 @@ public abstract class HibernateTestCase extends PersistenceTestCase {
         session.close();
     }
 
-    private SessionFactory sessionFactory() throws Exception {
+    protected SessionFactory sessionFactory() throws Exception {
         LocalHibernateConfiguration config = new LocalHibernateConfiguration();
         return config.factory();
     }
