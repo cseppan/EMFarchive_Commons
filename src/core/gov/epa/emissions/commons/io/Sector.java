@@ -106,4 +106,8 @@ public class Sector implements Serializable, Lockable {
     public int hashCode() {
         return (int) id;
     }
+    
+    public String toString(){
+        return name;
+    }
 }
