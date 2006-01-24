@@ -43,7 +43,7 @@ public class MobileTemporalReferenceFileFormat implements FileFormatWithOptional
 
     public Column[] optionalCols() {
         Column pollutants = new Column("Pollutants", types.stringType(32), new StringFormatter(32));
-        Column fips = new Column("FIPS", types.intType(), new IntegerFormatter());
+        Column fips = new Column("FIPS", types.stringType(32), new StringFormatter(32));
         Column linkid = new Column("Link_Id", types.stringType(32), new StringFormatter(32));
 
         return new Column[] { pollutants, fips, linkid };

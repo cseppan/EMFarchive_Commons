@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.temporal;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FillDefaultValues;
 import gov.epa.emissions.commons.io.importer.FillRecordWithBlankValues;
@@ -46,7 +45,7 @@ public class AreaTemporalReferenceFileFormat implements FileFormatWithOptionalCo
 
     public Column[] optionalCols() {
         Column pollutants = new Column("Pollutants", types.stringType(32), new StringFormatter(32));
-        Column fips = new Column("FIPS", types.intType(), new IntegerFormatter());
+        Column fips = new Column("FIPS", types.stringType(32), new StringFormatter(32));
 
         return new Column[] { pollutants, fips };
     }

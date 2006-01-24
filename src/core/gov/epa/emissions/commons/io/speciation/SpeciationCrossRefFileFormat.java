@@ -45,7 +45,7 @@ public class SpeciationCrossRefFileFormat implements FileFormatWithOptionalCols 
     
     public Column[] optionalCols() {
         List columns = new ArrayList();
-        columns.add(new Column("FIPS", types.intType(), new IntegerFormatter()));
+        columns.add(new Column("FIPS", types.stringType(32), new StringFormatter(32)));
         columns.add(new Column("MACT", types.stringType(6), new StringFormatter(6)));
         columns.add(new Column("SIC", types.intType(), new IntegerFormatter()));
         columns.add(new Column("PLANTID", types.stringType(32), new StringFormatter(32)));

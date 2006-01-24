@@ -62,9 +62,9 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data
+        assertEquals("37001,2201001150,100414,1.0626200e+000,-9,-9,-9,-9,-9", (String) data
                 .get(0));
-        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data
+        assertEquals("37001,2201001150,100425,2.0263000e-001,-9,-9,-9,-9,-9", (String) data
                 .get(1));
     }
 
@@ -84,9 +84,9 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001, 2201001150,           100414, 1.0626200e+000, -9, -9,     -9,   -9,  -9", (String) data
+        assertEquals("37001,2201001150,100414,1.0626200e+000,-9,-9,-9,-9,-9", (String) data
                 .get(0));
-        assertEquals("37001, 2201001150,           100425, 2.0263000e-001, -9, -9,     -9,   -9,  -9", (String) data
+        assertEquals("37001,2201001150,100425,2.0263000e-001,-9,-9,-9,-9,-9", (String) data
                 .get(1));
     }
 
@@ -105,9 +105,9 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(16, data.size());
-        assertEquals("37001, 2260001010,           100414, 5.6000000e-001, -9, -9, -9, -9, -9,         -9,   -9,  -9,       -9,       -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9",
+        assertEquals("37001,2260001010,100414,5.6000000e-001,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9",
                 (String) data.get(0));
-        assertEquals("37001, 2260001010,           100425, 3.0000000e-002, -9, -9, -9, -9, -9,         -9,   -9,  -9,       -9,       -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9",
+        assertEquals("37001,2260001010,100425,3.0000000e-002,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9",
                 (String) data.get(1));
     }
 
@@ -128,9 +128,9 @@ public class ORLExportersTest extends PersistenceTestCase {
         assertEquals(6, data.size());
         // regex is used because of precision diff between mysql and postgres
         assertTrue(((String) data.get(0))
-                .matches("37001,   10201302,    0,   0107,  2,      0,              246, 3.87296\\d*e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9,              -9,       -9,       -9,       -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9"));
+                .matches("37001,10201302,0,0107,2,0,246,3.87296\\d*e-004,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9"));
         assertTrue(((String) data.get(1))
-                .matches("37001,   10201302,    0,   0107,  2,      0,              253, 6.91058\\d*e-004, -9, -9, -9, -9,   -9,   -9,         -9,   -9,  -9,              -9,       -9,       -9,       -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9"));
+                .matches("37001,10201302,0,0107,2,0,253,6.91058\\d*e-004,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9"));
         
 
     }
@@ -151,15 +151,15 @@ public class ORLExportersTest extends PersistenceTestCase {
         List records = readData(file);
         assertEquals(10, records.size());
 
-        String expectedPattern = "37119,            0001,            0001,               1,               "
-                + "1,                 REXAMINC\\.;CUSTOMDIVISION,   40201301, 02, 01, "
-                + "6.00000\\d*e\\+001, "
-                + "7.50000\\d*e\\+000, 3.75000\\d*e\\+002, 2.08346\\d*e\\+003, 4.71600\\d*e\\+001, 3083,   0714,      "
-                + "0, L, -8.07081\\d*e\\+001, 3.51200\\d*e\\+001, 17,           108883, 9.70414\\d*e\\+000,"
-                + " -9, -9, -9, -9, -9,                   -9,     -9,    -9, ,         -9,"
-                + "         -9,         -9,   -9,  -9, -9, -9,             -9,"
-                + "  -9,  -9,              -9,     -9,  -9,  -9,         -9,         -9,           -9,"
-                + "       -9,       -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9";
+        String expectedPattern = "37119,0001,0001,1,"
+                + "1,REXAMINC\\.;CUSTOMDIVISION,40201301,02,01,"
+                + "6.00000\\d*e\\+001,"
+                + "7.50000\\d*e\\+000,3.75000\\d*e\\+002,2.08346\\d*e\\+003,4.71600\\d*e\\+001,3083,0714,"
+                + "0,L,-8.07081\\d*e\\+001,3.51200\\d*e\\+001,17,108883,9.70414\\d*e\\+000,"
+                + "-9,-9,-9,-9,-9,-9,-9,-9,,-9,"
+                + "-9,-9,-9,-9,-9,-9,-9,"
+                + "-9,-9,-9,-9,-9,-9,-9,-9,-9,"
+                + "-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9";
         String actual = (String) records.get(0);
         
         assertTrue(actual.matches(expectedPattern));

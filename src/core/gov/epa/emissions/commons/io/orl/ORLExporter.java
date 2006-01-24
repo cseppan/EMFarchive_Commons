@@ -63,7 +63,7 @@ public class ORLExporter {
     }
 
     private void writeHeaders(PrintWriter writer, Dataset dataset) {
-        writer.println(dataset.getDescription());
+        writer.print(dataset.getDescription());
     }
 
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
@@ -79,9 +79,9 @@ public class ORLExporter {
 
     private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
-            writer.print(cols[i].format(data));
+            writer.print(cols[i].format(data).trim());
             if (i + 1 < cols.length)
-                writer.print(", ");// delimiter
+                writer.print(",");// delimiter
         }
         writer.println();
     }
