@@ -96,4 +96,8 @@ public class ChangeSet {
         updatedRecords.clear();
     }
 
+    public int netIncrease() {
+        return newRecords.size() - deletedRecords.size();
+    }
+
 }

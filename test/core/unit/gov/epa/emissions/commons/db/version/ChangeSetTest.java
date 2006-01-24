@@ -71,6 +71,28 @@ public class ChangeSetTest extends TestCase {
         newDeleteCS.addNew(new VersionedRecord());
         newDeleteCS.addDeleted(new VersionedRecord());
         assertTrue("Adding and Deleting records should confirm availability of 'changes'", newDeleteCS.hasChanges());
-
+    }
+    
+    public void testShouldProvideNetIncrease() {
+        ChangeSet newCS = new ChangeSet();
+        newCS.addNew(new VersionedRecord());
+        assertEquals(1, newCS.netIncrease());
+        
+        ChangeSet deletedCS = new ChangeSet();
+        deletedCS.addDeleted(new VersionedRecord());
+        assertEquals(-1, deletedCS.netIncrease());
+        
+        ChangeSet updatedCS = new ChangeSet();
+        updatedCS.addUpdated(new VersionedRecord());
+        assertEquals(0, updatedCS.netIncrease());
+        
+        ChangeSet mixedCS = new ChangeSet();
+        mixedCS.addNew(new VersionedRecord());
+        mixedCS.addNew(new VersionedRecord());
+        mixedCS.addDeleted(new VersionedRecord());
+        mixedCS.addDeleted(new VersionedRecord());
+        mixedCS.addDeleted(new VersionedRecord());
+        mixedCS.addUpdated(new VersionedRecord());
+        assertEquals(-1, mixedCS.netIncrease());
     }
 }
