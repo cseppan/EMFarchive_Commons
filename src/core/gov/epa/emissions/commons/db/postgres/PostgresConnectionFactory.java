@@ -20,7 +20,6 @@ public class PostgresConnectionFactory implements ConnectionFactory {
         source.setDatabaseName(params.getDbName());
         source.setUser(params.getUsername());
         source.setPassword(params.getPassword());
-        source.setMaxConnections(16);
         source.setInitialConnections(2);
         source.setPortNumber(Integer.parseInt(params.getPort()));
     }
