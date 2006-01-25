@@ -67,7 +67,7 @@ public class User implements Serializable, Lockable {
     }
 
     public int hashCode() {
-        return username.hashCode();
+        return username != null ? username.hashCode() : 0;
     }
 
     public boolean isAcctDisabled() {
