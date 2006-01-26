@@ -67,4 +67,16 @@ public class PageTest extends TestCase {
 
         assertEquals(1, page.count());
     }
+    
+    public void testShouldConfirmYesIfRecordIsPresentOnPage() {
+        Page page = new Page();
+
+        page.setMin(1);
+        page.add(new VersionedRecord());
+        page.add(new VersionedRecord());
+
+        assertTrue("record 1 should be on page", page.contains(1));
+        assertTrue("record 2 should be on page", page.contains(2));
+        assertFalse("record 3 should not be on page", page.contains(3));
+    }
 }

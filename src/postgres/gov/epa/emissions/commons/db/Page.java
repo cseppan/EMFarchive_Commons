@@ -68,7 +68,7 @@ public class Page {
     }
 
     public boolean contains(int record) {
-        return (getMin() >= record) && (record <= getMax());
+        return (getMin() <= record) && (record <= getMax());
     }
 
 }
