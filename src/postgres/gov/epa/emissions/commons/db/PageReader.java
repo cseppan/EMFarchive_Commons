@@ -60,4 +60,8 @@ public class PageReader {
     public void close() throws SQLException {
         scrollableRecords.close();
     }
+
+    public int pageSize() {
+        return pageSize;
+    }
 }
