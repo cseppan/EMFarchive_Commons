@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Region implements Serializable {
 
     private long id;
+
     private String name;
 
     /*
@@ -14,10 +15,10 @@ public class Region implements Serializable {
         super();
     }
 
-    public Region(String name){
-        this.name=name;
+    public Region(String name) {
+        this.name = name;
     }
-    
+
     public long getId() {
         return id;
     }
@@ -53,5 +54,7 @@ public class Region implements Serializable {
         return name.hashCode();
     }
 
-
+    public String toString() {
+        return getName();
+    }
 }

@@ -49,6 +49,9 @@ public class Country implements Serializable {
     public int hashCode() {
         return name.hashCode();
     }
-
+    
+    public String toString(){
+        return getName();
+    }
 
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Project implements Serializable {
 
     private long id;
+
     private String name;
 
     /*
@@ -53,4 +54,7 @@ public class Project implements Serializable {
         return name.hashCode();
     }
 
+    public String toString() {
+        return getName();
+    }
 }
