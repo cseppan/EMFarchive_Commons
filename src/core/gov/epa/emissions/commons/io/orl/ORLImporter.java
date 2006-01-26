@@ -1,10 +1,12 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.io.Country;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
+import gov.epa.emissions.commons.io.Region;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
@@ -100,8 +102,8 @@ public class ORLImporter {
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
         String country = comments.content("COUNTRY");
-        dataset.setCountry(country);
-        dataset.setRegion(country);
+        dataset.setCountry(new Country(country));
+        dataset.setRegion(new Region(country));
 
         if (!comments.hasContent("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");

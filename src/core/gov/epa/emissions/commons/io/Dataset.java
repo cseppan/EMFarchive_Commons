@@ -29,17 +29,24 @@ public interface Dataset extends Serializable {
 
     String getUnits();
 
-    void setRegion(String region);
 
-    String getRegion();
+
+    void setRegion(Region region);
+    
+    Region getRegion();
+    
+    Country getCountry();
+    
+    void setCountry(Country country);
+    
+    void setProject(Project project);
+    
+    Project getProject();
 
     void setYear(int year);
 
     int getYear();
 
-    String getCountry();
-
-    void setCountry(String country);
 
     // FIXME: use the TemporalResolution instead
     void setTemporalResolution(String name);

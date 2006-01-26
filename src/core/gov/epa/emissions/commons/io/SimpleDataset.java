@@ -16,10 +16,6 @@ public class SimpleDataset implements Dataset {
 
     private String datasetTypeName;
 
-    private String region;
-
-    private String country;
-
     private String units;
 
     private String creator;
@@ -39,6 +35,12 @@ public class SimpleDataset implements Dataset {
     private DatasetType datasetType;
 
     private InternalSource summarySource;
+
+    private Region region;
+
+    private Project project;
+
+    private Country country;
 
     /**
      * No argument constructor needed for hibernate bean mapping
@@ -61,10 +63,6 @@ public class SimpleDataset implements Dataset {
         this.temporalResolution = temporalResolution;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
     public void setYear(int year) {
         this.year = year;
     }
@@ -77,9 +75,6 @@ public class SimpleDataset implements Dataset {
         this.endDateTime = time;
     }
 
-    public String getRegion() {
-        return region;
-    }
 
     public int getYear() {
         return year;
@@ -95,14 +90,6 @@ public class SimpleDataset implements Dataset {
 
     public void setDatasetTypeName(String datasetType) {
         this.datasetTypeName = datasetType;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getUnits() {
@@ -204,6 +191,30 @@ public class SimpleDataset implements Dataset {
 
     public InternalSource getSummarySource() {
         return summarySource;
+    }
+
+    public void setRegion(Region region) {
+       this.region = region;
+    }
+    
+    public Region getRegion(){
+        return region;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+    
+    public Country getCountry(){
+        return country;
+    }
+
+    public void setProject(Project project) {
+       this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
     }
 
 }

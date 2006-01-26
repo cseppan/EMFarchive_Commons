@@ -318,8 +318,8 @@ public class ORLImporterTest extends HibernateTestCase {
         importer.run();
 
         // assert
-        assertEquals("PERU", dataset.getCountry());
-        assertEquals("PERU", dataset.getRegion());
+        assertEquals("PERU", dataset.getCountry().getName());
+        assertEquals("PERU", dataset.getRegion().getName());
         assertEquals(1995, dataset.getYear());
     }
 

@@ -3,10 +3,12 @@ package gov.epa.emissions.commons.io.ida;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Country;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.io.Region;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
@@ -111,8 +113,8 @@ public class IDAImporter {
         String country = comments.content("COUNTRY");
         if (!country.toLowerCase().equals("us"))
             throw new ImporterException("Currently the IDA importer supports files for US not for '" + country + "'");
-        dataset.setCountry(country);
-        dataset.setRegion(country);
+        dataset.setCountry(new Country(country));
+        dataset.setRegion(new Region(country));
 
         if (!comments.have("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
