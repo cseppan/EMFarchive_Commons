@@ -12,37 +12,38 @@ import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 public class ComboBox extends JComboBox {
-    
-    public ComboBox(){
+
+    public ComboBox() {
         super();
     }
-    
-    public ComboBox(String defaultString, Object[] objects){
+
+    public ComboBox(String defaultString, Object[] objects) {
         List list = new ArrayList(Arrays.asList(objects));
-        list.add(0,defaultString);
+        list.add(0, defaultString);
         DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
         setModel(model);
         setRenderer(new ComboBoxRenderer(defaultString));
     }
-    
-    public Object getSelectedItem(){
+
+    public Object getSelectedItem() {
         int index = super.getSelectedIndex();
-        return (index>0) ?super.getSelectedItem() :null;
+        return (index > 0) ? super.getSelectedItem() : null;
     }
-    
+
     class ComboBoxRenderer extends BasicComboBoxRenderer {
-        
+
         private String defaultString;
-        
-        ComboBoxRenderer(String defaultString){
+
+        ComboBoxRenderer(String defaultString) {
             this.defaultString = defaultString;
         }
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                boolean cellHasFocus) {
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
-            }
-            else {
+            } else {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
@@ -50,12 +51,12 @@ public class ComboBox extends JComboBox {
             setFont(list.getFont());
 
             if (value instanceof Icon) {
-                setIcon((Icon)value);
+                setIcon((Icon) value);
             }
-            
-            if(value==null){
+
+            if (value == null) {
                 setText(defaultString);
-            }else{
+            } else {
                 setText(value.toString());
             }
             return ComboBoxRenderer.this;
