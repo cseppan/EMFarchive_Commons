@@ -15,6 +15,8 @@ public class Page {
 
     private int number;
 
+    private int min;
+
     public Page() {// needed for serialization
         this(0);
     }
@@ -53,18 +55,16 @@ public class Page {
         records.addAll(Arrays.asList(array));
     }
 
-    public int min() {
-        if (count() == 0)
-            return -1;
-
-        return ((VersionedRecord) records.get(0)).getRecordId();
+    public int getMin() {
+        return min;
     }
 
-    public int max() {
-        if (count() == 0)
-            return -1;
+    public int getMax() {
+        return min + count() - 1;
+    }
 
-        return ((VersionedRecord) records.get(count() - 1)).getRecordId();
+    public void setMin(int min) {
+        this.min = min;
     }
 
 }
