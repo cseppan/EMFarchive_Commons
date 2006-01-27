@@ -8,6 +8,9 @@ public class StringFormatter implements ColumnFormatter {
 
     private StringFormat format;
 
+    public StringFormatter() {
+        format = new StringFormat(0);
+    }
     public StringFormatter(int size) {
         format = new StringFormat(size);
     }

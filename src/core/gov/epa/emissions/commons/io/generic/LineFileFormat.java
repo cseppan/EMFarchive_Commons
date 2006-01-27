@@ -24,6 +24,6 @@ public class LineFileFormat implements FileFormat {
 
     private Column[] createCols(SqlDataTypes types) {
         return new Column[]{new Column("Line_Number", types.realType(), new RealFormatter()),
-                new Column("Lines", types.stringType(256), new StringFormatter(256))};
+                new Column("Lines", types.text(), new StringFormatter())};
     }
 }
