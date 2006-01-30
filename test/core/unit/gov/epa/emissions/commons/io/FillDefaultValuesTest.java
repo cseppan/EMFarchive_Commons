@@ -78,7 +78,7 @@ public class FillDefaultValuesTest extends MockObjectTestCase {
         assertEquals("fixed3", data.get(3));// fixed 3
         assertEquals("", data.get(4));// optional 1 - filler
         assertEquals("", data.get(5));// optional 2 - filler
-        assertEquals("!", data.get(6));// comments - filler
+        assertEquals("", data.get(6));// comments - filler
     }
 
     public void testShouldAddDatasetIdAndFillersForAllOptionalColsOnFillDefaultValues() {

@@ -67,6 +67,7 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
         data.add("fixed1");
         data.add("fixed2");
         data.add("fixed3");
+        data.add("op1");
         long datasetId = 129;
 
         // run
@@ -82,9 +83,9 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
         assertEquals("fixed1", data.get(4));// fixed 1
         assertEquals("fixed2", data.get(5));// fixed 2
         assertEquals("fixed3", data.get(6));// fixed 3
-        assertEquals("", data.get(7));// optional 1 - filler
+        assertEquals("op1", data.get(7));// optional 1 - filler
         assertEquals("", data.get(8));// optional 2 - filler
-        assertEquals("!", data.get(9));// comments - filler
+        assertEquals("", data.get(9));// comments - filler
     }
 
     public void testShouldAddDatasetIdAndFillersForAllOptionalColsOnFillDefaultValues() {

@@ -17,8 +17,8 @@ public class FillRecordWithBlankValues implements FillDefaultValues {
             return;
 
         String last = (String) data.get(data.size() - 1);
-        if (!isComments(last))
-            data.add(data.size(), "!");// empty comment
+        if (!isComments(last)) 
+            data.add(data.size(), "");// empty comment
     }
 
     private int size(FileFormatWithOptionalCols base) {
