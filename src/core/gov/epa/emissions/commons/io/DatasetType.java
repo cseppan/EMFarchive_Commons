@@ -10,15 +10,15 @@ import java.util.List;
 
 public class DatasetType implements Serializable, Lockable {
 
-    private long datasettypeid;
+    private long id;
 
     private String name;
 
     private String description;
 
-    private int minfiles;
+    private int minFiles;
 
-    private int maxfiles;
+    private int maxFiles;
 
     private boolean external;
 
@@ -68,20 +68,20 @@ public class DatasetType implements Serializable, Lockable {
         this.description = description;
     }
 
-    public int getMaxfiles() {
-        return maxfiles;
+    public int getMaxFiles() {
+        return maxFiles;
     }
 
-    public void setMaxfiles(int maxfiles) {
-        this.maxfiles = maxfiles;
+    public void setMaxFiles(int maxfiles) {
+        this.maxFiles = maxfiles;
     }
 
-    public int getMinfiles() {
-        return minfiles;
+    public int getMinFiles() {
+        return minFiles;
     }
 
-    public void setMinfiles(int minfiles) {
-        this.minfiles = minfiles;
+    public void setMinFiles(int minfiles) {
+        this.minFiles = minfiles;
     }
 
     public void setName(String name) {
@@ -92,12 +92,12 @@ public class DatasetType implements Serializable, Lockable {
         return getName();
     }
 
-    public long getDatasettypeid() {
-        return datasettypeid;
+    public long getId() {
+        return id;
     }
 
-    public void setDatasettypeid(long datasettypeid) {
-        this.datasettypeid = datasettypeid;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int hashCode() {
@@ -105,7 +105,7 @@ public class DatasetType implements Serializable, Lockable {
     }
 
     public boolean equals(Object other) {
-        return (other instanceof DatasetType && ((DatasetType) other).datasettypeid == datasettypeid);
+        return (other instanceof DatasetType && ((DatasetType) other).id == id);
     }
 
     public boolean isExternal() {

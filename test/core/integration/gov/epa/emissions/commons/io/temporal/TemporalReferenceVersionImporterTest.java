@@ -28,7 +28,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        dataset.setId(Math.abs(new Random().nextInt()));
     }
 
     protected void doTearDown() throws Exception {

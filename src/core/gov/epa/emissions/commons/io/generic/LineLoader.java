@@ -35,7 +35,7 @@ public class LineLoader implements DataLoader{
         try {
             DataModifier modifier = datasource.dataModifier();
             String key = tableFormat.key();
-            long value = dataset.getDatasetid();
+            long value = dataset.getId();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
@@ -52,7 +52,7 @@ public class LineLoader implements DataLoader{
 
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
-        data.add("" + dataset.getDatasetid());
+        data.add("" + dataset.getId());
         data.addAll(record.tokens());
 
         return (String[]) data.toArray(new String[0]);

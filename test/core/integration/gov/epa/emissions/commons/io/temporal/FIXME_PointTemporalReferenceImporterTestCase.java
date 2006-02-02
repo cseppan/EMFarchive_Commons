@@ -29,7 +29,7 @@ public abstract class FIXME_PointTemporalReferenceImporterTestCase extends Persi
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        dataset.setId(Math.abs(new Random().nextInt()));
 
         PointTemporalReferenceFileFormat base = new PointTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);

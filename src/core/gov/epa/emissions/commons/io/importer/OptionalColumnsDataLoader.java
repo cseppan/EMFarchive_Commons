@@ -37,7 +37,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.dataModifier();
-            long value = dataset.getDatasetid();
+            long value = dataset.getId();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table + "\n" + e.getMessage(), e);
@@ -63,7 +63,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
     private String[] data(Dataset dataset, Record record, FileFormatWithOptionalCols format) {
         List data = new ArrayList();
         data.addAll(record.tokens());
-        format.fillDefaults(data, dataset.getDatasetid());
+        format.fillDefaults(data, dataset.getId());
         massageNullMarkers(data);
         return (String[]) data.toArray(new String[0]);
     }

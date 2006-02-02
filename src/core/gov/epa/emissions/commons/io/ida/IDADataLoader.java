@@ -45,7 +45,7 @@ public class IDADataLoader implements DataLoader {
         try {
             DataModifier modifier = emissionDatasource.dataModifier();
             String key = tableFormat.key();
-            long value = dataset.getDatasetid();
+            long value = dataset.getId();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
@@ -67,12 +67,12 @@ public class IDADataLoader implements DataLoader {
         List data = new ArrayList();
         //FIXME: demo code
         if (tableFormat instanceof VersionedTableFormat){
-            addVersionData(data, dataset.getDatasetid(), 0);
+            addVersionData(data, dataset.getId(), 0);
             stateIndex=4;
             fipsIndex =5;
         }
         else{
-            data.add("" + dataset.getDatasetid());
+            data.add("" + dataset.getId());
         }
         String stateID = record.token(0);
         String fips = fips(stateID, record.token(1));

@@ -31,7 +31,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
     private void importNonPoint() throws Exception {
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        dataset.setId(Math.abs(new Random().nextInt()));
         File file = new File("test/data/orl/nc", "arinv.nonpoint.nti99_NC.txt");
         ORLNonPointImporter importer = new ORLNonPointImporter(file.getParentFile(), new String[] { file.getName() },
                 dataset, dbServer(), dataTypes(), new VersionedDataFormatFactory(0));
@@ -103,7 +103,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         assertNotNull("Should be able to fetch first record", record);
 
         assertEquals("1", record.token(0));// record id
-        assertEquals(dataset.getDatasetid() + "", record.token(1));
+        assertEquals(dataset.getId() + "", record.token(1));
         assertEquals("0", record.token(2));// version
         assertEquals("", record.token(3));// delete versions
         assertEquals("37001", record.token(4));

@@ -39,7 +39,7 @@ public class VersionedDataLoader implements DataLoader {
     private void dropData(String table, Dataset dataset) throws ImporterException {
         try {
             DataModifier modifier = datasource.dataModifier();
-            long value = dataset.getDatasetid();
+            long value = dataset.getId();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
@@ -58,7 +58,7 @@ public class VersionedDataLoader implements DataLoader {
     private String[] data(Dataset dataset, Record record, FileFormatWithOptionalCols fileFormat) {
         List data = new ArrayList();
         data.addAll(record.tokens());
-        fileFormat.fillDefaults(data, dataset.getDatasetid());
+        fileFormat.fillDefaults(data, dataset.getId());
         massageNullMarkers(data);
 
         return (String[]) data.toArray(new String[0]);

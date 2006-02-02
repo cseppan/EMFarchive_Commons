@@ -34,7 +34,7 @@ public class MassagedFixedColumnsDataLoader implements DataLoader {
         try {
             DataModifier modifier = datasource.dataModifier();
             String key = tableFormat.key();
-            long value = dataset.getDatasetid();
+            long value = dataset.getId();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
@@ -52,7 +52,7 @@ public class MassagedFixedColumnsDataLoader implements DataLoader {
 
     private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
-        data.add("" + dataset.getDatasetid());
+        data.add("" + dataset.getId());
         for (int i = 0; i < record.size(); i++)
             data.add(record.token(i));
 

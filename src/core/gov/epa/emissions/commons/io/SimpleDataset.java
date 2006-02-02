@@ -124,11 +124,11 @@ public class SimpleDataset implements Dataset {
         this.datasources = datasources;
     }
 
-    public long getDatasetid() {
+    public long getId() {
         return datasetid;
     }
 
-    public void setDatasetid(long datasetid) {
+    public void setId(long datasetid) {
         this.datasetid = datasetid;
     }
 

@@ -35,7 +35,7 @@ public class LineImporterTest extends HibernateTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        dataset.setId(Math.abs(new Random().nextInt()));
     }
 
     protected void doTearDown() throws Exception {
@@ -95,12 +95,12 @@ public class LineImporterTest extends HibernateTestCase {
 
     private void verifyVersionZeroEntryInVersionsTable() throws Exception {
         Versions versions = new Versions();
-        Version[] simpleVersions = versions.get(dataset.getDatasetid(), session);
+        Version[] simpleVersions = versions.get(dataset.getId(), session);
         assertEquals(1, simpleVersions.length);
 
         Version versionZero = simpleVersions[0];
         assertEquals(0, versionZero.getVersion());
-        assertEquals(dataset.getDatasetid(), versionZero.getDatasetId());
+        assertEquals(dataset.getId(), versionZero.getDatasetId());
         assertEquals("", versionZero.getPath());
         assertTrue("Version Zero should be zero upon import", versionZero.isFinalVersion());
     }

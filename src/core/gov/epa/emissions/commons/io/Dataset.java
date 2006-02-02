@@ -5,10 +5,9 @@ import java.util.Date;
 
 public interface Dataset extends Serializable {
 
-    // unique id needed for hibernate persistence
-    public long getDatasetid();
+    public long getId();
 
-    public void setDatasetid(long datasetid);
+    public void setId(long id);
 
     public String getName();
 
@@ -29,24 +28,21 @@ public interface Dataset extends Serializable {
 
     String getUnits();
 
-
-
     void setRegion(Region region);
-    
+
     Region getRegion();
-    
+
     Country getCountry();
-    
+
     void setCountry(Country country);
-    
+
     void setProject(Project project);
-    
+
     Project getProject();
 
     void setYear(int year);
 
     int getYear();
-
 
     // FIXME: use the TemporalResolution instead
     void setTemporalResolution(String name);

@@ -39,7 +39,7 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        dataset.setId(Math.abs(new Random().nextInt()));
 
         String name = dataset.getName();
         tableCE = name + "_ce";

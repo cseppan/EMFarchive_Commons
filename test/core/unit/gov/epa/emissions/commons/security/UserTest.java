@@ -11,7 +11,7 @@ public class UserTest extends TestCase {
     public void testShouldFailIfNameIsNull() {
         User user = new User();
         try {
-            user.setFullName(null);
+            user.setName(null);
         } catch (UserException ex) {
             assertEquals("Name should be specified", ex.getMessage());
             return;
@@ -23,7 +23,7 @@ public class UserTest extends TestCase {
     public void testShouldFailIfNameIsBlank() {
         User user = new User();
         try {
-            user.setFullName("");
+            user.setName("");
         } catch (UserException ex) {
             assertEquals("Name should be specified", ex.getMessage());
             return;

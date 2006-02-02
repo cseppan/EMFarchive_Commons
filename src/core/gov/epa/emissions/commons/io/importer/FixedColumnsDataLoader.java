@@ -36,7 +36,7 @@ public class FixedColumnsDataLoader implements DataLoader {
         try {
             DataModifier modifier = datasource.dataModifier();
             String key = tableFormat.key();
-            long value = dataset.getDatasetid();
+            long value = dataset.getId();
             modifier.dropData(table, key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
@@ -56,9 +56,9 @@ public class FixedColumnsDataLoader implements DataLoader {
         List data = new ArrayList();
   
         if (tableFormat instanceof VersionedTableFormat)
-            addVersionData(data, dataset.getDatasetid(), 0);
+            addVersionData(data, dataset.getId(), 0);
         else
-            data.add("" + dataset.getDatasetid());
+            data.add("" + dataset.getId());
   
         data.addAll(record.tokens());
 

@@ -15,10 +15,9 @@ import java.util.regex.Pattern;
  */
 public class User implements Serializable, Lockable {
 
-    // State variables for the User bean
     private long id;
 
-    private String fullname;
+    private String name;
 
     private String affiliation;
 
@@ -30,9 +29,9 @@ public class User implements Serializable, Lockable {
 
     private String encryptedPassword;
 
-    private boolean inAdminGroup = false;
+    private boolean isAdmin;
 
-    private boolean acctDisabled = false;
+    private boolean isAccountDisabled;
 
     private PasswordGenerator passwordGen;
 
@@ -47,15 +46,15 @@ public class User implements Serializable, Lockable {
             boolean beAdmin, boolean disabled) throws UserException {
         this();
 
-        setFullName(name);
+        setName(name);
         setAffiliation(affiliation);
         setPhone(phone);
         setEmail(email);
         setUsername(username);
         setPassword(password);
 
-        this.inAdminGroup = beAdmin;
-        this.acctDisabled = disabled;
+        this.isAdmin = beAdmin;
+        this.isAccountDisabled = disabled;
     }
 
     public boolean equals(Object other) {
@@ -70,12 +69,12 @@ public class User implements Serializable, Lockable {
         return username != null ? username.hashCode() : 0;
     }
 
-    public boolean isAcctDisabled() {
-        return acctDisabled;
+    public boolean isAccountDisabled() {
+        return isAccountDisabled;
     }
 
-    public void setAcctDisabled(boolean acctDisabled) {
-        this.acctDisabled = acctDisabled;
+    public void setAccountDisabled(boolean disable) {
+        this.isAccountDisabled = disable;
     }
 
     public String getAffiliation() {
@@ -107,22 +106,22 @@ public class User implements Serializable, Lockable {
         this.email = email;
     }
 
-    public String getFullName() {
-        return fullname;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String name) throws UserException {
+    public void setName(String name) throws UserException {
         if (name == null || name.length() == 0)
             throw new UserException("Name should be specified");
-        this.fullname = name;
+        this.name = name;
     }
 
-    public boolean isInAdminGroup() {
-        return inAdminGroup;
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
-    public void setInAdminGroup(boolean inAdminGroup) {
-        this.inAdminGroup = inAdminGroup;
+    public void setAdmin(boolean inAdminGroup) {
+        this.isAdmin = inAdminGroup;
     }
 
     public void setPassword(String password) throws UserException {

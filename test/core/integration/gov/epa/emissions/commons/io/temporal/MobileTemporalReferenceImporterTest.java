@@ -29,7 +29,7 @@ public class MobileTemporalReferenceImporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setDatasetid(Math.abs(new Random().nextInt()));
+        dataset.setId(Math.abs(new Random().nextInt()));
 
         MobileTemporalReferenceFileFormat base = new MobileTemporalReferenceFileFormat(sqlDataTypes);
         TableFormat tableFormat = new FixedColsTableFormat(base, sqlDataTypes);

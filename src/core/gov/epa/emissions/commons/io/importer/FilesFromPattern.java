@@ -20,7 +20,7 @@ public class FilesFromPattern {
             throw new ImporterException("No file pattern or filename is specified");
         }
 
-        int minFiles = datasetType.getMinfiles();
+        int minFiles = datasetType.getMinFiles();
         files = extractFileNames(folder, filePatterns[0]);
         if (files.length < minFiles) {
             throw new ImporterException(datasetType.getName()+ " importer requires " + minFiles + " files");

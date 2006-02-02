@@ -22,7 +22,7 @@ public class VersionedImporter implements Importer {
 
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        String[] data = { null, dataset.getDatasetid() + "", "0", "Initial Version", "", "true", null };
+        String[] data = { null, dataset.getId() + "", "0", "Initial Version", "", "true", null };
         modifier.insertRow("versions", data);
     }
 
