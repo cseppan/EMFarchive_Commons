@@ -20,7 +20,6 @@ public class Versions {
         Version version = get(datasetId, finalVersion, session);
         if (version == null)
             return new Version[0];
-
         return doGetPath(version, session);
     }
 

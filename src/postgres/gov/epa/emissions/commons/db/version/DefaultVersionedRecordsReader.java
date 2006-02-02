@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Column;
 
 import java.sql.SQLException;
 import java.util.StringTokenizer;
@@ -19,31 +18,61 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
     }
 
     public VersionedRecord[] fetchAll(Version version, String table, Session session) throws SQLException {
-        return fetchAll(version, table, null, session);
+        return fetchAll(version, table, null, null, null, session);
     }
 
-    public VersionedRecord[] fetchAll(Version version, String table, String sortOrder, Session session)
+    public VersionedRecord[] fetchAll(Version version, String table, String columnFilter, String rowFilter, String sortOrder, Session session)
             throws SQLException {
-        return fetch(version, table, sortOrder, session).all();
+        return fetch(version, table, columnFilter, rowFilter, sortOrder, session).all();
     }
 
     public ScrollableVersionedRecords fetch(Version version, String table, Session session) throws SQLException {
-        return fetch(version, table, null, session);
+        return fetch(version, table, null, null, null, session);
     }
 
-    public ScrollableVersionedRecords fetch(Version version, String table, String sortOrder, Session session)
-            throws SQLException {
+    public ScrollableVersionedRecords fetch(Version version, String table, String columnFilter, String rowFilter,
+            String sortOrder, Session session) throws SQLException {
+
         String versions = fetchCommaSeparatedVersionSequence(version, session);
         String deleteClause = createDeleteClause(versions);
 
-        Column sortColumn = datasource.dataModifier().getColumns(table)[4];
-        sortOrder = sortColumn.name();
+        // these are the default clauses if the user does not specify additional sort/filter parameters
+        final String defaultColumnFilterClause = "*";
+        
+        final String defaultSortOrderClause = "record_id";
+        final String defaultRowFilterClause = " WHERE dataset_id = " + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause;
 
-        String queryString = "SELECT * FROM " + datasource.getName() + "." + table + " WHERE dataset_id = "
-                + version.getDatasetId() + " AND version IN (" + versions + ") AND " + deleteClause + " " + "ORDER BY ";
+        String columnFilterClause = "";
+        String rowFilterClause = "";
+        String sortOrderClause = "";
 
-        if (sortOrder != null)
-            queryString += sortOrder;
+        if ((columnFilter == null) || (columnFilter.equals(""))) {
+            columnFilterClause = defaultColumnFilterClause;
+        } else {
+            columnFilterClause = columnFilter + ", " + "record_id, dataset_id, version, delete_versions";
+        }
+
+        if ((rowFilter == null) || (rowFilter.equals(""))) {
+            rowFilterClause = defaultRowFilterClause;
+        } else {
+            rowFilterClause = defaultRowFilterClause + rowFilter;
+        }
+
+        if ((sortOrder == null) || (sortOrder.equals(""))) {
+
+            // FIXME: need the rules for choosing the number of data columns to sort by
+            // Column sortColumn = datasource.dataModifier().getColumns(table)[4];
+            // sortOrder = sortColumn.name();
+            sortOrderClause = defaultSortOrderClause;
+        } else {
+            sortOrderClause = sortOrder + "," + defaultSortOrderClause;
+        }
+
+        String extraWhereClause = "";
+        extraWhereClause = extraWhereClause + "";
+
+        String queryString = "SELECT " + columnFilterClause + " FROM " + datasource.getName() + "." + table
+                + rowFilterClause + " ORDER BY " + sortOrderClause;
 
         ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, queryString);
         records.execute();
@@ -68,8 +97,8 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         return buffer.toString();
     }
 
-    private String fetchCommaSeparatedVersionSequence(Version finalVersion, Session session) {
-        Version[] path = versions.getPath(finalVersion.getDatasetId(), finalVersion.getVersion(), session);
+    private String fetchCommaSeparatedVersionSequence(Version version, Session session) {
+        Version[] path = versions.getPath(version.getDatasetId(), version.getVersion(), session);
 
         StringBuffer result = new StringBuffer();
         for (int i = 0; i < path.length; i++) {
