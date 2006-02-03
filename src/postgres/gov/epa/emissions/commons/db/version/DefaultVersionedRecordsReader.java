@@ -50,8 +50,9 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         String extraWhereClause = "";
         extraWhereClause = extraWhereClause + "";
 
-        return "SELECT " + columnFilterClause + " FROM " + datasource.getName() + "." + table + rowFilterClause
+        String query = "SELECT " + columnFilterClause + " FROM " + datasource.getName() + "." + table + rowFilterClause
                 + " ORDER BY " + sortOrderClause;
+        return query;
     }
 
     // FIXME: need the rules for choosing the number of data columns to sort by
