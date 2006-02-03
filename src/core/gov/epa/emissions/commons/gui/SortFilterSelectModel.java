@@ -15,7 +15,7 @@ import org.apache.commons.collections.primitives.IntList;
  * (except selectable) to the underlying delegate model
  * </p>
  */
-public class SortFilterSelectModel extends MultiRowHeaderTableModel {
+public class SortFilterSelectModel extends MultiRowHeaderTableModel implements SelectModel {
 
     private static final String SELECT_COL_NAME = "Select";
 

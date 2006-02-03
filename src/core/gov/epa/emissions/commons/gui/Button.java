@@ -15,6 +15,10 @@ public class Button extends JButton {
         super.setName(toCanonicalName(label));
 
         addActionForEnterKeyPress(label, action);
+        addActionListener(action);
+    }
+
+    protected void addActionListener(final Action action) {
         super.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 action.actionPerformed(event);
