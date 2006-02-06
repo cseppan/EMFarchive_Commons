@@ -16,5 +16,14 @@ public class TextArea extends JTextArea {
         super.setCaretPosition(0);
         super.setColumns(width);
     }
+    
+    public TextArea(String name, String value, int width, int rows) {
+        super.setName(name);
+        super.setText(value);
+        super.setRows(rows);
+        super.setLineWrap(true);
+        super.setCaretPosition(0);
+        super.setColumns(width);
+    }
 
 }
