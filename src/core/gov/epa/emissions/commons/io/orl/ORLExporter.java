@@ -79,7 +79,11 @@ public class ORLExporter {
 
     private void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = 0; i < cols.length; i++) {
-            writer.print(cols[i].format(data).trim());
+            String field = cols[i].format(data).trim();
+            if(field.equals("-9"))
+                writer.print("");
+            else
+                writer.print(field);
             if (i + 1 < cols.length)
                 writer.print(",");// delimiter
         }
