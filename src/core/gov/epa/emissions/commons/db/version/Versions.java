@@ -85,7 +85,7 @@ public class Versions {
         try {
             tx = session.beginTransaction();
             Criteria crit = session.createCriteria(Version.class)
-                    .add(Restrictions.eq("datasetId", new Long(datasetId)));
+                    .add(Restrictions.eq("datasetId", new Long(datasetId))).addOrder(Order.asc("version"));
             List versions = crit.list();
             tx.commit();
 

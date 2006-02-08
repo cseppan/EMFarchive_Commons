@@ -43,6 +43,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableName);
+        dropData("versions", datasource);
     }
 
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
