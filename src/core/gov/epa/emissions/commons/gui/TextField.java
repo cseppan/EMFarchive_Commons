@@ -2,7 +2,10 @@ package gov.epa.emissions.commons.gui;
 
 import javax.swing.JTextField;
 
-public class TextField extends JTextField {
+public class TextField extends JTextField implements Changeable {
+    private ChangeablesList listOfChangeables;
+    
+    private boolean changed = false;
 
     public TextField(String name, int size) {
         super(size);
@@ -12,5 +15,21 @@ public class TextField extends JTextField {
     public TextField(String name, String value, int size) {
         this(name, size);
         super.setText(value);
+    }
+    
+    public void setChanges(boolean status) {
+        this.changed = status;
+    }
+    
+    public void notifyChanges() {
+        this.listOfChangeables.onChanges();
+    }
+
+    public boolean hasChanges() {
+        return this.changed;
+    }
+
+    public void observe(ChangeablesList list) {
+        this.listOfChangeables = list;
     }
 }

@@ -24,11 +24,16 @@ public class ChangeablesList {
     }
     
     public boolean hasChanges() {
-        for(int i = 0; i < listOfChangeables.size(); i++) 
+        for(int i = 0; i < listOfChangeables.size(); i++)
             if(query((Changeable)listOfChangeables.get(i)))
                 return true;
         
         return false;
+    }
+    
+    public void resetChanges() {
+        for(int i = 0; i < listOfChangeables.size(); i++)
+            ((Changeable)listOfChangeables.get(i)).setChanges(false);
     }
     
     private boolean query(Changeable c) {
@@ -36,7 +41,10 @@ public class ChangeablesList {
     }
     
     public void onChanges() {
-        window.onChanges();
+        if(hasChanges())
+            window.signalChanges();
+        else
+            window.signalSaved();
     }
     
 }

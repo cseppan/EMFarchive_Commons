@@ -29,6 +29,15 @@ public class ChangeablesListTest extends MockObjectTestCase {
 
         return changeable;
     }
+    
+    private Mock resetChangeable() {
+        Mock changeable = mock(Changeable.class);
+        changeable.expects(once()).method("observe").with(same(model));
+        changeable.expects(once()).method("setChanges").with(eq(false));
+        changeable.stubs().method("hasChanges").withNoArguments().will(returnValue(false));
+        
+        return changeable;
+    }
 
     public void testShouldConfirmTrueIfOneChangesInChangables() {
         model.add((Changeable) changeable(false).proxy());
@@ -51,5 +60,20 @@ public class ChangeablesListTest extends MockObjectTestCase {
         model.add(list);
         assertTrue(list.size() == 6);
         assertTrue("Should have changes, since two of the Changeables has changes", model.hasChanges());
+    }
+    
+    public void testShouldResetChanges() {
+        List list = new ArrayList();
+        list.add(resetChangeable().proxy());
+        list.add(resetChangeable().proxy());
+        list.add(resetChangeable().proxy());
+        list.add(resetChangeable().proxy());
+        list.add(resetChangeable().proxy());
+        list.add(resetChangeable().proxy());
+        
+        model.add(list);
+        assertTrue(list.size() == 6);
+        model.resetChanges();
+        assertFalse("Should have no changes, since they are reset", model.hasChanges());
     }
 }
