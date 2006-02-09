@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.gui;
 
-import javax.swing.JComponent;
+import java.awt.Component;
+
 import javax.swing.JOptionPane;
 
 public class ConfirmDialog {
@@ -9,9 +10,9 @@ public class ConfirmDialog {
 
     private String title;
 
-    private JComponent parentWindow;
+    private Component parentWindow;
 
-    public ConfirmDialog(String message, String title, JComponent parentWindow) {
+    public ConfirmDialog(String message, String title, Component parentWindow) {
         this.message = message;
         this.title = title;
         this.parentWindow = parentWindow;
