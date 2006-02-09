@@ -33,7 +33,7 @@ public class ChangeablesList {
     
     public void resetChanges() {
         for(int i = 0; i < listOfChangeables.size(); i++)
-            ((Changeable)listOfChangeables.get(i)).setChanges(false);
+            ((Changeable)listOfChangeables.get(i)).clear();
     }
     
     private boolean query(Changeable c) {

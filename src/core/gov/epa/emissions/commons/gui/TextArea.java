@@ -1,6 +1,9 @@
 package gov.epa.emissions.commons.gui;
 
 import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 
 public class TextArea extends JTextArea implements Changeable {
     private ChangeablesList listOfChangeables;
@@ -29,11 +32,29 @@ public class TextArea extends JTextArea implements Changeable {
         super.setColumns(width);
     }
     
-    public void setChanges(boolean status) {
-        this.changed = status;
+    public void addTextListener() {
+        Document nameDoc = this.getDocument();
+        nameDoc.addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                notifyChanges();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                notifyChanges();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                notifyChanges();
+            }
+        });
     }
     
-    public void notifyChanges() {
+    public void clear() {
+        this.changed = false;
+    }
+    
+    private void notifyChanges() {
+        this.changed = true;
         this.listOfChangeables.onChanges();
     }
 

@@ -5,7 +5,5 @@ public interface Changeable {
     
     void observe(ChangeablesList list);
     
-    void setChanges(boolean status);
-    
-    void notifyChanges();
+    void clear();
 }

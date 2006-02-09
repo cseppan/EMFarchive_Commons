@@ -33,7 +33,7 @@ public class ChangeablesListTest extends MockObjectTestCase {
     private Mock resetChangeable() {
         Mock changeable = mock(Changeable.class);
         changeable.expects(once()).method("observe").with(same(model));
-        changeable.expects(once()).method("setChanges").with(eq(false));
+        changeable.expects(once()).method("clear").withNoArguments();
         changeable.stubs().method("hasChanges").withNoArguments().will(returnValue(false));
         
         return changeable;
