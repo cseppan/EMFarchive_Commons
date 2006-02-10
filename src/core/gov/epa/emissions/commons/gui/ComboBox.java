@@ -1,6 +1,8 @@
 package gov.epa.emissions.commons.gui;
 
 import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
-public class ComboBox extends JComboBox {
+public class ComboBox extends JComboBox implements Changeable {
+    private ChangeablesList listOfChangeables;
+    
+    private boolean changed = false;
 
     public ComboBox() {
         super();
@@ -61,5 +66,30 @@ public class ComboBox extends JComboBox {
             }
             return ComboBoxRenderer.this;
         }
+    }
+    
+    public void addItemChangeListener() {
+        addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent e) {
+                notifyChanges();
+            }
+        });
+    }
+    
+    public void clear() {
+        this.changed = false;
+    }
+    
+    private void notifyChanges() {
+        changed = true;
+        this.listOfChangeables.onChanges();
+    }
+
+    public boolean hasChanges() {
+        return this.changed;
+    }
+
+    public void observe(ChangeablesList list) {
+        this.listOfChangeables = list;
     }
 }
