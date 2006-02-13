@@ -57,7 +57,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         assertEquals(1, version.getVersion());
     }
 
-    public void xtestUpdate() throws Exception {
+    public void testUpdate() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
         Version versionZero = versions.get(1, 0, session);
@@ -87,7 +87,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         assertEquals("p22", versionOneRecords[4].token(1));
     }
 
-    public void xtestShouldDeleteExistingRecordAndAddNewRecordOnUpdate() throws Exception {
+    public void testShouldDeleteExistingRecordAndAddNewRecordOnUpdate() throws Exception {
         // version one (based on version zero): 4 deleted, add new 6 & 7
         ChangeSet changeSetForVersionOne = new ChangeSet();
 
@@ -160,7 +160,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         assertEquals(1, version.getVersion());
     }
 
-    public void xtestChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
+    public void testChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
         Version versionZero = versions.get(1, 0, session);
         Version versionOne = versions.derive(versionZero, "version one", session);
 
