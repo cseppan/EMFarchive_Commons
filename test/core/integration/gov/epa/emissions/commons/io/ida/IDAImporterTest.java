@@ -84,7 +84,6 @@ public class IDAImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
-        System.out.println(dataset.getName());
     }
 
 }
