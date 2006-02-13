@@ -145,7 +145,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("! EPA Derived", tokens[2]);
     }
 
-    public void FIXME_testTokenizeWithTwoSingleQuotedStrings() throws ImporterException {
+    public void testTokenizeWithTwoSingleQuotedStrings() throws ImporterException {
         String input = "37001 'ES1801f1207' 1 1 1 'Roche Biomedical' 2601020000";
         Tokenizer tokenizer = new WhitespaceDelimitedTokenizer();
         String[] tokens = tokenizer.tokens(input);

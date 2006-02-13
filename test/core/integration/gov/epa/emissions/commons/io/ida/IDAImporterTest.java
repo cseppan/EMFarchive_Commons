@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.File;
@@ -37,10 +38,10 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAreaFile() throws Exception {
-        File folder = new File("test/data/ida" );
-        String[] fileNames = {"small-area.txt"};
-        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset,
-                dbServer, sqlDataTypes);
+        File folder = new File("test/data/ida");
+        String[] fileNames = { "small-area.txt" };
+        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer,
+                sqlDataTypes);
         importer.run();
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
@@ -50,7 +51,7 @@ public class IDAImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallPointFile() throws Exception {
         File folder = new File("test/data/ida");
-        String[] fileNames = {"small-point.txt"};
+        String[] fileNames = { "small-point.txt" };
         IDAPointImporter importer = new IDAPointImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
 
@@ -62,7 +63,7 @@ public class IDAImporterTest extends PersistenceTestCase {
 
     public void testShouldImportASmallMobileFile() throws Exception {
         File folder = new File("test/data/ida");
-        String[] fileNames = {"small-mobile.txt"};
+        String[] fileNames = { "small-mobile.txt" };
         IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
         // assert
@@ -71,17 +72,19 @@ public class IDAImporterTest extends PersistenceTestCase {
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
-    public void FIXME_testShouldImportASmallActivityFile() throws Exception {
+    // FIXME: something wrong w/ input data file
+    public void FIXME_testShouldImportASmallActivityFile() throws ImporterException {
         File folder = new File("test/data/ida");
-        String[] fileNames = {"small-activity.txt"};
-        IDAActivityImporter importer = new IDAActivityImporter(folder, fileNames, dataset,
-                dbServer, sqlDataTypes);
+        String[] fileNames = { "small-activity.txt" };
+        FIXME_IDAActivityImporter importer = new FIXME_IDAActivityImporter(folder, fileNames, dataset, dbServer,
+                sqlDataTypes);
         importer.run();
 
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        System.out.println(dataset.getName());
     }
 
 }

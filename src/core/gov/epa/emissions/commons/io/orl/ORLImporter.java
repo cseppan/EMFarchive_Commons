@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.io.Country;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
@@ -99,10 +100,8 @@ public class ORLImporter {
 
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        //String country = comments.content("COUNTRY");
-        //FIXME: get the region and country object from db
-        //dataset.setCountry(new Country(country));
-        //dataset.setRegion(new Region(country));
+        String country = comments.content("COUNTRY");
+        dataset.setCountry(new Country(country));
 
         if (!comments.hasContent("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");

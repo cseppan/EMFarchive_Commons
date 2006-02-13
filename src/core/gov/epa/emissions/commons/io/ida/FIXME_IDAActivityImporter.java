@@ -10,16 +10,16 @@ import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.File;
 
-public class IDAActivityImporter implements Importer {
+public class FIXME_IDAActivityImporter implements Importer {
 
     private IDAImporter delegate;
 
-    public IDAActivityImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer,
+    public FIXME_IDAActivityImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         this(folder, fileNames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
-    public IDAActivityImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer,
+    public FIXME_IDAActivityImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         delegate = new IDAImporter(dataset, dbServer, sqlDataTypes);
         delegate.setup(folder, fileNames, new IDAActivityFileFormat(sqlDataTypes), factory);
