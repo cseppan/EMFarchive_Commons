@@ -1,7 +1,9 @@
 package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FillDefaultValues;
@@ -11,21 +13,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AreaTemporalReferenceFileFormat implements FileFormatWithOptionalCols {
-    private SqlDataTypes types;
+public class SampleFileFormatWithOptionalCols implements FileFormatWithOptionalCols {
 
-    private PointTemporalReferenceFileFormat base;
+    private SqlDataTypes types;
 
     private FillDefaultValues filler;
 
-    public AreaTemporalReferenceFileFormat(SqlDataTypes types) {
+    public SampleFileFormatWithOptionalCols(SqlDataTypes types) {
         this.types = types;
-        this.base = new PointTemporalReferenceFileFormat(types);
         filler = new FillRecordWithBlankValues();
     }
 
     public String identify() {
-        return "Area - Temporal Reference";
+        return "Sample";
     }
 
     public Column[] cols() {
@@ -44,14 +44,20 @@ public class AreaTemporalReferenceFileFormat implements FileFormatWithOptionalCo
     }
 
     public Column[] optionalCols() {
-        Column pollutants = new Column("Pollutants", types.stringType(32), new StringFormatter(32));
-        Column fips = new Column("FIPS", types.stringType(32), new StringFormatter(32));
+        Column characteristic1 = new Column("Characteristic_1", types.charType(), new CharFormatter());
+        Column characteristic2 = new Column("Characteristic_2", types.charType(), new CharFormatter());
+        Column characteristic3 = new Column("Characteristic_3", types.charType(), new CharFormatter());
+        Column characteristic4 = new Column("Characteristic_4", types.charType(), new CharFormatter());
+        Column characteristic5 = new Column("Characteristic_5", types.charType(), new CharFormatter());
 
-        return new Column[] { pollutants, fips };
+        return new Column[] { characteristic1, characteristic2, characteristic3, characteristic4, characteristic5 };
     }
 
     public Column[] minCols() {
-        return base.minCols();
+        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
+        Column monthlyCode = new Column("Monthly_Code", types.intType(), new IntegerFormatter());
+
+        return new Column[] { scc, monthlyCode };
     }
 
     public void fillDefaults(List data, long datasetId) {
