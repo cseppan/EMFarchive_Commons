@@ -109,7 +109,7 @@ public class NIFImporter {
             TableFormat tableFormat) throws ImporterException, IOException {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
-        Reader fileReader = new DataReader(reader, new FixedWidthParser(fileFormat));
+        Reader fileReader = new DataReader(reader, 0, new FixedWidthParser(fileFormat));
         loader.load(fileReader, dataset, tableName);
         reader.close();
         loadDataset(fileReader.comments(), dataset);

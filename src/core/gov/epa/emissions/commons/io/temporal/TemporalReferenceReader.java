@@ -16,9 +16,9 @@ public class TemporalReferenceReader implements Reader {
 
     private String header;
 
-    public TemporalReferenceReader(BufferedReader reader) throws IOException {
+    public TemporalReferenceReader(BufferedReader reader, int lineNumber) throws IOException {
         this.header = readHeader(reader);
-        this.delegate = new DataReader(reader, new WhitespaceDelimitedParser());
+        this.delegate = new DataReader(reader, lineNumber, new WhitespaceDelimitedParser());
     }
 
     public Record read() throws IOException {
@@ -58,7 +58,7 @@ public class TemporalReferenceReader implements Reader {
         return "Area/Mobile Temporal Reference";
     }
 
-    public void close() {
+    public void close() throws IOException {
         delegate.close();
     }
 

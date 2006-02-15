@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
+import gov.epa.emissions.commons.io.importer.FixedWidthFileReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
@@ -81,7 +82,7 @@ public class IDAImporter {
     }
 
     private void doImport(DatasetTypeUnit unit, Dataset dataset, String table) throws Exception {
-        Reader idaReader = new IDAFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
+        Reader idaReader = new FixedWidthFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
         IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
         loader.load(idaReader, dataset, table);
         loadDataset(file, table, unit.tableFormat(), idaReader.comments(), dataset);

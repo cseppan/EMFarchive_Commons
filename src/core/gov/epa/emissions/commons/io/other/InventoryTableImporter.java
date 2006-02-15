@@ -73,7 +73,7 @@ public class InventoryTableImporter implements Importer {
         // FIXME: Due to irregularity in inventory data names (1st column in
         // input data file),
         // some extra chars may be extracted into 2nd column (CAS number).
-        Reader fileReader = new DataReader(reader, new InventoryTableParser(formatUnit.fileFormat()));
+        Reader fileReader = new DataReader(reader, 0, new InventoryTableParser(formatUnit.fileFormat()));
 
         loader.load(fileReader, dataset, table);
         loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());

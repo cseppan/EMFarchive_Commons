@@ -10,20 +10,17 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
-import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
-import gov.epa.emissions.commons.io.importer.FixedWidthParser;
+import gov.epa.emissions.commons.io.importer.FixedWidthFileReader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.List;
 
 public class DaySpecPointInventoryImporter implements Importer {
@@ -39,7 +36,7 @@ public class DaySpecPointInventoryImporter implements Importer {
             SqlDataTypes sqlDataTypes) throws ImporterException {
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
-    
+
     public DaySpecPointInventoryImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
@@ -57,7 +54,7 @@ public class DaySpecPointInventoryImporter implements Importer {
         String table = dataTable.name();
 
         try {
-            if(!dataTable.exists(table))
+            if (!dataTable.exists(table))
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -69,8 +66,7 @@ public class DaySpecPointInventoryImporter implements Importer {
     // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
-        Reader fileReader = new DataReader(reader, new FixedWidthParser(formatUnit.fileFormat()));
+        Reader fileReader = new FixedWidthFileReader(file.getAbsolutePath(), formatUnit.fileFormat());
 
         loader.load(fileReader, dataset, table);
         loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());

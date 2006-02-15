@@ -14,15 +14,22 @@ public class DataReader implements Reader {
     private List comments;
 
     private Parser parser;
+    
+    private int lineNumber;
 
-    public DataReader(BufferedReader reader, Parser parser) {
+    private String line;
+
+    public DataReader(BufferedReader reader, int lineNumber, Parser parser) {
         fileReader = reader;
+        this.lineNumber = lineNumber;
         this.parser = parser;
         comments = new ArrayList();
     }
 
     public Record read() throws IOException {
         for (String line = fileReader.readLine(); !isEnd(line); line = fileReader.readLine()) {
+            this.line = line;
+            this.lineNumber++;
             if (isData(line))
                 return parser.parse(line);
             if (isComment(line))
@@ -50,18 +57,16 @@ public class DataReader implements Reader {
 
     
 
-    public void close() {
-        // no op
+    public void close() throws IOException {
+       fileReader.close();
     }
     
     public int lineNumber() {
-        // TODO Auto-generated method stub
-        return 0;
+        return lineNumber;
     }
 
     public String line() {
-        // TODO Auto-generated method stub
-        return null;
+        return line;
     }
 
 }

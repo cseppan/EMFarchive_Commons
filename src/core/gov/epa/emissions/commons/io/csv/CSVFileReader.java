@@ -55,10 +55,7 @@ public class CSVFileReader implements Reader {
         } catch (FileNotFoundException e) {
             log.error("Importer failure: File not found" + "\n" + e);
             throw new ImporterException("Importer failure: File not found");
-        } catch (IOException e) {
-            log.error("Importer failure: Error reading file" + "\n" + e);
-            throw new ImporterException("Importer failure: Error reading file");
-        }
+        } 
     }
 
     public void close() throws IOException {

@@ -64,7 +64,7 @@ public class TemporalReferenceImporter implements Importer {
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        Reader reader = new TemporalReferenceReader(fileReader);
+        Reader reader = new TemporalReferenceReader(fileReader, 0);
 
         loader.load(reader, dataset, table);
         loadDataset(file, table, unit.tableFormat(), reader, dataset);
