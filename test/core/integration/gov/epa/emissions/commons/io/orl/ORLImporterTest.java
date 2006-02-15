@@ -10,7 +10,7 @@ import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.db.version.Versions;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
@@ -208,7 +208,7 @@ public class ORLImporterTest extends HibernateTestCase {
         assertEquals(dataset.getName(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
-        TableFormat tableFormat = new FixedColsTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
+        TableFormat tableFormat = new NonVersionedTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
         String[] actualCols = source.getCols();
         String[] expectedCols = colNames(tableFormat.cols());
         assertEquals(expectedCols.length, actualCols.length);

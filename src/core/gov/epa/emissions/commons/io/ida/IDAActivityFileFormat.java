@@ -2,26 +2,33 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.FillDefaultValues;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IDAActivityFileFormat implements IDAFileFormat {
+public class IDAActivityFileFormat implements IDAFileFormat, FileFormatWithOptionalCols {
 
-    private List cols;
+    private List requiredCols;
 
     private SqlDataTypes sqlDataTypes;
 
-    public IDAActivityFileFormat(SqlDataTypes types) {
-        cols = createCols(types);
+    private List optionalCols;
+
+    private FillDefaultValues filler;
+
+    public IDAActivityFileFormat(SqlDataTypes types, FillDefaultValues filler) {
+        requiredCols = createRequiredCols(types);
         sqlDataTypes = types;
+        this.filler= filler;
     }
 
     public void addPollutantCols(String[] pollutants) {
-        cols.addAll(pollutantCols(pollutants, sqlDataTypes));
+        optionalCols = pollutantCols(pollutants, sqlDataTypes);
     }
 
     public String identify() {
@@ -29,10 +36,13 @@ public class IDAActivityFileFormat implements IDAFileFormat {
     }
 
     public Column[] cols() {
-        return (Column[]) cols.toArray(new Column[0]);
+        List allCols = new ArrayList();
+        allCols.addAll(requiredCols);
+        allCols.addAll(optionalCols);
+        return (Column[])allCols.toArray(new Column[0]);
     }
 
-    private List createCols(SqlDataTypes types) {
+    private List createRequiredCols(SqlDataTypes types) {
         List cols = new ArrayList();
 
         cols.add(new Column("STID", types.intType(), new IntegerFormatter()));
@@ -49,5 +59,17 @@ public class IDAActivityFileFormat implements IDAFileFormat {
             cols.add(col);
         }
         return cols;
+    }
+
+    public Column[] optionalCols() {
+        return (Column[]) optionalCols.toArray(new Column[0]);
+    }
+
+    public Column[] minCols() {
+        return (Column[]) requiredCols.toArray(new Column[0]);
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fill(this, data, datasetId);        
     }
 }

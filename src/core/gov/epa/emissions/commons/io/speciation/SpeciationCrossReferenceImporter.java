@@ -7,7 +7,7 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
@@ -35,7 +35,7 @@ public class SpeciationCrossReferenceImporter implements Importer {
     public SpeciationCrossReferenceImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new SpeciationCrossRefFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new NonVersionedTableFormat(fileFormat, sqlDataTypes);
         create(folder, filenames, dataset, dbServer, fileFormat, tableFormat);
     }
 

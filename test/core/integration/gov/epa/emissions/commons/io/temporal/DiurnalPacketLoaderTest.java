@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
@@ -26,7 +26,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private FixedColsTableFormat tableFormat;
+    private NonVersionedTableFormat tableFormat;
 
     private DataLoader loader;
 
@@ -39,7 +39,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
         typeMapper = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
         DiurnalFileFormat fileFormat = new DiurnalFileFormat(typeMapper);
-        tableFormat = new FixedColsTableFormat(fileFormat, typeMapper);
+        tableFormat = new NonVersionedTableFormat(fileFormat, typeMapper);
 
         createTable("Diurnal_Weekday", datasource, tableFormat);
         loader = new FixedColumnsDataLoader(datasource, tableFormat);

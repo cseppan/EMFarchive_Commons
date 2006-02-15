@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetTypeUnit;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -20,7 +20,7 @@ public class ORLNonRoadImporter implements Importer {
     public ORLNonRoadImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         FileFormatWithOptionalCols fileFormat = new ORLNonRoadFileFormat(sqlDataTypes);
-        TableFormat tableFormat = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = new NonVersionedTableFormat(fileFormat, sqlDataTypes);
 
         create(folder, filePatterns, dataset, dbServer, fileFormat, tableFormat);
     }

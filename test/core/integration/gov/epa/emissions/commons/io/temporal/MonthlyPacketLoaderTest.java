@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
@@ -26,7 +26,7 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    public FixedColsTableFormat tableFormat;
+    public NonVersionedTableFormat tableFormat;
 
     private BufferedReader fileReader;
 
@@ -39,7 +39,7 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
 
         File file = new File("test/data/temporal-profiles/monthly.txt");
         MonthlyFileFormat fileFormat = new MonthlyFileFormat(typeMapper);
-        tableFormat = new FixedColsTableFormat(fileFormat, typeMapper);
+        tableFormat = new NonVersionedTableFormat(fileFormat, typeMapper);
         createTable("Monthly", datasource, tableFormat);
 
         fileReader = new BufferedReader(new FileReader(file));

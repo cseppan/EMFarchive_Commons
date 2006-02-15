@@ -73,17 +73,23 @@ public class IDAImporterTest extends PersistenceTestCase {
     }
 
     // FIXME: something wrong w/ input data file
-    public void FIXME_testShouldImportASmallActivityFile() throws ImporterException {
-        File folder = new File("test/data/ida");
-        String[] fileNames = { "small-activity.txt" };
-        FIXME_IDAActivityImporter importer = new FIXME_IDAActivityImporter(folder, fileNames, dataset, dbServer,
-                sqlDataTypes);
-        importer.run();
+    public void testShouldImportASmallActivityFile() throws ImporterException {
+        try {
+            File folder = new File("test/data/ida");
+            String[] fileNames = { "small-activity.txt" };
+            IDAActivityImporter importer = new IDAActivityImporter(folder, fileNames, dataset, dbServer,
+                    sqlDataTypes);
+            importer.run();
 
-        // assert
-        Datasource datasource = dbServer.getEmissionsDatasource();
-        TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+            // assert
+            Datasource datasource = dbServer.getEmissionsDatasource();
+            TableReader tableReader = tableReader(datasource);
+            assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        } catch (ImporterException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 }

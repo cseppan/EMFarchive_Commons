@@ -7,7 +7,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.orl.ORLNonPointFileFormat;
@@ -43,7 +43,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
     private FileFormatWithOptionalCols setupUnversionedTable() throws SQLException {
         FileFormatWithOptionalCols fileFormat = new SampleFileFormatWithOptionalCols(sqlDataTypes);
-        FixedColsTableFormat format = new FixedColsTableFormat(fileFormat, sqlDataTypes);
+        NonVersionedTableFormat format = new NonVersionedTableFormat(fileFormat, sqlDataTypes);
         createTable(table, datasource, format);
 
         return fileFormat;

@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
@@ -27,7 +27,7 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes typeMapper;
 
-    private FixedColsTableFormat tableFormat;
+    private NonVersionedTableFormat tableFormat;
 
     private FileFormat fileFormat;
 
@@ -39,7 +39,7 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
         datasource = dbServer.getEmissionsDatasource();
 
         fileFormat = new WeeklyFileFormat(typeMapper);
-        tableFormat = new FixedColsTableFormat(fileFormat, typeMapper);
+        tableFormat = new NonVersionedTableFormat(fileFormat, typeMapper);
         createTable("Weekly", datasource, tableFormat);
     }
 

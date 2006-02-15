@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.FixedColsTableFormat;
+import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.SimpleDataset;
 
 import java.io.File;
@@ -19,7 +19,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
 
     private SqlDataTypes dataType;
 
-    private FixedColsTableFormat tableFormat;
+    private NonVersionedTableFormat tableFormat;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -31,7 +31,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
         File file = new File("test/data/orl/SimpleDelimited.txt");
         reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
 
-        tableFormat = new FixedColsTableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
+        tableFormat = new NonVersionedTableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
         createTable("SimpleDelimited", datasource, tableFormat);
     }
 

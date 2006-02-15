@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FixedColsTableFormat implements TableFormat {
+public class NonVersionedTableFormat implements TableFormat {
 
     private FileFormat base;
 
     private SqlDataTypes types;
 
-    public FixedColsTableFormat(FileFormat base, SqlDataTypes types) {
+    public NonVersionedTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
         this.types = types;
     }
