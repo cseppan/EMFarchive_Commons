@@ -25,5 +25,9 @@ public class TextFieldWidget implements Widget {
     public void addKeyListener(KeyListener listener) {
         textfield.addKeyListener(listener);
     }
+    
+    public void addTextListener() {
+        textfield.addTextListener();
+    }
 
 }
