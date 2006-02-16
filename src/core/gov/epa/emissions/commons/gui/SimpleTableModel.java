@@ -7,9 +7,8 @@ import java.util.List;
 
 /**
  * <p>
- * A simple table model with a header. Uses the GOF's <pattern>Decorator</pattern>
- * pattern. Delegates all behavior (except selectable) to the underlying
- * delegate model
+ * A simple table model with a header. Uses the GOF's <pattern>Decorator</pattern> pattern. Delegates all behavior
+ * (except selectable) to the underlying delegate model
  * </p>
  */
 public class SimpleTableModel extends MultiRowHeaderTableModel {
@@ -20,6 +19,10 @@ public class SimpleTableModel extends MultiRowHeaderTableModel {
         this.delegate = delegate;
 
         setColumnHeaders(getDelegateColumnNames());
+    }
+
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return delegate.isCellEditable(rowIndex, columnIndex);
     }
 
     void setColumnHeaders(String[] columnNames) {
@@ -60,5 +63,9 @@ public class SimpleTableModel extends MultiRowHeaderTableModel {
 
     public void refresh() {
         delegate.refresh();
+    }
+
+    public void setValueAt(Object value, int row, int col) {
+        delegate.setValueAt(value, row, col);
     }
 }
