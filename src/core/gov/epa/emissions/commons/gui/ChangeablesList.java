@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangeablesList {
+public class ChangeablesList{
     private List listOfChangeables;
     
     private ChangeObserver window;
