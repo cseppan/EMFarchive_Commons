@@ -14,11 +14,11 @@ public class SelectAwareButton extends Button {
     private ConfirmDialog confirmDialog;
 
     public SelectAwareButton(String label, final Action action, SelectModel model, ConfirmDialog confirmDialog) {
-        super(label,action);
+        super(label, action);
         this.selectModel = model;
         this.threshHold = 5;
         this.confirmDialog = confirmDialog;
-        
+
     }
 
     public SelectAwareButton(String label, final Action action, SelectModel model, int threshHold,
@@ -26,8 +26,8 @@ public class SelectAwareButton extends Button {
         this(label, action, model, confirmDialog);
         this.threshHold = threshHold;
     }
-    
-    protected void addActionListener(final Action action){
+
+    protected void addActionListener(final Action action) {
         addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 if (confirm()) {
@@ -38,11 +38,7 @@ public class SelectAwareButton extends Button {
     }
 
     protected boolean confirm() {
-        int[] selected = selectModel.getSelectedIndexes();
-        int noOfSelected = (selected == null) ? 0 : selected.length;
-        if (noOfSelected > threshHold) {
-            return confirmDialog.confirm();
-        }
-        return true;
+        int selected = selectModel.getSelectedCount();
+        return (selected > threshHold) ? confirmDialog.confirm() : true;
     }
 }

@@ -2,5 +2,5 @@ package gov.epa.emissions.commons.gui;
 
 public interface SelectModel {
 
-    public int[] getSelectedIndexes();
+    public int getSelectedCount();
 }

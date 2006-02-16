@@ -10,9 +10,8 @@ import org.apache.commons.collections.primitives.IntList;
 
 /**
  * <p>
- * A table that adds the 'selectable' behavior to a MultiRowHeaderTableModel.
- * Uses the GOF's <pattern>Decorator</pattern> pattern. Delegates all behavior
- * (except selectable) to the underlying delegate model
+ * A table that adds the 'selectable' behavior to a MultiRowHeaderTableModel. Uses the GOF's <pattern>Decorator</pattern>
+ * pattern. Delegates all behavior (except selectable) to the underlying delegate model
  * </p>
  */
 public class SortFilterSelectModel extends MultiRowHeaderTableModel implements SelectModel {
@@ -103,6 +102,10 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         }
 
         return (String[]) names.toArray(new String[0]);
+    }
+
+    public int getSelectedCount() {
+        return getSelectedIndexes().length;
     }
 
     public int[] getSelectedIndexes() {

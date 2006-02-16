@@ -92,6 +92,6 @@ public class SortFilterSelectModelTest extends MockObjectTestCase {
         
         model.refresh();
         
-        assertEquals(0, model.getSelectedIndexes().length);
+        assertEquals(0, model.getSelectedCount());
     }
 }
