@@ -8,6 +8,8 @@ public interface Widget {
     JComponent element();
 
     String value();
+    
+    void addChangeable(ManageChangeables changeablesList);
 
     void addKeyListener(KeyListener listener);
 }

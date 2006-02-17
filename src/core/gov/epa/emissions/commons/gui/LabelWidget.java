@@ -26,4 +26,8 @@ public class LabelWidget implements Widget {
         // ignored. Not Applicable
     }
 
+    public void addChangeable(ManageChangeables changeablesList) {
+        // NOTE no need to implement
+    }
+
 }

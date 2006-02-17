@@ -6,7 +6,6 @@ import java.awt.event.KeyListener;
 import javax.swing.JComponent;
 
 public class TextFieldWidget implements Widget {
-
     private TextField textfield;
 
     public TextFieldWidget(String name, String value, int size) {
@@ -27,6 +26,11 @@ public class TextFieldWidget implements Widget {
     }
     
     public void addTextListener() {
+        textfield.addTextListener();
+    }
+    
+    public void addChangeable(ManageChangeables changeablesList) {
+        changeablesList.addChangeable(textfield);
         textfield.addTextListener();
     }
 
