@@ -72,7 +72,6 @@ public class IDAImporterTest extends PersistenceTestCase {
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
-    // FIXME: something wrong w/ input data file
     public void testShouldImportASmallActivityFile() throws ImporterException {
         try {
             File folder = new File("test/data/ida");
