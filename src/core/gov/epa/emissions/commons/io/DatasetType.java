@@ -24,6 +24,8 @@ public class DatasetType implements Serializable, Lockable {
 
     private List keywordsList;
 
+    private String defaultSortOrder;
+    
     private String importerClassName;
 
     private String exporterClassName;
@@ -155,5 +157,13 @@ public class DatasetType implements Serializable, Lockable {
 
     public boolean isLocked() {
         return lock.isLocked();
+    }
+
+    public String getDefaultSortOrder() {
+        return defaultSortOrder;
+    }
+
+    public void setDefaultSortOrder(String defaultSortOrder) {
+        this.defaultSortOrder = defaultSortOrder;
     }
 }
