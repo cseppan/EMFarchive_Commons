@@ -86,7 +86,6 @@ public class IDAImporterTest extends PersistenceTestCase {
             assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
         } catch (ImporterException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
             throw e;
         }
     }
