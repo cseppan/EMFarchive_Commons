@@ -41,6 +41,7 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
 
     private String createQuery(Version version, String table, String columnFilter, String rowFilter, String sortOrder,
             Session session) {
+
         String versions = fetchCommaSeparatedVersionSequence(version, session);
 
         String columnFilterClause = columnFilterClause(columnFilter);
@@ -83,9 +84,8 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
                 + versions + ") AND " + deleteClause;
         String rowFilterClause = defaultRowFilterClause;
         if ((rowFilter != null) && (rowFilter.length() > 0)) {
-            rowFilterClause = defaultRowFilterClause + rowFilter;
+            rowFilterClause = defaultRowFilterClause + " AND " + rowFilter;
         }
-
         return rowFilterClause;
     }
 

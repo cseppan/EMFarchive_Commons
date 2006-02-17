@@ -145,7 +145,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setDatasetId(datasetId);
         versionZero.setVersion(0);
 
-        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null, "AND col_three = 'R87'", null,
+        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null, "col_three = 'R87'", null,
                 session);
 
         assertEquals(1, records.length);
@@ -185,7 +185,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setVersion(0);
 
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null,
-                "AND col_one = 'A91' OR col_three = 'R87'", null, session);
+                "col_one = 'A91' OR col_three = 'R87'", null, session);
 
         assertEquals(2, records.length);
 
@@ -237,7 +237,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setVersion(0);
 
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null,
-                "AND col_one = 'A91' OR col_three = 'R87'", "col_four", session);
+                "col_one = 'A91' OR col_three = 'R87'", "col_four", session);
 
         assertEquals(2, records.length);
 
@@ -290,7 +290,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setVersion(0);
 
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null,
-                "AND col_one = 'A91' OR col_three = 'R87' OR col_five='B12'", "col_five", session);
+                "col_one = 'A91' OR col_three = 'R87' OR col_five='B12'", "col_five", session);
 
         assertEquals(3, records.length);
 
@@ -354,7 +354,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setVersion(0);
 
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null,
-                "AND (col_one = 'A91' OR col_three = 'R87' OR col_five='B12' OR col_two='T18' OR col_two='F99')", "col_five,col_one", session);
+                "(col_one = 'A91' OR col_three = 'R87' OR col_five='B12' OR col_two='T18' OR col_two='F99')", "col_five,col_one", session);
 
         assertEquals(5, records.length);
 
