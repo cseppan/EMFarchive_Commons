@@ -7,22 +7,17 @@ import javax.swing.text.Document;
 
 public class TextArea extends JTextArea implements Changeable {
     private ChangeablesList listOfChangeables;
-    
+
     private boolean changed = false;
-    
+
     public TextArea(String name, String value) {
         this(name, value, 40);
     }
-    
+
     public TextArea(String name, String value, int width) {
-        super.setName(name);
-        super.setText(value);
-        super.setRows(4);
-        super.setLineWrap(true);
-        super.setCaretPosition(0);
-        super.setColumns(width);
+        this(name, value, width, 4);
     }
-    
+
     public TextArea(String name, String value, int width, int rows) {
         super.setName(name);
         super.setText(value);
@@ -31,7 +26,7 @@ public class TextArea extends JTextArea implements Changeable {
         super.setCaretPosition(0);
         super.setColumns(width);
     }
-    
+
     public void addTextListener() {
         Document nameDoc = this.getDocument();
         nameDoc.addDocumentListener(new DocumentListener() {
@@ -48,11 +43,11 @@ public class TextArea extends JTextArea implements Changeable {
             }
         });
     }
-    
+
     public void clear() {
         this.changed = false;
     }
-    
+
     private void notifyChanges() {
         this.changed = true;
         this.listOfChangeables.onChanges();

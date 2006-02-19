@@ -12,4 +12,11 @@ public class ScrollableTextArea extends JScrollPane {
         super.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 
+    public static ScrollableTextArea createWithVerticalScrollBar(TextArea text) {
+        ScrollableTextArea scrollable = new ScrollableTextArea(text);
+        scrollable.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        return scrollable;
+    }
+
 }
