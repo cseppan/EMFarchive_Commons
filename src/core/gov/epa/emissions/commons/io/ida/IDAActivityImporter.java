@@ -124,12 +124,10 @@ public class IDAActivityImporter implements Importer {
         Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
         loader.load(reader, dataset, table);
 
-        loadDataset(file,table, tableFormat, reader.comments(), dataset);
+        loadDataset(reader.comments(), dataset);
     }
     
-    private void loadDataset(File file, String table, TableFormat tableFormat, List commentsList, Dataset dataset) {
-        DatasetLoader loader = new DatasetLoader(dataset);
-        loader.internalSource(file, table, tableFormat);
+    private void loadDataset(List commentsList, Dataset dataset) {
         Comments comments = new Comments(commentsList);
         dataset.setDescription(comments.all());
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());

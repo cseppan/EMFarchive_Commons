@@ -85,12 +85,10 @@ public class IDAImporter {
         Reader idaReader = new FixedWidthFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
         IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
         loader.load(idaReader, dataset, table);
-        loadDataset(file, table, unit.tableFormat(), idaReader.comments(), dataset);
+        loadDataset(idaReader.comments(), dataset);
     }
 
-    private void loadDataset(File file, String table, TableFormat tableFormat, List commentsList, Dataset dataset) {
-        DatasetLoader loader = new DatasetLoader(dataset);
-        loader.internalSource(file, table, tableFormat);
+    private void loadDataset(List commentsList, Dataset dataset) {
         dataset.setUnits("short tons/year");
         Comments comments = new Comments(commentsList);
         dataset.setDescription(comments.all());
