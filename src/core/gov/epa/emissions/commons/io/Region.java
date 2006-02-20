@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io;
 
 import java.io.Serializable;
 
-public class Region implements Serializable {
+public class Region implements Serializable, Comparable{
 
     private long id;
 
@@ -56,5 +56,9 @@ public class Region implements Serializable {
 
     public String toString() {
         return getName();
+    }
+
+    public int compareTo(Object o) {
+        return name.compareTo(((Region) o).getName());
     }
 }

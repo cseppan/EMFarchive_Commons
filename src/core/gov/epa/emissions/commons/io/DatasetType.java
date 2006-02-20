@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class DatasetType implements Serializable, Lockable {
+public class DatasetType implements Serializable, Lockable, Comparable{
 
     private long id;
 
@@ -165,5 +165,9 @@ public class DatasetType implements Serializable, Lockable {
 
     public void setDefaultSortOrder(String defaultSortOrder) {
         this.defaultSortOrder = defaultSortOrder;
+    }
+
+    public int compareTo(Object o) {
+        return name.compareTo(((DatasetType) o).getName());
     }
 }
