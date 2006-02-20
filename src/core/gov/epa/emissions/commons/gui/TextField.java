@@ -7,7 +7,7 @@ import javax.swing.text.Document;
 
 public class TextField extends JTextField implements Changeable {
     private ChangeablesList listOfChangeables;
-    
+
     private boolean changed = false;
 
     public TextField(String name, int size) {
@@ -19,7 +19,7 @@ public class TextField extends JTextField implements Changeable {
         this(name, size);
         super.setText(value);
     }
-    
+
     public void addTextListener() {
         Document nameDoc = this.getDocument();
         nameDoc.addDocumentListener(new DocumentListener() {
@@ -36,11 +36,11 @@ public class TextField extends JTextField implements Changeable {
             }
         });
     }
-    
+
     public void clear() {
         this.changed = false;
     }
-    
+
     private void notifyChanges() {
         changed = true;
         this.listOfChangeables.onChanges();
@@ -52,5 +52,9 @@ public class TextField extends JTextField implements Changeable {
 
     public void observe(ChangeablesList list) {
         this.listOfChangeables = list;
+    }
+
+    public boolean isEmpty() {
+        return getText().trim().length() == 0;
     }
 }

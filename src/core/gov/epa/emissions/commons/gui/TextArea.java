@@ -61,4 +61,8 @@ public class TextArea extends JTextArea implements Changeable {
         this.listOfChangeables = list;
     }
 
+    public boolean isEmpty() {
+        return getText().trim().length() == 0;
+    }
+
 }
