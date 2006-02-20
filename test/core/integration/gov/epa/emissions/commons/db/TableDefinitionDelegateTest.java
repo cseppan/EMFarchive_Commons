@@ -24,7 +24,7 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
         datasource = dbServer.getEmissionsDatasource();
     }
 
-    public void testShouldGetTableMetaDataForTableWithOneType() {
+    public void testShouldGetTableMetaDataForTableWithOneType() throws Exception {
         String[] names = { "table1" };
         try {
             TableDefinitionDelegate definition = new TableDefinitionDelegate(datasource.getConnection());
@@ -41,20 +41,12 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
             assertEquals("column type should match", tmd.getCols()[0].getType(), "java.lang.String");
             assertEquals("column size should match", tmd.getCols()[0].getSize(), 15);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
-            try {
-                dropTables(names);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            dropTables(names);
         }
     }
 
-    public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() {
+    public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() throws Exception {
         String[] names = { "table1" };
         try {
             TableDefinitionDelegate definition = new TableDefinitionDelegate(datasource.getConnection());
@@ -102,16 +94,8 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
             assertEquals("column type should match", tmd.getCols()[7].getType(), "java.lang.String");
             assertEquals("column size should match", tmd.getCols()[7].getSize(), -5);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
-            try {
-                dropTables(names);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            dropTables(names);
         }
     }
 
