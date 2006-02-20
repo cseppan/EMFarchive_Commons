@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,11 +10,14 @@ public class FilePatternMatcher {
 
     private Pattern pattern;
 
-    public FilePatternMatcher(String filePattern) throws ImporterException {
-        this.pattern = Pattern.compile(pattern(filePattern));
+    public FilePatternMatcher(File folder, String filePattern) throws ImporterException {
+        this.pattern = Pattern.compile(pattern(folder, filePattern));
     }
 
-    private String pattern(String filePattern) throws ImporterException {
+    private String pattern(File folder, String filePattern) throws ImporterException {
+        if(new File(folder, filePattern).exists())
+            return filePattern;
+        
         String regExPattern = filePattern;
         StringBuffer sb = new StringBuffer(regExPattern);
         int index = regExPattern.indexOf(".");

@@ -34,7 +34,7 @@ public class FilesFromPattern {
     private File[] extractFileNames(File folder, String filePattern) throws ImporterException {
         String[] fileNamesInFolder = fileNames(folder);
 
-        FilePatternMatcher matcher = new FilePatternMatcher(filePattern);
+        FilePatternMatcher matcher = new FilePatternMatcher(folder, filePattern);
         String[] matchedFileNames = matcher.matchingNames(fileNamesInFolder);
         if (matchedFileNames == null || matchedFileNames.length == 0) {
             throw new ImporterException("There are no files found in the directory '" + folder.getAbsolutePath()
