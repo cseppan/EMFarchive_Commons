@@ -55,6 +55,7 @@ public class CountryStateCountyDataImporter implements Importer {
 
     public void run() throws ImporterException {
         try {
+            int lineNumber = 0;
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
 
             while (!isEndOfFile(fileReader)) {
@@ -68,22 +69,25 @@ public class CountryStateCountyDataImporter implements Importer {
                 if(!dataTable.exists(table))
                     dataTable.create(table, unit.tableFormat());
                 
-                doImport(fileReader, dataset, unit, header);
+                lineNumber = doImport(fileReader, lineNumber, dataset, unit, header);
             }
         } catch (Exception e) {
+            Throwable t = e.getCause();
+            String message = (t==null)?e.getMessage():t.getMessage();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName()+"\n"+e.getMessage());
+                    + dataset.getName()+"\n"+message);
         }
     }
 
-    private void doImport(BufferedReader fileReader, Dataset dataset, DatasetTypeUnit unit, String header)
+    private int doImport(BufferedReader fileReader, int lineNumber, Dataset dataset, DatasetTypeUnit unit, String header)
             throws ImporterException {
-        Reader reader = new CountryStateCountyFileReader(fileReader, header,
-                new InventoryTableParser(unit.fileFormat()));
+        Reader reader = new CountryStateCountyFileReader(fileReader, lineNumber,
+                header, new InventoryTableParser(unit.fileFormat()));
         DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
         loadDataset(file, table(header), unit.tableFormat(), dataset);
+        return reader.lineNumber();
     }
 
     // TODO: revisit ?

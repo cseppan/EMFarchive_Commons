@@ -68,7 +68,7 @@ public class TemporalProfileImporter implements Importer {
             }
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName());
+                    + dataset.getName() + "\n" + e.getMessage());
         }
     }
 
@@ -79,7 +79,10 @@ public class TemporalProfileImporter implements Importer {
     private void doImport(BufferedReader fileReader, DatasetTypeUnit unit, String header) throws Exception {
         DataTable dataTable = new DataTable(dataset, datasource);
         try {
-            dataTable.create(table(header), unit.tableFormat());
+            String tableName = table(header);
+            if (!dataTable.exists(tableName)) {
+                dataTable.create(tableName, unit.tableFormat());
+            }
             doImport(fileReader, dataset, unit, header);
         } catch (Exception e) {
             dataTable.drop(table(header));
