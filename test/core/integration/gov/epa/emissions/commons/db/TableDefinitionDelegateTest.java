@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
-import gov.epa.emissions.commons.io.TableMetaData;
+import gov.epa.emissions.commons.io.TableMetadata;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.sql.SQLException;
@@ -27,16 +27,15 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
     public void testShouldGetTableMetaDataForTableWithOneType() throws Exception {
         String[] names = { "table1" };
         try {
-            TableDefinitionDelegate definition = new TableDefinitionDelegate(datasource.getConnection());
-            if (definition.tableExist(names[0]))
+            TableDefinition definition = datasource.tableDefinition();
+            if (definition.tableExists(names[0]))
                 dropTables(names);
 
             createTables(names);
-            while (!definition.tableExist(names[0])) {
+            while (!definition.tableExists(names[0])) {
                 // busy wait for table to be created
             }
-            TableMetaData tmd = definition.getTableMetaData("table1");
-            assertEquals("table name should match", tmd.getTable(), "table1");
+            TableMetadata tmd = definition.getTableMetaData("table1");
             assertEquals("column name should match", tmd.getCols()[0].getName(), "col1");
             assertEquals("column type should match", tmd.getCols()[0].getType(), "java.lang.String");
             assertEquals("column size should match", tmd.getCols()[0].getSize(), 15);
@@ -49,15 +48,14 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
     public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() throws Exception {
         String[] names = { "table1" };
         try {
-            TableDefinitionDelegate definition = new TableDefinitionDelegate(datasource.getConnection());
-            if (definition.tableExist(names[0]))
+            TableDefinition definition = datasource.tableDefinition();
+            if (definition.tableExists(names[0]))
                 dropTables(names);
 
             createTablesWithMultipleColumns(names);
 
-            TableMetaData tmd = definition.getTableMetaData("table1");
+            TableMetadata tmd = definition.getTableMetaData("table1");
 
-            assertEquals("table name should match", tmd.getTable(), "table1");
             assertEquals("column name should match", tmd.getCols()[0].getName(), "col1");
             assertEquals("column type should match", tmd.getCols()[0].getType(), "java.lang.String");
             assertEquals("column size should match", tmd.getCols()[0].getSize(), 15);

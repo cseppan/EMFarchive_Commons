@@ -42,7 +42,7 @@ public class EditableTable extends JTable implements Editor,Changeable {
         this.changed = false;
     }
     
-    private void notifyChanges() {
+    void notifyChanges() {
         this.changed = true;
         this.listOfChangeables.onChanges();
     }

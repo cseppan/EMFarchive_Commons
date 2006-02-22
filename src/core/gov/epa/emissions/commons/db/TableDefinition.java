@@ -1,11 +1,21 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.io.TableMetadata;
+
 import java.sql.SQLException;
 import java.util.List;
 
 public interface TableDefinition {
 
     List getTableNames() throws SQLException;
+    
+    void createTable(String table, DbColumn[] cols) throws SQLException;
+
+    void dropTable(String table) throws SQLException;
+
+    boolean tableExists(String tableName) throws Exception;
+    
+    TableMetadata getTableMetaData(String tableName) throws SQLException;
 
     // FIXME: legacy. Remove when new Importers/Exporters are complete
     void createTableWithOverwrite(String table, String[] colNames, String[] colTypes, String[] primaryCols)
@@ -14,11 +24,7 @@ public interface TableDefinition {
     // FIXME: legacy. Remove when new Importers/Exporters are complete
     void createTable(String table, String[] colNames, String[] colTypes, String primaryCol) throws SQLException;
 
-    void createTable(String table, DbColumn[] cols) throws SQLException;
-
-    void dropTable(String table) throws SQLException;
-
-    boolean tableExists(String tableName) throws Exception;
+    
 
     /**
      * ALTER TABLE ADD INDEX indexName (indexColumnNames0, indexColumnNames1,

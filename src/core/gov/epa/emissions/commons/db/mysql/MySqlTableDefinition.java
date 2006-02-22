@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.db.mysql;
 import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.TableDefinitionDelegate;
+import gov.epa.emissions.commons.io.TableMetadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -138,6 +139,11 @@ public class MySqlTableDefinition implements TableDefinition {
 
     private String qualified(String table) {
         return schema + "." + table;
+    }
+
+    public TableMetadata getTableMetaData(String tableName) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

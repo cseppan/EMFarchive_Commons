@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.db;
 
 import gov.epa.emissions.commons.io.ColumnMetaData;
-import gov.epa.emissions.commons.io.TableMetaData;
+import gov.epa.emissions.commons.io.TableMetadata;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -25,12 +25,9 @@ public class TableDefinitionDelegate {
      * the column meta data values (label, size and type/class)
      * in a TableMetaData object
      */
-    public TableMetaData getTableMetaData(String table) throws SQLException {
-        // FIXME: re-evaluate if this is the best way to do this
-        // Perhaps use a datasource
-        String query = "SELECT * FROM emissions." + table;
-
-        TableMetaData tableMeta = new TableMetaData(table);
+    public TableMetadata getTableMetaData(String table) throws SQLException {
+        String query = "SELECT * FROM "+table;
+        TableMetadata tableMeta = new TableMetadata(table);
 
         ResultSet rs = connection.createStatement().executeQuery(query);
         ResultSetMetaData rsmd = rs.getMetaData();

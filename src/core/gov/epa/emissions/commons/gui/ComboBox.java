@@ -80,7 +80,7 @@ public class ComboBox extends JComboBox implements Changeable {
         this.changed = false;
     }
     
-    private void notifyChanges() {
+    void notifyChanges() {
         changed = true;
         this.listOfChangeables.onChanges();
     }

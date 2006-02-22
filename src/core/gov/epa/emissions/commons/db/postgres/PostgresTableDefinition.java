@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.db.postgres;
 import gov.epa.emissions.commons.db.DbColumn;
 import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.TableDefinitionDelegate;
+import gov.epa.emissions.commons.io.TableMetadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -132,6 +133,10 @@ public class PostgresTableDefinition implements TableDefinition {
 
         queryString = queryString + ")";
         execute(queryString);
+    }
+
+    public TableMetadata getTableMetaData(String tableName) throws SQLException {
+       return delegate.getTableMetaData(qualified(tableName));
     }
 
 }

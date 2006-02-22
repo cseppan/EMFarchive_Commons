@@ -5,17 +5,17 @@ import java.util.List;
 
 import gov.epa.emissions.commons.io.ColumnMetaData;
 
-public class TableMetaData {
+public class TableMetadata {
 
     private String table;
     private List cols;
 
-    public TableMetaData() {
+    public TableMetadata() {
         super();
         cols = new ArrayList();
     }
 
-    public TableMetaData(String table){
+    public TableMetadata(String table){
         this();
         this.table= table;
     }

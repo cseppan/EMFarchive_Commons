@@ -43,7 +43,7 @@ public class FormattedTextField extends JFormattedTextField implements Changeabl
         this.changed = false;
     }
     
-    private void notifyChanges() {
+    void notifyChanges() {
         changed = true;
         listOfChangeables.onChanges();
     }
