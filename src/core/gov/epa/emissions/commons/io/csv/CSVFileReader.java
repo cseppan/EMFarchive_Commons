@@ -126,6 +126,9 @@ public class CSVFileReader implements Reader {
     }
 
     private void detectDelimiter() throws ImporterException {
+        if(file.length() == 0)
+            throw new ImporterException("File: " + file.getAbsolutePath() + " is empty.");
+
         try {
             String line = fileReader.readLine();
             fileReader.mark((int) file.length()); // FIXME: what if file gets too big?
