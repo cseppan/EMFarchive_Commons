@@ -1,19 +1,22 @@
 package gov.epa.emissions.commons.gui;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
-public class EditableTable extends JTable implements Editor,Changeable {
+public class EditableTable extends JTable implements Editor, Changeable {
     private ChangeablesList listOfChangeables;
-    
+
     private boolean changed = false;
-    
+
     public EditableTable(TableModel tableModel) {
         super(tableModel);
         setRowHeight(25);
+    }
+
+    public void setValueAt(Object value, int row, int column) {
+        super.setValueAt(value, row, column);
+        if (super.dataModel.isCellEditable(row, column))
+            notifyChanges();
     }
 
     public void commit() {
@@ -21,27 +24,11 @@ public class EditableTable extends JTable implements Editor,Changeable {
             getCellEditor().stopCellEditing();
         }
     }
-    
-    public void addListeners() {
-        addKeyListener(new KeyListener() {
-            public void keyPressed(KeyEvent e) {
-                notifyChanges();
-            }
-            
-            public void keyReleased(KeyEvent e) {
-                notifyChanges();
-            }
-            
-            public void keyTyped(KeyEvent e) {
-                notifyChanges();
-            }
-        });
-    }
-    
+
     public void clear() {
         this.changed = false;
     }
-    
+
     void notifyChanges() {
         this.changed = true;
         this.listOfChangeables.onChanges();
