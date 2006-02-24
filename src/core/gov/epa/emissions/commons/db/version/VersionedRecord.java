@@ -1,11 +1,13 @@
 package gov.epa.emissions.commons.db.version;
 
-import gov.epa.emissions.commons.Record;
+
+
+import gov.epa.emissions.commons.db.DatabaseRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VersionedRecord extends Record {
+public class VersionedRecord extends DatabaseRecord {
 
     private int recordId;
 
@@ -76,5 +78,10 @@ public class VersionedRecord extends Record {
 
     private int numVersionCols() {
         return 4;
+    }
+
+    public void replace(int i, Object val) {
+        // TODO Auto-generated method stub
+        
     }
 }

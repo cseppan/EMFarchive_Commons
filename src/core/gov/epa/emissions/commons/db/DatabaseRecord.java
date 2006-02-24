@@ -1,0 +1,52 @@
+package gov.epa.emissions.commons.db;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class DatabaseRecord {
+
+    private List tokens;
+
+    public DatabaseRecord() {
+        this.tokens = new ArrayList();
+    }
+
+    public Object token(int position) {
+        return tokens.get(position);
+    }
+
+    public int size() {
+        return tokens.size();
+    }
+
+    public void add(Object token) {
+        tokens.add(token);
+    }
+
+    public void add(List list) {
+        tokens.addAll(list);
+    }
+
+    public List tokens() {
+        return tokens;
+    }
+
+    public Object[] getTokens() {
+        return tokens.toArray();
+    }
+
+    public void setTokens(Object[] objects) {
+        tokens.clear();
+        tokens.addAll(Arrays.asList(objects));
+    }
+    
+    /**
+     * Replace the token at the position with the new token
+     */
+    public void replace(int position, Object newToken) {
+        tokens.add(position, newToken);
+        tokens.remove(position + 1);
+    }
+
+}

@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.db.version;
 
-import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.db.DatabaseRecord;
 import gov.epa.emissions.commons.db.Datasource;
 
 import java.sql.SQLException;
@@ -48,7 +48,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         assertEquals(10, records.length);
 
         for (int i = 0; i < records.length; i++) {
-            Record rec = records[i];
+            DatabaseRecord rec = records[i];
             List all = rec.tokens();
 
             assertEquals(6, all.size());
@@ -151,7 +151,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         assertEquals(1, records.length);
 
         for (int i = 0; i < records.length; i++) {
-            Record rec = records[i];
+            DatabaseRecord rec = records[i];
             List all = rec.tokens();
 
             assertEquals(6, all.size());
@@ -190,7 +190,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         assertEquals(2, records.length);
 
         for (int i = 0; i < records.length; i++) {
-            Record rec = records[i];
+            DatabaseRecord rec = records[i];
             List all = rec.tokens();
 
             assertEquals(6, all.size());
@@ -242,7 +242,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         assertEquals(2, records.length);
 
         for (int i = 0; i < records.length; i++) {
-            Record rec = records[i];
+            DatabaseRecord rec = records[i];
             List all = rec.tokens();
 
             assertEquals(6, all.size());
@@ -295,7 +295,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         assertEquals(3, records.length);
 
         for (int i = 0; i < records.length; i++) {
-            Record rec = records[i];
+            DatabaseRecord rec = records[i];
             List all = rec.tokens();
 
             assertEquals(6, all.size());
@@ -359,7 +359,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         assertEquals(5, records.length);
 
         for (int i = 0; i < records.length; i++) {
-            Record rec = records[i];
+            DatabaseRecord rec = records[i];
             List all = rec.tokens();
 
             assertEquals(6, all.size());
