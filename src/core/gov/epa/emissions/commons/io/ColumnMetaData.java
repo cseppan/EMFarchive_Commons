@@ -3,7 +3,9 @@ package gov.epa.emissions.commons.io;
 public class ColumnMetaData {
 
     private String name;
+    
     private String type;
+    
     private int size;
     
     public ColumnMetaData() {

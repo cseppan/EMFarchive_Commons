@@ -34,7 +34,7 @@ public class TableDefinitionDelegate {
         int colCount = rsmd.getColumnCount();
 
         for (int i = 1; i <= colCount; i++) {
-            ColumnMetaData col = new ColumnMetaData(rsmd.getColumnLabel(i), rsmd.getColumnClassName(i), rsmd.getColumnDisplaySize(i));
+            ColumnMetaData col = new ColumnMetaData(rsmd.getColumnLabel(i),rsmd.getColumnClassName(i) , rsmd.getColumnDisplaySize(i));
             tableMeta.addColumnMetaData(col);
         }
 

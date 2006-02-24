@@ -47,7 +47,7 @@ public class CellEditor extends AbstractCellEditor implements TableCellEditor {
             return false;
         }
 
-        Class columnClass = getColumnClass(column.getType());
+        Class columnClass = classType(column.getType());
         if (columnClass == Double.class || columnClass == Float.class) {
             return doubleValue(value);
         } else if (columnClass == Integer.class) {
@@ -56,6 +56,14 @@ public class CellEditor extends AbstractCellEditor implements TableCellEditor {
 
         this.value = editedValue;
         return true;
+    }
+
+    private Class classType(String type) {
+        try {
+            return Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e.getMessage());//TODO: what to do with the exception
+        }
     }
 
     private boolean sizeCheck(String value, int size) {
@@ -72,14 +80,6 @@ public class CellEditor extends AbstractCellEditor implements TableCellEditor {
             return true;
         } catch (NumberFormatException e) {
             return false;
-        }
-    }
-
-    private Class getColumnClass(String type) {
-        try {
-            return Class.forName(type);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e.getMessage());
         }
     }
 
