@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -49,6 +50,11 @@ public class SortFilterSelectUsersLauncher {
         }
 
         public void refresh() {// Stub
+        }
+
+        public List elements(int[] selected) {
+            // TODO Auto-generated method stub
+            return null;
         }
 
     }

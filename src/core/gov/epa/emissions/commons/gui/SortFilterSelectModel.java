@@ -123,4 +123,9 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         delegate.refresh();
         resetSelections();
     }
+
+    public List selected() {
+        int[] selected = getSelectedIndexes();
+        return delegate.elements(selected);
+    }
 }
