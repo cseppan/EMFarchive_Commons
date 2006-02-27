@@ -44,7 +44,9 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         for (int i = 1; i <= 394; i++) {
             String data1 = "P1_" + i;
             String data2 = "P2_" + i;
-            addRecord(datasource, dataTable, new String[] { i + "", "1", "5", "3,4", data1, data2 });
+            String data3 = "2";
+            String data4 = "3.0";
+            addRecord(datasource, dataTable, new String[] { i + "", "1", "5", "3,4", data1, data2, data3, data4 });
         }
     }
 
@@ -62,8 +64,10 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
             public Column[] minCols() {
                 Column p1 = new Column("p1", types.text());
                 Column p2 = new Column("p2", types.text());
+                Column p3 = new Column("p3", types.intType());
+                Column p4 = new Column("p4", types.realType());
 
-                return new Column[] { p1, p2 };
+                return new Column[] { p1, p2, p3, p4 };
             }
 
             public String identify() {
@@ -149,7 +153,7 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
     public void testFetchFirstRecord() throws Exception {
         VersionedRecord record = results.next();
         assertNotNull("Should be able to fetch first record", record);
-        assertEquals(3, record.size());// including comments
+        assertEquals(5, record.size());// including comments
 
         assertEquals(1, record.getRecordId());
         assertEquals(1, record.getDatasetId());
@@ -157,6 +161,10 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         assertEquals("3,4", record.getDeleteVersions());
         assertEquals("P1_1", record.token(0));
         assertEquals("P2_1", record.token(1));
+        assertEquals(Integer.class, record.token(2).getClass());
+        assertEquals(new Integer(2), record.token(2));
+        assertEquals(Float.class, record.token(3).getClass());
+        assertEquals(3.0, ((Float)record.token(3)).floatValue(), 0.000001);
     }
 
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultScrollableVersionedRecords implements ScrollableVersionedRecords {
+
     private Datasource datasource;
 
     private String query;
@@ -80,9 +81,9 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
         record.setVersion(resultSet.getInt("version"));
         record.setDeleteVersions(resultSet.getString("delete_versions"));
 
-        for (int i = 5; i <= columnCount(); i++)
-            record.add(resultSet.getString(i));
-
+        for (int i = 5; i <= columnCount(); i++) {
+            record.add(resultSet.getObject(i));
+        }
         return record;
     }
 
@@ -102,9 +103,9 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
 
         List range = new ArrayList();
         int max = total();
-        for (int i = start; (i <= end) && (i < max); i++)
+        for (int i = start; (i <= end) && (i < max); i++) {
             range.add(next());
-
+        }
         return (VersionedRecord[]) range.toArray(new VersionedRecord[0]);
     }
 

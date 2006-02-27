@@ -80,8 +80,4 @@ public class VersionedRecord extends DatabaseRecord {
         return 4;
     }
 
-    public void replace(int i, Object val) {
-        // TODO Auto-generated method stub
-        
-    }
 }
