@@ -24,10 +24,6 @@ public class DatabaseRecord {
         tokens.add(token);
     }
 
-    public void add(List list) {
-        tokens.addAll(list);
-    }
-
     public List tokens() {
         return tokens;
     }
@@ -40,7 +36,7 @@ public class DatabaseRecord {
         tokens.clear();
         tokens.addAll(Arrays.asList(objects));
     }
-    
+
     /**
      * Replace the token at the position with the new token
      */

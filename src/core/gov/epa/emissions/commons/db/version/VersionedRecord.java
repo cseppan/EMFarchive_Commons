@@ -1,7 +1,5 @@
 package gov.epa.emissions.commons.db.version;
 
-
-
 import gov.epa.emissions.commons.db.DatabaseRecord;
 
 import java.util.ArrayList;
@@ -71,9 +69,19 @@ public class VersionedRecord extends DatabaseRecord {
         data.add(2, version.getVersion() + "");// version
         data.add(3, "");// delete versions
 
-        data.addAll(numVersionCols(), tokens());// add all specified data
+        data.addAll(numVersionCols(), tokensStrings(tokens()));// add all specified data
 
         return (String[]) data.toArray(new String[0]);
+    }
+
+    private List tokensStrings(List tokens) {
+        List stringTokens = new ArrayList();
+        for (int i = 0; i < tokens.size(); i++) {
+            Object object = tokens.get(i);
+            String stringValue = (object == null) ? "" : "" + object;
+            stringTokens.add(stringValue);
+        }
+        return stringTokens;
     }
 
     private int numVersionCols() {
