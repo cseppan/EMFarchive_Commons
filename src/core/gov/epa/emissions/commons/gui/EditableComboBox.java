@@ -17,7 +17,7 @@ public class EditableComboBox extends JComboBox implements Changeable {
         setEditable(true);
     }
     
-    public void addListeners() {
+    private void addListeners() {
         addItemChangeListener();
         addKeyMotionListener();
     }
@@ -61,5 +61,6 @@ public class EditableComboBox extends JComboBox implements Changeable {
 
     public void observe(ChangeablesList list) {
         this.listOfChangeables = list;
+        addListeners();
     }
 }

@@ -15,19 +15,15 @@ import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 public class ComboBox extends JComboBox implements Changeable {
     private ChangeablesList listOfChangeables;
-    
+
     private boolean changed = false;
 
-    public ComboBox() {
-        super();
-    }
-
-    public ComboBox(String defaultString, Object[] objects) {
+    public ComboBox(String defaultValue, Object[] objects) {
         List list = new ArrayList(Arrays.asList(objects));
-        list.add(0, defaultString);
+        list.add(0, defaultValue);
         DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
         setModel(model);
-        setRenderer(new ComboBoxRenderer(defaultString));
+        setRenderer(new ComboBoxRenderer(defaultValue));
     }
 
     public Object getSelectedItem() {
@@ -67,19 +63,19 @@ public class ComboBox extends JComboBox implements Changeable {
             return ComboBoxRenderer.this;
         }
     }
-    
-    public void addItemChangeListener() {
-        addItemListener(new ItemListener(){
+
+    private void addItemChangeListener() {
+        addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 notifyChanges();
             }
         });
     }
-    
+
     public void clear() {
         this.changed = false;
     }
-    
+
     void notifyChanges() {
         changed = true;
         this.listOfChangeables.onChanges();
@@ -91,5 +87,6 @@ public class ComboBox extends JComboBox implements Changeable {
 
     public void observe(ChangeablesList list) {
         this.listOfChangeables = list;
+        addItemChangeListener();
     }
 }

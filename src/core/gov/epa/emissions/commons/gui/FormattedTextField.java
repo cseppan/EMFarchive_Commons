@@ -54,6 +54,7 @@ public class FormattedTextField extends JFormattedTextField implements Changeabl
 
     public void observe(ChangeablesList list) {
         listOfChangeables = list;
+        addTextListener();
     }
 
 
