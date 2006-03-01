@@ -13,9 +13,6 @@ public class FilesFromPattern {
 
     public FilesFromPattern(File folder, String[] filePatterns,Dataset dataset) throws ImporterException{
         DatasetType datasetType = dataset.getDatasetType();
-        if (filePatterns.length > 1) {
-            throw new ImporterException("Only one file pattern or filename is allowed, but "+filePatterns.length+ " are specified");
-        }
         if (filePatterns[0].length() == 0) {
             throw new ImporterException("No file pattern or filename is specified");
         }
