@@ -4,8 +4,6 @@ import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.DatasetType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FilesFromPattern {
 
@@ -18,7 +16,7 @@ public class FilesFromPattern {
         }
 
         int minFiles = datasetType.getMinFiles();
-        files = extractFileNames(folder, filePatterns[0]);
+        files = extractFileNames(folder, filePatterns);
         if (files.length < minFiles) {
             throw new ImporterException(datasetType.getName()+ " importer requires " + minFiles + " files");
         } 
@@ -28,37 +26,15 @@ public class FilesFromPattern {
         return files;
     }
 
-    private File[] extractFileNames(File folder, String filePattern) throws ImporterException {
-        String[] fileNamesInFolder = fileNames(folder);
-
-        FilePatternMatcher matcher = new FilePatternMatcher(folder, filePattern);
-        String[] matchedFileNames = matcher.matchingNames(fileNamesInFolder);
-        if (matchedFileNames == null || matchedFileNames.length == 0) {
-            throw new ImporterException("There are no files found in the directory '" + folder.getAbsolutePath()
-                    + "' matching pattern '" + filePattern + "'");
+    private File[] extractFileNames(File folder, String[] filePattern) throws ImporterException {
+        if (filePattern == null || filePattern.length == 0) {
+            throw new ImporterException("There are no files found in the directory '" + folder.getAbsolutePath());
         }
-        File[] files = new File[matchedFileNames.length];
+        
+        File[] files = new File[filePattern.length];
         for (int i = 0; i < files.length; i++) {
-            files[i] = new File(folder, matchedFileNames[i]);
+            files[i] = new File(folder, filePattern[i]);
         }
         return files;
     }
-
-    private String[] fileNames(File folder) throws ImporterException {
-        if (!folder.isDirectory()) {
-            throw new ImporterException(folder.getAbsolutePath() + " is not a directory");
-        }
-        List names = new ArrayList();
-        String[] fileNames = folder.list();
-        for (int i = 0; i < fileNames.length; i++) {
-            if (new File(folder, fileNames[i]).isFile()) {
-                names.add(fileNames[i]);
-            }
-        }
-        if (names.isEmpty()) {
-            throw new ImporterException("There are no files in the directory '" + folder + "'");
-        }
-        return (String[]) names.toArray(new String[0]);
-    }
-
 }
