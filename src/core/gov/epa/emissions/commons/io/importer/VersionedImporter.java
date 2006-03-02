@@ -31,8 +31,7 @@ public class VersionedImporter implements Importer {
         try {
             addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (SQLException e) {
-            throw new ImporterException("Could not add Version Zero entry to the Versions Table. Reason: "
-                    + e.getMessage());
+            throw new ImporterException("Could not add Version Zero entry to the Versions Table." + e.getMessage());
         }
     }
 }

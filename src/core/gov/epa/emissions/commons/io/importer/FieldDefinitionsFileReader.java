@@ -101,7 +101,7 @@ public class FieldDefinitionsFileReader {
                 details.setWidth(nameSplitString[i], widthSplitString[i]);
             }
         } catch (Exception e) {
-            throw new RuntimeException("FieldDefinitions FileReader failed. Reason: " + e.getMessage());
+            throw new RuntimeException("FieldDefinitions FileReader failed." + e.getMessage());
         }
 
         return details;
