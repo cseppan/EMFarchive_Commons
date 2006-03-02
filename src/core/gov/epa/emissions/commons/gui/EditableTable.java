@@ -1,8 +1,11 @@
 package gov.epa.emissions.commons.gui;
 
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 public class EditableTable extends JTable implements Editor, Changeable {
+    
     private ChangeablesList listOfChangeables;
 
     private boolean changed = false;
@@ -13,6 +16,17 @@ public class EditableTable extends JTable implements Editor, Changeable {
         super(tableModel);
         this.tableModel = tableModel;
         setRowHeight(25);
+        getModel().addTableModelListener(tableModelListener());
+    }
+
+    private TableModelListener tableModelListener() {
+        return new TableModelListener(){
+            public void tableChanged(TableModelEvent e) {
+                if (tableModel.shouldTrackChange(e.getColumn()))
+                    notifyChanges();
+            }
+            
+        };
     }
 
     public void setValueAt(Object value, int row, int column) {
