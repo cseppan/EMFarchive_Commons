@@ -4,7 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 public interface Dataset extends Serializable {
-
+    public static final String inline_comment_key = "EXPORT_INLINE_COMMENTS";
+    
+    public static final String header_comment_key = "EXPORT_HEADER_COMMENTS";
+    
+    public static final String inline_comment_char = "INLINE_COMMENT_CHAR";
+    
+    public static final String header_comment_char = "HEADER_COMMENT_CHAR";
+    
     public long getId();
 
     public void setId(long id);
@@ -82,5 +89,13 @@ public interface Dataset extends Serializable {
     void setSummarySource(InternalSource summary);
 
     public InternalSource getSummarySource();
+    
+    boolean getInlineCommentSetting();
+    
+    boolean getHeaderCommentsSetting();
+    
+    char getInlineCommentChar();
+    
+    char getHeaderCommentChar();
 
 }

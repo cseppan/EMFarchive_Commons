@@ -217,4 +217,24 @@ public class SimpleDataset implements Dataset {
         return project;
     }
 
+    public boolean getInlineCommentSetting() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    public boolean getHeaderCommentsSetting() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    public char getInlineCommentChar() {
+        // TODO Auto-generated method stub
+        return '!';
+    }
+
+    public char getHeaderCommentChar() {
+        // TODO Auto-generated method stub
+        return '#';
+    }
+
 }

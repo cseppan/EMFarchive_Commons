@@ -60,7 +60,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
         
         List data = readData(file);
-        assertEquals(data.get(0), "pollutant_code;pollutant_name");
+        assertEquals(data.get(0), "pollutant_code;pollutant_name;comments");
         assertEquals(data.get(8), "VOC;VOC");
     }
     
