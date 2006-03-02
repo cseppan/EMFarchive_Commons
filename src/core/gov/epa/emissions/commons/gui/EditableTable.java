@@ -7,14 +7,17 @@ public class EditableTable extends JTable implements Editor, Changeable {
 
     private boolean changed = false;
 
+    private EditableTableModel tableModel;
+
     public EditableTable(EditableTableModel tableModel) {
         super(tableModel);
+        this.tableModel = tableModel;
         setRowHeight(25);
     }
 
     public void setValueAt(Object value, int row, int column) {
         super.setValueAt(value, row, column);
-        if (super.dataModel.isCellEditable(row, column))
+        if (tableModel.shouldTrackChange(column))
             notifyChanges();
     }
 

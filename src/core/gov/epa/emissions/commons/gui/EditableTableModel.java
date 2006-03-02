@@ -4,4 +4,6 @@ import javax.swing.table.TableModel;
 
 public interface EditableTableModel extends TableModel {
 
+    boolean shouldTrackChange(int column);
+
 }
