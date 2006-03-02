@@ -41,4 +41,14 @@ public class TableMetadata {
         this.cols = Arrays.asList(cols);
     }
 
+    public ColumnMetaData columnMetadata(String columnName) {
+        for (int i = 0; i < cols.size(); i++) {
+            ColumnMetaData metadata = (ColumnMetaData) cols.get(i);
+            if (metadata.getName().equals(columnName)) {
+                return metadata;
+            }
+        }
+        return null;
+    }
+
 }
