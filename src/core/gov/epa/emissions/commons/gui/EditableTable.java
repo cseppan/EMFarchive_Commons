@@ -1,14 +1,13 @@
 package gov.epa.emissions.commons.gui;
 
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
 public class EditableTable extends JTable implements Editor, Changeable {
     private ChangeablesList listOfChangeables;
 
     private boolean changed = false;
 
-    public EditableTable(TableModel tableModel) {
+    public EditableTable(EditableTableModel tableModel) {
         super(tableModel);
         setRowHeight(25);
     }
