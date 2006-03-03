@@ -60,10 +60,10 @@ public class SMKReportExporter implements Exporter {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
         
-        wirte(file, writer);
+        write(file, writer);
     }
     
-    protected void wirte(File file, PrintWriter writer) throws ExporterException {
+    protected void write(File file, PrintWriter writer) throws ExporterException {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
@@ -159,14 +159,7 @@ public class SMKReportExporter implements Exporter {
         for (; i < cols.length + commentspad; i++) {
             if(data.getObject(i) != null) {
                 String colValue = data.getObject(i).toString().trim();
-                if(cols[i-1].equalsIgnoreCase("sccdesc") || containsDelimiter("" + colValue))
-                    writer.print("\"" + colValue + "\"");
-                else {
-                    if(i == cols.length)
-                        writer.print(dataset.getInlineCommentChar() + colValue);
-                    else
-                        writer.print(colValue);
-                }
+                writeToken(writer, cols, i, colValue);
             } else {
                 writer.print("");
             }
@@ -175,6 +168,21 @@ public class SMKReportExporter implements Exporter {
                 writer.print(delimiter);// delimiter
         }
         writer.println();
+    }
+
+    private void writeToken(PrintWriter writer, String[] cols, int i, String colValue) {
+        if(cols[i-1].equalsIgnoreCase("sccdesc") || containsDelimiter("" + colValue))
+            writer.print("\"" + colValue + "\"");
+        else {
+            if(i == cols.length) {
+                if(colValue.charAt(0) == dataset.getInlineCommentChar())
+                    writer.print(" " + colValue);
+                else
+                    writer.print(" " + dataset.getInlineCommentChar() + colValue);
+            } else {
+                writer.print(colValue);
+            }
+        }
     }
     
     private String[] getCols(ResultSet data) throws SQLException {
@@ -213,7 +221,7 @@ public class SMKReportExporter implements Exporter {
         writer.println();
     }
     
-    private int startCol(String[] cols) {
+    protected int startCol(String[] cols) {
         int i = 1;
         if(cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions"))
             i = 4;

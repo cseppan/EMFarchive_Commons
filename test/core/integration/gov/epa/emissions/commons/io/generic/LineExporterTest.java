@@ -75,7 +75,7 @@ public class LineExporterTest extends PersistenceTestCase {
         importer2.run();
 
         LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
-        File file = new File("C:\\lineexporter.txt");
+        File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());
         

@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
@@ -13,6 +12,10 @@ import java.sql.SQLException;
 
 public class SurrogatesDescriptionExporter extends GenericExporter {
     
+    private Dataset dataset;
+    
+    private String delimiter;
+    
     public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
         super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types));
     }
@@ -22,16 +25,31 @@ public class SurrogatesDescriptionExporter extends GenericExporter {
         super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types), factory);
     }
     
-    protected void writeRecord(Column[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        for (int i = 0; i < cols.length; i++) {
-            if(cols[i].name().equalsIgnoreCase("NAME"))
-                writer.print("\"" + cols[i].format(data).trim() + "\"");
-            else
-                writer.print(cols[i].format(data).trim());
-            
-            if (i + 1 < cols.length)
-                writer.print(",");// delimiter
+    protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
+        int i = startCol(cols) + 1;
+        for (; i < cols.length + commentspad; i++) {
+            if(data.getObject(i) != null) {
+                String colValue = data.getObject(i).toString().trim();
+                if(i == cols.length && !colValue.equals("")) {
+                    if(colValue.charAt(0) == dataset.getInlineCommentChar())
+                        writer.print(" " + colValue);
+                    else
+                        writer.print(" " + dataset.getInlineCommentChar() + colValue);
+                } else {
+                    if(cols[i - 1].equalsIgnoreCase("NAME"))
+                        writer.print("\"" + colValue + "\"");
+                    else
+                        writer.print(colValue);
+                }
+
+                if (i + 1 < cols.length)
+                    writer.print(delimiter);// delimiter
+            }
         }
         writer.println();
+    }
+    
+    public void setDelimiter(String del) {
+        this.delimiter = del;
     }
 }

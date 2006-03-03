@@ -58,7 +58,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         assertEquals(
                 "ORISPL_CODE,UNITID,OP_DATE,OP_HOUR,OP_TIME,GLOAD,SLOAD,NOX_MASS,NOX_RATE,SO2_MASS,HEAT_INPUT,FLOW",
                 (String) data.get(0));
-        assertEquals("2161,**GT2,113,19,0,-9,-9,-9,-9,-9,-9,-9", (String) data.get(21));
+        assertEquals("2161,**GT2,113,19,0,,", (String) data.get(21));
         exportfile.delete();
     }
     
@@ -79,7 +79,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         assertEquals(
                 "ORISPL_CODE,UNITID,OP_DATE,OP_HOUR,OP_TIME,GLOAD,SLOAD,NOX_MASS,NOX_RATE,SO2_MASS,HEAT_INPUT,FLOW",
                 (String) data.get(0));
-        assertEquals("2161,**GT2,113,19,0,-9,-9,-9,-9,-9,-9,-9", (String) data.get(21));
+        assertEquals("2161,**GT2,113,19,0,,", (String) data.get(21));
         exportfile.delete();
     }
 

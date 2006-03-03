@@ -22,7 +22,6 @@ public class CEMHourSpecInventoryExporter extends GenericExporter {
     
     private void setup(){
         this.setDelimiter(",");
-        this.setFormatted(false);
     }
     
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {

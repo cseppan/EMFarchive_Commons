@@ -107,8 +107,8 @@ public class IDAImporterTest extends PersistenceTestCase {
             fileFormat.addPollutantCols(getPollutantCols(dataset));
             IDAActivityExporter exporter = new IDAActivityExporter(dataset, dbServer, fileFormat);
             exporter.export(exportfile);
-            String data1 = "37 1 0 2201001150 4.0000000e+001 4.1420000e+001";
-            String data10 = "37 1 0 2201020150 4.0000000e+001 1.6770000e+001";
+            String data1 = "37 1 0 2201001150 40.0 41.42";
+            String data10 = "37 1 0 2201020150 40.0 16.77";
             String pollutant = "#DATA       SPEED VMT";
             try {
                 List data = readData(exportfile);
