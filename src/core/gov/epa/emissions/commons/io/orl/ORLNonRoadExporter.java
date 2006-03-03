@@ -20,7 +20,7 @@ public class ORLNonRoadExporter implements Exporter {
 
     public ORLNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory.exportStatement());
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

@@ -65,7 +65,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         List data = readData(file);
         assertEquals(37, data.size());
         assertEquals("/COUNTRY/", (String) data.get(0));
-        assertEquals("0 -9                   US", ((String) data.get(1)).trim());
+        assertEquals("0  US", ((String) data.get(1)).trim());
         assertEquals("/STATE/", (String) data.get(8));
         assertEquals("/COUNTY/", (String) data.get(20));
     }
@@ -89,7 +89,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         List data = readData(file);
         assertEquals(37, data.size());
         assertEquals("/COUNTRY/", (String) data.get(0));
-        assertEquals("0 -9                   US", ((String) data.get(1)).trim());
+        assertEquals("0  US", ((String) data.get(1)).trim());
         assertEquals("/STATE/", (String) data.get(8));
         assertEquals("/COUNTY/", (String) data.get(20));
     }

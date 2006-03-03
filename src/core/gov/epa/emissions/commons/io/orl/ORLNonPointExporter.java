@@ -20,7 +20,7 @@ public class ORLNonPointExporter implements Exporter {
 
     public ORLNonPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory.exportStatement());
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

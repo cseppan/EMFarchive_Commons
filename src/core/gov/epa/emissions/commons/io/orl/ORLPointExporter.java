@@ -20,7 +20,7 @@ public class ORLPointExporter implements Exporter {
 
     public ORLPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory.exportStatement());
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

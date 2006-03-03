@@ -99,15 +99,12 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(63, records.size());
 
-        String expectedPattern1 = "    1     0     0     0     0     0   110   110"
-                + "   110   223   223   223     0   999";
-        String expectedPattern2 = "    8   147   147   147   147   147   135   129  1000";
-        String expectedPattern3 = " 2006    88    49    33    24    36   119   332"
-                + "   854   588   493   485   520   535   557   648   710   789   867"
-                + "   660   456   387   338   257   176  1000";
-        String expectedPattern4 = " 2001   166   122   103    87    92   120   182"
-                + "   263   367   501   623   697   721   738   750   752   751   697"
-                + "   584   480   400   331   272   201  1000";
+        String expectedPattern1 = "1 0 0 0 0 0 110 110 110 223 223 223 0 999";
+        String expectedPattern2 = "8 147 147 147 147 147 135 129 1000";
+        String expectedPattern3 = "2006 88 49 33 24 36 119 332 854 588 " +
+                "493 485 520 535 557 648 710 789 867 660 456 387 338 257 176 1000";
+        String expectedPattern4 = "2001 166 122 103 87 92 120 182 263 367 " +
+                "501 623 697 721 738 750 752 751 697 584 480 400 331 272 201 1000";
 
         assertEquals((String) records.get(0), expectedPattern1);
         assertEquals((String) records.get(17), expectedPattern2);
@@ -136,15 +133,12 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(63, records.size());
 
-        String expectedPattern1 = "    1     0     0     0     0     0   110   110"
-                + "   110   223   223   223     0   999";
-        String expectedPattern2 = "    8   147   147   147   147   147   135   129  1000";
-        String expectedPattern3 = " 2006    88    49    33    24    36   119   332"
-                + "   854   588   493   485   520   535   557   648   710   789   867"
-                + "   660   456   387   338   257   176  1000";
-        String expectedPattern4 = " 2001   166   122   103    87    92   120   182"
-                + "   263   367   501   623   697   721   738   750   752   751   697"
-                + "   584   480   400   331   272   201  1000";
+        String expectedPattern1 = "1 0 0 0 0 0 110 110 110 223 223 223 0 999";
+        String expectedPattern2 = "8 147 147 147 147 147 135 129 1000";
+        String expectedPattern3 = "2006 88 49 33 24 36 119 332 854 " +
+                "588 493 485 520 535 557 648 710 789 867 660 456 387 338 257 176 1000";
+        String expectedPattern4 = "2001 166 122 103 87 92 120 182 263 " +
+                "367 501 623 697 721 738 750 752 751 697 584 480 400 331 272 201 1000";
 
         assertEquals((String) records.get(0), expectedPattern1);
         assertEquals((String) records.get(17), expectedPattern2);
@@ -170,8 +164,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "    1     0     0     0     0     0     0     0     0   125   125"
-                + "   125   125   125   125   125   125     0     0     0     0     0     0     0     0  1000";
+        String expectedPattern = "1 0 0 0 0 0 0 0 0 125 125 125 125 125 125 125 125 0 0 0 0 0 0 0 0 1000";
 
         String actual = (String) records.get(0);
         assertTrue(actual.matches(expectedPattern));
@@ -197,8 +190,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "    1     0     0     0     0     0     0     0     0   125   125"
-                + "   125   125   125   125   125   125     0     0     0     0     0     0     0     0  1000";
+        String expectedPattern = "1 0 0 0 0 0 0 0 0 125 125 125 125 125 125 125 125 0 0 0 0 0 0 0 0 1000";
 
         String actual = (String) records.get(0);
         assertTrue(actual.matches(expectedPattern));
@@ -222,7 +214,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "   10     0     0     0     0     0     0     0   100   100   100   100   100   100   100   100   100   100     0     0     0     0     0     0     0  1000";
+        String expectedPattern = "10 0 0 0 0 0 0 0 100 100 100 100 100 100 100 " +
+                "100 100 100 0 0 0 0 0 0 0 1000";
 
         String actual = (String) records.get(9);
         assertTrue(actual.matches(expectedPattern));
@@ -248,7 +241,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "   10     0     0     0     0     0     0     0   100   100   100   100   100   100   100   100   100   100     0     0     0     0     0     0     0  1000";
+        String expectedPattern = "10 0 0 0 0 0 0 0 100 100 100 100 100 100 100 100 100 100 0 0 0 0 0 0 0 1000";
 
         String actual = (String) records.get(9);
         assertTrue(actual.matches(expectedPattern));
@@ -272,7 +265,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(10, records.size());
 
-        String expectedPattern = "   10    32    32    12    12    12    31    31    31   258   258   258    32   999";
+        String expectedPattern = "10 32 32 12 12 12 31 31 31 258 258 258 32 999";
 
         String actual = (String) records.get(9);
         assertTrue(actual.matches(expectedPattern));
@@ -298,7 +291,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(10, records.size());
 
-        String expectedPattern = "   10    32    32    12    12    12    31    31    31   258   258   258    32   999";
+        String expectedPattern = "10 32 32 12 12 12 31 31 31 258 258 258 32 999";
 
         String actual = (String) records.get(9);
         assertTrue(actual.matches(expectedPattern));
@@ -322,7 +315,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(13, records.size());
 
-        String expectedPattern = "    6   167   167   167   167   167   167     0  1000";
+        String expectedPattern = "6 167 167 167 167 167 167 0 1000";
 
         String actual = (String) records.get(5);
         assertTrue(actual.matches(expectedPattern));
@@ -348,7 +341,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(13, records.size());
 
-        String expectedPattern = "    6   167   167   167   167   167   167     0  1000";
+        String expectedPattern = "6 167 167 167 167 167 167 0 1000";
 
         String actual = (String) records.get(5);
         assertTrue(actual.matches(expectedPattern));
