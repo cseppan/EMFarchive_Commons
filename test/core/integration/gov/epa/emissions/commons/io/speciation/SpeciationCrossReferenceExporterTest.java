@@ -57,8 +57,8 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         
         List data = readData(exportfile);
         assertEquals(153, countRecords());
-        assertEquals("0;0000;EXH__CO;;;;;; ! exhaust for MOBILE5", data.get(2));
-        assertEquals("2850000010;99999;PM2_5;;;;;;", data.get(153));
+        assertEquals("0;0000;EXH__CO;;;;;;; ! exhaust for MOBILE5", data.get(2));
+        assertEquals("2850000010;99999;PM2_5;;;;;;;", data.get(153));
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
@@ -76,8 +76,8 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         
         List data = readData(exportfile);
         assertEquals(153, countRecords());
-        assertEquals("0;0000;EXH__CO;;;;;; ! exhaust for MOBILE5", data.get(2));
-        assertEquals("2850000010;99999;PM2_5;;;;;;", data.get(153));
+        assertEquals("0;0000;EXH__CO;;;;;;; ! exhaust for MOBILE5", data.get(2));
+        assertEquals("2850000010;99999;PM2_5;;;;;;;", data.get(153));
     }
     
     private int countRecords() {

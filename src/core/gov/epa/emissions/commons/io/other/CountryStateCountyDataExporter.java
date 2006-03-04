@@ -4,11 +4,13 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
+import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
@@ -32,6 +34,10 @@ public class CountryStateCountyDataExporter implements Exporter {
     private DataFormatFactory dataFormatFactory;
     
     private String delimiter;
+    
+    private FileFormat fileFormat;
+    
+    private SqlDataTypes types;
 
     public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
         setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
@@ -47,6 +53,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
+        this.types = types;
         setDelimiter(" ");
     }
 
@@ -102,20 +109,14 @@ public class CountryStateCountyDataExporter implements Exporter {
     }
 
     protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
-        DataQuery q = datasource.query();
-        InternalSource[] sources = dataset.getInternalSources();
-
-        for(int i = 0; i < sources.length; i++){
-            ResultSet data = getResultSet(sources[i], q);
-            String[] cols = getCols(data);
-            writer.println("/" + sources[i].getTable() + "/");
-
-            while (data.next())
-                writeRecordWithComments(cols, data, writer);
-        }
+        writeData(writer, dataset, datasource, true);
     }
     
     protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+        writeData(writer, dataset, datasource, false);
+    }
+    
+    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws SQLException {
         DataQuery q = datasource.query();
         InternalSource[] sources = dataset.getInternalSources();
 
@@ -123,10 +124,22 @@ public class CountryStateCountyDataExporter implements Exporter {
             ResultSet data = getResultSet(sources[i], q);
             String[] cols = getCols(data);
             writer.println("/" + sources[i].getTable() + "/");
+            this.fileFormat = getFileFormat(sources[i].getTable());
 
-            while (data.next())
-                writeRecordWithoutComments(cols, data, writer);
+            if(comments) {
+                while (data.next()) 
+                    writeRecordWithComments(cols, data, writer);
+            } else {
+                while (data.next())
+                    writeRecordWithoutComments(cols, data, writer);
+            }
         }
+    }
+    
+    protected FileFormat getFileFormat(String fileFormatName) {
+        CountryStateCountyFileFormatFactory factory = new CountryStateCountyFileFormatFactory(types);
+        
+        return factory.get(fileFormatName);
     }
     
     protected ResultSet getResultSet(InternalSource source, DataQuery q) throws SQLException {
@@ -156,32 +169,58 @@ public class CountryStateCountyDataExporter implements Exporter {
     }
 
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
-        int i = startCol(cols) + 1;
-        for (; i < cols.length + commentspad; i++) {
-            if(data.getObject(i) != null) {
-                String colValue = data.getObject(i).toString().trim();
-                if(i == cols.length && !colValue.equals("")) {
-                    if(colValue.charAt(0) == dataset.getInlineCommentChar())
-                        writer.print(" " + colValue);
-                    else
-                        writer.print(" " + dataset.getInlineCommentChar() + colValue);
-                } else {
-                    writer.print(colValue);
-                }
+        for (int i = startCol(cols); i < cols.length + commentspad; i++) {
+            String value = data.getString(i);
+            if (value != null)
+                writer.write(getValue(cols, i, value, data));
 
-                if (i + 1 < cols.length)
-                    writer.print(delimiter);// delimiter
-            }
+            if (i + 1 < cols.length)
+                writer.print(delimiter);// delimiter
         }
         writer.println();
     }
-    
-    private int startCol(String[] cols) {
-        int i = 1;
-        if(cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions"))
-            i = 4;
+
+    protected String getValue(String[] cols, int index, String value, ResultSet data) throws SQLException {
+        if (!isComment(index, cols))
+            return formatValue(cols, index, data);
+
+        return getComment(value);
+    }
+
+    protected String formatValue(String[] cols, int index, ResultSet data) throws SQLException {
+        int fileIndex = index;
+        if (isTableVersioned(cols))
+            fileIndex = index - 3;
         
+        Column column = fileFormat.cols()[fileIndex - 2];
+        return column.format(data).trim();
+    }
+
+    protected String getComment(String value) {
+        value = value.trim();
+        if (value.equals(""))
+            return value;
+
+        if (!value.startsWith(dataset.getInlineCommentChar()))
+            value = dataset.getInlineCommentChar() + value;
+
+        return " " + value;
+    }
+
+    protected boolean isComment(int index, String[] cols) {
+        return (index == cols.length);
+    }
+
+    protected int startCol(String[] cols) {
+        int i = 2;
+        if (isTableVersioned(cols))
+            i = 5;
+
         return i;
+    }
+
+    protected boolean isTableVersioned(String[] cols) {
+        return cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions");
     }
 
     public void setDelimiter(String del) {

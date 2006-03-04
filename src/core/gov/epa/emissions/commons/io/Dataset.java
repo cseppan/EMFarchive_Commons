@@ -94,8 +94,8 @@ public interface Dataset extends Serializable {
     
     boolean getHeaderCommentsSetting();
     
-    char getInlineCommentChar();
+    String getInlineCommentChar();
     
-    char getHeaderCommentChar();
+    String getHeaderCommentChar();
 
 }

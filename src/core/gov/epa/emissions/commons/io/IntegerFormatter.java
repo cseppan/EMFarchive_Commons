@@ -11,7 +11,7 @@ public class IntegerFormatter implements ColumnFormatter {
 
     public String format(String name, ResultSet data) throws SQLException {
         if (data.getString(name) == null || data.getFloat(name) == -9)
-            return "-9";
+            return "";
 
         return FORMAT.format(data.getInt(name));
     }

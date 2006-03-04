@@ -75,7 +75,6 @@ public class SimpleDataset implements Dataset {
         this.endDateTime = time;
     }
 
-
     public int getYear() {
         return year;
     }
@@ -194,23 +193,23 @@ public class SimpleDataset implements Dataset {
     }
 
     public void setRegion(Region region) {
-       this.region = region;
+        this.region = region;
     }
-    
-    public Region getRegion(){
+
+    public Region getRegion() {
         return region;
     }
 
     public void setCountry(Country country) {
         this.country = country;
     }
-    
-    public Country getCountry(){
+
+    public Country getCountry() {
         return country;
     }
 
     public void setProject(Project project) {
-       this.project = project;
+        this.project = project;
     }
 
     public Project getProject() {
@@ -218,23 +217,19 @@ public class SimpleDataset implements Dataset {
     }
 
     public boolean getInlineCommentSetting() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     public boolean getHeaderCommentsSetting() {
-        // TODO Auto-generated method stub
         return true;
     }
 
-    public char getInlineCommentChar() {
-        // TODO Auto-generated method stub
-        return '!';
+    public String getInlineCommentChar() {
+        return "!";
     }
 
-    public char getHeaderCommentChar() {
-        // TODO Auto-generated method stub
-        return '#';
+    public String getHeaderCommentChar() {
+        return "#";
     }
 
 }

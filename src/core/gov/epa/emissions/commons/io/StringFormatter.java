@@ -17,7 +17,7 @@ public class StringFormatter implements ColumnFormatter {
 
     public String format(String name, ResultSet data) throws SQLException {
         String value = data.getString(name);
-        String evalValue = (value == null) || (value.equals(""))? "-9" : value;
+        String evalValue = (value == null) || (value.equals(""))? "" : value;
         
         return format.format(evalValue);
     }

@@ -12,12 +12,12 @@ import java.util.StringTokenizer;
 public class SpeciationCrossReferenceExporter extends GenericExporter {
     
     public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new SpeciationProfileFileFormat(types));
+        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types));
     }
     
     public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory) {
-        super(dataset, dbServer, new SpeciationProfileFileFormat(types), factory);
+        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), factory);
     }
     
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {

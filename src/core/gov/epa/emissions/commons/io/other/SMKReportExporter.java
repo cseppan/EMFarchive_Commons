@@ -147,22 +147,19 @@ public class SMKReportExporter implements Exporter {
     }
     
     protected void writeRecordWithoutComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        doWrite(data, writer, cols, 0);
+        writeRecord(data, writer, cols, 0);
     }
 
     protected void writeRecordWithComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        doWrite(data, writer, cols, 1);
+        writeRecord(data, writer, cols, 1);
     }
     
-    private void doWrite(ResultSet data, PrintWriter writer, String[] cols, int commentspad) throws SQLException {
-        int i = startCol(cols) + 1;
+    private void writeRecord(ResultSet data, PrintWriter writer, String[] cols, int commentspad) throws SQLException {
+        int i = startCol(cols);
         for (; i < cols.length + commentspad; i++) {
-            if(data.getObject(i) != null) {
-                String colValue = data.getObject(i).toString().trim();
-                writeToken(writer, cols, i, colValue);
-            } else {
-                writer.print("");
-            }
+            String value = data.getString(i);
+            if(value != null)
+                writer.write(getValue(cols, i, value));
             
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -170,19 +167,33 @@ public class SMKReportExporter implements Exporter {
         writer.println();
     }
 
-    private void writeToken(PrintWriter writer, String[] cols, int i, String colValue) {
-        if(cols[i-1].equalsIgnoreCase("sccdesc") || containsDelimiter("" + colValue))
-            writer.print("\"" + colValue + "\"");
-        else {
-            if(i == cols.length) {
-                if(colValue.charAt(0) == dataset.getInlineCommentChar())
-                    writer.print(" " + colValue);
-                else
-                    writer.print(" " + dataset.getInlineCommentChar() + colValue);
-            } else {
-                writer.print(colValue);
-            }
-        }
+    protected String getValue(String[] cols, int index, String value) {
+        if (!isComment(index, cols))
+            return formatValue(cols, index, value);
+
+        return getComment(value);
+    }
+    
+    protected String formatValue(String[] cols, int index, String value) {
+        if(cols[index - 1].equalsIgnoreCase("sccdesc") || containsDelimiter(value))
+            return "\"" + value + "\"";
+        
+        return value;
+    }
+
+    protected String getComment(String value) {
+        value = value.trim();
+        if (value.equals(""))
+            return value;
+
+        if (!value.startsWith(dataset.getInlineCommentChar()))
+            value = dataset.getInlineCommentChar() + value;
+
+        return " " + value;
+    }
+
+    protected boolean isComment(int index, String[] cols) {
+        return (index == cols.length);
     }
     
     private String[] getCols(ResultSet data) throws SQLException {
@@ -211,7 +222,7 @@ public class SMKReportExporter implements Exporter {
     }
     
     private void writeCols(PrintWriter writer, String[] cols, int pad) {
-        int i = startCol(cols);
+        int i = startCol(cols) - 1;
         for(; i < cols.length - pad; i++){
             writer.print(cols[i]);
             if (i + 1 + pad < cols.length)
@@ -222,11 +233,15 @@ public class SMKReportExporter implements Exporter {
     }
     
     protected int startCol(String[] cols) {
-        int i = 1;
-        if(cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions"))
-            i = 4;
-        
+        int i = 2;
+        if (isTableVersioned(cols))
+            i = 5;
+
         return i;
     }
     
+    protected boolean isTableVersioned(String[] cols) {
+        return cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions");
+    }
+
 }

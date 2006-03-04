@@ -13,7 +13,7 @@ public class CharFormatter implements ColumnFormatter {
 
     public String format(String name, ResultSet data) throws SQLException {
         String value = data.getString(name);
-        return (value == null) ? "-9" : format.format(value);
+        return (value == null) ? "" : format.format(value);
     }
 
 }

@@ -12,8 +12,6 @@ import java.sql.SQLException;
 
 public class SurrogatesDescriptionExporter extends GenericExporter {
     
-    private Dataset dataset;
-    
     private String delimiter;
     
     public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
@@ -26,25 +24,17 @@ public class SurrogatesDescriptionExporter extends GenericExporter {
     }
     
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
-        int i = startCol(cols) + 1;
-        for (; i < cols.length + commentspad; i++) {
-            if(data.getObject(i) != null) {
-                String colValue = data.getObject(i).toString().trim();
-                if(i == cols.length && !colValue.equals("")) {
-                    if(colValue.charAt(0) == dataset.getInlineCommentChar())
-                        writer.print(" " + colValue);
-                    else
-                        writer.print(" " + dataset.getInlineCommentChar() + colValue);
-                } else {
-                    if(cols[i - 1].equalsIgnoreCase("NAME"))
-                        writer.print("\"" + colValue + "\"");
-                    else
-                        writer.print(colValue);
-                }
-
-                if (i + 1 < cols.length)
-                    writer.print(delimiter);// delimiter
+        for (int i = startCol(cols); i < cols.length + commentspad; i++) {
+            String value = data.getString(i);
+            if (value != null) {
+                String towrite = getValue(cols, i, value, data);
+                if(cols[i - 1].equalsIgnoreCase("NAME"))
+                    towrite = "\"" + towrite + "\"";
+                writer.write(towrite);
             }
+
+            if (i + 1 < cols.length)
+                writer.print(delimiter);// delimiter
         }
         writer.println();
     }
