@@ -51,18 +51,18 @@ public class TableMetadata {
         return null;
     }
 
-    public String[] getColNames() {
+    private List getColNames() {
         ColumnMetaData[] cols = getCols();
-        String[] colNames = new String[cols.length];
-        for (int i = 0; i < cols.length; i++) {
-            colNames[i] = cols[i].getName();
-        }
+        List names = new ArrayList();
+        for (int i = 0; i < cols.length; i++)
+            names.add(cols[i].getName());
 
-        return colNames;
+        return names;
     }
 
     public boolean containsCol(String col) {
-        return cols.contains(col.toUpperCase()) || cols.contains(col.toLowerCase());
+        List names = getColNames();
+        return names.contains(col.toUpperCase()) || names.contains(col.toLowerCase());
     }
 
 }
