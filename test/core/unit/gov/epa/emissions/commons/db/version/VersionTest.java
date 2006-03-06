@@ -9,7 +9,7 @@ public class VersionTest extends TestCase {
         v.setVersion(0);
         v.setPath("");
 
-        assertEquals("0", v.createPathForDerived());
+        assertEquals("0", v.createCompletePath());
     }
 
     public void testPathForVersionDerivedFromNonRootVersion() {
@@ -17,7 +17,7 @@ public class VersionTest extends TestCase {
         v.setVersion(2);
         v.setPath("0,1");
 
-        assertEquals("0,1,2", v.createPathForDerived());
+        assertEquals("0,1,2", v.createCompletePath());
     }
 
     public void testShouldObtainBaseFromPath() {

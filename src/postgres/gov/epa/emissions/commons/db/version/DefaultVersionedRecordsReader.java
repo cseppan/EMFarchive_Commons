@@ -56,7 +56,6 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         return query;
     }
 
-    // FIXME: need the rules for choosing the number of data columns to sort by
     private String sortOrderClause(String sortOrder) {
         final String defaultSortOrderClause = "record_id";
         String sortOrderClause = defaultSortOrderClause;

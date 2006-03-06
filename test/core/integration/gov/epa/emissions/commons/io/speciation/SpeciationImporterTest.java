@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -41,23 +42,26 @@ public class SpeciationImporterTest extends PersistenceTestCase {
 
     public void testImportChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/speciation");
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, dbServer, sqlDataTypes);
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
+                new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         assertEquals(88, countRecords());
     }
-    
+
     public void testImportVersionedChemicalSpeciationData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/speciation");
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
+                new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
         assertEquals(88, countRecords());
     }
-
 
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();

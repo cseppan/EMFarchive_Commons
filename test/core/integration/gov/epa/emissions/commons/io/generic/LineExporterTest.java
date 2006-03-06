@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -45,14 +46,15 @@ public class LineExporterTest extends PersistenceTestCase {
 
     public void testExportSmallLineFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, dbServer, sqlDataTypes);
+        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
+                sqlDataTypes);
         importer.run();
 
         LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());
-        
+
         // assert records
         List records = readData(file);
 
@@ -66,19 +68,23 @@ public class LineExporterTest extends PersistenceTestCase {
         assertEquals(expectedPattern3, records.get(15));
         assertEquals(expectedPattern4, records.get(21));
     }
-    
+
     public void testExportVersionedSmallLineFile() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[]{"small-point.txt"}, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
+                sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
-        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+                version));
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());
-        
+
         // assert records
         List records = readData(file);
 
@@ -98,7 +104,7 @@ public class LineExporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 
@@ -108,5 +114,5 @@ public class LineExporterTest extends PersistenceTestCase {
 
         return data;
     }
-    
+
 }

@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -63,16 +64,19 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     }
 
     public void testImportVersionedCEMpthourData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/other");
         DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
         DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(0));
+                sqlDataTypes, new VersionedDataFormatFactory(version));
         exporter.export(exportfile);
 
         List data = readData(exportfile);

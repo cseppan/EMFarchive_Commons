@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -53,14 +54,17 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/speciation");
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+                new VersionedDataFormatFactory(version));
         File file = File.createTempFile("speciatiationprofileexported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.

@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -54,14 +55,17 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
     }
 
     public void testExportVersionedPointStackReplacementsData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/other");
         PointStackReplacementsImporter importer = new PointStackReplacementsImporter(folder, new String[]{"pstk.m3.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(0));
+                sqlDataTypes, new VersionedDataFormatFactory(version));
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);

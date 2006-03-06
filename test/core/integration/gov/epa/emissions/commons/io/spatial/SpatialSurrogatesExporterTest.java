@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -52,14 +53,17 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
     }
     
     public void testExportVersionedSpetailSurrogatesData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/spatial");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+                new VersionedDataFormatFactory(version));
         File exportfile = File.createTempFile("SpetialSurrogatesExported", ".txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.

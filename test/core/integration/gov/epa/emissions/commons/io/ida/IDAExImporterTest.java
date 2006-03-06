@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.SimpleDataset;
@@ -62,10 +63,13 @@ public class IDAExImporterTest extends PersistenceTestCase {
     }
     
     public void testShouldExportASmallAreaFile() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-area.txt" };
         IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(0));
+                sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
         // assert
@@ -172,10 +176,13 @@ public class IDAExImporterTest extends PersistenceTestCase {
     }
     
     public void testShouldExportASmallMobileFile() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-mobile.txt" };
         IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+                new VersionedDataFormatFactory(version));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
         // assert

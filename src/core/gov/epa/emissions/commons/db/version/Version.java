@@ -75,10 +75,10 @@ public class Version implements Lockable {
     }
 
     /**
-     * create path for a versioned derived from 'me' i.e. I am it's base.
+     * create path that includes 'me'
      */
-    public String createPathForDerived() {
-        return path.length() == 0 ? (version + "") : (path + "," + version);
+    public String createCompletePath() {
+        return (path == null || path.length() == 0) ? (version + "") : (path + "," + version);
     }
 
     public long getBase() {

@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -48,9 +49,12 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
     }
     
     public void testImportVersionedCountryStateCountyData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
     }

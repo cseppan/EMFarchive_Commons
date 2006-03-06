@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -49,10 +50,13 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     }
     
     public void testImportVersionedSpeciationCrossRefData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+                new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 

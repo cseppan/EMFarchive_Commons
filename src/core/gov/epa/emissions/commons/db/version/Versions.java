@@ -145,7 +145,7 @@ public class Versions {
     }
 
     private String path(Version base) {
-        return base.createPathForDerived();
+        return base.createCompletePath();
     }
 
     private int getNextVersionNumber(long datasetId, Session session) {

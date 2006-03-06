@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
@@ -33,8 +34,12 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
         File file = new File("test/data/orl/nc", "arinv.nonpoint.nti99_NC.txt");
+        
+        Version version = new Version();
+        version.setVersion(0);
+
         ORLNonPointImporter importer = new ORLNonPointImporter(file.getParentFile(), new String[] { file.getName() },
-                dataset, dbServer(), dataTypes(), new VersionedDataFormatFactory(0));
+                dataset, dbServer(), dataTypes(), new VersionedDataFormatFactory(version));
         importer.run();
     }
 

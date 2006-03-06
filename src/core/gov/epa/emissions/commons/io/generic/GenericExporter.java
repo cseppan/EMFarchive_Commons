@@ -51,14 +51,13 @@ public class GenericExporter implements Exporter {
     }
 
     public void export(File file) throws ExporterException {
-        PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            write(file, writer);
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
 
-        write(file, writer);
     }
 
     protected void write(File file, PrintWriter writer) throws ExporterException {
@@ -120,13 +119,13 @@ public class GenericExporter implements Exporter {
     }
 
     private ResultSet getResultSet(Dataset dataset, Datasource datasource) throws SQLException {
-        DataQuery q = datasource.query();
         InternalSource source = dataset.getInternalSources()[0];
-
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
-        ResultSet data = q.executeQuery(export.generate(qualifiedTable));
-        return data;
+        String query = export.generate(qualifiedTable);
+
+        DataQuery q = datasource.query();
+        return q.executeQuery(query);
     }
 
     private String[] getCols(ResultSet data) throws SQLException {
@@ -134,7 +133,7 @@ public class GenericExporter implements Exporter {
         ResultSetMetaData md = data.getMetaData();
         for (int i = 1; i <= md.getColumnCount(); i++)
             cols.add(md.getColumnName(i));
-        
+
         return (String[]) cols.toArray(new String[0]);
     }
 
@@ -169,7 +168,7 @@ public class GenericExporter implements Exporter {
         int fileIndex = index;
         if (isTableVersioned(cols))
             fileIndex = index - 3;
-        
+
         Column column = fileFormat.cols()[fileIndex - 2];
         return column.format(data).trim();
     }

@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.Exporter;
@@ -67,8 +68,11 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     public void testShouldExportOnRoadVersionZero() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File importFile = new File("test/data/orl/nc", "small-onroad.txt");
-        DataFormatFactory formatFactory = new VersionedDataFormatFactory(0);
+        DataFormatFactory formatFactory = new VersionedDataFormatFactory(version);
         Importer importer = new ORLOnRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
                 dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();

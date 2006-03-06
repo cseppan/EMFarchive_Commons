@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -32,7 +33,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        
+
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -47,14 +48,14 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
     public void testExportChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes);
+                new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, dbServer,
                 sqlDataTypes);
         File exportfile = File.createTempFile("SpeciatiationCrossRefExported", ".txt");
         exporter.export(exportfile);
-        
+
         List data = readData(exportfile);
         assertEquals(153, countRecords());
         assertEquals("0;0000;EXH__CO;;;;;;; ! exhaust for MOBILE5", data.get(2));
@@ -62,30 +63,33 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+                new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+                        version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(0));
+                sqlDataTypes, new VersionedDataFormatFactory(version));
         File exportfile = File.createTempFile("SpeciatiationCrossRefExported", ".txt");
         exporter.export(exportfile);
-        
+
         List data = readData(exportfile);
         assertEquals(153, countRecords());
         assertEquals("0;0000;EXH__CO;;;;;;; ! exhaust for MOBILE5", data.get(2));
         assertEquals("2850000010;99999;PM2_5;;;;;;;", data.get(153));
     }
-    
+
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 

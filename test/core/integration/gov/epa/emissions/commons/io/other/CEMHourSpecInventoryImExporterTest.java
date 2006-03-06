@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -63,15 +64,18 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
     }
     
     public void testImportVersionedCEMpthourData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/other");
         CEMHourSpecInventoryImporter importer = new CEMHourSpecInventoryImporter(folder, new String[]{"CEMpthour.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         File exportfile = File.createTempFile("CEMpthourExported", ".txt");
         CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(0));
+                new VersionedDataFormatFactory(version));
         exporter.export(exportfile);
 
         List data = readData(exportfile);

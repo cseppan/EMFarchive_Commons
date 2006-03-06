@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.NonVersionedTableFormat;
@@ -75,8 +76,11 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
     }
 
     public void testShouldLoadRecordsFromFileIntoVersionedTable() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         // create table
-        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory(0);
+        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory(version);
         ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(sqlDataTypes, formatFactory.defaultValuesFiller());
         TableFormat tableFormat = setupVersionedTable(fileFormat);
 
@@ -102,8 +106,8 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
             Object recordId = tableRef.getValue(i, "Record_Id");
             assertEquals((i + 1) + "", recordId.toString());
 
-            Object version = tableRef.getValue(i, "Version");
-            assertEquals("0", version.toString());
+            Object versionObj = tableRef.getValue(i, "Version");
+            assertEquals("0", versionObj.toString());
 
             Object deleteVersions = tableRef.getValue(i, "Delete_Versions");
             assertEquals("", deleteVersions);

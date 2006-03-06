@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
@@ -54,14 +55,17 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     }
     
     public void testExportVersionedChemicalSpeciationData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                dbServer, sqlDataTypes, new VersionedDataFormatFactory(0));
+                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
