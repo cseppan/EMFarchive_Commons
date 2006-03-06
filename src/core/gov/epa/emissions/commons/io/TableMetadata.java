@@ -51,4 +51,18 @@ public class TableMetadata {
         return null;
     }
 
+    public String[] getColNames() {
+        ColumnMetaData[] cols = getCols();
+        String[] colNames = new String[cols.length];
+        for (int i = 0; i < cols.length; i++) {
+            colNames[i] = cols[i].getName();
+        }
+
+        return colNames;
+    }
+
+    public boolean containsCol(String col) {
+        return cols.contains(col.toUpperCase()) || cols.contains(col.toLowerCase());
+    }
+
 }
