@@ -25,6 +25,11 @@ public class ChangeSet {
     }
 
     public void addDeleted(VersionedRecord record) {
+        if (containsNew(record)) {
+            newRecords.remove(record);
+            return;
+        }
+
         deletedRecords.add(record);
     }
 
@@ -68,7 +73,8 @@ public class ChangeSet {
     }
 
     public void addDeleted(VersionedRecord[] records) {
-        deletedRecords.addAll(Arrays.asList(records));
+        for (int i = 0; i < records.length; i++)
+            addDeleted(records[i]);
     }
 
     public boolean containsUpdated(VersionedRecord record) {

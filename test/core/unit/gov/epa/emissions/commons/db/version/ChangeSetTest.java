@@ -36,6 +36,35 @@ public class ChangeSetTest extends TestCase {
         assertEquals(0, changeset.getUpdatedRecords().length);
     }
 
+    public void testShouldRemoveFromAddListIfNewlyAddedRecordIsRemoved() {
+        ChangeSet changeset = new ChangeSet();
+
+        VersionedRecord newRecord = new VersionedRecord();
+        changeset.addNew(newRecord);
+        changeset.addDeleted(newRecord);
+
+        assertEquals(0, changeset.getNewRecords().length);
+        assertEquals(0, changeset.getDeletedRecords().length);
+    }
+
+    public void testShouldRemoveNewlyAddedRecordsFromAddListIfTheyAreRemoved() {
+        ChangeSet changeset = new ChangeSet();
+
+        VersionedRecord add1 = new VersionedRecord();
+        VersionedRecord tobeRemoved = new VersionedRecord();
+        VersionedRecord add3 = new VersionedRecord();
+
+        changeset.addNew(add1);
+        changeset.addNew(tobeRemoved);
+        changeset.addNew(add3);
+
+        VersionedRecord[] delete = { tobeRemoved };
+        changeset.addDeleted(delete);
+
+        assertEquals(2, changeset.getNewRecords().length);
+        assertEquals(0, changeset.getDeletedRecords().length);
+    }
+
     public void testShouldReturnTrueIfItContainsUpdatedRecord() {
         ChangeSet changeset = new ChangeSet();
         VersionedRecord record = new VersionedRecord();
@@ -72,20 +101,20 @@ public class ChangeSetTest extends TestCase {
         newDeleteCS.addDeleted(new VersionedRecord());
         assertTrue("Adding and Deleting records should confirm availability of 'changes'", newDeleteCS.hasChanges());
     }
-    
+
     public void testShouldProvideNetIncrease() {
         ChangeSet newCS = new ChangeSet();
         newCS.addNew(new VersionedRecord());
         assertEquals(1, newCS.netIncrease());
-        
+
         ChangeSet deletedCS = new ChangeSet();
         deletedCS.addDeleted(new VersionedRecord());
         assertEquals(-1, deletedCS.netIncrease());
-        
+
         ChangeSet updatedCS = new ChangeSet();
         updatedCS.addUpdated(new VersionedRecord());
         assertEquals(0, updatedCS.netIncrease());
-        
+
         ChangeSet mixedCS = new ChangeSet();
         mixedCS.addNew(new VersionedRecord());
         mixedCS.addNew(new VersionedRecord());

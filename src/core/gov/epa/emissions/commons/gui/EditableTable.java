@@ -5,7 +5,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 public class EditableTable extends JTable implements Editor, Changeable {
-    
+
     private ChangeablesList listOfChangeables;
 
     private boolean changed = false;
@@ -20,20 +20,20 @@ public class EditableTable extends JTable implements Editor, Changeable {
     }
 
     private TableModelListener tableModelListener() {
-        return new TableModelListener(){
+        return new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (tableModel.shouldTrackChange(e.getColumn()))
                     notifyChanges();
             }
-            
+
         };
     }
 
     public void setValueAt(Object value, int row, int column) {
         Object original = super.getValueAt(row, column);
-        if(original.equals(value))//ignore, if value is unchanged
+        if (original != null && original.equals(value))// ignore, if value is unchanged
             return;
-        
+
         super.setValueAt(value, row, column);
         if (tableModel.shouldTrackChange(column))
             notifyChanges();
