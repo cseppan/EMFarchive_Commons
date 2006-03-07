@@ -30,6 +30,10 @@ public class EditableTable extends JTable implements Editor, Changeable {
     }
 
     public void setValueAt(Object value, int row, int column) {
+        Object original = super.getValueAt(row, column);
+        if(original.equals(value))//ignore, if value is unchanged
+            return;
+        
         super.setValueAt(value, row, column);
         if (tableModel.shouldTrackChange(column))
             notifyChanges();
