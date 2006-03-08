@@ -45,7 +45,7 @@ public class VersionedTableFormat implements TableFormat {
     private Column[] versionCols(SqlDataTypes types) {
         Column recordId = recordID(types);
         Column datasetId = new Column("Dataset_Id", types.longType(), new LongFormatter(), "NOT NULL");
-        Column version = new Column("Version", types.longType(), new NullFormatter(), "NULL DEFAULT 0");
+        Column version = new Column("Version", types.intType(), new NullFormatter(), "NULL DEFAULT 0");
         Column deleteVersions = new Column("Delete_Versions", types.text(), new NullFormatter(), "DEFAULT ''::text");
 
         return new Column[] { recordId, datasetId, version, deleteVersions };
