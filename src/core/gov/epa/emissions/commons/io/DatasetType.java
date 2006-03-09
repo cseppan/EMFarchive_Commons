@@ -31,9 +31,12 @@ public class DatasetType implements Serializable, Lockable, Comparable{
     private String exporterClassName;
 
     private Mutex lock;
+    
+    private List keyValsList;
 
     public DatasetType() {
         this.keywordsList = new ArrayList();
+        this.keyValsList = new ArrayList();
         this.lock = new Mutex();
     }
 
@@ -169,5 +172,14 @@ public class DatasetType implements Serializable, Lockable, Comparable{
 
     public int compareTo(Object o) {
         return name.compareTo(((DatasetType) o).getName());
+    }
+    
+    public KeyVal[] getKeyVals() {
+        return (KeyVal[]) keyValsList.toArray(new KeyVal[0]);
+    }
+
+    public void setKeyVals(KeyVal[] keyvals) {
+        keyValsList.clear();
+        keyValsList.addAll(Arrays.asList(keyvals));
     }
 }
