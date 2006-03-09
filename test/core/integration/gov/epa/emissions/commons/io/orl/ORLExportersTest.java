@@ -63,8 +63,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001,2201001150,100414,1.06262,,,,,! EPA_derived", (String) data.get(0));
-        assertEquals("37001,2201001150,100425,0.20263,,,,,! EPA_derived", (String) data.get(1));
+        assertEquals("37001,2201001150,100414,1.06262,,,,,! EPA-derived", (String) data.get(0));
+        assertEquals("37001,2201001150,100425,0.20263,,,,,! EPA-derived", (String) data.get(1));
     }
 
     public void testShouldExportOnRoadVersionZero() throws Exception {
@@ -86,8 +86,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001,2201001150,100414,1.06262,,,,,! EPA_derived", (String) data.get(0));
-        assertEquals("37001,2201001150,100425,0.20263,,,,,! EPA_derived", (String) data.get(1));
+        assertEquals("37001,2201001150,100414,1.06262,,,,,! EPA-derived", (String) data.get(0));
+        assertEquals("37001,2201001150,100425,0.20263,,,,,! EPA-derived", (String) data.get(1));
     }
 
     public void testShouldExportNonRoad() throws Exception {

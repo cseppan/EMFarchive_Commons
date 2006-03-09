@@ -59,8 +59,8 @@ public class LineExporterTest extends PersistenceTestCase {
         List records = readData(file);
 
         String expectedPattern1 = "#ORL";
-        String expectedPattern2 = "37119 0001 0001 1 1 'REXAMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L _80.7081 35.12 17 108883 9.704141 _9 _9 _9 _9 _9";
-        String expectedPattern3 = "#Cutomized Division _ 1998";
+        String expectedPattern2 = "37119 0001 0001 1 1 'REXAMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L -80.7081 35.12 17 108883 9.704141 -9 -9 -9 -9 -9";
+        String expectedPattern3 = "#Cutomized Division - 1998";
         String expectedPattern4 = "#End Comment";
 
         assertEquals(expectedPattern1, records.get(0));
@@ -89,8 +89,8 @@ public class LineExporterTest extends PersistenceTestCase {
         List records = readData(file);
 
         String expectedPattern1 = "#ORL";
-        String expectedPattern2 = "37119 0001 0001 1 1 'REXAMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L _80.7081 35.12 17 108883 9.704141 _9 _9 _9 _9 _9";
-        String expectedPattern3 = "#Cutomized Division _ 1998";
+        String expectedPattern2 = "37119 0001 0001 1 1 'REXAMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L -80.7081 35.12 17 108883 9.704141 -9 -9 -9 -9 -9";
+        String expectedPattern3 = "#Cutomized Division - 1998";
         String expectedPattern4 = "#End Comment";
 
         assertEquals(expectedPattern1, records.get(0));

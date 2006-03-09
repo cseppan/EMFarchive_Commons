@@ -164,7 +164,7 @@ public class DataModifier {
             if ((data[i] == null || (data[i].trim().length() == 0)) && (!isTypeString(cols[i])))
                 data[i] = "DEFAULT";
             if (isTypeString(cols[i])) {
-                data[i] = escapeAndDelimitStringValue(data[i]);
+                data[i] = escapeString(data[i]);
             }
 
             insert.append(data[i]);
@@ -206,15 +206,13 @@ public class DataModifier {
         return sqlType.startsWith("VARCHAR") || sqlType.equalsIgnoreCase("TEXT");
     }
 
-    private String escapeAndDelimitStringValue(String val) {
+    private String escapeString(String val) {
         if (val == null)
             return "''";
 
         val = val.trim();
-        String cleanedCell = val.replace('-', '_');
-        String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
-
-        return "'" + cellWithSingleQuotesEscaped + "'";
+        String cleaned = val.replaceAll("\'", "''");
+        return "'" + cleaned + "'";
     }
 
     public void dropData(String table, String key, long value) throws SQLException {

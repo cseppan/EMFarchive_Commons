@@ -145,8 +145,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         List data = readData(file);
         String expect = "cnty_tn_lcc;D:\\MIMS\\mimssp_7_2005\\data\\;SPHERE;"
-                + "proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=_97;" + "TN county boundaries;from UNC CEP machine;";
-        assertEquals(data.get(1), expect);
+                + "proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97;" + "TN county boundaries;from UNC CEP machine;";
+        assertEquals(expect, data.get(1));
         expect = "us_ph;D:\\MIMS\\emiss_shp2003\\us\\;;;The change in housing between 1990 and 2000;US Census Bureau;No Data";
         assertEquals(data.get(7), expect);
     }
