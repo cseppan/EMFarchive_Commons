@@ -151,8 +151,6 @@
             <batchtest fork="yes" todir="${reports.tests.dir}">
                 <fileset dir="${build.classes.dir}">
                     <include name="**/*Test.class" />
-                    <exclude name="**/ReferenceImporterTest.class" />
-                    <exclude name="**/ReferenceTablesCreatorTest.class" />
                 </fileset>
             </batchtest>
         </junit>
