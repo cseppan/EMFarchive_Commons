@@ -66,9 +66,9 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
         int fileIndex = index;
         if (isTableVersioned(cols))
             fileIndex = index - 3;
-        
+
         Column column = fileFormat.cols()[fileIndex - 2];
-        return column.format(data).trim();
+        return getFixedPositionValue(column, data);
     }
 
 }

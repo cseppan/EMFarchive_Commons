@@ -12,13 +12,13 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedFileReader;
 
 import java.io.File;
 import java.util.List;
@@ -64,10 +64,9 @@ public class SpatialSurrogatesImporter implements Importer {
         }
     }
 
-    // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        Reader reader = new WhitespaceDelimitedFileReader(file);
+        Reader reader = new DelimiterIdentifyingFileReader(file, formatUnit.fileFormat().cols().length);
 
         loader.load(reader, dataset, table);
         loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());

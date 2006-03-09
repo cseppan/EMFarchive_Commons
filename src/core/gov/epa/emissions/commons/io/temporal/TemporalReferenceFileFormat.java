@@ -33,7 +33,7 @@ public class TemporalReferenceFileFormat implements FileFormat {
         column.add(new Column("Weekly_Code", types.intType(), new IntegerFormatter()));
         column.add(new Column("Diurnal_Code", types.intType(), new IntegerFormatter()));
         column.add(new Column("Pollutants", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("FIPS", types.stringType(32), new StringFormatter(32)));
+        column.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
         column.add(new Column("LinkID_PlantID", types.stringType(32), new StringFormatter(32)));
         column.add(new Column("Characteristic_1", types.stringType(32), new StringFormatter(32)));
         column.add(new Column("Characteristic_2", types.stringType(32), new StringFormatter(32)));

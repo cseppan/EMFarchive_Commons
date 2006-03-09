@@ -39,7 +39,7 @@ public class IDATableFormat implements TableFormat {
         Column state = new Column("STATE", types.stringType(2), new StringFormatter(2));
         cols.add(0, state);
 
-        Column fips = new Column("FIPS", types.stringType(5), new StringFormatter(5));
+        Column fips = new Column("FIPS", types.stringType(6), new StringFormatter(6));
         cols.add(1, fips);
 
         //Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));

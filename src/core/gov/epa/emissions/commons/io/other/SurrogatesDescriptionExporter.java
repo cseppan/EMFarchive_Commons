@@ -12,8 +12,6 @@ import java.sql.SQLException;
 
 public class SurrogatesDescriptionExporter extends GenericExporter {
     
-    private String delimiter;
-    
     public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
         super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types));
     }
@@ -26,20 +24,15 @@ public class SurrogatesDescriptionExporter extends GenericExporter {
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
         for (int i = startCol(cols); i < cols.length + commentspad; i++) {
             String value = data.getString(i);
-            if (value != null) {
-                String towrite = getValue(cols, i, value, data);
-                if(cols[i - 1].equalsIgnoreCase("NAME"))
-                    towrite = "\"" + towrite + "\"";
-                writer.write(towrite);
-            }
+            String towrite = getValue(cols, i, value, data);
+            if(cols[i - 1].equalsIgnoreCase("NAME"))
+                towrite = "\"" + towrite + "\"";
+            writer.write(towrite);
 
             if (i + 1 < cols.length)
-                writer.print(delimiter);// delimiter
+                writer.print(getDelimiter());// delimiter
         }
         writer.println();
     }
     
-    public void setDelimiter(String del) {
-        this.delimiter = del;
-    }
 }

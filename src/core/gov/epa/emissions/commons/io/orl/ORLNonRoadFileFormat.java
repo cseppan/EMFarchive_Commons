@@ -46,7 +46,7 @@ public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols {
     public Column[] minCols() {
         List cols = new ArrayList();
 
-        cols.add(new Column("FIPS", types.stringType(32), new StringFormatter(32)));
+        cols.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
         cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
         cols.add(new Column("POLL", types.stringType(16), new StringFormatter(16)));
         cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));

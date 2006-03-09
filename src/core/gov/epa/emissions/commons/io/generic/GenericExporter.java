@@ -148,8 +148,7 @@ public class GenericExporter implements Exporter {
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
         for (int i = startCol(cols); i < cols.length + commentspad; i++) {
             String value = data.getString(i);
-            if (value != null)
-                writer.write(getValue(cols, i, value, data));
+            writer.write(getValue(cols, i, value, data));
 
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -161,7 +160,10 @@ public class GenericExporter implements Exporter {
         if (!isComment(index, cols))
             return formatValue(cols, index, data);
 
-        return getComment(value);
+        if(value != null)
+            return getComment(value);
+        
+        return "";
     }
 
     protected String formatValue(String[] cols, int index, ResultSet data) throws SQLException {
@@ -170,7 +172,39 @@ public class GenericExporter implements Exporter {
             fileIndex = index - 3;
 
         Column column = fileFormat.cols()[fileIndex - 2];
-        return column.format(data).trim();
+        return (delimiter.equals("")) ? getFixedPositionValue(column, data) : getDelimitedValue(column, data);
+    }
+    
+    protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
+        String value = column.format(data).trim();
+        
+        if(column.sqlType().startsWith("FLOAT") ||
+                column.sqlType().startsWith("DOUBLE")) {
+            value = getFloatValue(value);
+        }
+        
+        return value;
+    }
+    
+    protected String getFloatValue(String value) {
+        if(!value.equals("") && value != null) {
+            value = "" + Float.parseFloat(value);
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.lastIndexOf(".0"));
+        }
+        
+        return value;
+    }
+    
+    protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
+        String value = getDelimitedValue(column, data);
+        String leadingSpace = "";
+        int spaceCount = column.width() - value.length();
+        
+        for(int i = 0; i < spaceCount; i++)
+            leadingSpace += " ";
+        
+        return leadingSpace + value;
     }
 
     protected String getComment(String value) {
@@ -181,7 +215,7 @@ public class GenericExporter implements Exporter {
         if (!value.startsWith(dataset.getInlineCommentChar()))
             value = dataset.getInlineCommentChar() + value;
 
-        return " " + value;
+        return value;
     }
 
     protected boolean isComment(int index, String[] cols) {
@@ -202,6 +236,10 @@ public class GenericExporter implements Exporter {
 
     public void setDelimiter(String del) {
         this.delimiter = del;
+    }
+    
+    protected String getDelimiter() {
+        return delimiter;
     }
 
 }

@@ -16,13 +16,13 @@ public class IDANonPointNonRoadExporter extends GenericExporter {
     
     public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
         super(dataset, dbServer, fileFormat);
-        setup(fileFormat, " ");
+        setup(fileFormat, "");
     }
 
     public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
             DataFormatFactory dataFormatFactory) {
         super(dataset, dbServer, fileFormat, dataFormatFactory);
-        setup(fileFormat, " ");
+        setup(fileFormat, "");
     }
     
     private void setup(FileFormat fileFormat, String delimiter) {
@@ -34,9 +34,9 @@ public class IDANonPointNonRoadExporter extends GenericExporter {
         int fileIndex = index;
         if (isTableVersioned(cols))
             fileIndex = index - 3;
-        
-        Column column = fileFormat.cols()[fileIndex - 4]; //two more columns added to dataset during importing
-        return column.format(data).trim();
+
+        Column column = fileFormat.cols()[fileIndex - 4];
+        return getFixedPositionValue(column, data);
     }
     
     // Due to two more columns added to dataset during import

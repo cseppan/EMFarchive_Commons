@@ -49,7 +49,7 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols {
     public Column[] minCols() {
         List cols = new ArrayList();
 
-        cols.add(new Column("FIPS", types.stringType(32), new StringFormatter(32)));
+        cols.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
         cols.add(new Column("PLANTID", types.stringType(15), new StringFormatter(15)));
         cols.add(new Column("POINTID", types.stringType(15), new StringFormatter(15)));
         cols.add(new Column("STACKID", types.stringType(15), new StringFormatter(15)));

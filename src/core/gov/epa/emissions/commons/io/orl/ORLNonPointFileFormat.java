@@ -46,7 +46,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols {
     public Column[] minCols() {
         List cols = new ArrayList();
 
-        cols.add(new Column("FIPS", types.stringType(32), new StringFormatter(32)));
+        cols.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
         cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
         cols.add(new Column("SIC", types.stringType(4), new StringFormatter(4)));
         cols.add(new Column("MACT", types.stringType(6), new StringFormatter(6)));
