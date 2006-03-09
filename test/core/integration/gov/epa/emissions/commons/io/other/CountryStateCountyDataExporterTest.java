@@ -28,7 +28,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
     private Dataset dataset;
 
     private DbServer dbServer;
-    
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -50,46 +50,17 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
 
     public void testExportCountryStateCountyData() throws Exception {
         File folder = new File("test/data/other");
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, dbServer, sqlDataTypes);
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder,
+                new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
-                dbServer, sqlDataTypes);
+        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes);
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
-        
+
         // assert headers
         assertComments(file);
-        
-        // assert data
-        List data = readData(file);
-        assertEquals(37, data.size());
-        assertEquals("/COUNTRY/", (String) data.get(0));
-        assertEquals("0                   US", (String) data.get(1));
-        assertEquals("/STATE/", (String) data.get(8));
-        assertEquals(" 12FL              Florida 4  TEST", (String)data.get(18));
-        assertEquals("/COUNTY/", (String) data.get(20));
-    }
-    
-    public void testExportVersionedCountryStateCountyData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
 
-        File folder = new File("test/data/other");
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
-        importerv.run();
-
-        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, 
-                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
-        File file = File.createTempFile("CSCexported", ".txt");
-        exporter.export(file);
-        
-        // assert headers
-        assertComments(file);
-        
         // assert data
         List data = readData(file);
         assertEquals(37, data.size());
@@ -98,11 +69,38 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         assertEquals("/STATE/", (String) data.get(8));
         assertEquals(" 12FL              Florida 4  TEST", (String) data.get(18));
         assertEquals("/COUNTY/", (String) data.get(20));
-        assertEquals(" TN         Claiborne Co  4 725 44 440 EST   -83.664   36.474      " +
-                "456.719  -84.0067  -83.3646  36.3284  36.5988    30059",
-                (String) data.get(36));
     }
-    
+
+    public void testExportVersionedCountryStateCountyData() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
+        File folder = new File("test/data/other");
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder,
+                new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        importerv.run();
+
+        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version));
+        File file = File.createTempFile("CSCexported", ".txt");
+        exporter.export(file);
+
+        // assert headers
+        assertComments(file);
+
+        // assert data
+        List data = readData(file);
+        assertEquals(37, data.size());
+        assertEquals("/COUNTRY/", (String) data.get(0));
+        assertEquals("0                   US", (String) data.get(1));
+        assertEquals("/STATE/", (String) data.get(8));
+        assertEquals(" 12FL              Florida 4  TEST", (String) data.get(18));
+        assertEquals("/COUNTY/", (String) data.get(20));
+        assertEquals(" TN         Claiborne Co  4 725 44 440 EST   -83.664   36.474 "
+                + "456.71943606  -84.0067  -83.3646  36.3284  36.5988    30059", data.get(36));
+    }
+
     private void assertComments(File file) throws IOException {
         List comments = readComments(file);
         assertEquals(headers(dataset.getDescription()).size(), comments.size());

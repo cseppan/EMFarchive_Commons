@@ -125,8 +125,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         List data = readData(file);
         assertEquals(6, data.size());
         // regex is used because of precision diff between mysql and postgres
-        assertEquals("37001,10201302,0,0107,2,0,246,3.87296E-4,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(0)));
-        assertEquals("37001,10201302,0,0107,2,0,253,6.91058E-4,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(1)));
+        assertEquals("37001,10201302,0,0107,2,0,246,0.0003872963052,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(0)));
+        assertEquals("37001,10201302,0,0107,2,0,253,0.0006910581132,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(1)));
     }
 
     public void testShouldExportPoint() throws Exception {
@@ -146,7 +146,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         assertEquals(10, records.size());
 
         String expectedPattern = "37119,0001,0001,1,1,REXAMINC.;CUSTOMDIVISION,40201301,02,01,60," +
-                "7.5,375,2083.46,47.16,3083,0714,0,L,-80.7081,35.12,17,108883,9.70414,,,,,,,,,,,,,," +
+                "7.5,375,2083.463,47.16,3083,0714,0,L,-80.7081,35.12,17,108883,9.704141,,,,,,,,,,,,,," +
                 ",,,,,,,,,,,,,,,,,,,,,,,,,,";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);

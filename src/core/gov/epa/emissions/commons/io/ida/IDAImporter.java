@@ -49,8 +49,9 @@ public class IDAImporter {
         this.fileVerifier = new FileVerifier();
     }
 
-    public void setup(File folder, String[] fileNames, IDAFileFormat fileFormat, DataFormatFactory formatFactory) throws ImporterException {
-        File file = new File(folder,fileNames[0]);
+    public void setup(File folder, String[] fileNames, IDAFileFormat fileFormat, DataFormatFactory formatFactory)
+            throws ImporterException {
+        File file = new File(folder, fileNames[0]);
         fileVerifier.shouldExist(file);
         this.file = file;
         IDAHeaderReader headerReader = new IDAHeaderReader(file);
@@ -58,12 +59,12 @@ public class IDAImporter {
         headerReader.close();
 
         fileFormat.addPollutantCols(headerReader.polluntants());
-        TableFormat tableFormat = new IDATableFormat(fileFormat,sqlDataTypes); 
+        TableFormat tableFormat = new IDATableFormat(fileFormat, sqlDataTypes);
         tableFormat = formatFactory.tableFormat(tableFormat, sqlDataTypes);
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         DatasetLoader loader = new DatasetLoader(dataset);
-        
+
         dataTable = new DataTable(dataset, emissionDatasource);
         InternalSource internalSource = loader.internalSource(file, dataTable.name(), tableFormat);
         unit.setInternalSource(internalSource);
@@ -110,9 +111,9 @@ public class IDAImporter {
         String country = comments.content("COUNTRY");
         if (!country.toLowerCase().equals("us"))
             throw new ImporterException("Currently the IDA importer supports files for US not for '" + country + "'");
-        //FIXME: get the country object from the db
-        //dataset.setCountry(new Country(country));
-        //dataset.setRegion(new Region(country));
+        // FIXME: get the country object from the db
+        // dataset.setCountry(new Country(country));
+        // dataset.setRegion(new Region(country));
 
         if (!comments.have("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");

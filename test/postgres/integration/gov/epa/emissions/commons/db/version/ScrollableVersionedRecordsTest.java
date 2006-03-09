@@ -163,8 +163,8 @@ public class ScrollableVersionedRecordsTest extends PersistenceTestCase {
         assertEquals("P2_1", record.token(1));
         assertEquals(Integer.class, record.token(2).getClass());
         assertEquals(new Integer(2), record.token(2));
-        assertEquals(Float.class, record.token(3).getClass());
-        assertEquals(3.0, ((Float)record.token(3)).floatValue(), 0.000001);
+        assertEquals(Double.class, record.token(3).getClass());
+        assertEquals(3.0, ((Double)record.token(3)).floatValue(), 0.000001);
     }
 
 }

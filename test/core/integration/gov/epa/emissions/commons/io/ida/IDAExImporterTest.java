@@ -61,7 +61,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
-    
+
     public void testShouldExportASmallAreaFile() throws Exception {
         Version version = new Version();
         version.setVersion(0);
@@ -76,21 +76,21 @@ public class IDAExImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
-        
+
         IDANonPointNonRoadFileFormat fileFormat = new IDANonPointNonRoadFileFormat(sqlDataTypes);
         fileFormat.addPollutantCols(getPollutantCols(dataset));
         IDANonPointNonRoadExporter exporter = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat);
         File exportfile = File.createTempFile("IDAAreaExported", ".txt");
         exporter.export(exportfile);
-        
-        String data3 = "37  12102006000    5.7519    0.0206          0      0  0     0   39.9441     0.143          " +
-                "0      0  0     0   26.8425    0.0961          0      0  0     0    0.0301    1.0E-4          0      " +
-                "0  0     0    0.1443    6.0E-4          0      0  0     0    0.1352    5.0E-4          0      0  0     " +
-                "0    4.0749    0.0236          0      0  0     0";
-        String data10 = "37  12104002000         0         0          0      0  0     0         0         0          0      " +
-                "0  0     0         0         0          0      0  0     0    8.7829    0.0016          0      0  0     0    " +
-                "0.8414    2.0E-4          0      0  0     0    0.2946         0          0      0  0     0         0         " +
-                "0          0      0  0     0";
+
+        String data3 = "37  12102006000    5.7519    0.0206          0      0  0     0   39.9441     0.143          "
+                + "0      0  0     0   26.8425    0.0961          0      0  0     0    0.0301    0.0001          0      "
+                + "0  0     0    0.1443    0.0006          0      0  0     0    0.1352    0.0005          0      0  0     "
+                + "0    4.0749    0.0236          0      0  0     0";
+        String data10 = "37  12104002000         0         0          0      0  0     0         0         0          0      "
+                + "0  0     0         0         0          0      0  0     0    8.7829    0.0016          0      0  0     0    "
+                + "0.8414    0.0002          0      0  0     0    0.2946         0          0      0  0     0         0         "
+                + "0          0      0  0     0";
         List data = readData(exportfile);
         assertEquals(data3, data.get(2));
         assertEquals(data10, data.get(9));
@@ -107,7 +107,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
-    
+
     public void testShouldExportASmallPointFile() throws Exception {
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-point.txt" };
@@ -118,25 +118,25 @@ public class IDAExImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
-        
+
         IDAPointFileFormat fileFormat = new IDAPointFileFormat(sqlDataTypes);
         fileFormat.addPollutantCols(getPollutantCols(dataset));
         IDAPointExporter exporter = new IDAPointExporter(dataset, dbServer, fileFormat);
         File exportfile = File.createTempFile("IDAPointExported", ".txt");
         exporter.export(exportfile);
-        
-        String data1 = "37  1           0010            001         001            01BFI WASTE SYSTEMS OF NORTH AMERICA, INC.  " +
-                "50300505   0   0  82   2.5 165    201.26       41       0 2525252524 07 1      11836           0       0    0    " +
-                "0        04953    36.04     79.4          0.84       0.0023      0  0         0  0  0        21.98       0.0603      " +
-                "0  0         0  0  0         3.82       0.0104      0  0         0  0  0         1.54       0.0042     60  " +
-                "0         0  2  0        16.74       0.0459     60  0         0  2  0      14.8874       0.0409     60  0         0  " +
-                "2  0            0            0      0  0         0  0  0";
-        String data10 = "37  1           0034            006         001            02                           COPLAND, INC.  " +
-                "10200501   0   0  40     3 370    118.05     16.7       0 3025202524 05 1          2           0       0  0.5    " +
-                "0        02221  36.1208  79.4042        2.0E-4            0      0  0         0  0  0       0.0249       1.0E-4      " +
-                "0  0         0  0  0       0.0062            0      0  0         0  0  0       0.0894       2.0E-4      0  0         0  " +
-                "0  0       0.0012            0      0  0         0  0  0       3.0E-4            0      0  0         0  0  0            " +
-                "0            0      0  0         0  0  0"; 
+
+        String data1 = "37  1           0010            001         001            01BFI WASTE SYSTEMS OF NORTH AMERICA, INC.  "
+                + "50300505   0   0  82   2.5 165    201.26       41       0 2525252524 07 1      11836           0       0    0    "
+                + "0        04953    36.04     79.4          0.84       0.0023      0  0         0  0  0        21.98       0.0603      "
+                + "0  0         0  0  0         3.82       0.0104      0  0         0  0  0         1.54       0.0042     60  "
+                + "0         0  2  0        16.74       0.0459     60  0         0  2  0      14.8874       0.0409     60  0         0  "
+                + "2  0            0            0      0  0         0  0  0";
+        String data10 = "37  1           0034            006         001            02                           COPLAND, INC.  "
+                + "10200501   0   0  40     3 370    118.05     16.7       0 3025202524 05 1          2           0       0  0.5    "
+                + "0        02221  36.1208  79.4042        0.0002            0      0  0         0  0  0       0.0249       0.0001      "
+                + "0  0         0  0  0       0.0062            0      0  0         0  0  0       0.0894       0.0002      0  0         0  "
+                + "0  0       0.0012            0      0  0         0  0  0       0.0003            0      0  0         0  0  0            "
+                + "0            0      0  0         0  0  0";
         List data = readData(exportfile);
         assertEquals(data1, data.get(0));
         assertEquals(data10, data.get(9));
@@ -152,7 +152,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
     }
-    
+
     public void testShouldExportASmallMobileFile() throws Exception {
         Version version = new Version();
         version.setVersion(0);
@@ -167,17 +167,17 @@ public class IDAExImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
-        
+
         IDAMobileFileFormat fileFormat = new IDAMobileFileFormat(sqlDataTypes);
         fileFormat.addPollutantCols(getPollutantCols(dataset));
         IDAMobileExporter exporter = new IDAMobileExporter(dataset, dbServer, fileFormat);
         File exportfile = File.createTempFile("IDAMobileExported", ".txt");
         exporter.export(exportfile);
-        
-        String data1 = " 1  1         02201001110    46.224     0.133    81.371    0.2334   " +
-                "638.965    1.6686     2.225    0.0070     0.974    0.0031     0.584    0.0018    2.7179    0.0086";
-        String data10 = " 1  1         02201001290   101.487    0.2639    67.366    0.1775   1020.88    2.4307     " +
-                "2.905    0.0084     1.271    0.0037     0.726    0.0021    3.5515     0.011";
+
+        String data1 = " 1  1         02201001110    46.224     0.133    81.371    0.2334   "
+                + "638.965    1.6686     2.225     0.007     0.974    0.0031     0.584    0.0018    2.7179    0.0086";
+        String data10 = " 1  1         02201001290   101.487    0.2639    67.366    0.1775  1020.877    2.4307     "
+                + "2.905    0.0084     1.271    0.0037     0.726    0.0021    3.5515     0.011";
         List data = readData(exportfile);
         assertEquals(data1, data.get(0));
         assertEquals(data10, data.get(9));
@@ -187,15 +187,14 @@ public class IDAExImporterTest extends PersistenceTestCase {
         try {
             File folder = new File("test/data/ida");
             String[] fileNames = { "small-activity.txt" };
-            IDAActivityImporter importer = new IDAActivityImporter(folder, fileNames, dataset, dbServer,
-                    sqlDataTypes);
+            IDAActivityImporter importer = new IDAActivityImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
             importer.run();
 
             // assert
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
-            
+
             // Test exporter
             NonVersionedDataFormatFactory factory = new NonVersionedDataFormatFactory();
             IDAActivityFileFormat fileFormat = new IDAActivityFileFormat(sqlDataTypes, factory.defaultValuesFiller());
@@ -224,9 +223,9 @@ public class IDAExImporterTest extends PersistenceTestCase {
         } catch (ExporterException e) {
             throw e;
         }
-        
+
     }
-    
+
     private String[] getPollutantCols(Dataset dataset) throws ImporterException {
         try {
             File header = File.createTempFile(dataset.getName(), ".txt");
@@ -241,7 +240,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
             throw new ImporterException("Can't read header file");
         }
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 
@@ -273,6 +272,5 @@ public class IDAExImporterTest extends PersistenceTestCase {
     private boolean isComment(String line) {
         return line.startsWith("#");
     }
-
 
 }

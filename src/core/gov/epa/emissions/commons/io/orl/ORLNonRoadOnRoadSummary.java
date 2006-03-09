@@ -148,7 +148,6 @@ public class ORLNonRoadOnRoadSummary implements SummaryTable {
             // create the temp tables first, if needed
             if (tempTableNames != null) {
                 for (int i = 0; i < tempTableQueries.length; i++) {
-                    System.err.println("temp table query-" + tempTableQueries[i]);
                     emissionsDatasource.query().execute(tempTableQueries[i]);
                     emissionsDatasource.query().execute((String) tempTableIndexList.get(i));
                 }
@@ -164,8 +163,6 @@ public class ORLNonRoadOnRoadSummary implements SummaryTable {
                     + " = f." + "state_county_fips" + " AND " + summaryTableAndPart + "f.country_code='US')";
 
             // create the actual table
-            System.err.println("query-" + query);
-
             emissionsDatasource.query().execute(query);
 
             // drop the temp tables, if needed

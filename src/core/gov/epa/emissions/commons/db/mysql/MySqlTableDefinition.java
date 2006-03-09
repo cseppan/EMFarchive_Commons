@@ -70,7 +70,6 @@ public class MySqlTableDefinition implements TableDefinition {
                     + (colNames[i].equals(primaryCol) ? " PRIMARY KEY " + ", " : ", ");
         }// for i
         ddlStatement = ddlStatement.substring(0, ddlStatement.length() - 2) + ")";
-        System.err.println("create table -"+ddlStatement);
         execute(ddlStatement);
     }
 

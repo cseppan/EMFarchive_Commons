@@ -33,17 +33,11 @@ public class IDATableFormat implements TableFormat {
         List cols = new ArrayList();
         cols.addAll(Arrays.asList(base.cols()));
 
-        //Column datasetId = new Column(key(), types.longType(), new LongFormatter());
-        //cols.add(0, datasetId);
-
         Column state = new Column("STATE", types.stringType(2), new StringFormatter(2));
         cols.add(0, state);
 
         Column fips = new Column("FIPS", types.stringType(6), new StringFormatter(6));
         cols.add(1, fips);
-
-        //Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
-        //cols.add(inlineComments);
 
         return (Column[]) cols.toArray(new Column[0]);
     }

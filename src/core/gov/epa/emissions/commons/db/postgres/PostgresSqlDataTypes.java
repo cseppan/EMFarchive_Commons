@@ -40,7 +40,7 @@ public class PostgresSqlDataTypes implements SqlDataTypes {
     }
 
     public String realType() {
-        return "FLOAT(15)";// FIXME: review the precision. too big or small ?
+        return "double precision";
     }
 
     public String smallInt() {

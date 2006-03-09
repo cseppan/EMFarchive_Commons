@@ -176,24 +176,7 @@ public class GenericExporter implements Exporter {
     }
     
     protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
-        String value = column.format(data).trim();
-        
-        if(column.sqlType().startsWith("FLOAT") ||
-                column.sqlType().startsWith("DOUBLE")) {
-            value = getFloatValue(value);
-        }
-        
-        return value;
-    }
-    
-    protected String getFloatValue(String value) {
-        if(!value.equals("") && value != null) {
-            value = "" + Float.parseFloat(value);
-            if(value.endsWith(".0"))
-                value = value.substring(0, value.lastIndexOf(".0"));
-        }
-        
-        return value;
+        return column.format(data).trim();
     }
     
     protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {

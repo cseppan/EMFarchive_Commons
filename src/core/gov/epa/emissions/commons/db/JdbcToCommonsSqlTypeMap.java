@@ -16,6 +16,7 @@ public class JdbcToCommonsSqlTypeMap {
         map.put(new Integer(Types.CHAR), types.charType());
         map.put(new Integer(Types.BIGINT), types.longType());
         map.put(new Integer(Types.REAL), types.realType());
+        map.put(new Integer(Types.DOUBLE), types.realType());
         map.put(new Integer(Types.SMALLINT), types.smallInt());
         map.put(new Integer(Types.LONGVARCHAR), types.text());
         map.put(new Integer(Types.VARCHAR), types.stringType());
