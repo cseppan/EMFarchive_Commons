@@ -40,7 +40,7 @@ public abstract class SortedFilteredVersionedRecordsTestCase extends HibernateTe
 
     protected void doTearDown() throws Exception {
         DataModifier modifier = datasource.dataModifier();
-        modifier.dropAll(versionsTable);
+        modifier.dropAllData(versionsTable);
 
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(dataTable);

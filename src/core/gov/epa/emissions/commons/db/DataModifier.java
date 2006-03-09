@@ -135,9 +135,8 @@ public class DataModifier {
 
         for (int i = 0; i < data.length; i++) {
             if (colTypes[i].startsWith("VARCHAR")) {
-                String cleanedCell = data[i].replace('-', '_');
-                String cellWithSingleQuotesEscaped = cleanedCell.replaceAll("\'", "''");
-                insert.append("'" + cellWithSingleQuotesEscaped + "'");
+                String cleaned = data[i].replaceAll("\'", "''");
+                insert.append("'" + cleaned + "'");
             } else {
                 if (data[i].trim().length() == 0)
                     data[i] = "DEFAULT";
@@ -226,7 +225,7 @@ public class DataModifier {
         return schema + "." + table;
     }
 
-    public void dropAll(String table) throws SQLException {
+    public void dropAllData(String table) throws SQLException {
         execute("DELETE FROM " + qualified(table));
     }
 

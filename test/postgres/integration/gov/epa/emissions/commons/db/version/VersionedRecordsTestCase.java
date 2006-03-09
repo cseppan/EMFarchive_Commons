@@ -34,17 +34,28 @@ public abstract class VersionedRecordsTestCase extends HibernateTestCase {
         versionsTable = "versions";
         dataTable = "versioned_data";
 
+        clean();
         createTable(dataTable, datasource);
     }
 
     protected void doTearDown() throws Exception {
-        DataModifier modifier = datasource.dataModifier();
-        modifier.dropAll(versionsTable);
+        clean();
+        super.doTearDown();
+    }
 
+    private void dropDataTable() throws SQLException {
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(dataTable);
+    }
 
-        super.doTearDown();
+    private void clean() throws SQLException {
+        DataModifier modifier = datasource.dataModifier();
+        modifier.dropAllData(versionsTable);
+
+        try {
+            dropDataTable();
+        } catch (SQLException e) {// Ignore, as table may not exist
+        }
     }
 
     protected void addRecord(Datasource datasource, String table, String[] data) throws SQLException {

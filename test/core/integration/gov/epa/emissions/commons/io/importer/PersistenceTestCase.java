@@ -85,7 +85,7 @@ public abstract class PersistenceTestCase extends TestCase {
 
     protected void dropData(String table, Datasource datasource) throws SQLException {
         DataModifier modifier = datasource.dataModifier();
-        modifier.dropAll(table);
+        modifier.dropAllData(table);
     }
 
     protected TableReader tableReader(Datasource datasource) {
