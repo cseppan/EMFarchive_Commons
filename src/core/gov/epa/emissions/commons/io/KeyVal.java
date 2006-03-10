@@ -12,6 +12,14 @@ public class KeyVal implements Serializable {
 
     private long listindex;
 
+    public KeyVal() {// persistence/bean
+    }
+
+    public KeyVal(Keyword keyword, String value) {
+        this.keyword = keyword;
+        this.value = value;
+    }
+
     public long getId() {
         return id;
     }
@@ -42,6 +50,10 @@ public class KeyVal implements Serializable {
 
     public void setListindex(long listindex) {
         this.listindex = listindex;
+    }
+
+    public String getName() {
+        return keyword.getName();
     }
 
 }

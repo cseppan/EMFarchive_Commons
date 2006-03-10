@@ -10,26 +10,14 @@ public class DatasetTypeTest extends TestCase {
 
     public void testAddKeyword() {
         DatasetType type = new DatasetType();
-        Keyword kw = new Keyword();
-        kw.setName("key1");
-        type.addKeyword(kw);
+        Keyword kw = new Keyword("key1");
+        KeyVal val = new KeyVal(kw, "val");
+        type.addKeyVal(val);
 
-        Keyword[] actual = type.getKeywords();
+        KeyVal[] actual = type.getKeyVals();
         assertEquals(1, actual.length);
-        assertEquals("key1", actual[0].getName());
-    }
-
-    public void testSetKeywords() {
-        DatasetType type = new DatasetType();
-        Keyword kw1 = new Keyword("key1");
-        Keyword kw2 = new Keyword("key2");
-
-        type.setKeywords(new Keyword[] { kw1, kw2 });
-
-        Keyword[] actual = type.getKeywords();
-        assertEquals(2, actual.length);
-        assertEquals("key1", actual[0].getName());
-        assertEquals("key2", actual[1].getName());
+        assertEquals("key1", actual[0].getKeyword().getName());
+        assertEquals("val", actual[0].getValue());
     }
 
     public void testShouldBeLockedOnlyIfUsernameAndDateIsSet() {

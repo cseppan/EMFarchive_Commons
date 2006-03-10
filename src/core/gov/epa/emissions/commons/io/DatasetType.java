@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class DatasetType implements Serializable, Lockable, Comparable{
-    
+public class DatasetType implements Serializable, Lockable, Comparable {
+
     private long id;
 
     private String name;
@@ -22,20 +22,17 @@ public class DatasetType implements Serializable, Lockable, Comparable{
 
     private boolean external;
 
-    private List keywordsList;
-
     private String defaultSortOrder;
-    
+
     private String importerClassName;
 
     private String exporterClassName;
 
     private Mutex lock;
-    
+
     private List keyValsList;
 
     public DatasetType() {
-        this.keywordsList = new ArrayList();
         this.keyValsList = new ArrayList();
         this.lock = new Mutex();
     }
@@ -121,19 +118,6 @@ public class DatasetType implements Serializable, Lockable, Comparable{
         this.external = external;
     }
 
-    public void addKeyword(Keyword keyword) {
-        keywordsList.add(keyword);
-    }
-
-    public Keyword[] getKeywords() {
-        return (Keyword[]) keywordsList.toArray(new Keyword[0]);
-    }
-
-    public void setKeywords(Keyword[] keywords) {
-        keywordsList.clear();
-        keywordsList.addAll(Arrays.asList(keywords));
-    }
-
     public String getLockOwner() {
         return lock.getLockOwner();
     }
@@ -173,7 +157,7 @@ public class DatasetType implements Serializable, Lockable, Comparable{
     public int compareTo(Object o) {
         return name.compareTo(((DatasetType) o).getName());
     }
-    
+
     public KeyVal[] getKeyVals() {
         return (KeyVal[]) keyValsList.toArray(new KeyVal[0]);
     }
@@ -181,5 +165,9 @@ public class DatasetType implements Serializable, Lockable, Comparable{
     public void setKeyVals(KeyVal[] keyvals) {
         keyValsList.clear();
         keyValsList.addAll(Arrays.asList(keyvals));
+    }
+
+    public void addKeyVal(KeyVal val) {
+        keyValsList.add(val);
     }
 }
