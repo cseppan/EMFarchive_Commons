@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.io.Dataset;
+import gov.epa.emissions.commons.data.Dataset;
 
 public interface DataLoader {
 

@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;

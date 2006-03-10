@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
-import gov.epa.emissions.commons.io.Lockable;
-import gov.epa.emissions.commons.io.Mutex;
+import gov.epa.emissions.commons.data.Lockable;
+import gov.epa.emissions.commons.data.Mutex;
 import gov.epa.emissions.commons.security.User;
 
 import java.util.Date;

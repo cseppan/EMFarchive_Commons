@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.generic;
 
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.Dataset;
 
 import java.io.PrintWriter;
 import java.sql.ResultSet;

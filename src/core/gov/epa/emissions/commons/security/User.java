@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.security;
 
 import gov.epa.emissions.commons.CommonsException;
-import gov.epa.emissions.commons.io.Lockable;
-import gov.epa.emissions.commons.io.Mutex;
+import gov.epa.emissions.commons.data.Lockable;
+import gov.epa.emissions.commons.data.Mutex;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetType;
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 
 import java.io.File;
 

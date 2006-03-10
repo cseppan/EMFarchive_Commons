@@ -5,8 +5,8 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.SimpleDataset;
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.SimpleDataset;
 
 import java.io.File;
 import java.util.Random;

@@ -1,5 +1,8 @@
-package gov.epa.emissions.commons.io;
+package gov.epa.emissions.commons.data;
 
+import gov.epa.emissions.commons.data.DatasetType;
+import gov.epa.emissions.commons.data.KeyVal;
+import gov.epa.emissions.commons.data.Keyword;
 import gov.epa.emissions.commons.security.User;
 
 import java.util.Date;

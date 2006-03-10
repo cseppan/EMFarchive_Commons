@@ -1,5 +1,6 @@
-package gov.epa.emissions.commons.io;
+package gov.epa.emissions.commons.data;
 
+import gov.epa.emissions.commons.data.SectorCriteria;
 import junit.framework.TestCase;
 
 public class SectorCriteriaTest extends TestCase {

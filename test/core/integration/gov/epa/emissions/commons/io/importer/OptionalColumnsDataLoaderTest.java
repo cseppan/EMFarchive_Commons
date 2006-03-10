@@ -1,15 +1,15 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.db.version.Version;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.NonVersionedTableFormat;
-import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.orl.ORLNonPointFileFormat;
 import gov.epa.emissions.commons.io.temporal.SampleFileFormatWithOptionalCols;

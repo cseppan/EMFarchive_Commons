@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.nif;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.FormatUnit;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.BufferedReader;

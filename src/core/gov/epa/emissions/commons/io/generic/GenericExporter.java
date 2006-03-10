@@ -1,16 +1,16 @@
 package gov.epa.emissions.commons.io.generic;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.BufferedWriter;

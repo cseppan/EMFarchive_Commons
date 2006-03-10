@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.external;
 
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;

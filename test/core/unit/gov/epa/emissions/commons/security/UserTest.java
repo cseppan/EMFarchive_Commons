@@ -1,6 +1,6 @@
 package gov.epa.emissions.commons.security;
 
-import gov.epa.emissions.commons.io.Lockable;
+import gov.epa.emissions.commons.data.Lockable;
 
 import java.util.Date;
 

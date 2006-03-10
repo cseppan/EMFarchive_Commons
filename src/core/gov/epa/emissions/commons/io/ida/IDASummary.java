@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.ida;
 
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.InternalSource;
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.io.importer.SummaryTable;
 
 public class IDASummary implements SummaryTable {

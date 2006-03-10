@@ -1,11 +1,11 @@
 package gov.epa.emissions.commons.io.orl;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 

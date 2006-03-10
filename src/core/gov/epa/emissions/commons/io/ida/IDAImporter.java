@@ -1,12 +1,12 @@
 package gov.epa.emissions.commons.io.ida;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetTypeUnit;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetTypeUnit;
-import gov.epa.emissions.commons.io.InternalSource;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;

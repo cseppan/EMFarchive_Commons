@@ -1,8 +1,8 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableDefinition;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.TableFormat;
 
 import java.sql.SQLException;

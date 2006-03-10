@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.version.Version;
-import gov.epa.emissions.commons.io.SimpleDataset;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.orl.ORLNonPointImporter;

@@ -1,9 +1,9 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.Dataset;
-import gov.epa.emissions.commons.io.DatasetType;
 import gov.epa.emissions.commons.io.ida.IDASummary;
 import gov.epa.emissions.commons.io.nif.nonpointNonroad.NIFNonpointNonRoadSummary;
 import gov.epa.emissions.commons.io.nif.onroad.NIFOnRoadSummary;

@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.orl;
 
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.io.Dataset;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.SummaryTable;
