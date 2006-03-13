@@ -32,9 +32,12 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     private List keyValsList;
 
+    private List qaStepTemplates;
+
     public DatasetType() {
-        this.keyValsList = new ArrayList();
-        this.lock = new Mutex();
+        keyValsList = new ArrayList();
+        qaStepTemplates = new ArrayList();
+        lock = new Mutex();
     }
 
     public DatasetType(String name) {
@@ -169,5 +172,18 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public void addKeyVal(KeyVal val) {
         keyValsList.add(val);
+    }
+
+    public void setQaStepTemplates(QAStepTemplate[] templates) {
+        qaStepTemplates.clear();
+        qaStepTemplates.addAll(Arrays.asList(templates));
+    }
+
+    public void addQaStepTemplate(QAStepTemplate val) {
+        qaStepTemplates.add(val);
+    }
+
+    public QAStepTemplate[] getQaStepTemplates() {
+        return (QAStepTemplate[]) qaStepTemplates.toArray(new QAStepTemplate[0]);
     }
 }

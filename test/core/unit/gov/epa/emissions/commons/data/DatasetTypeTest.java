@@ -1,8 +1,5 @@
 package gov.epa.emissions.commons.data;
 
-import gov.epa.emissions.commons.data.DatasetType;
-import gov.epa.emissions.commons.data.KeyVal;
-import gov.epa.emissions.commons.data.Keyword;
 import gov.epa.emissions.commons.security.User;
 
 import java.util.Date;
@@ -11,7 +8,7 @@ import junit.framework.TestCase;
 
 public class DatasetTypeTest extends TestCase {
 
-    public void testAddKeyword() {
+    public void testAddKeyVal() {
         DatasetType type = new DatasetType();
         Keyword kw = new Keyword("key1");
         KeyVal val = new KeyVal(kw, "val");
@@ -21,6 +18,16 @@ public class DatasetTypeTest extends TestCase {
         assertEquals(1, actual.length);
         assertEquals("key1", actual[0].getKeyword().getName());
         assertEquals("val", actual[0].getValue());
+    }
+    
+    public void testAddQAStepTemplate() {
+        DatasetType type = new DatasetType();
+        QAStepTemplate val = new QAStepTemplate();
+        type.addQaStepTemplate(val);
+        
+        QAStepTemplate[] actual = type.getQaStepTemplates();
+        assertEquals(1, actual.length);
+        assertSame(val, actual[0]);
     }
 
     public void testShouldBeLockedOnlyIfUsernameAndDateIsSet() {

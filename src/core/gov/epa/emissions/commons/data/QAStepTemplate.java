@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.data;
 
 public class QAStepTemplate {
 
-    private long id;
+    private long listIndex;
 
     private String name;
 
@@ -54,12 +54,12 @@ public class QAStepTemplate {
         this.order = order;
     }
 
-    public long getId() {
-        return id;
+    public long getListIndex() {
+        return listIndex;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setListIndex(long listIndex) {
+        this.listIndex = listIndex;
     }
 
 }
