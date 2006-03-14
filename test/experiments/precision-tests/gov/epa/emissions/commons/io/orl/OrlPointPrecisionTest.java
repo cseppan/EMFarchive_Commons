@@ -35,8 +35,6 @@ public class OrlPointPrecisionTest extends HibernateTestCase {
     }
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
-        System.out.println("dataset: " + dataset.getName());
-
         File folder = new File("test/data/orl/nc");
         ORLPointImporter importer = new ORLPointImporter(folder, new String[] { "point-precisions.txt" }, dataset,
                 dbServer, sqlDataTypes);

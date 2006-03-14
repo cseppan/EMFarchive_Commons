@@ -34,8 +34,6 @@ public class IDAPrecisionsTest extends PersistenceTestCase {
     }
 
     public void testShouldImportASmallAreaFile() throws Exception {
-        System.out.println("importing dataset: " + dataset.getName());
-
         File folder = new File("test/data/ida");
         String[] fileNames = { "area-precisions-test.txt" };
         IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer,
