@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SimpleDataset implements Dataset {
-    private long datasetid;
+    private int datasetid;
 
     private String name;
 
@@ -124,11 +124,11 @@ public class SimpleDataset implements Dataset {
         this.datasources = datasources;
     }
 
-    public long getId() {
+    public int getId() {
         return datasetid;
     }
 
-    public void setId(long datasetid) {
+    public void setId(int datasetid) {
         this.datasetid = datasetid;
     }
 

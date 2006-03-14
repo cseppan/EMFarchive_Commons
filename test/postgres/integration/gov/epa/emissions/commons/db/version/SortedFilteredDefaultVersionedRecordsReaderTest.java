@@ -10,34 +10,35 @@ import java.util.List;
 public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilteredVersionedRecordsTestCase {
     private DefaultVersionedRecordsReader reader;
 
-    long datasetId;
-    
+    int datasetId;
+
     protected void setUp() throws Exception {
         super.setUp();
-        datasetId = (long) Math.random();
-        
+        datasetId = (int) Math.random();
+
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
         reader = new DefaultVersionedRecordsReader(datasource);
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { null, ""+datasetId, "0", "Initial Version", "", "true" });
+        addRecord(datasource, table, new String[] { null, "" + datasetId, "0", "Initial Version", "", "true" });
     }
 
     private void setupVersionZeroData(Datasource datasource, String table) throws SQLException {
-        addRecord(datasource, table, new String[] { "1", ""+datasetId, "0", null, "A91", "W27", "D52", "X74", "L14" });
-        addRecord(datasource, table, new String[] { "2", ""+datasetId, "0", null, "E11", "F99", "K23", "P87", "Y78" });
-        addRecord(datasource, table, new String[] { "3", ""+datasetId, "0", null, "C17", "U45", "H19", "Z23", "B34" });
-        addRecord(datasource, table, new String[] { "4", ""+datasetId, "0", null, "G19", "N97", "R87", "J22", "Q26" });
-        addRecord(datasource, table, new String[] { "5", ""+datasetId, "0", null, "I61", "T18", "O16", "S15", "M19" });
-        addRecord(datasource, table, new String[] { "6", ""+datasetId, "0", null, "T16", "X14", "V18", "Z17", "B12" });
-        addRecord(datasource, table, new String[] { "7", ""+datasetId, "0", null, "A22", "W11", "D62", "X19", "L99" });
-        addRecord(datasource, table, new String[] { "8", ""+datasetId, "0", null, "A11", "W55", "D11", "X23", "L47" });
-        addRecord(datasource, table, new String[] { "9", ""+datasetId, "0", null, "G98", "N23", "R34", "J16", "Q19" });
-        addRecord(datasource, table, new String[] { "10", ""+datasetId, "0", null, "G09", "N27", "R98", "J89", "Q01" });
+        addRecord(datasource, table, new String[] { "1", "" + datasetId, "0", null, "A91", "W27", "D52", "X74", "L14" });
+        addRecord(datasource, table, new String[] { "2", "" + datasetId, "0", null, "E11", "F99", "K23", "P87", "Y78" });
+        addRecord(datasource, table, new String[] { "3", "" + datasetId, "0", null, "C17", "U45", "H19", "Z23", "B34" });
+        addRecord(datasource, table, new String[] { "4", "" + datasetId, "0", null, "G19", "N97", "R87", "J22", "Q26" });
+        addRecord(datasource, table, new String[] { "5", "" + datasetId, "0", null, "I61", "T18", "O16", "S15", "M19" });
+        addRecord(datasource, table, new String[] { "6", "" + datasetId, "0", null, "T16", "X14", "V18", "Z17", "B12" });
+        addRecord(datasource, table, new String[] { "7", "" + datasetId, "0", null, "A22", "W11", "D62", "X19", "L99" });
+        addRecord(datasource, table, new String[] { "8", "" + datasetId, "0", null, "A11", "W55", "D11", "X23", "L47" });
+        addRecord(datasource, table, new String[] { "9", "" + datasetId, "0", null, "G98", "N23", "R34", "J16", "Q19" });
+        addRecord(datasource, table,
+                new String[] { "10", "" + datasetId, "0", null, "G09", "N27", "R98", "J89", "Q01" });
     }
-     
+
     public void testFetchVersionZeroWithNoFilters() throws Exception {
         Version versionZero = new Version();
         versionZero.setDatasetId(datasetId);
@@ -145,8 +146,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setDatasetId(datasetId);
         versionZero.setVersion(0);
 
-        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null, "col_three = 'R87'", null,
-                session);
+        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null, "col_three = 'R87'", null, session);
 
         assertEquals(1, records.length);
 
@@ -277,7 +277,6 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
                         assertEquals("L14", tokin);
                 }
 
-
                 k++;
             }
         }
@@ -354,7 +353,8 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         versionZero.setVersion(0);
 
         VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, null,
-                "(col_one = 'A91' OR col_three = 'R87' OR col_five='B12' OR col_two='T18' OR col_two='F99')", "col_five,col_one", session);
+                "(col_one = 'A91' OR col_three = 'R87' OR col_five='B12' OR col_two='T18' OR col_two='F99')",
+                "col_five,col_one", session);
 
         assertEquals(5, records.length);
 
@@ -437,11 +437,5 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
         }
 
     }
-    
-    
-    
-    
-    
-    
-    
+
 }

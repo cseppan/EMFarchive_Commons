@@ -16,7 +16,7 @@ import org.hibernate.criterion.Restrictions;
 
 public class Versions {
 
-    public Version[] getPath(long datasetId, int finalVersion, Session session) {
+    public Version[] getPath(int datasetId, int finalVersion, Session session) {
         Version version = get(datasetId, finalVersion, session);
         if (version == null)
             return new Version[0];
@@ -36,12 +36,12 @@ public class Versions {
         return (Version[]) versions.toArray(new Version[0]);
     }
 
-    public Version get(long datasetId, int version, Session session) {
+    public Version get(int datasetId, int version, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
             Criteria crit = session.createCriteria(Version.class);
-            Criteria fullCrit = crit.add(Restrictions.eq("datasetId", new Long(datasetId))).add(
+            Criteria fullCrit = crit.add(Restrictions.eq("datasetId", new Integer(datasetId))).add(
                     Restrictions.eq("version", new Integer(version)));
             tx.commit();
 
@@ -64,7 +64,7 @@ public class Versions {
         return versions.toArray();
     }
 
-    public int getLastFinalVersion(long datasetId, Session session) {
+    public int getLastFinalVersion(int datasetId, Session session) {
         int versionNumber = 0;
 
         Version[] versions = get(datasetId, session);
@@ -80,12 +80,12 @@ public class Versions {
         return versionNumber;
     }
 
-    public Version[] get(long datasetId, Session session) {
+    public Version[] get(int datasetId, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            Criteria crit = session.createCriteria(Version.class)
-                    .add(Restrictions.eq("datasetId", new Long(datasetId))).addOrder(Order.asc("version"));
+            Criteria crit = session.createCriteria(Version.class).add(
+                    Restrictions.eq("datasetId", new Integer(datasetId))).addOrder(Order.asc("version"));
             List versions = crit.list();
             tx.commit();
 
@@ -148,12 +148,12 @@ public class Versions {
         return base.createCompletePath();
     }
 
-    private int getNextVersionNumber(long datasetId, Session session) {
+    private int getNextVersionNumber(int datasetId, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
             Criteria base = session.createCriteria(Version.class);
-            Criteria fullCrit = base.add(Restrictions.eq("datasetId", new Long(datasetId))).addOrder(
+            Criteria fullCrit = base.add(Restrictions.eq("datasetId", new Integer(datasetId))).addOrder(
                     Order.desc("version"));
             List versions = fullCrit.list();
             tx.commit();

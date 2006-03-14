@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Sector implements Serializable, Lockable {
-    private long id;
+    private int id;
 
     private String name;
 
@@ -38,11 +38,11 @@ public class Sector implements Serializable, Lockable {
         this.description = description;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -104,7 +104,7 @@ public class Sector implements Serializable, Lockable {
     }
 
     public int hashCode() {
-        return (int) id;
+        return id;
     }
     
     public String toString(){

@@ -8,9 +8,9 @@ import java.util.Date;
 
 public class Version implements Lockable {
 
-    private long id;
+    private int id;
 
-    private long datasetId;
+    private int datasetId;
 
     private int version;
 
@@ -42,7 +42,7 @@ public class Version implements Lockable {
         return version;
     }
 
-    public void setDatasetId(long datasetId) {
+    public void setDatasetId(int datasetId) {
         this.datasetId = datasetId;
     }
 
@@ -50,7 +50,7 @@ public class Version implements Lockable {
         this.version = version;
     }
 
-    public long getDatasetId() {
+    public int getDatasetId() {
         return datasetId;
     }
 
@@ -137,11 +137,11 @@ public class Version implements Lockable {
         lock.setLockOwner(username);
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -150,6 +150,6 @@ public class Version implements Lockable {
     }
 
     public int hashCode() {
-        return (int) id;
+        return id;
     }
 }

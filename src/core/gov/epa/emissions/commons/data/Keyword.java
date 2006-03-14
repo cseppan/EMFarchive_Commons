@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Keyword implements Serializable {
 
-    private long id;
+    private int id;
 
     private String name;
 
@@ -15,11 +15,11 @@ public class Keyword implements Serializable {
         this.name = name;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -39,7 +39,7 @@ public class Keyword implements Serializable {
     }
 
     public int hashCode() {
-        return (int) id;
+        return id;
     }
 
 }

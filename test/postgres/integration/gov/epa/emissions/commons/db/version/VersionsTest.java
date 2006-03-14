@@ -55,7 +55,7 @@ public class VersionsTest extends HibernateTestCase {
     }
 
     public void testSeveralMarksDerivedVersionAsFinal() throws Exception {
-        long datasetId = 1;
+        int datasetId = 1;
         Version base = versions.get(datasetId, 0, session);
 
         Version derivedFromBase = versions.derive(base, "version one", session);

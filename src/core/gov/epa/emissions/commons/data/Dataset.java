@@ -13,9 +13,9 @@ public interface Dataset extends Serializable {
     
     public static final String header_comment_char = "HEADER_COMMENT_CHAR";
     
-    public long getId();
+    public int getId();
 
-    public void setId(long id);
+    public void setId(int id);
 
     public String getName();
 
