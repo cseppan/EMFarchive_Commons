@@ -13,7 +13,7 @@ public class Button extends JButton {
     public Button(String label, final Action action) {
         super(label);
         super.setName(toCanonicalName(label));
-
+        
         addActionForEnterKeyPress(label, action);
         addActionListener(action);
     }
