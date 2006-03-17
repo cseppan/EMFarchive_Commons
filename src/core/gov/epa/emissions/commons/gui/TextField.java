@@ -1,5 +1,8 @@
 package gov.epa.emissions.commons.gui;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -32,6 +35,14 @@ public class TextField extends JTextField implements Changeable {
             }
 
             public void removeUpdate(DocumentEvent e) {
+                notifyChanges();
+            }
+        });
+    }
+    
+    public void addKeyListener() {
+        this.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
                 notifyChanges();
             }
         });
