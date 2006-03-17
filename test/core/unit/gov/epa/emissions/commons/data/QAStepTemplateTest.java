@@ -35,9 +35,9 @@ public class QAStepTemplateTest extends TestCase {
 
     public void testShouldHaveOrderAsAttribute() {
         QAStepTemplate template = new QAStepTemplate();
-        template.setOrder("order");
+        template.setOrder((float)1.2);
 
-        assertEquals("order", template.getOrder());
+        assertEquals(1.20, 0.0, template.getOrder());
     }
 
 }

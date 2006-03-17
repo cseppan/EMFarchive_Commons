@@ -12,7 +12,7 @@ public class QAStepTemplate {
 
     private boolean required;
 
-    private String order;
+    private float order;
 
     public void setName(String name) {
         this.name = name;
@@ -46,11 +46,11 @@ public class QAStepTemplate {
         this.required = optional;
     }
 
-    public String getOrder() {
+    public float getOrder() {
         return order;
     }
 
-    public void setOrder(String order) {
+    public void setOrder(float order) {
         this.order = order;
     }
 
