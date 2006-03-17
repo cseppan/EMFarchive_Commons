@@ -13,6 +13,8 @@ public class QAStepTemplate {
     private boolean required;
 
     private float order;
+    
+    private String description;
 
     public void setName(String name) {
         this.name = name;
@@ -60,6 +62,14 @@ public class QAStepTemplate {
 
     public void setListIndex(long listIndex) {
         this.listIndex = listIndex;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

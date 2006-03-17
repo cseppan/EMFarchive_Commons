@@ -39,5 +39,13 @@ public class QAStepTemplateTest extends TestCase {
 
         assertEquals(1.20, 0.0, template.getOrder());
     }
+    
+    public void testShouldHaveDescriptionAsAttribute() {
+        QAStepTemplate template = new QAStepTemplate();
+        template.setDescription("blah blah");
+        
+        assertEquals("blah blah", template.getDescription());
+    }
+    
 
 }
