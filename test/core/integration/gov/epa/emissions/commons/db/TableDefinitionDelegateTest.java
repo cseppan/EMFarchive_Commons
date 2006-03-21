@@ -45,7 +45,7 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
         }
     }
 
-public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() throws Exception {
+    public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() throws Exception {
         String[] names = { "table1" };
         try {
             TableDefinition definition = datasource.tableDefinition();
@@ -81,7 +81,7 @@ public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() throws E
             assertEquals("column size should match", tmd.getCols()[4].getSize(), 11);
 
             assertEquals("column name should match", tmd.getCols()[5].getName(), "col6");
-            assertEquals("column type should match",  "java.lang.Double", tmd.getCols()[5].getType());
+            assertEquals("column type should match", "java.lang.Double", tmd.getCols()[5].getType());
             assertEquals("column size should match", tmd.getCols()[5].getSize(), 20);
 
             assertEquals("column name should match", tmd.getCols()[6].getName(), "col7");
@@ -95,7 +95,9 @@ public void testShouldGetTableMetaDataForTableWithMultipleColumnTypes() throws E
         } finally {
             dropTables(names);
         }
-    }    public void testTableExist() throws Exception {
+    }
+
+    public void testTableExist() throws Exception {
         TableDefinitionDelegate definition = new TableDefinitionDelegate(datasource.getConnection());
         String[] names = { "table1" };
         createTables(names);

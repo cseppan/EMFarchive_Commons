@@ -25,6 +25,13 @@ public abstract class PersistenceTestCase extends TestCase {
 
     protected File referenceFilesDir;
 
+    public PersistenceTestCase(String name) {
+        super(name);
+    }
+
+    public PersistenceTestCase() {
+    }
+
     protected void setUp() throws Exception {
         String folder = "test";
         File conf = new File(folder, configFilename());

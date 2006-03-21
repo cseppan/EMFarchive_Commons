@@ -11,6 +11,13 @@ public abstract class HibernateTestCase extends PersistenceTestCase {
 
     protected Session session;
 
+    public HibernateTestCase(String name) {
+        super(name);
+    }
+
+    public HibernateTestCase() {
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         HibernateSessionFactory sessionFactory = new HibernateSessionFactory(sessionFactory());

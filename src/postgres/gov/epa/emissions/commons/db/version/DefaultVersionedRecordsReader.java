@@ -17,15 +17,6 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         versions = new Versions();
     }
 
-    public VersionedRecord[] fetchAll(Version version, String table, Session session) throws SQLException {
-        return fetchAll(version, table, null, null, null, session);
-    }
-
-    public VersionedRecord[] fetchAll(Version version, String table, String columnFilter, String rowFilter,
-            String sortOrder, Session session) throws SQLException {
-        return fetch(version, table, columnFilter, rowFilter, sortOrder, session).all();
-    }
-
     public ScrollableVersionedRecords fetch(Version version, String table, Session session) throws SQLException {
         return fetch(version, table, null, null, null, session);
     }
@@ -37,6 +28,15 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         records.execute();
 
         return records;
+    }
+
+    VersionedRecord[] fetchAll(Version version, String table, Session session) throws SQLException {
+        return fetchAll(version, table, null, null, null, session);
+    }
+
+    VersionedRecord[] fetchAll(Version version, String table, String columnFilter, String rowFilter, String sortOrder,
+            Session session) throws SQLException {
+        return fetch(version, table, columnFilter, rowFilter, sortOrder, session).all();
     }
 
     private String createQuery(Version version, String table, String columnFilter, String rowFilter, String sortOrder,

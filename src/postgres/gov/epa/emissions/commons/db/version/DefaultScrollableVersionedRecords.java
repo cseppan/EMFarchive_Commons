@@ -20,6 +20,8 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
 
     private ResultSetMetaData metadata;
 
+    private int totalCount;
+
     public DefaultScrollableVersionedRecords(Datasource datasource, String query) {
         this.datasource = datasource;
         this.query = query;
@@ -27,13 +29,14 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
 
     public void execute() throws SQLException {
         Connection connection = datasource.getConnection();
-        Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
         resultSet = stmt.executeQuery(query);
         metadata = resultSet.getMetaData();
+        totalCount = getTotalCount();
     }
 
-    public int total() throws SQLException {
+    private int getTotalCount() throws SQLException {
         int current = position();
         resultSet.last();
         try {
@@ -45,6 +48,10 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
                 resultSet.absolute(current);
 
         }
+    }
+
+    public int total() {
+        return totalCount;
     }
 
     public int position() throws SQLException {
@@ -67,7 +74,7 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
     }
 
     public boolean available() throws SQLException {
-        // TODO: is this a serious hit to the ResultSet's cursor ?
+        // PERF: is this a serious hit to the ResultSet's cursor ?
         return position() < total();
     }
 
@@ -102,15 +109,14 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
         moveTo(start);// one position prior to start
 
         List range = new ArrayList();
-        int max = total();
-        for (int i = start; (i <= end) && (i < max); i++) {
+        for (int i = start; (i <= end) && (i < totalCount); i++) {
             range.add(next());
         }
         return (VersionedRecord[]) range.toArray(new VersionedRecord[0]);
     }
 
     public VersionedRecord[] all() throws SQLException {
-        return range(0, total());
+        return range(0, totalCount);
     }
 
 }
