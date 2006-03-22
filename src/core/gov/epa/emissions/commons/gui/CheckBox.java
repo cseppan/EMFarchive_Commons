@@ -12,7 +12,11 @@ public class CheckBox extends JCheckBox implements Changeable {
     private boolean changed = false;
     
     public CheckBox(String title) {
-        super(title, false);
+        this(title, false);
+    }
+
+    public CheckBox(String title, boolean selected) {
+        super(title, selected);
     }
 
     private void addActionListener() {
