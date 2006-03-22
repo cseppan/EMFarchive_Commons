@@ -21,6 +21,10 @@ public class DefaultScrollableVersionedRecordsTest extends PersistenceTestCase {
 
     protected String dataTable;
 
+    public DefaultScrollableVersionedRecordsTest(String name) {
+        super(name);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
 
