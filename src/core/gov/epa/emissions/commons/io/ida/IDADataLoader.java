@@ -36,7 +36,6 @@ public class IDADataLoader implements DataLoader {
             insertRecords(dataset, table, reader);
         } catch (Exception e) {
             dropData(table, dataset);
-            e.printStackTrace();
             throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         }
