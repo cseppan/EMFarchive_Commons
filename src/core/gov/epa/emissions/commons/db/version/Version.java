@@ -106,7 +106,7 @@ public class Version implements Lockable {
     }
 
     public String toString() {
-        return "Version " + version + " of Dataset - " + datasetId;
+        return version + " (" + name + ")";
     }
 
     public Date getLockDate() {
