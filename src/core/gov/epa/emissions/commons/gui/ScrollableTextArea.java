@@ -5,7 +5,7 @@ import javax.swing.JScrollPane;
 public class ScrollableTextArea extends JScrollPane {
 
     public ScrollableTextArea(TextArea text) {
-        text.setLineWrap(false);
+        //text.setLineWrap(false); //let text do it explicitly
 
         super.setViewportView(text);
         super.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
