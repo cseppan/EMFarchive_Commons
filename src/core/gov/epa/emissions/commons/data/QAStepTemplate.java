@@ -13,7 +13,7 @@ public class QAStepTemplate {
     private boolean required;
 
     private float order;
-    
+
     private String description;
 
     public void setName(String name) {
@@ -70,6 +70,10 @@ public class QAStepTemplate {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String toString() {
+        return name;
     }
 
 }
