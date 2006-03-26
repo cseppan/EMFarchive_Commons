@@ -1,8 +1,5 @@
 package gov.epa.emissions.commons.gui;
 
-
-import java.awt.event.KeyListener;
-
 import javax.swing.JComponent;
 
 public class TextFieldWidget implements Widget {
@@ -19,19 +16,6 @@ public class TextFieldWidget implements Widget {
 
     public String value() {
         return textfield.getText();
-    }
-
-    public void addKeyListener(KeyListener listener) {
-        textfield.addKeyListener(listener);
-    }
-    
-    public void addTextListener() {
-        textfield.addTextListener();
-    }
-    
-    public void addChangeable(ManageChangeables changeablesList) {
-        changeablesList.addChangeable(textfield);
-        textfield.addTextListener();
     }
 
 }

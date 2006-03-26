@@ -1,7 +1,5 @@
 package gov.epa.emissions.commons.gui;
 
-import java.awt.event.KeyListener;
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
@@ -20,14 +18,6 @@ public class LabelWidget implements Widget {
 
     public String value() {
         return label.getText();
-    }
-
-    public void addKeyListener(KeyListener listener) {
-        // ignored. Not Applicable
-    }
-
-    public void addChangeable(ManageChangeables changeablesList) {
-        // NOTE no need to implement
     }
 
 }

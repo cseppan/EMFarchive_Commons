@@ -9,7 +9,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 public class TextField extends JTextField implements Changeable {
-    private ChangeablesList listOfChangeables;
+    private ChangeablesList changeables;
 
     private boolean changed = false;
 
@@ -23,7 +23,7 @@ public class TextField extends JTextField implements Changeable {
         super.setText(value);
     }
 
-    public void addTextListener() {
+    private void addTextListener() {
         Document nameDoc = this.getDocument();
         nameDoc.addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
@@ -40,7 +40,7 @@ public class TextField extends JTextField implements Changeable {
         });
     }
     
-    public void addKeyListener() {
+    private void addKeyListener() {
         this.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 notifyChanges();
@@ -52,17 +52,19 @@ public class TextField extends JTextField implements Changeable {
         this.changed = false;
     }
 
-    private void notifyChanges() {
+    void notifyChanges() {
         changed = true;
-        this.listOfChangeables.onChanges();
+        this.changeables.onChanges();
     }
 
     public boolean hasChanges() {
         return this.changed;
     }
 
-    public void observe(ChangeablesList list) {
-        this.listOfChangeables = list;
+    public void observe(ChangeablesList changeables) {
+        this.changeables = changeables;
+        addTextListener();
+        addKeyListener();
     }
 
     public boolean isEmpty() {

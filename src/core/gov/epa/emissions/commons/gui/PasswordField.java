@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPasswordField;
 
 public class PasswordField extends JPasswordField implements Changeable {
-    private ChangeablesList listOfChangeables;
+    private ChangeablesList changeables;
     
     private boolean changed = false;
     
@@ -15,7 +15,7 @@ public class PasswordField extends JPasswordField implements Changeable {
         super.setName(name);
     }
     
-    public void addListeners() {
+    private void addKeyListener() {
         addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 notifyChanges();
@@ -27,9 +27,9 @@ public class PasswordField extends JPasswordField implements Changeable {
         this.changed = false;
     }
     
-    private void notifyChanges() {
+    void notifyChanges() {
         this.changed = true;
-        this.listOfChangeables.onChanges();
+        this.changeables.onChanges();
     }
 
     public boolean hasChanges() {
@@ -37,7 +37,8 @@ public class PasswordField extends JPasswordField implements Changeable {
     }
 
     public void observe(ChangeablesList list) {
-        this.listOfChangeables = list;
+        this.changeables = list;
+        addKeyListener();
     }
 
 }
