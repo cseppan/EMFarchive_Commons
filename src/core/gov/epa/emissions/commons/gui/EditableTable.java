@@ -6,7 +6,7 @@ import javax.swing.event.TableModelListener;
 
 public class EditableTable extends JTable implements Editor, Changeable {
 
-    private ChangeablesList listOfChangeables;
+    private Changeables listOfChangeables;
 
     private boolean changed = false;
 
@@ -58,7 +58,7 @@ public class EditableTable extends JTable implements Editor, Changeable {
         return this.changed;
     }
 
-    public void observe(ChangeablesList list) {
+    public void observe(Changeables list) {
         this.listOfChangeables = list;
     }
 

@@ -6,12 +6,12 @@ import java.util.List;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 
-public class ChangeablesListTest extends MockObjectTestCase {
+public class ChangeablesTest extends MockObjectTestCase {
 
-    private ChangeablesList model;
+    private DefaultChangeables model;
 
     protected void setUp() {
-        model = new ChangeablesList(null);
+        model = new DefaultChangeables(null);
     }
 
     public void testShouldConfirmFalseIfNoChangesInChangables() {

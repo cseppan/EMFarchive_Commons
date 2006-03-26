@@ -9,11 +9,10 @@ import javax.swing.text.Document;
 
 public class FormattedTextField extends JFormattedTextField implements Changeable {
     private boolean changed = false;
-    
-    private ChangeablesList listOfChangeables;
-    
-    public FormattedTextField(String name, Object value, Format format,
-            MessageBoard messagePanel) {
+
+    private Changeables changeables;
+
+    public FormattedTextField(String name, Object value, Format format, MessageBoard messagePanel) {
         super(format);
         super.setName(name);
         super.setValue(value);
@@ -21,8 +20,8 @@ public class FormattedTextField extends JFormattedTextField implements Changeabl
 
         super.setInputVerifier(new FormattedTextFieldVerifier(messagePanel));
     }
-    
-    public void addTextListener() {
+
+    private void addTextListener() {
         Document nameDoc = this.getDocument();
         nameDoc.addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
@@ -38,24 +37,24 @@ public class FormattedTextField extends JFormattedTextField implements Changeabl
             }
         });
     }
-    
+
     public void clear() {
         this.changed = false;
     }
-    
+
     void notifyChanges() {
         changed = true;
-        listOfChangeables.onChanges();
+        if (changeables != null)
+            changeables.onChanges();
     }
 
     public boolean hasChanges() {
         return this.changed;
     }
 
-    public void observe(ChangeablesList list) {
-        listOfChangeables = list;
+    public void observe(Changeables list) {
+        changeables = list;
         addTextListener();
     }
-
 
 }

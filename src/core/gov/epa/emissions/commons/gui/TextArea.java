@@ -9,7 +9,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 public class TextArea extends JTextArea implements Changeable {
-    private ChangeablesList changeables;
+    private Changeables changeables;
 
     private boolean changed = false;
 
@@ -46,7 +46,7 @@ public class TextArea extends JTextArea implements Changeable {
             }
         });
     }
-    
+
     private void addKeyListener() {
         this.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
@@ -60,15 +60,16 @@ public class TextArea extends JTextArea implements Changeable {
     }
 
     void notifyChanges() {
-        this.changed = true;
-        this.changeables.onChanges();
+        changed = true;
+        if (changeables != null)
+            changeables.onChanges();
     }
 
     public boolean hasChanges() {
         return this.changed;
     }
 
-    public void observe(ChangeablesList changeables) {
+    public void observe(Changeables changeables) {
         this.changeables = changeables;
         addTextListener();
         addKeyListener();

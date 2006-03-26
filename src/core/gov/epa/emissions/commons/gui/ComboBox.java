@@ -15,7 +15,7 @@ import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 public class ComboBox extends JComboBox implements Changeable {
-    private ChangeablesList listOfChangeables;
+    private Changeables changeables;
 
     private boolean changed = false;
 
@@ -84,15 +84,16 @@ public class ComboBox extends JComboBox implements Changeable {
 
     void notifyChanges() {
         changed = true;
-        this.listOfChangeables.onChanges();
+        if (changeables != null)
+            changeables.onChanges();
     }
 
     public boolean hasChanges() {
         return this.changed;
     }
 
-    public void observe(ChangeablesList list) {
-        this.listOfChangeables = list;
+    public void observe(Changeables list) {
+        this.changeables = list;
         addItemChangeListener();
     }
 }

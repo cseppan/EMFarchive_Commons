@@ -7,10 +7,10 @@ import javax.swing.JCheckBox;
 
 public class CheckBox extends JCheckBox implements Changeable {
 
-    private ChangeablesList listOfChangeables;
+    private Changeables changeables;
 
     private boolean changed = false;
-    
+
     public CheckBox(String title) {
         this(title, false);
     }
@@ -33,15 +33,16 @@ public class CheckBox extends JCheckBox implements Changeable {
 
     void notifyChanges() {
         changed = true;
-        this.listOfChangeables.onChanges();
+        if (changeables != null)
+            changeables.onChanges();
     }
 
     public boolean hasChanges() {
         return this.changed;
     }
 
-    public void observe(ChangeablesList list) {
-        this.listOfChangeables = list;
+    public void observe(Changeables changeables) {
+        this.changeables = changeables;
         addActionListener();
     }
 
