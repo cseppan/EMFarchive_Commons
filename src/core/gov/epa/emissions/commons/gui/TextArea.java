@@ -28,6 +28,7 @@ public class TextArea extends JTextArea implements Changeable {
         super.setLineWrap(true);
         super.setCaretPosition(0);
         super.setColumns(width);
+        super.setWrapStyleWord(true);
     }
 
     private void addTextListener() {

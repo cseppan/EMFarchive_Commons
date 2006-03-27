@@ -20,7 +20,7 @@ public class TextField extends JTextField implements Changeable {
 
     public TextField(String name, String value, int size) {
         this(name, size);
-        super.setText(value);
+        super.setText(value != null ? value : "");
     }
 
     private void addTextListener() {
