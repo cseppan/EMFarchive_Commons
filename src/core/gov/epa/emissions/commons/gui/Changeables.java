@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface Changeables {
 
-    public abstract void add(Changeable changeable);
+    void add(Changeable changeable);
 
-    public abstract void add(List changeables);
+    void add(List changeables);
 
-    public abstract boolean hasChanges();
+    boolean hasChanges();
 
-    public abstract void resetChanges();
+    void resetChanges();
 
-    public abstract void onChanges();
+    void onChanges();
 
 }
