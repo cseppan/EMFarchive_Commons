@@ -32,7 +32,9 @@ public class DefaultScrollableVersionedRecordsPerformanceTest extends Persistenc
                 + "WHERE dataset_id = 2 AND version IN (0) AND  "
                 + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)' ORDER BY record_id";
         results = new DefaultScrollableVersionedRecords(emissions(), query);
+        dumpMemory();
         results.execute();
+        dumpMemory();
     }
 
     protected TableFormat tableFormat(final SqlDataTypes types) {
@@ -69,9 +71,11 @@ public class DefaultScrollableVersionedRecordsPerformanceTest extends Persistenc
     }
 
     public void testRowCount() throws Exception {
-        System.out.println(Runtime.getRuntime().freeMemory());
         assertEquals(60780, results.total());
-        System.out.println(Runtime.getRuntime().freeMemory());
+    }
+
+    private void dumpMemory() {
+        System.out.println(Runtime.getRuntime().freeMemory()/1024);
     }
 
     public void testFetchRangeOfRecords() throws Exception {

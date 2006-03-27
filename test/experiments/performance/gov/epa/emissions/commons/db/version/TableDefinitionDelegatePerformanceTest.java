@@ -21,8 +21,14 @@ public class TableDefinitionDelegatePerformanceTest extends PersistenceTestCase 
 
     public void testShouldGetTableMetaData() throws Exception {
         TableDefinition definition = datasource.tableDefinition();
+        
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println(runtime.freeMemory()/1024);
+        
         TableMetadata data = definition.getTableMetaData("nonroad_capann_nei2002_0110_x_txt");
         assertNotNull(data);
+
+        System.out.println(runtime.freeMemory()/1024);
     }
 
 }
