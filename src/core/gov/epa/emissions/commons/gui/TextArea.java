@@ -17,17 +17,17 @@ public class TextArea extends JTextArea implements Changeable {
         this(name, value, 40);
     }
 
-    public TextArea(String name, String value, int width) {
-        this(name, value, width, 4);
+    public TextArea(String name, String value, int columns) {
+        this(name, value, columns, 4);
     }
 
-    public TextArea(String name, String value, int width, int rows) {
+    public TextArea(String name, String value, int columns, int rows) {
         super.setName(name);
         super.setText(value);
         super.setRows(rows);
         super.setLineWrap(true);
         super.setCaretPosition(0);
-        super.setColumns(width);
+        super.setColumns(columns);
         super.setWrapStyleWord(true);
     }
 

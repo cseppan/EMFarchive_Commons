@@ -8,7 +8,7 @@ public class FormattedDateField extends FormattedTextField implements Changeable
 
     private SimpleDateFormat format;
 
-    public FormattedDateField(String name, Object value, SimpleDateFormat format, MessageBoard messagePanel) {
+    public FormattedDateField(String name, Date value, SimpleDateFormat format, MessageBoard messagePanel) {
         super(name, value, format, messagePanel);
         this.format = format;
     }
