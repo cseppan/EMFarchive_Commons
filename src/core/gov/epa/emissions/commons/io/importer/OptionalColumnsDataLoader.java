@@ -46,6 +46,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
         DataModifier modifier = datasource.dataModifier();
+        modifier.initBatch();
+        
         for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
             int minColsSize = fileFormat.minCols().length;
             if (record.size() < minColsSize)
@@ -53,11 +55,13 @@ public class OptionalColumnsDataLoader implements DataLoader {
                         + ", It's less than minimum number of columns expected(" + minColsSize + ")");
             String[] data = data(dataset, record, fileFormat);
             try {
-                modifier.insertRow(table, data);
+                modifier.addBatchInsert(table, data);
             } catch (SQLException e) {
                 throw new ImporterException("Error in inserting query\n" + e.getMessage());
             }
         }
+        
+        modifier.executeBatch();
     }
 
     private String[] data(Dataset dataset, Record record, FileFormatWithOptionalCols format) {

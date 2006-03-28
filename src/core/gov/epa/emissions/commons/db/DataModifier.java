@@ -18,6 +18,8 @@ public class DataModifier {
 
     private JdbcToCommonsSqlTypeMap typeMap;
 
+    private Statement statement;
+
     public DataModifier(String schema, Connection connection, SqlDataTypes types) {
         this.schema = schema;
         this.connection = connection;
@@ -25,7 +27,7 @@ public class DataModifier {
     }
 
     private void execute(String sql) throws SQLException {
-        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        Statement statement = connection.createStatement();
         try {
             statement.execute(sql);
         } catch (SQLException e) {
@@ -69,7 +71,7 @@ public class DataModifier {
         }
 
         execute(sb.toString());
-    }// updateWhereLike(String, String, String[], String[])
+    }
 
     /**
      * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] = equalsClauses[i]
@@ -154,6 +156,11 @@ public class DataModifier {
      * Use 'insertRow(String table, String[] data) instead.
      */
     public void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
+        StringBuffer insert = createInsertStatement(table, data, cols);
+        execute(insert.toString());
+    }
+
+    private StringBuffer createInsertStatement(String table, String[] data, DbColumn[] cols) throws SQLException {
         if (data.length > cols.length)
             throw new SQLException("Invalid number of data tokens - " + data.length + ". Max: " + cols.length);
 
@@ -174,12 +181,32 @@ public class DataModifier {
         }
 
         insert.append(')');// close parentheses around the query
-
-        execute(insert.toString());
+        return insert;
     }
 
     public void insertRow(String table, String[] data) throws SQLException {
         insertRow(table, data, getColumns(table));
+    }
+
+    public void initBatch() throws SQLException {
+        statement = connection.createStatement();
+    }
+
+    public void addBatchInsert(String table, String[] data) throws SQLException {
+        StringBuffer sql = createInsertStatement(table, data, getColumns(table));
+        try {
+            statement.addBatch(sql.toString());
+        } catch (SQLException e) {
+            throw new SQLException("Error in executing query-" + sql + "\n" + e.getMessage());
+        }
+    }
+
+    public void executeBatch() throws SQLException {
+        try {
+            statement.executeBatch();
+        } finally {
+            statement.close();
+        }
     }
 
     public Column[] getColumns(String table) throws SQLException {
