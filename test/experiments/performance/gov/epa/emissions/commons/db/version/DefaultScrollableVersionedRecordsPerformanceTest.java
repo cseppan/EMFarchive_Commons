@@ -1,16 +1,16 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.PerformanceTestCase;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
 import java.util.List;
 
-public class DefaultScrollableVersionedRecordsPerformanceTest extends PersistenceTestCase {
+public class DefaultScrollableVersionedRecordsPerformanceTest extends PerformanceTestCase {
 
     private DefaultScrollableVersionedRecords results;
 
@@ -74,9 +74,7 @@ public class DefaultScrollableVersionedRecordsPerformanceTest extends Persistenc
         assertEquals(60780, results.total());
     }
 
-    private void dumpMemory() {
-        System.out.println(Runtime.getRuntime().freeMemory()/1024);
-    }
+   
 
     public void testFetchRangeOfRecords() throws Exception {
         VersionedRecord[] records = results.range(1, 100);
