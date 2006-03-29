@@ -2,15 +2,12 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.PerformanceTestCase;
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
-import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.version.Version;
-import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Exporter;
-import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 
 import java.io.File;
@@ -38,7 +35,6 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
         sqlDataTypes = dbServer.getSqlDataTypes();
 
         dataset = new SimpleDataset();
-        dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
 
         version = new Version();
@@ -46,24 +42,16 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
         formatFactory = new VersionedDataFormatFactory(version);
     }
 
-    protected void doTearDown() throws Exception {
-        Datasource datasource = dbServer.getEmissionsDatasource();
-        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
-    }
+    protected void doExport(String datasetName) throws Exception {
+        dataset.setName(datasetName);
+        InternalSource table = new InternalSource();
+        table.setTable(datasetName);
+        dataset.addInternalSource(table);
 
-    protected void doImport(File importFile) throws Exception {
-        DataFormatFactory formatFactory = new VersionedDataFormatFactory(version);
-        Importer importer = new ORLOnRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
-                dataset, dbServer, sqlDataTypes, formatFactory);
-        importer.run();
-        System.out.println("Import completed.");
-    }
-
-    protected void doExport() throws Exception {
         Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory);
         File file = File.createTempFile("exported", ".orl");
-        file.deleteOnExit();
+        System.out.println(file.getAbsolutePath());
+//        file.deleteOnExit();
 
         exporter.export(file);
     }

@@ -12,7 +12,6 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 
 import java.io.File;
-import java.util.Date;
 import java.util.Random;
 
 public class ImportPerformanceTestCase extends PerformanceTestCase {
@@ -55,10 +54,6 @@ public class ImportPerformanceTestCase extends PerformanceTestCase {
         Importer importer = new ORLOnRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
                 dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();
-    }
-
-    protected long time() {
-        return new Date().getTime()/1000;
     }
 
 }

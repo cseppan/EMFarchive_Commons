@@ -1,8 +1,14 @@
 package gov.epa.emissions.commons;
 
+import java.util.Date;
+
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 public abstract class PerformanceTestCase extends PersistenceTestCase {
+
+    private long startMemory;
+
+    private long startTime;
 
     public PerformanceTestCase(String name) {
         super(name);
@@ -32,4 +38,19 @@ public abstract class PerformanceTestCase extends PersistenceTestCase {
     protected long totalMemory() {
         return Runtime.getRuntime().totalMemory() / megabyte();
     }
+
+    protected long time() {
+        return new Date().getTime() / 1000;
+    }
+
+    protected void startTracking() {
+        startMemory = usedMemory();
+        startTime = time();
+    }
+
+    protected void dumpStats() {
+        System.out.println("Time: " + (time() - startTime) + " secs using " + (usedMemory() - startMemory)
+                + " MB memory");
+    }
+
 }

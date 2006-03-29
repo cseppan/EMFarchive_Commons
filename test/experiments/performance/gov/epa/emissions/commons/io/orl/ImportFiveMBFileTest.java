@@ -11,9 +11,11 @@ public class ImportFiveMBFileTest extends ImportPerformanceTestCase {
     public void testImport() throws Exception {
         File importFile = new File("test/data/orl/nc/performance", "onroad-5MB.txt");
         
-        long before = time();
+        long startMemory = usedMemory();
+        long startTime = time();
         super.doImport(importFile, "onroad_five_mb");
-        System.out.println("Import of 5 MB complete in " + (time() - before));
+        System.out.println("Import of 5 MB complete in " + (time() - startTime) + " secs using " + 
+                (usedMemory() - startMemory) + " MB memory");
     }
 
 }
