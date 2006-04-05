@@ -101,10 +101,10 @@ public class OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest extends
         startTracking();
 
         OptimizedScrollableVersionedRecords results = executeOptimizedQuery();
-        VersionedRecord[] records = results.range(50000, 99999);
-        assertEquals(50000, records.length);
+        VersionedRecord[] records = results.range(50000, 59999);
+        assertEquals(10000, records.length);
         assertEquals(50001, records[0].getRecordId());
-        assertEquals(100000, records[49999].getRecordId());
+        assertEquals(60000, records[9999].getRecordId());
 
         dumpStats();
         results.close();
@@ -115,10 +115,10 @@ public class OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest extends
         startTracking();
 
         OptimizedScrollableVersionedRecords results = executeOptimizedQuery();
-        VersionedRecord[] records = results.range(300000, 341373);
-        assertEquals(41374, records.length);
-        assertEquals(300001, records[0].getRecordId());
-        assertEquals(341374, records[41373].getRecordId());
+        VersionedRecord[] records = results.range(340000, 341373);
+        assertEquals(1374, records.length);
+        assertEquals(340001, records[0].getRecordId());
+        assertEquals(341374, records[1373].getRecordId());
 
         dumpStats();
         results.close();
@@ -129,10 +129,10 @@ public class OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest extends
         startTracking();
 
         OptimizedScrollableVersionedRecords results = executeOptimizedQuery();
-        VersionedRecord[] records = results.range(300000, 350000);
-        assertEquals(41374, records.length);
-        assertEquals(300001, records[0].getRecordId());
-        assertEquals(341374, records[41373].getRecordId());
+        VersionedRecord[] records = results.range(340000, 350000);
+        assertEquals(1374, records.length);
+        assertEquals(340001, records[0].getRecordId());
+        assertEquals(341374, records[1373].getRecordId());
 
         dumpStats();
         results.close();

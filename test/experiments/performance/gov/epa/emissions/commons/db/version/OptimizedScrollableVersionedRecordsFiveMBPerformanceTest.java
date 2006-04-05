@@ -100,10 +100,10 @@ public class OptimizedScrollableVersionedRecordsFiveMBPerformanceTest extends Sc
         startTracking();
 
         OptimizedScrollableVersionedRecords results = executeOptimizedQuery();
-        VersionedRecord[] records = results.range(50000, 99999);
-        assertEquals(50000, records.length);
+        VersionedRecord[] records = results.range(50000, 59999);
+        assertEquals(10000, records.length);
         assertEquals(50001, records[0].getRecordId());
-        assertEquals(100000, records[49999].getRecordId());
+        assertEquals(60000, records[9999].getRecordId());
 
         dumpStats();
         results.close();

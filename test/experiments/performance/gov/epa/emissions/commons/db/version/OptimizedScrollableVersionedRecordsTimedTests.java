@@ -6,7 +6,7 @@ import junit.framework.TestSuite;
 import com.clarkware.junitperf.LoadTest;
 import com.clarkware.junitperf.TimedTest;
 
-public class DefaultScrollableVersionedRecordsTimedTests {
+public class OptimizedScrollableVersionedRecordsTimedTests {
 
     public static Test suite() {
         int secs = 1000;
@@ -14,7 +14,7 @@ public class DefaultScrollableVersionedRecordsTimedTests {
 
         TestSuite suite = new TestSuite();
 
-        Test rowCount = new TimedTest(new ScrollableVersionedRecordsFiveMBPerformanceTest("testRowCount"),
+        Test rowCount = new TimedTest(new ScrollableVersionedRecordsFiveMBPerformanceTest("testSimpleQuery"),
                 (5 * minute));
         Test repeatedTest = new LoadTest(rowCount, 15);
         suite.addTest(repeatedTest);

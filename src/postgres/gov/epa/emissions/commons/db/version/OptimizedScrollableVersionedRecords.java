@@ -12,7 +12,7 @@ import java.util.List;
 
 public class OptimizedScrollableVersionedRecords implements ScrollableVersionedRecords {
 
-    private static final int FETCH_SIZE = 50000;
+    private static final int FETCH_SIZE = 10000;
 
     private Datasource datasource;
 
