@@ -49,8 +49,9 @@ public abstract class PerformanceTestCase extends PersistenceTestCase {
     }
 
     protected void dumpStats() {
-        System.out.println("Time: " + (time() - startTime) + " secs using " + (usedMemory() - startMemory)
-                + " MB memory");
+        long current = usedMemory();
+        System.out.println("Time: " + (time() - startTime) + " secs using " + (current - startMemory)
+                + " MB memory " + "(current:" + current + ", start: " + startMemory + ")");
     }
 
 }

@@ -36,9 +36,8 @@ public abstract class ScrollableVersionedRecordsPerformanceTest extends Performa
         datasource = emissions();
 
         whereClause = " WHERE dataset_id = " + datasetId + " AND version IN (0) AND  "
-        // + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)' ORDER BY record_id";
-                + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)'";// NOTE: 'ORDER BY' is removed
-        query = "SELECT * FROM " + dataTable + whereClause;
+                + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)'";
+        query = "SELECT * FROM " + dataTable + whereClause + " ORDER BY record_id";
     }
 
     protected SimpleScrollableVersionedRecords executeSimpleQuery() throws SQLException {

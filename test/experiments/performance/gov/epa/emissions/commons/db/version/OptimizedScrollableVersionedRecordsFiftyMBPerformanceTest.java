@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
-public class OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest extends ScrollableVersionedRecordsPerformanceTest {
+public class OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest extends
+        ScrollableVersionedRecordsPerformanceTest {
 
     public OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest(String name) {
         super(name);
@@ -112,13 +113,13 @@ public class OptimizedScrollableVersionedRecordsFiftyMBPerformanceTest extends S
     public void testShouldGetCompleteRangeFromLastQueryResults() throws Exception {
         System.out.println("testShouldGetCompleteRangeFromLastQueryResults");
         startTracking();
-        
+
         OptimizedScrollableVersionedRecords results = executeOptimizedQuery();
         VersionedRecord[] records = results.range(300000, 341373);
         assertEquals(41374, records.length);
         assertEquals(300001, records[0].getRecordId());
         assertEquals(341374, records[41373].getRecordId());
-        
+
         dumpStats();
         results.close();
     }
