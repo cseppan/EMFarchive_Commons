@@ -3,12 +3,16 @@ package gov.epa.emissions.commons.db.postgres;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DataQuery;
+import gov.epa.emissions.commons.db.OptimizedQuery;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class PostgresDatasource implements Datasource {
+
+    private static final int OPTIMIZED_FETCH_SIZE = 50000;// # of rows
 
     private Connection connection;
 
@@ -40,6 +44,10 @@ public class PostgresDatasource implements Datasource {
 
     public TableDefinition tableDefinition() {
         return new PostgresTableDefinition(name, connection);
+    }
+
+    public OptimizedQuery optimizedQuery(String query) throws SQLException {
+        return new OptimizedPostgresQuery(connection, query, OPTIMIZED_FETCH_SIZE);
     }
 
 }

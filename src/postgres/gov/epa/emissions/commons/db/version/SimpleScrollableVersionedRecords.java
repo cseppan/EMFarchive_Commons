@@ -10,11 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultScrollableVersionedRecords implements ScrollableVersionedRecords {
+public class SimpleScrollableVersionedRecords implements ScrollableVersionedRecords {
 
     private Datasource datasource;
-
-    private String query;
 
     private ResultSet resultSet;
 
@@ -22,12 +20,12 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
 
     private int totalCount;
 
-    public DefaultScrollableVersionedRecords(Datasource datasource, String query) {
+    public SimpleScrollableVersionedRecords(Datasource datasource, String query) throws SQLException {
         this.datasource = datasource;
-        this.query = query;
+        execute(query);
     }
 
-    public void execute() throws SQLException {
+    public void execute(String query) throws SQLException {
         Connection connection = datasource.getConnection();
         Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -54,16 +52,8 @@ public class DefaultScrollableVersionedRecords implements ScrollableVersionedRec
         return totalCount;
     }
 
-    public int position() throws SQLException {
+    int position() throws SQLException {
         return resultSet.getRow();
-    }
-
-    public void forward(int count) throws SQLException {
-        resultSet.relative(count);
-    }
-
-    public void backward(int count) throws SQLException {
-        resultSet.relative(-count);
     }
 
     public void moveTo(int index) throws SQLException {

@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class OptimizedPostgresQuery {
+public class OptimizedTestQuery {
 
     private Connection connection;
 
@@ -17,7 +17,7 @@ public class OptimizedPostgresQuery {
 
     private String query;
 
-    public OptimizedPostgresQuery(Connection connection) {
+    public OptimizedTestQuery(Connection connection) {
         this.connection = connection;
     }
 
@@ -29,7 +29,6 @@ public class OptimizedPostgresQuery {
         // Statement statement = connection.createStatement();
         statement.setFetchSize(rows);
         statement.setMaxRows(rows);
-
     }
 
     public ResultSet execute() throws SQLException {
@@ -40,10 +39,14 @@ public class OptimizedPostgresQuery {
         ResultSet resultSet = statement.executeQuery(currentQuery);
         System.out.println("used memory(after query): "
                 + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
-        System.out.println("fetch size: " + resultSet.getFetchSize());
 
         count += rows;
         return resultSet;
+    }
+
+    public void close() throws SQLException {
+        statement.close();
+        connection.close();
     }
 
 }

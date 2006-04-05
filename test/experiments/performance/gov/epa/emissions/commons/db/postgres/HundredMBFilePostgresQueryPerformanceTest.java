@@ -16,7 +16,7 @@ public class HundredMBFilePostgresQueryPerformanceTest extends PerformanceTestCa
         int count = 716920;
         int pageSize = 50000;
 
-        OptimizedPostgresQuery runner = new OptimizedPostgresQuery(emissions().getConnection());
+        OptimizedTestQuery runner = new OptimizedTestQuery(emissions().getConnection());
         runner.init("SELECT * FROM emissions.test_onroad_hundred_mb", pageSize);
 
         for (int i = 0; i < count;) {

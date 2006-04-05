@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DefaultScrollableVersionedRecordsTest extends PersistenceTestCase {
 
-    private ScrollableVersionedRecords results;
+    private SimpleScrollableVersionedRecords results;
 
     protected Datasource datasource;
 
@@ -34,9 +34,8 @@ public class DefaultScrollableVersionedRecordsTest extends PersistenceTestCase {
 
         importTestData(dataTable);
 
-        results = new DefaultScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "."
+        results = new SimpleScrollableVersionedRecords(emissions(), "SELECT * from " + datasource.getName() + "."
                 + dataTable);
-        results.execute();
     }
 
     private void clean() throws SQLException {
@@ -100,20 +99,6 @@ public class DefaultScrollableVersionedRecordsTest extends PersistenceTestCase {
 
     public void testRowCount() throws Exception {
         assertEquals(394, results.total());
-    }
-
-    public void testScrollForward() throws Exception {
-        assertEquals(0, results.position());
-        results.forward(10);
-        assertEquals(10, results.position());
-    }
-
-    public void testScrollBackward() throws Exception {
-        assertEquals(0, results.position());
-        results.forward(10);
-        results.backward(3);
-
-        assertEquals(7, results.position());
     }
 
     public void testMoveToSpecificPosition() throws Exception {

@@ -14,18 +14,21 @@ public class FiftyMBFilePostgresQueryPerformanceTest extends PerformanceTestCase
         startTracking();
 
         int count = 341374;
+        int pageSize = 50000;
 
-        OptimizedPostgresQuery runner = new OptimizedPostgresQuery(emissions().getConnection());
-        runner.init("SELECT * FROM emissions.test_onroad_fifty_mb", 50000);
+        OptimizedTestQuery runner = new OptimizedTestQuery(emissions().getConnection());
+        runner.init("SELECT * FROM emissions.test_onroad_fifty_mb", pageSize);
 
         for (int i = 0; i < count;) {
             ResultSet rs = runner.execute();
-            while(rs.next()){
+            while (rs.next()) {
                 rs.getObject(1);
             }
+            rs.close();
             
-            i += 50000;
+            i += pageSize;
         }
+        runner.close();
 
         dumpStats();
     }

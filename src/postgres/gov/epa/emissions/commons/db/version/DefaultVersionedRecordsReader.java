@@ -21,13 +21,25 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         return fetch(version, table, null, null, null, session);
     }
 
+    public ScrollableVersionedRecords optimizedFetch(Version version, String table, Session session)
+            throws SQLException {
+        return optimizedFetch(version, table, null, null, null, session);
+    }
+
+    public ScrollableVersionedRecords optimizedFetch(Version version, String table, String columnFilter,
+            String rowFilter, String sortOrder, Session session) throws SQLException {
+        String query = createQuery(version, table, columnFilter, rowFilter, sortOrder, session);
+        String versions = versionsList(version, session);
+        String fullyQualifiedTable = fullyQualifiedTable(table);
+        String whereClause = whereClause(version, rowFilter, versions);
+
+        return new OptimizedScrollableVersionedRecords(datasource, query, fullyQualifiedTable, whereClause);
+    }
+
     public ScrollableVersionedRecords fetch(Version version, String table, String columnFilter, String rowFilter,
             String sortOrder, Session session) throws SQLException {
         String query = createQuery(version, table, columnFilter, rowFilter, sortOrder, session);
-        ScrollableVersionedRecords records = new DefaultScrollableVersionedRecords(datasource, query);
-        records.execute();
-
-        return records;
+        return new SimpleScrollableVersionedRecords(datasource, query);
     }
 
     VersionedRecord[] fetchAll(Version version, String table, Session session) throws SQLException {
@@ -36,13 +48,13 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
 
     VersionedRecord[] fetchAll(Version version, String table, String columnFilter, String rowFilter, String sortOrder,
             Session session) throws SQLException {
-        return fetch(version, table, columnFilter, rowFilter, sortOrder, session).all();
+        ScrollableVersionedRecords records = fetch(version, table, columnFilter, rowFilter, sortOrder, session);
+        return records.range(0, records.total());
     }
 
     private String createQuery(Version version, String table, String columnFilter, String rowFilter, String sortOrder,
             Session session) {
-
-        String versions = fetchCommaSeparatedVersionSequence(version, session);
+        String versions = versionsList(version, session);
 
         String columnFilterClause = columnFilterClause(columnFilter);
         String rowFilterClause = rowFilterClause(version, rowFilter, versions);
@@ -51,9 +63,14 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         String extraWhereClause = "";
         extraWhereClause = extraWhereClause + "";
 
-        String query = "SELECT " + columnFilterClause + " FROM " + datasource.getName() + "." + table + rowFilterClause
+        String query = "SELECT " + columnFilterClause + " FROM " + fullyQualifiedTable(table) + rowFilterClause
                 + " ORDER BY " + sortOrderClause;
         return query;
+    }
+
+    private String fullyQualifiedTable(String table) {
+        String qualifiedTable = datasource.getName() + "." + table;
+        return qualifiedTable;
     }
 
     private String sortOrderClause(String sortOrder) {
@@ -74,6 +91,10 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         }
 
         return columnFilterClause;
+    }
+
+    private String whereClause(Version version, String rowFilter, String versions) {
+        return rowFilterClause(version, rowFilter, versions);
     }
 
     private String rowFilterClause(Version version, String rowFilter, String versions) {
@@ -105,7 +126,7 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
         return buffer.toString();
     }
 
-    private String fetchCommaSeparatedVersionSequence(Version finalVersion, Session session) {
+    private String versionsList(Version finalVersion, Session session) {
         Version[] path = versions.getPath(finalVersion.getDatasetId(), finalVersion.getVersion(), session);
 
         StringBuffer result = new StringBuffer();

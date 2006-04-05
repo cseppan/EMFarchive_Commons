@@ -14,7 +14,7 @@ public class DefaultScrollableVersionedRecordsTimedTests {
 
         TestSuite suite = new TestSuite();
 
-        Test rowCount = new TimedTest(new DefaultScrollableVersionedRecordsPerformanceTest("testRowCount"),
+        Test rowCount = new TimedTest(new ScrollableVersionedRecordsFiveMBPerformanceTest("testRowCount"),
                 (5 * minute));
         Test repeatedTest = new LoadTest(rowCount, 15);
         suite.addTest(repeatedTest);

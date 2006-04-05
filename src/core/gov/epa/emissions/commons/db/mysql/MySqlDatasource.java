@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.db.mysql;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DataQuery;
+import gov.epa.emissions.commons.db.OptimizedQuery;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableDefinition;
 
@@ -48,6 +49,10 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
 
     public TableDefinition tableDefinition() {
         return new MySqlTableDefinition(name, connection);
+    }
+
+    public OptimizedQuery optimizedQuery(String query) {
+        throw new RuntimeException("Optimized Query is not implemented for MySql");
     }
 
 }

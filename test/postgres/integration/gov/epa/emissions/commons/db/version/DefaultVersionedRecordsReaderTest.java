@@ -34,12 +34,19 @@ public class DefaultVersionedRecordsReaderTest extends VersionedRecordsTestCase 
         versionZero.setDatasetId(1);
         versionZero.setVersion(0);
 
-        VersionedRecord[] records = reader.fetchAll(versionZero, dataTable, session);
+        ScrollableVersionedRecords records = reader.fetch(versionZero, dataTable, session);
 
-        assertEquals(5, records.length);
+        assertEquals(5, records.total());
+    }
 
-        assertEquals(0, records[0].getVersion());
-        assertEquals(1, records[0].getDatasetId());
+    public void testFetchVersionZeroUsingOptimizedFetch() throws Exception {
+        Version versionZero = new Version();
+        versionZero.setDatasetId(1);
+        versionZero.setVersion(0);
+
+        ScrollableVersionedRecords records = reader.optimizedFetch(versionZero, dataTable, session);
+
+        assertEquals(5, records.total());
     }
 
     public void testFetchVersionTwoThatHasARecordDeleteFromVersionOne() throws Exception {

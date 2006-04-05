@@ -8,6 +8,11 @@ public interface VersionedRecordsReader {
 
     ScrollableVersionedRecords fetch(Version version, String table, Session session) throws SQLException;
 
+    ScrollableVersionedRecords optimizedFetch(Version version, String table, Session session) throws SQLException;
+
     ScrollableVersionedRecords fetch(Version version, String table, String columnFilter, String rowFilter,
+            String sortOrder, Session session) throws SQLException;
+
+    ScrollableVersionedRecords optimizedFetch(Version version, String table, String columnFilter, String rowFilter,
             String sortOrder, Session session) throws SQLException;
 }

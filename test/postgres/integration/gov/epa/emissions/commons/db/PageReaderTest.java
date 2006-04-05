@@ -9,9 +9,8 @@ import org.jmock.cglib.MockObjectTestCase;
 public class PageReaderTest extends MockObjectTestCase {
 
     public void testPageCountShouldBeTotalRecordsByPageSize() throws Exception {
-        Mock scrollableRecords = mock(ScrollableVersionedRecordsStub.class);
+        Mock scrollableRecords = mock(ScrollableVersionedRecords.class);
         scrollableRecords.stubs().method("total").withNoArguments().will(returnValue(new Integer(1800)));
-        scrollableRecords.stubs().method("execute").withNoArguments();
 
         PageReader reader = new PageReader(3, (ScrollableVersionedRecords) scrollableRecords.proxy());
 
@@ -19,9 +18,8 @@ public class PageReaderTest extends MockObjectTestCase {
     }
 
     public void testShouldCloseScrollableRecordsOnClose() throws Exception {
-        Mock scrollableRecords = mock(ScrollableVersionedRecordsStub.class);
+        Mock scrollableRecords = mock(ScrollableVersionedRecords.class);
         scrollableRecords.expects(once()).method("close").withNoArguments();
-        scrollableRecords.stubs().method("execute").withNoArguments();
 
         PageReader reader = new PageReader(3, (ScrollableVersionedRecords) scrollableRecords.proxy());
 
@@ -29,9 +27,8 @@ public class PageReaderTest extends MockObjectTestCase {
     }
 
     public void testTotalRecordsShouldBeEqualToTotalFromScrollableRecords() throws Exception {
-        Mock scrollableRecords = mock(ScrollableVersionedRecordsStub.class);
+        Mock scrollableRecords = mock(ScrollableVersionedRecords.class);
         scrollableRecords.stubs().method("total").withNoArguments().will(returnValue(new Integer(1800)));
-        scrollableRecords.stubs().method("execute").withNoArguments();
 
         PageReader reader = new PageReader(3, (ScrollableVersionedRecords) scrollableRecords.proxy());
 
@@ -39,9 +36,8 @@ public class PageReaderTest extends MockObjectTestCase {
     }
 
     public void testPageCountShouldIncludeTheLastPageWhichCouldBeSparse() throws Exception {
-        Mock scrollableRecords = mock(ScrollableVersionedRecordsStub.class);
+        Mock scrollableRecords = mock(ScrollableVersionedRecords.class);
         scrollableRecords.stubs().method("total").withNoArguments().will(returnValue(new Integer(394)));
-        scrollableRecords.stubs().method("execute").withNoArguments();
 
         PageReader reader = new PageReader(10, (ScrollableVersionedRecords) scrollableRecords.proxy());
 
@@ -49,12 +45,11 @@ public class PageReaderTest extends MockObjectTestCase {
     }
 
     public void testShouldGetSpecifiedPage() throws Exception {
-        Mock scrollableRecords = mock(ScrollableVersionedRecordsStub.class);
+        Mock scrollableRecords = mock(ScrollableVersionedRecords.class);
         scrollableRecords.stubs().method("total").withNoArguments().will(returnValue(new Integer(1800)));
         VersionedRecord[] records = {};
         scrollableRecords.stubs().method("range").with(eq(new Integer(40)), eq(new Integer(49))).will(
                 returnValue(records));
-        scrollableRecords.expects(once()).method("execute").withNoArguments();
 
         PageReader reader = new PageReader(10, (ScrollableVersionedRecords) scrollableRecords.proxy());
 
@@ -66,9 +61,8 @@ public class PageReaderTest extends MockObjectTestCase {
     }
 
     public void testShouldGetPageBasedOnRecordNumber() throws Exception {
-        Mock scrollableRecords = mock(ScrollableVersionedRecordsStub.class);
+        Mock scrollableRecords = mock(ScrollableVersionedRecords.class);
         scrollableRecords.stubs().method("total").withNoArguments().will(returnValue(new Integer(1800)));
-        scrollableRecords.expects(once()).method("execute").withNoArguments();
 
         PageReader reader = new PageReader(10, (ScrollableVersionedRecords) scrollableRecords.proxy());
 

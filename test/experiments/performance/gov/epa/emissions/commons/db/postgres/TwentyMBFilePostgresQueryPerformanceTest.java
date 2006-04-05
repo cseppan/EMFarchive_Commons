@@ -13,19 +13,22 @@ public class TwentyMBFilePostgresQueryPerformanceTest extends PerformanceTestCas
     public void testTrackMemory() throws Exception {
         startTracking();
 
-        int count = 143384;
+        int count = 143385;
+        int pageSize = 50000;
 
-        OptimizedPostgresQuery runner = new OptimizedPostgresQuery(emissions().getConnection());
-        runner.init("SELECT * FROM emissions.test_onroad_twenty_mb", 50000);
+        OptimizedTestQuery runner = new OptimizedTestQuery(emissions().getConnection());
+        runner.init("SELECT * FROM emissions.test_onroad_twenty_mb", pageSize);
 
         for (int i = 0; i < count;) {
             ResultSet rs = runner.execute();
             while(rs.next()){
                 rs.getObject(1);
             }
-            
-            i += 50000;
+            rs.close();
+
+            i += pageSize;
         }
+        runner.close();
 
         dumpStats();
     }

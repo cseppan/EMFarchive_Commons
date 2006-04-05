@@ -8,33 +8,50 @@ import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
+import java.sql.SQLException;
 import java.util.List;
 
-public class DefaultScrollableVersionedRecordsPerformanceTest extends PerformanceTestCase {
-
-    private DefaultScrollableVersionedRecords results;
+public abstract class ScrollableVersionedRecordsPerformanceTest extends PerformanceTestCase {
 
     protected Datasource datasource;
 
-    protected String dataTable;
+    private String query;
 
-    public DefaultScrollableVersionedRecordsPerformanceTest(String name) {
+    private String whereClause;
+
+    public ScrollableVersionedRecordsPerformanceTest(String name) {
         super(name);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
+        doSetup(table(), datasetId());
+    }
 
+    abstract protected String table();
+
+    abstract protected int datasetId();
+
+    private void doSetup(String dataTable, int datasetId) throws Exception {
         datasource = emissions();
-        dataTable = "emissions.nonroad_capann_nei2002_0110_x_txt";
 
-        String query = "SELECT * FROM emissions.nonroad_capann_nei2002_0110_x_txt "
-                + "WHERE dataset_id = 2 AND version IN (0) AND  "
-                + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)' ORDER BY record_id";
-        results = new DefaultScrollableVersionedRecords(emissions(), query);
-        dumpMemory();
-        results.execute();
-        dumpMemory();
+        whereClause = " WHERE dataset_id = " + datasetId + " AND version IN (0) AND  "
+        // + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)' ORDER BY record_id";
+                + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)'";// NOTE: 'ORDER BY' is removed
+        query = "SELECT * FROM " + dataTable + whereClause;
+    }
+
+    protected SimpleScrollableVersionedRecords executeSimpleQuery() throws SQLException {
+        return new SimpleScrollableVersionedRecords(emissions(), query);
+    }
+
+    protected void doTearDown() throws Exception {
+        super.doTearDown();
+        System.out.println("---------------------------------");
+    }
+
+    protected OptimizedScrollableVersionedRecords executeOptimizedQuery() throws SQLException {
+        return new OptimizedScrollableVersionedRecords(emissions(), query, table(), whereClause);
     }
 
     protected TableFormat tableFormat(final SqlDataTypes types) {
@@ -64,24 +81,6 @@ public class DefaultScrollableVersionedRecordsPerformanceTest extends Performanc
             }
         };
         return new VersionedTableFormat(fileFormat, types);
-    }
-
-    protected void doTearDown() throws Exception {
-        results.close();
-    }
-
-    public void testRowCount() throws Exception {
-        assertEquals(60780, results.total());
-    }
-
-   
-
-    public void testFetchRangeOfRecords() throws Exception {
-        VersionedRecord[] records = results.range(1, 100);
-        assertNotNull("Should be able to fetch a range of records", records);
-        assertEquals(100, records.length);
-        for (int i = 0; i < records.length; i++)
-            assertNotNull(records[i]);
     }
 
 }
