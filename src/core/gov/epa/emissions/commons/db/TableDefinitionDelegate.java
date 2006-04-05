@@ -21,21 +21,28 @@ public class TableDefinitionDelegate {
     }
 
     /*
-     * This method reads the table metadata and returns
-     * the column meta data values (label, size and type/class)
-     * in a TableMetaData object
+     * This method reads the table metadata and returns the column meta data values (label, size and type/class) in a
+     * TableMetaData object
      */
     public TableMetadata getTableMetaData(String table) throws SQLException {
-        String query = "SELECT * FROM "+table;
+        String query = "SELECT * FROM " + table;
         TableMetadata tableMeta = new TableMetadata(table);
 
-        ResultSet rs = connection.createStatement().executeQuery(query);
-        ResultSetMetaData rsmd = rs.getMetaData();
-        int colCount = rsmd.getColumnCount();
+        Statement statement = connection.createStatement();
+        statement.setMaxRows(1);// optimized query
+        ResultSet rs = statement.executeQuery(query);
+        try {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int colCount = rsmd.getColumnCount();
 
-        for (int i = 1; i <= colCount; i++) {
-            ColumnMetaData col = new ColumnMetaData(rsmd.getColumnLabel(i),rsmd.getColumnClassName(i) , rsmd.getColumnDisplaySize(i));
-            tableMeta.addColumnMetaData(col);
+            for (int i = 1; i <= colCount; i++) {
+                ColumnMetaData col = new ColumnMetaData(rsmd.getColumnLabel(i), rsmd.getColumnClassName(i), rsmd
+                        .getColumnDisplaySize(i));
+                tableMeta.addColumnMetaData(col);
+            }
+        } finally {
+            rs.close();
+            statement.close();
         }
 
         return tableMeta;
