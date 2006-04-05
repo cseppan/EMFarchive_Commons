@@ -75,6 +75,7 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
 
     public void close() throws SQLException {
         resultSet.close();
+        statement.close();
     }
 
     private void createStatement() throws SQLException {
