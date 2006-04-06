@@ -2,9 +2,9 @@ package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
-import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.OptimizedQuery;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.ExportStatement;
@@ -57,7 +57,6 @@ public class GenericExporter implements Exporter {
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
-
     }
 
     protected void write(File file, PrintWriter writer) throws ExporterException {
@@ -102,30 +101,43 @@ public class GenericExporter implements Exporter {
 
     protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
             throws SQLException {
-        ResultSet data = getResultSet(dataset, datasource);
-        String[] cols = getCols(data);
-
-        while (data.next())
-            writeRecordWithComments(cols, data, writer);
+        writeData(writer, dataset, datasource, true);
     }
 
     protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
             throws SQLException {
-        ResultSet data = getResultSet(dataset, datasource);
+        writeData(writer, dataset, datasource, false);
+    }
+
+    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws SQLException {
+        String query = getQueryString(dataset, datasource);
+        OptimizedQuery runner = datasource.optimizedQuery(query);
+        
+        while(runner.execute())
+            writeRecords(writer, runner.getResultSet(), comments);
+        
+        runner.close();
+    }
+    
+    protected void writeRecords(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
         String[] cols = getCols(data);
 
-        while (data.next())
+        if(comments) { 
+            while (data.next()) { writeRecordWithComments(cols, data, writer); }
+            data.close();
+            return;
+        }
+            
+        while(data.next())
             writeRecordWithoutComments(cols, data, writer);
     }
 
-    private ResultSet getResultSet(Dataset dataset, Datasource datasource) throws SQLException {
+    private String getQueryString(Dataset dataset, Datasource datasource) {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
-        String query = export.generate(qualifiedTable);
 
-        DataQuery q = datasource.query();
-        return q.executeQuery(query);
+        return export.generate(qualifiedTable);
     }
 
     private String[] getCols(ResultSet data) throws SQLException {

@@ -50,8 +50,7 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
 
         Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory);
         File file = File.createTempFile("exported", ".orl");
-        System.out.println(file.getAbsolutePath());
-//        file.deleteOnExit();
+        file.deleteOnExit();
 
         exporter.export(file);
     }

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public class PostgresDatasource implements Datasource {
 
-    private static final int OPTIMIZED_FETCH_SIZE = 50000;// # of rows
+    private static final int OPTIMIZED_FETCH_SIZE = 25000;// # of rows
 
     private Connection connection;
 
