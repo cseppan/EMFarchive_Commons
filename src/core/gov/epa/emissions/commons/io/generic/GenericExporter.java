@@ -59,7 +59,7 @@ public class GenericExporter implements Exporter {
         }
     }
 
-    protected void write(File file, PrintWriter writer) throws ExporterException {
+    final protected void write(File file, PrintWriter writer) throws ExporterException {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
@@ -99,37 +99,47 @@ public class GenericExporter implements Exporter {
         }
     }
 
-    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
+    final protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
             throws SQLException {
         writeData(writer, dataset, datasource, true);
     }
 
-    protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
+    final protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
             throws SQLException {
         writeData(writer, dataset, datasource, false);
     }
 
-    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws SQLException {
+    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
+            throws SQLException {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query);
-        
-        while(runner.execute())
-            writeRecords(writer, runner.getResultSet(), comments);
-        
+
+        while (runner.execute())
+            writeBatchOfData(writer, runner.getResultSet(), comments);
+
         runner.close();
     }
-    
-    protected void writeRecords(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
+
+    private void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
         String[] cols = getCols(data);
 
-        if(comments) { 
-            while (data.next()) { writeRecordWithComments(cols, data, writer); }
-            data.close();
+        if (comments) {
+            writeComments(writer, data, cols);
             return;
         }
-            
-        while(data.next())
-            writeRecordWithoutComments(cols, data, writer);
+        writeDataWithoutComments(writer, data, cols);
+    }
+
+    private void writeDataWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecord(cols, data, writer, 0);
+        data.close();
+    }
+
+    private void writeComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecord(cols, data, writer, 1);
+        data.close();
     }
 
     private String getQueryString(Dataset dataset, Datasource datasource) {
@@ -149,14 +159,6 @@ public class GenericExporter implements Exporter {
         return (String[]) cols.toArray(new String[0]);
     }
 
-    protected void writeRecordWithComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writeRecord(cols, data, writer, 1);
-    }
-
-    protected void writeRecordWithoutComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writeRecord(cols, data, writer, 0);
-    }
-
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
         for (int i = startCol(cols); i < cols.length + commentspad; i++) {
             String value = data.getString(i);
@@ -168,13 +170,13 @@ public class GenericExporter implements Exporter {
         writer.println();
     }
 
-    protected String getValue(String[] cols, int index, String value, ResultSet data) throws SQLException {
+    final protected String getValue(String[] cols, int index, String value, ResultSet data) throws SQLException {
         if (!isComment(index, cols))
             return formatValue(cols, index, data);
 
-        if(value != null)
+        if (value != null)
             return getComment(value);
-        
+
         return "";
     }
 
@@ -186,23 +188,23 @@ public class GenericExporter implements Exporter {
         Column column = fileFormat.cols()[fileIndex - 2];
         return (delimiter.equals("")) ? getFixedPositionValue(column, data) : getDelimitedValue(column, data);
     }
-    
-    protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
+
+    final protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
         return column.format(data).trim();
     }
-    
-    protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
+
+    final protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
         String value = getDelimitedValue(column, data);
         String leadingSpace = "";
         int spaceCount = column.width() - value.length();
-        
-        for(int i = 0; i < spaceCount; i++)
+
+        for (int i = 0; i < spaceCount; i++)
             leadingSpace += " ";
-        
+
         return leadingSpace + value;
     }
 
-    protected String getComment(String value) {
+    final protected String getComment(String value) {
         value = value.trim();
         if (value.equals(""))
             return value;
@@ -213,7 +215,7 @@ public class GenericExporter implements Exporter {
         return value;
     }
 
-    protected boolean isComment(int index, String[] cols) {
+    final protected boolean isComment(int index, String[] cols) {
         return (index == cols.length);
     }
 
@@ -225,15 +227,15 @@ public class GenericExporter implements Exporter {
         return i;
     }
 
-    protected boolean isTableVersioned(String[] cols) {
+    final protected boolean isTableVersioned(String[] cols) {
         return cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions");
     }
 
     public void setDelimiter(String del) {
         this.delimiter = del;
     }
-    
-    protected String getDelimiter() {
+
+    final protected String getDelimiter() {
         return delimiter;
     }
 
