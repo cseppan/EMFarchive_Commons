@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
-import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.OptimizedTableModifier;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
@@ -23,47 +23,69 @@ public class FixedColumnsDataLoader implements DataLoader {
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
+        OptimizedTableModifier dataModifier = dataModifier(datasource, table);
         try {
-            insertRecords(dataset, table, reader);
+            insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
-            dropData(table, dataset);
+            dropData(table, dataset, dataModifier);
             throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
+        } finally {
+            close(dataModifier);
         }
     }
 
-    private void dropData(String table, Dataset dataset) throws ImporterException {
+    private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            DataModifier modifier = datasource.dataModifier();
+            return new OptimizedTableModifier(datasource, table);
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void close(OptimizedTableModifier dataModifier) throws ImporterException {
+        try {
+            dataModifier.close();
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
+        try {
             String key = tableFormat.key();
             long value = dataset.getId();
-            modifier.dropData(table, key, value);
+            dataModifier.dropData(key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
         }
     }
 
-    private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
-        Record record = reader.read();
-        DataModifier modifier = datasource.dataModifier();
-        while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record), tableFormat.cols());
-            record = reader.read();
+    private void insertRecords(Dataset dataset, Reader reader, OptimizedTableModifier dataModifier) throws Exception {
+        dataModifier.start();
+        try {
+            Record record = reader.read();
+            while (!record.isEnd()) {
+                dataModifier.insert(data(dataset, record));
+                record = reader.read();
+            }
+        } finally {
+            dataModifier.finish();
         }
     }
 
-    private String[] data(Dataset dataset, Record record){
+    private String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
-  
+
         if (tableFormat instanceof VersionedTableFormat)
             addVersionData(data, dataset.getId(), 0);
         else
             data.add("" + dataset.getId());
-  
+
         data.addAll(record.tokens());
 
         massageNullMarkers(data);
-  
+
         return (String[]) data.toArray(new String[0]);
     }
 

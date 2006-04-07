@@ -19,10 +19,13 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
     private DataModifier dataAcceptor;
 
     private String name;
+    
+    private SqlDataTypes sqlDataTypes;
 
     public MySqlDatasource(String name, Connection connection, SqlDataTypes types) {
         this.name = name;
         this.connection = connection;
+        this.sqlDataTypes = types;
         this.dataAcceptor = new DataModifier(name, connection, types);
     }
 
@@ -53,6 +56,10 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
 
     public OptimizedQuery optimizedQuery(String query) {
         throw new RuntimeException("Optimized Query is not implemented for MySql");
+    }
+
+    public SqlDataTypes getSqlDataType() {
+        return sqlDataTypes;
     }
 
 }

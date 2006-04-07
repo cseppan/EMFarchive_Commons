@@ -16,4 +16,6 @@ public interface Datasource {
     Connection getConnection();
 
     DataModifier dataModifier();
+
+    SqlDataTypes getSqlDataType();
 }

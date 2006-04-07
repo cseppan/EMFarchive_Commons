@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
-import gov.epa.emissions.commons.db.DataModifier;
+import gov.epa.emissions.commons.db.OptimizedTableModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 
@@ -25,43 +25,61 @@ public class OptionalColumnsDataLoader implements DataLoader {
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
+        OptimizedTableModifier dataModifier = dataModifier(datasource, table);
         try {
-            insertRecords(dataset, table, reader);
+            insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
-            dropData(table, dataset);
+            dropData(table, dataset, dataModifier);
             throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage() + "\nLine: "
                     + reader.line() + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
+        } finally {
+            close(dataModifier);
         }
     }
 
-    private void dropData(String table, Dataset dataset) throws ImporterException {
+    private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            DataModifier modifier = datasource.dataModifier();
+            return new OptimizedTableModifier(datasource, table);
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void close(OptimizedTableModifier dataModifier) throws ImporterException {
+        try {
+            dataModifier.close();
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
+        try {
             long value = dataset.getId();
-            modifier.dropData(table, key, value);
+            dataModifier.dropData(key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table + "\n" + e.getMessage(), e);
         }
     }
 
-    private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
-        DataModifier modifier = datasource.dataModifier();
-        modifier.initBatch();
-        
-        for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
-            int minColsSize = fileFormat.minCols().length;
-            if (record.size() < minColsSize)
-                throw new ImporterException("The number of tokens in the line are " + record.size()
-                        + ", It's less than minimum number of columns expected(" + minColsSize + ")");
-            String[] data = data(dataset, record, fileFormat);
-            try {
-                modifier.addBatchInsert(table, data);
-            } catch (SQLException e) {
-                throw new ImporterException("Error in inserting query\n" + e.getMessage());
+    private void insertRecords(Dataset dataset, Reader reader, OptimizedTableModifier dataModifier) throws Exception {
+        dataModifier.start();
+        try {
+            for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
+                int minColsSize = fileFormat.minCols().length;
+                if (record.size() < minColsSize)
+                    throw new ImporterException("The number of tokens in the line are " + record.size()
+                            + ", It's less than minimum number of columns expected(" + minColsSize + ")");
+                String[] data = data(dataset, record, fileFormat);
+
+                dataModifier.insert(data);
+
             }
+        } catch (SQLException e) {
+            throw new ImporterException("Error in inserting query\n" + e.getMessage());
+        } finally {
+            dataModifier.finish();
         }
-        
-        modifier.executeBatch();
     }
 
     private String[] data(Dataset dataset, Record record, FileFormatWithOptionalCols format) {

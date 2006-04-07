@@ -53,7 +53,6 @@ public class ORLImporter {
     public void run() throws ImporterException {
         importAttributes(file, dataset);
         dataTable.create(formatUnit.tableFormat());
-
         try {
             doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
                     .tableFormat());

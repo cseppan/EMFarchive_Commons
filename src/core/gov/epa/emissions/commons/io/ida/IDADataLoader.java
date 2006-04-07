@@ -2,8 +2,8 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
-import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.OptimizedTableModifier;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -32,32 +32,54 @@ public class IDADataLoader implements DataLoader {
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
+        OptimizedTableModifier dataModifier = dataModifier(emissionDatasource, table);
         try {
-            insertRecords(dataset, table, reader);
+            insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
-            dropData(table, dataset);
+            dropData(table, dataset, dataModifier);
             throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
+        } finally {
+            close(dataModifier);
         }
     }
 
-    private void dropData(String table, Dataset dataset) throws ImporterException {
+    private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            DataModifier modifier = emissionDatasource.dataModifier();
+            return new OptimizedTableModifier(datasource, table);
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void close(OptimizedTableModifier dataModifier) throws ImporterException {
+        try {
+            dataModifier.close();
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
+        try {
             String key = tableFormat.key();
             long value = dataset.getId();
-            modifier.dropData(table, key, value);
+            dataModifier.dropData(key, value);
         } catch (SQLException e) {
             throw new ImporterException("could not drop data from table " + table, e);
         }
     }
 
-    private void insertRecords(Dataset dataset, String table, Reader reader) throws Exception {
-        Record record = reader.read();
-        DataModifier modifier = emissionDatasource.dataModifier();
-        while (!record.isEnd()) {
-            modifier.insertRow(table, data(dataset, record));
-            record = reader.read();
+    private void insertRecords(Dataset dataset, Reader reader, OptimizedTableModifier dataModifier) throws Exception {
+        dataModifier.start();
+        try {
+            Record record = reader.read();
+            while (!record.isEnd()) {
+                dataModifier.insert(data(dataset, record));
+                record = reader.read();
+            }
+        } finally {
+            dataModifier.finish();
         }
     }
 
@@ -65,13 +87,12 @@ public class IDADataLoader implements DataLoader {
         int stateIndex = 1;
         int fipsIndex = 2;
         List data = new ArrayList();
-        //FIXME: demo code
-        if (tableFormat instanceof VersionedTableFormat){
+        // FIXME: demo code
+        if (tableFormat instanceof VersionedTableFormat) {
             addVersionData(data, dataset.getId(), 0);
-            stateIndex=4;
-            fipsIndex =5;
-        }
-        else{
+            stateIndex = 4;
+            fipsIndex = 5;
+        } else {
             data.add("" + dataset.getId());
         }
         String stateID = record.token(0);
@@ -81,10 +102,10 @@ public class IDADataLoader implements DataLoader {
         for (int i = 0; i < record.size(); i++)
             data.add(record.token(i));
 
-        addEmptyLineCommentIfNotThere(data,tableFormat);
+        addEmptyLineCommentIfNotThere(data, tableFormat);
         return (String[]) data.toArray(new String[0]);
     }
-    
+
     private void addVersionData(List data, long datasetId, int version) {
         data.add(0, "");// record id
         data.add(1, datasetId + "");
@@ -93,13 +114,14 @@ public class IDADataLoader implements DataLoader {
     }
 
     private void addEmptyLineCommentIfNotThere(List data, TableFormat tableFormat) throws ImporterException {
-        int diff = tableFormat.cols().length- data.size();
-        if(diff==1){
+        int diff = tableFormat.cols().length - data.size();
+        if (diff == 1) {
             data.add("");
             return;
         }
-        throw new ImporterException("Number of tokens are "+data.size() + " but table column size is "+ tableFormat.cols().length);
-        
+        throw new ImporterException("Number of tokens are " + data.size() + " but table column size is "
+                + tableFormat.cols().length);
+
     }
 
     private String stateAbbr(Datasource referenceDatasource, String fips) throws SQLException {

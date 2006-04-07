@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DataModifierTest extends PersistenceTestCase {
+public class TableModifierTest extends PersistenceTestCase {
 
     protected Datasource datasource;
 
@@ -23,7 +23,7 @@ public class DataModifierTest extends PersistenceTestCase {
         table = "Modifier_Test";
         createTable(table, datasource);
     }
-
+    
     private void createTable(String table, Datasource datasource) throws SQLException {
         TableDefinition tableDefinition = datasource.tableDefinition();
         tableDefinition.createTable(table, cols());
@@ -66,11 +66,10 @@ public class DataModifierTest extends PersistenceTestCase {
     }
 
     public void testShouldInsertRowUsingSpecifiedCols() throws Exception {
-        DataModifier modifier = datasource.dataModifier();
+        TableModifier modifier = new TableModifier(datasource,table);
 
         String[] data = { null, "102", "0", "", "p1", "p2", "" };
-        modifier.insertRow(table, data);
-
+        modifier.insertOneRow(data);
         DataQuery query = datasource.query();
         ResultSet rs = query.selectAll(table);
         assertTrue("Should have inserted row", rs.next());
@@ -85,10 +84,10 @@ public class DataModifierTest extends PersistenceTestCase {
     }
 
     public void testShouldInsertRow() throws Exception {
-        DataModifier modifier = datasource.dataModifier();
+        TableModifier modifier = new TableModifier(datasource,table);
 
         String[] data = { null, "102", "0", "", "p1", "p2", "" };
-        modifier.insertRow(table, data);
+        modifier.insertOneRow(data);
 
         DataQuery query = datasource.query();
         ResultSet rs = query.selectAll(table);
@@ -102,19 +101,4 @@ public class DataModifierTest extends PersistenceTestCase {
 
         rs.close();
     }
-    
-    public void testGetColumns() throws SQLException{
-        DataModifier modifier = datasource.dataModifier();
-        Column [] cols = modifier.getColumns(table);
-        
-        assertEquals(7,cols.length);
-        assertEquals(cols[0].name(),"record_id");
-        assertEquals(cols[1].name(),"dataset_id");
-        assertEquals(cols[2].name(),"version");
-        assertEquals(cols[3].name(),"delete_versions");
-        assertEquals(cols[4].name(),"p1");
-        assertEquals(cols[5].name(),"p2");
-        assertEquals(cols[6].name(),"comments");
-    }
-
 }

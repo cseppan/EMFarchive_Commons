@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.reference;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.db.OptimizedTableModifier;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
@@ -32,7 +33,8 @@ public class ReferenceCSVFileImporter implements Importer {
 
     private FileFormat fileFormat;
 
-    public ReferenceCSVFileImporter(File file, String tableName, Datasource datasource, SqlDataTypes sqlDataTypes) throws ImporterException {
+    public ReferenceCSVFileImporter(File file, String tableName, Datasource datasource, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this.file = file;
         this.tableName = tableName;
         this.datasource = datasource;
@@ -49,11 +51,30 @@ public class ReferenceCSVFileImporter implements Importer {
 
     public void run() throws ImporterException {
         createTable(tableName, datasource, fileFormat);
+        OptimizedTableModifier tableModifier = tableModifier();
         try {
-            doImport();
+            doImport(tableModifier);
         } catch (Exception e) {
             dropTable(tableName);
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
+        } finally {
+            close(tableModifier);
+        }
+    }
+
+    private OptimizedTableModifier tableModifier() throws ImporterException {
+        try {
+            return new OptimizedTableModifier(datasource, tableName);
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
+    private void close(OptimizedTableModifier tableModifier) throws ImporterException {
+        try {
+            tableModifier.close();
+        } catch (SQLException e) {
+            throw new ImporterException(e.getMessage());
         }
     }
 
@@ -61,16 +82,18 @@ public class ReferenceCSVFileImporter implements Importer {
         try {
             datasource.tableDefinition().dropTable(tableName);
         } catch (SQLException e) {
-            throw new ImporterException("could not drop table '"+tableName+"'");
-        }        
+            throw new ImporterException("could not drop table '" + tableName + "'");
+        }
     }
 
-    private void doImport() throws IOException, SQLException, ImporterException {
+    private void doImport(OptimizedTableModifier tableModifier) throws Exception {
+        tableModifier.start();
         Record record = reader.read();
         while (!record.isEnd()) {
-            datasource.dataModifier().insertRow(tableName, data(record.getTokens(), fileFormat));
+            tableModifier.insert(data(record.getTokens(), fileFormat));
             record = reader.read();
         }
+        tableModifier.finish();
     }
 
     private String[] data(String[] tokens, FileFormat fileFormat) throws ImporterException {
@@ -87,7 +110,7 @@ public class ReferenceCSVFileImporter implements Importer {
         return (String[]) d.toArray(new String[0]);
     }
 
-    //FIXME: use DataTable to create instead
+    // FIXME: use DataTable to create instead
     private void createTable(String tableName, Datasource datasource, FileFormat fileFormat) throws ImporterException {
         try {
             datasource.tableDefinition().createTable(tableName, fileFormat.cols());

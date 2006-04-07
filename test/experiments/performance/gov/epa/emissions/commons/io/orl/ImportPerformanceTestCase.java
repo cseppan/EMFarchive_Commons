@@ -3,8 +3,10 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.PerformanceTestCase;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.SimpleDataset;
+import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -51,9 +53,15 @@ public class ImportPerformanceTestCase extends PerformanceTestCase {
 
     private void doImport(File importFile) throws ImporterException {
         DataFormatFactory formatFactory = new VersionedDataFormatFactory(version);
-        Importer importer = new ORLOnRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
+        Importer importer = new ORLNonRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
                 dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();
+    }
+    
+    protected int countRecords() {
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        TableReader tableReader = tableReader(datasource);
+        return tableReader.count(datasource.getName(), dataset.getName());
     }
 
 }

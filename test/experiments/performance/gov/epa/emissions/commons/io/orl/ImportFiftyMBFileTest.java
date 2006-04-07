@@ -9,11 +9,11 @@ public class ImportFiftyMBFileTest extends ImportPerformanceTestCase {
     }
 
     public void testImport() throws Exception {
-        File importFile = new File("test/data/orl/nc/performance", "onroad-50MB.txt");
-        
+        File importFile = new File("test/data/orl/nc/performance", "nonroad-50MB.txt");
+        long memoryBefore = usedMemory();
         long before = time();
         super.doImport(importFile, "onroad_fifty_mb");
-        System.out.println("Import of 50 MB complete in " + (time() - before));
+        System.out.println("Import of 50 MB complete in " + (time() - before) +" using memory "+(usedMemory() - memoryBefore + "MB") );
     }
 
 }

@@ -20,9 +20,12 @@ public class PostgresDatasource implements Datasource {
 
     private String name;
 
+    private SqlDataTypes sqlDataTypes;
+
     public PostgresDatasource(String name, Connection connection, SqlDataTypes types) {
         this.connection = connection;
         this.name = name;
+        this.sqlDataTypes = types;
         this.dataAcceptor = new DataModifier(name, connection, types);
     }
 
@@ -48,6 +51,10 @@ public class PostgresDatasource implements Datasource {
 
     public OptimizedQuery optimizedQuery(String query) throws SQLException {
         return new OptimizedPostgresQuery(connection, query, OPTIMIZED_FETCH_SIZE);
+    }
+    
+    public SqlDataTypes getSqlDataType() {
+        return sqlDataTypes;
     }
 
 }
