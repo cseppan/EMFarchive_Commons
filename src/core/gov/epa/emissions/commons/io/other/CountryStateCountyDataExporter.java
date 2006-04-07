@@ -2,9 +2,9 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
-import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.OptimizedQuery;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -32,24 +32,23 @@ public class CountryStateCountyDataExporter implements Exporter {
     private Datasource datasource;
 
     private DataFormatFactory dataFormatFactory;
-    
+
     private String delimiter;
-    
+
     private FileFormat fileFormat;
-    
+
     private SqlDataTypes types;
 
     public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
         setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
-    
+
     public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory) {
         setup(dataset, dbServer, types, factory);
     }
-    
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory dataFormatFactory) {
+
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
@@ -72,22 +71,22 @@ public class CountryStateCountyDataExporter implements Exporter {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
-            
-            if(headercomments && inlinecomments) {
+
+            if (headercomments && inlinecomments) {
                 writeHeaders(writer, dataset);
                 writeDataWithComments(writer, dataset, datasource);
             }
-            
-            if(headercomments && !inlinecomments) {
+
+            if (headercomments && !inlinecomments) {
                 writeHeaders(writer, dataset);
                 writeDataWithoutComments(writer, dataset, datasource);
             }
-            
-            if(!headercomments && inlinecomments) {
+
+            if (!headercomments && inlinecomments) {
                 writeDataWithComments(writer, dataset, datasource);
             }
-            
-            if(!headercomments && !inlinecomments) {
+
+            if (!headercomments && !inlinecomments) {
                 writeDataWithoutComments(writer, dataset, datasource);
             }
         } catch (SQLException e) {
@@ -100,72 +99,89 @@ public class CountryStateCountyDataExporter implements Exporter {
     private void writeHeaders(PrintWriter writer, Dataset dataset) {
         String header = dataset.getDescription();
 
-        if(header != null){
+        if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
-            while (st.hasMoreTokens()){
+            while (st.hasMoreTokens()) {
                 writer.println("#" + st.nextToken());
             }
         }
     }
 
-    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
+            throws SQLException {
         writeData(writer, dataset, datasource, true);
     }
-    
-    protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
+
+    protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
+            throws SQLException {
         writeData(writer, dataset, datasource, false);
     }
-    
-    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws SQLException {
-        DataQuery q = datasource.query();
+
+    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
+            throws SQLException {
         InternalSource[] sources = dataset.getInternalSources();
 
-        for(int i = 0; i < sources.length; i++){
-            ResultSet data = getResultSet(sources[i], q);
-            String[] cols = getCols(data);
+        for (int i = 0; i < sources.length; i++) {
             writer.println("/" + sources[i].getTable() + "/");
             this.fileFormat = getFileFormat(sources[i].getTable());
-
-            if(comments) {
-                while (data.next()) 
-                    writeRecordWithComments(cols, data, writer);
-            } else {
-                while (data.next())
-                    writeRecordWithoutComments(cols, data, writer);
-            }
+            
+            writeResultSet(writer, sources[i], datasource, comments);
         }
     }
-    
-    protected FileFormat getFileFormat(String fileFormatName) {
-        CountryStateCountyFileFormatFactory factory = new CountryStateCountyFileFormatFactory(types);
-        
-        return factory.get(fileFormatName);
+
+    protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments) throws SQLException {
+        String query = getQueryString(source, datasource);
+        OptimizedQuery runner = datasource.optimizedQuery(query);
+
+        while (runner.execute())
+            writeBatchOfData(writer, runner.getResultSet(), comments);
+
+        runner.close();
     }
     
-    protected ResultSet getResultSet(InternalSource source, DataQuery q) throws SQLException {
+    private void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
+        String[] cols = getCols(data);
+
+        if (comments) {
+            writeComments(writer, data, cols);
+            return;
+        }
+        writeDataWithoutComments(writer, data, cols);
+    }
+    
+    private void writeComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecord(cols, data, writer, 1);
+        data.close();
+    }
+    
+    private void writeDataWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecord(cols, data, writer, 0);
+        data.close();
+    }
+
+    protected FileFormat getFileFormat(String fileFormatName) {
+        CountryStateCountyFileFormatFactory factory = new CountryStateCountyFileFormatFactory(types);
+
+        return factory.get(fileFormatName);
+    }
+
+    private String getQueryString(InternalSource source, Datasource datasource) {
         String table = source.getTable();
         String qualifiedTable = datasource.getName() + "." + table;
         ExportStatement export = dataFormatFactory.exportStatement();
-        ResultSet data = q.executeQuery(export.generate(qualifiedTable));
-        
-        return data;
+       
+        return export.generate(qualifiedTable);
     }
-    
+
     protected String[] getCols(ResultSet data) throws SQLException {
         List cols = new ArrayList();
         ResultSetMetaData md = data.getMetaData();
         for (int i = 1; i <= md.getColumnCount(); i++)
             cols.add(md.getColumnName(i));
-  
-        return (String[]) cols.toArray(new String[0]);
-     } 
 
-    protected void writeRecordWithComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writeRecord(cols, data, writer, 1);
-    }
-    
-    protected void writeRecordWithoutComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writeRecord(cols, data, writer, 0);
+        return (String[]) cols.toArray(new String[0]);
     }
 
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
@@ -183,9 +199,9 @@ public class CountryStateCountyDataExporter implements Exporter {
         if (!isComment(index, cols))
             return formatValue(cols, index, data);
 
-        if(value != null)
+        if (value != null)
             return getComment(value);
-        
+
         return "";
     }
 
@@ -200,28 +216,27 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
         String value = column.format(data).trim();
-        
-        if(column.sqlType().startsWith("FLOAT") ||
-                column.sqlType().startsWith("DOUBLE")) {
+
+        if (column.sqlType().startsWith("FLOAT") || column.sqlType().startsWith("DOUBLE")) {
             value = "" + Float.parseFloat(value);
-            if(value.endsWith(".0"))
+            if (value.endsWith(".0"))
                 value = value.substring(0, value.lastIndexOf(".0"));
         }
-        
+
         return value;
     }
-    
+
     protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
         String value = getDelimitedValue(column, data);
         String leadingSpace = "";
         int spaceCount = column.width() - value.length();
-        
-        for(int i = 0; i < spaceCount; i++)
+
+        for (int i = 0; i < spaceCount; i++)
             leadingSpace += " ";
-        
+
         return leadingSpace + value;
     }
-    
+
     protected String getComment(String value) {
         value = value.trim();
         if (value.equals(""))

@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
-import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -34,24 +33,13 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     }
     
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws SQLException {
-        DataQuery q = datasource.query();
         InternalSource[] sources = dataset.getInternalSources();
 
         for(int i = 0; i < sources.length; i++){
-            ResultSet data = getResultSet(sources[i], q);
-            String[] cols = getCols(data);
             String sectionName = sources[i].getTable().replace('_', ' ');
             writer.println("/" + sectionName + "/");
             this.fileFormat = getFileFormat(sectionName);
-
-            if(comments) {
-                while (data.next()) 
-                    writeRecordWithComments(cols, data, writer);
-            } else {
-                while (data.next())
-                    writeRecordWithoutComments(cols, data, writer);
-            }
-            
+            writeResultSet(writer, sources[i], datasource, comments);
             writer.println("/END/");
         }
     }

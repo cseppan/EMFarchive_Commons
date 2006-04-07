@@ -2,9 +2,9 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
-import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.OptimizedQuery;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.ExportStatement;
@@ -28,30 +28,28 @@ public class SMKReportExporter implements Exporter {
     private Dataset dataset;
 
     private Datasource datasource;
-    
+
     private String delimiter;
-    
+
     private String tableframe;
-    
+
     private DataFormatFactory dataFormatFactory;
-    
+
     public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
         setup(dataset, dbServer, types, new NonVersionedDataFormatFactory());
     }
-    
-    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
+
+    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory) {
         setup(dataset, dbServer, types, factory);
     }
 
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory dataFormatFactory) {
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
         setDelimiter(";");
     }
-    
+
     public void export(File file) throws ExporterException {
         PrintWriter writer = null;
         try {
@@ -59,30 +57,30 @@ public class SMKReportExporter implements Exporter {
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         }
-        
+
         write(file, writer);
     }
-    
+
     protected void write(File file, PrintWriter writer) throws ExporterException {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
-            
-            if(headercomments && inlinecomments) {
+
+            if (headercomments && inlinecomments) {
                 writeHeaders(writer, dataset);
                 writeDataWithComments(writer, dataset, datasource);
             }
-            
-            if(headercomments && !inlinecomments) {
+
+            if (headercomments && !inlinecomments) {
                 writeHeaders(writer, dataset);
                 writeDataWithoutComments(writer, dataset, datasource);
             }
-            
-            if(!headercomments && inlinecomments) {
+
+            if (!headercomments && inlinecomments) {
                 writeDataWithComments(writer, dataset, datasource);
             }
-            
-            if(!headercomments && !inlinecomments) {
+
+            if (!headercomments && !inlinecomments) {
                 writeDataWithoutComments(writer, dataset, datasource);
             }
         } catch (SQLException e) {
@@ -91,7 +89,7 @@ public class SMKReportExporter implements Exporter {
             writer.close();
         }
     }
-    
+
     protected void writeWithInlineComments(File file, PrintWriter writer) throws ExporterException {
         try {
             writeDataWithComments(writer, dataset, datasource);
@@ -104,63 +102,89 @@ public class SMKReportExporter implements Exporter {
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {
         String desc = dataset.getDescription();
-        if(desc != null) {
-            if(desc.lastIndexOf('#')+2 == desc.length()) {
+        if (desc != null) {
+            if (desc.lastIndexOf('#') + 2 == desc.length()) {
                 StringTokenizer st = new StringTokenizer(desc, System.getProperty("line.separator"));
-                while(st.hasMoreTokens()){
+                while (st.hasMoreTokens()) {
                     tableframe = st.nextToken();
                 }
                 writer.print(desc.substring(0, desc.indexOf(tableframe)));
-            } else 
+            } else
                 writer.print(desc);
         }
     }
 
-    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
-        ResultSet data = getResultSet(dataset, datasource);
-        String[] cols = getCols(data);
-        writeColsWithComment(writer, cols);
-        while (data.next())
-            writeRecordWithComments(cols, data, writer);
-        if(tableframe != null)
-            writer.println(System.getProperty("line.separator") + tableframe);
+    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
+            throws SQLException {
+        writeData(writer, dataset, datasource, true);
     }
-    
-    protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws SQLException {
-        ResultSet data = getResultSet(dataset, datasource);
-        String[] cols = getCols(data);
-        writeColsWithoutComment(writer, cols);
-        while (data.next())
-            writeRecordWithoutComments(cols, data, writer);
-        if(tableframe != null)
+
+    protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
+            throws SQLException {
+        writeData(writer, dataset, datasource, false);
+    }
+
+    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
+            throws SQLException {
+        String query = getQueryString(dataset, datasource);
+        OptimizedQuery runner = datasource.optimizedQuery(query);
+
+        int pad = 0;
+        if (!comments) {
+            pad = 1;
+        }
+
+        while (runner.execute()) {
+            ResultSet rs = runner.getResultSet();
+            
+            if (pad < 2)
+                writeCols(writer, getCols(rs), pad);
+            
+            writeBatchOfData(writer, rs, comments);
+            pad = 2;
+        }
+        runner.close();
+        if (tableframe != null)
             writer.println(System.getProperty("line.separator") + tableframe);
     }
 
-    private ResultSet getResultSet(Dataset dataset, Datasource datasource) throws SQLException {
-        DataQuery q = datasource.query();
+    private void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
+        String[] cols = getCols(data);
+
+        if (comments) {
+            writeComments(writer, data, cols);
+            return;
+        }
+        writeDataWithoutComments(writer, data, cols);
+    }
+
+    private void writeDataWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecord(data, writer, cols, 0);
+        data.close();
+    }
+
+    private void writeComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecord(data, writer, cols, 1);
+        data.close();
+    }
+
+    private String getQueryString(Dataset dataset, Datasource datasource) {
         InternalSource source = dataset.getInternalSources()[0];
-
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
-        ResultSet data = q.executeQuery(export.generate(qualifiedTable));
-        return data;
-    }
-    
-    protected void writeRecordWithoutComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writeRecord(data, writer, cols, 0);
+
+        return export.generate(qualifiedTable);
     }
 
-    protected void writeRecordWithComments(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writeRecord(data, writer, cols, 1);
-    }
-    
     private void writeRecord(ResultSet data, PrintWriter writer, String[] cols, int commentspad) throws SQLException {
         int i = startCol(cols);
         for (; i < cols.length + commentspad; i++) {
             String value = data.getString(i);
-            if(value != null)
+            if (value != null)
                 writer.write(getValue(cols, i, value));
-            
+
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
         }
@@ -173,11 +197,11 @@ public class SMKReportExporter implements Exporter {
 
         return getComment(value);
     }
-    
+
     protected String formatValue(String[] cols, int index, String value) {
-        if(cols[index - 1].equalsIgnoreCase("sccdesc") || containsDelimiter(value))
+        if (cols[index - 1].equalsIgnoreCase("sccdesc") || containsDelimiter(value))
             return "\"" + value + "\"";
-        
+
         return value;
     }
 
@@ -195,43 +219,35 @@ public class SMKReportExporter implements Exporter {
     protected boolean isComment(int index, String[] cols) {
         return (index == cols.length);
     }
-    
+
     private String[] getCols(ResultSet data) throws SQLException {
-       List cols = new ArrayList();
-       ResultSetMetaData md = data.getMetaData();
-       for (int i = 1; i <= md.getColumnCount(); i++)
-           cols.add(md.getColumnName(i));
- 
-       return (String[]) cols.toArray(new String[0]);
-    } 
-    
+        List cols = new ArrayList();
+        ResultSetMetaData md = data.getMetaData();
+        for (int i = 1; i <= md.getColumnCount(); i++)
+            cols.add(md.getColumnName(i));
+
+        return (String[]) cols.toArray(new String[0]);
+    }
+
     public void setDelimiter(String del) {
         this.delimiter = del;
     }
-    
-    private boolean containsDelimiter(String s){
+
+    private boolean containsDelimiter(String s) {
         return s.indexOf(delimiter) >= 0;
     }
-    
-    private void writeColsWithoutComment(PrintWriter writer, String[] cols) {
-        writeCols(writer, cols, 1);
-    }
 
-    private void writeColsWithComment(PrintWriter writer, String[] cols) {
-        writeCols(writer, cols, 0);
-    }
-    
     private void writeCols(PrintWriter writer, String[] cols, int pad) {
         int i = startCol(cols) - 1;
-        for(; i < cols.length - pad; i++){
+        for (; i < cols.length - pad; i++) {
             writer.print(cols[i]);
             if (i + 1 + pad < cols.length)
                 writer.print(delimiter);// delimiter
         }
-        
+
         writer.println();
     }
-    
+
     protected int startCol(String[] cols) {
         int i = 2;
         if (isTableVersioned(cols))
@@ -239,7 +255,7 @@ public class SMKReportExporter implements Exporter {
 
         return i;
     }
-    
+
     protected boolean isTableVersioned(String[] cols) {
         return cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions");
     }
