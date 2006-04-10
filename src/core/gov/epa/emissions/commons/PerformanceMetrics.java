@@ -12,19 +12,32 @@ public class PerformanceMetrics {
 
     private static Log LOG = LogFactory.getLog(PerformanceMetrics.class);
 
+    public void startTracking(String desc) {
+        startTracking();
+        LOG.debug("Started tracking for: " + desc);
+    }
+
     public void startTracking() {
         startMemory = usedMemory();
         startTime = time();
     }
 
     public void gc() {
+        gc("");
+    }
+
+    public void gc(String prefix) {
         startTracking();
 
-        LOG.warn("gc started....");
-        System.gc();
-        LOG.warn("gc complete");
+        LOG.debug("gc started....");
+        doGc();
+        LOG.debug("gc complete");
 
-        dumpStats();
+        dumpStats(prefix);
+    }
+
+    public void doGc() {
+        System.gc();
     }
 
     public long time() {
@@ -37,7 +50,7 @@ public class PerformanceMetrics {
 
     public void dumpStats(String prefix) {
         long end = usedMemory();
-        LOG.debug(prefix + "\tGC Stats: Reduced memory by " + (end - startMemory) + " MB" + "(end:" + end + ", start: "
+        LOG.debug(prefix + "\tGC Stats: Reduced memory by " + (startMemory - end) + " MB" + "(end:" + end + ", start: "
                 + startMemory + ") in " + (time() - startTime) + " secs");
     }
 

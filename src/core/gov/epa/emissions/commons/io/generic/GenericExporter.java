@@ -114,8 +114,11 @@ public class GenericExporter implements Exporter {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query);
 
-        while (runner.execute())
-            writeBatchOfData(writer, runner.getResultSet(), comments);
+        while (runner.execute()) {
+            ResultSet resultSet = runner.getResultSet();
+            writeBatchOfData(writer, resultSet, comments);
+            resultSet.close();
+        }
 
         runner.close();
     }
@@ -133,13 +136,11 @@ public class GenericExporter implements Exporter {
     private void writeDataWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
         while (data.next())
             writeRecord(cols, data, writer, 0);
-        data.close();
     }
 
     private void writeComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
         while (data.next())
             writeRecord(cols, data, writer, 1);
-        data.close();
     }
 
     private String getQueryString(Dataset dataset, Datasource datasource) {

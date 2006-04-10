@@ -69,8 +69,7 @@ public class DefaultVersionedRecordsReader implements VersionedRecordsReader {
     }
 
     private String fullyQualifiedTable(String table) {
-        String qualifiedTable = datasource.getName() + "." + table;
-        return qualifiedTable;
+        return datasource.getName() + "." + table;
     }
 
     private String sortOrderClause(String sortOrder) {
