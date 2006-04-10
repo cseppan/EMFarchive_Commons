@@ -37,8 +37,8 @@ public class PerformanceMetrics {
 
     public void dumpStats(String prefix) {
         long end = usedMemory();
-        LOG.warn(prefix + "\tTime: " + (time() - startTime) + " secs using " + (end - startMemory) + " MB memory "
-                + "(end:" + end + ", start: " + startMemory + ")");
+        LOG.debug(prefix + "\tGC Stats: Reduced memory by " + (end - startMemory) + " MB" + "(end:" + end + ", start: "
+                + startMemory + ") in " + (time() - startTime) + " secs");
     }
 
     public long usedMemory() {
