@@ -16,11 +16,13 @@ import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingTokenizer;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class CEMHourSpecInventoryImporter implements Importer {
@@ -36,7 +38,7 @@ public class CEMHourSpecInventoryImporter implements Importer {
             SqlDataTypes sqlDataTypes) throws ImporterException {
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
-    
+
     public CEMHourSpecInventoryImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
@@ -54,7 +56,7 @@ public class CEMHourSpecInventoryImporter implements Importer {
         String table = dataTable.name();
 
         try {
-            if(!dataTable.exists(table))
+            if (!dataTable.exists(table))
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -63,17 +65,28 @@ public class CEMHourSpecInventoryImporter implements Importer {
         }
     }
 
-    // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        DelimitedFileReader reader = new DelimitedFileReader(file, 
-                new DelimiterIdentifyingTokenizer(formatUnit.fileFormat().cols().length));
-        String[] header = reader.readHeader(1);
-        List comments = reader.comments();
+        DelimitedFileReader reader = null;
+        try {
+            FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
-        loader.load(reader, dataset, table);
-        comments.add(header[0]);
-        loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
+            reader = new DelimitedFileReader(file, new DelimiterIdentifyingTokenizer(
+                    formatUnit.fileFormat().cols().length));
+            String[] header = reader.readHeader(1);
+            List comments = reader.comments();
+
+            loader.load(reader, dataset, table);
+            comments.add(header[0]);
+            loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
+        } finally {
+            close(reader);
+        }
+    }
+
+    private void close(Reader reader) throws IOException {
+        if (reader != null) {
+            reader.close();
+        }
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {

@@ -17,9 +17,11 @@ import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.reference.CSVFileFormat;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class CSVImporter implements Importer {
@@ -30,18 +32,18 @@ public class CSVImporter implements Importer {
     private File file;
 
     private FormatUnit formatUnit;
-    
+
     private CSVFileReader reader;
-    
+
     private SqlDataTypes sqlDataTypes;
 
-    public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes) throws ImporterException{
+    public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
-    
-    public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory) throws ImporterException{
+
+    public CSVImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+            DataFormatFactory dataFormatFactory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
@@ -53,19 +55,31 @@ public class CSVImporter implements Importer {
         TableFormat tableFormat = dataFormatFactory.tableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
-    
+
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
         String table = dataTable.name();
 
         try {
-            if(!dataTable.exists(table))
+            if (!dataTable.exists(table))
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             dataTable.drop();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName()+ "\n"+ e.getMessage());
+                    + dataset.getName() + "\n" + e.getMessage());
+        } finally {
+            close(reader);
+        }
+    }
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+               throw new ImporterException(e.getMessage());
+            }
         }
     }
 
@@ -79,7 +93,7 @@ public class CSVImporter implements Importer {
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
         DatasetLoader loader = new DatasetLoader(dataset);
         loader.internalSource(file, table, tableFormat);
-        if(comments != null)
+        if (comments != null)
             dataset.setDescription(new Comments(comments).all());
     }
 
@@ -90,5 +104,5 @@ public class CSVImporter implements Importer {
     private CSVFileFormat fileFormat(CSVFileReader reader) {
         return new CSVFileFormat(sqlDataTypes, reader.getCols());
     }
-    
+
 }

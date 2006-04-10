@@ -22,6 +22,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -30,11 +31,17 @@ import java.util.List;
 public class IDAActivityImporter implements Importer {
 
     private Dataset dataset;
+
     private Datasource emissionDatasource;
+
     private SqlDataTypes sqlDataTypes;
+
     private FileVerifier fileVerifier;
+
     private File file;
+
     private DatasetTypeUnit unit;
+
     private DataTable dataTable;
 
     public IDAActivityImporter(File folder, String[] fileNames, Dataset dataset, DbServer dbServer,
@@ -51,8 +58,9 @@ public class IDAActivityImporter implements Importer {
         setup(folder, fileNames, new IDAActivityFileFormat(sqlDataTypes, factory.defaultValuesFiller()), factory);
     }
 
-    private void setup(File folder, String[] fileNames, IDAActivityFileFormat fileFormat, DataFormatFactory formatFactory) throws ImporterException {
-        File file = new File(folder,fileNames[0]);
+    private void setup(File folder, String[] fileNames, IDAActivityFileFormat fileFormat,
+            DataFormatFactory formatFactory) throws ImporterException {
+        File file = new File(folder, fileNames[0]);
         fileVerifier.shouldExist(file);
         this.file = file;
         IDAHeaderReader headerReader = new IDAHeaderReader(file);
@@ -60,19 +68,19 @@ public class IDAActivityImporter implements Importer {
         headerReader.close();
 
         fileFormat.addPollutantCols(headerReader.polluntants());
-        //TODO: add FIPS and CountyID: TableFormat tableFormat = new IDATableFormat(fileFormat,sqlDataTypes); 
+        // TODO: add FIPS and CountyID: TableFormat tableFormat = new IDATableFormat(fileFormat,sqlDataTypes);
         TableFormat tableFormat = formatFactory.tableFormat(fileFormat, sqlDataTypes);
 
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
         DatasetLoader loader = new DatasetLoader(dataset);
-        
+
         dataTable = new DataTable(dataset, emissionDatasource);
         InternalSource internalSource = loader.internalSource(file, dataTable.name(), tableFormat);
         unit.setInternalSource(internalSource);
 
         validateIDAFile(headerReader.comments());
     }
-    
+
     private void validateIDAFile(List comments) throws ImporterException {
         addAttributesExtractedFromComments(comments, dataset);
     }
@@ -88,9 +96,9 @@ public class IDAActivityImporter implements Importer {
         String country = comments.content("COUNTRY");
         if (!country.toLowerCase().equals("us"))
             throw new ImporterException("Currently the IDA importer supports files for US not for '" + country + "'");
-        //FIXME: get the country object from the db
-        //dataset.setCountry(new Country(country));
-        //dataset.setRegion(new Region(country));
+        // FIXME: get the country object from the db
+        // dataset.setCountry(new Country(country));
+        // dataset.setRegion(new Region(country));
 
         if (!comments.have("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
@@ -111,22 +119,38 @@ public class IDAActivityImporter implements Importer {
     public void run() throws ImporterException {
         dataTable.create(unit.tableFormat());
         try {
-            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) unit.fileFormat(), unit.tableFormat());
+            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) unit.fileFormat(), unit
+                    .tableFormat());
         } catch (Exception e) {
             dataTable.drop();
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }
-    
+
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat,
             TableFormat tableFormat) throws Exception {
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(emissionDatasource, fileFormat, tableFormat.key());
-        Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
-        loader.load(reader, dataset, table);
-
-        loadDataset(reader.comments(), dataset);
+        Reader reader = null;
+        try {
+            OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(emissionDatasource, fileFormat,
+                    tableFormat.key());
+            reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
+            loader.load(reader, dataset, table);
+            loadDataset(reader.comments(), dataset);
+        } finally {
+            close(reader);
+        }
     }
-    
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
+    }
+
     private void loadDataset(List commentsList, Dataset dataset) {
         Comments comments = new Comments(commentsList);
         dataset.setDescription(comments.all());

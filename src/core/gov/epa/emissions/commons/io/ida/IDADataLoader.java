@@ -32,8 +32,10 @@ public class IDADataLoader implements DataLoader {
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
-        OptimizedTableModifier dataModifier = dataModifier(emissionDatasource, table);
+        OptimizedTableModifier dataModifier = null;
+
         try {
+            dataModifier = dataModifier(emissionDatasource, table);
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             dropData(table, dataset, dataModifier);
@@ -54,7 +56,8 @@ public class IDADataLoader implements DataLoader {
 
     private void close(OptimizedTableModifier dataModifier) throws ImporterException {
         try {
-            dataModifier.close();
+            if (dataModifier != null)
+                dataModifier.close();
         } catch (SQLException e) {
             throw new ImporterException(e.getMessage());
         }

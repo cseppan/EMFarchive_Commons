@@ -11,9 +11,9 @@ import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.DataTable;
+import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
-import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 
@@ -107,12 +107,26 @@ public class NIFImporter {
 
     private void doImport(String fileName, Dataset dataset, String tableName, FileFormat fileFormat,
             TableFormat tableFormat) throws ImporterException, IOException {
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
-        Reader fileReader = new DataReader(reader, 0, new FixedWidthParser(fileFormat));
-        loader.load(fileReader, dataset, tableName);
-        reader.close();
-        loadDataset(fileReader.comments(), dataset);
+        Reader fileReader = null;
+        try {
+            FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            fileReader = new DataReader(reader, 0, new FixedWidthParser(fileFormat));
+            loader.load(fileReader, dataset, tableName);
+            loadDataset(fileReader.comments(), dataset);
+        } finally {
+            close(fileReader);
+        }
+    }
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     // TODO: load starttime, endtime

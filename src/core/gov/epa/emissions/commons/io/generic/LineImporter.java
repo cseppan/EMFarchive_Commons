@@ -14,12 +14,13 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.File;
+import java.io.IOException;
 
 public class LineImporter implements Importer {
 
@@ -31,18 +32,18 @@ public class LineImporter implements Importer {
 
     private FormatUnit formatUnit;
 
-    public LineImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes) throws ImporterException {
+    public LineImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes)
+            throws ImporterException {
         create(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
 
-    public LineImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
+    public LineImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+            DataFormatFactory factory) throws ImporterException {
         create(folder, filenames, dataset, dbServer, sqlDataTypes, factory);
     }
-    
-    private void create(File folder, String[] filenames, Dataset dataset, DbServer dbServer, 
-            SqlDataTypes types, DataFormatFactory factory) throws ImporterException {
+
+    private void create(File folder, String[] filenames, Dataset dataset, DbServer dbServer, SqlDataTypes types,
+            DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
@@ -51,27 +52,41 @@ public class LineImporter implements Importer {
         TableFormat tableFormat = factory.tableFormat(fileFormat, types);
         this.formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
-    
+
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
         String table = dataTable.name();
         try {
-            if(!dataTable.exists(table))
+            if (!dataTable.exists(table))
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             dataTable.drop(table);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName()+"\n"+e.getMessage());
+                    + dataset.getName() + "\n" + e.getMessage());
         }
     }
 
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        Reader reader = new LineReader(file);
+        Reader reader = null;
+        try {
+            DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            reader = new LineReader(file);
+            loader.load(reader, dataset, table);
+            loadDataset(file, table, formatUnit.tableFormat(), dataset);
+        } finally {
+            close(reader);
+        }
+    }
 
-        loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.tableFormat(), dataset);
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {

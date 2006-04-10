@@ -13,10 +13,10 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
@@ -57,8 +57,9 @@ public class TemporalProfileImporter implements Importer {
     }
 
     public void run() throws ImporterException {
+        BufferedReader fileReader = null;
         try {
-            BufferedReader fileReader = new BufferedReader(new FileReader(file));
+            fileReader = new BufferedReader(new FileReader(file));
 
             while (!isEndOfFile(fileReader)) {
                 String header = readHeader(fileReader);
@@ -69,6 +70,18 @@ public class TemporalProfileImporter implements Importer {
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
                     + dataset.getName() + "\n" + e.getMessage());
+        } finally {
+            close(fileReader);
+        }
+    }
+
+    private void close(BufferedReader fileReader) throws ImporterException {
+        if (fileReader != null) {
+            try {
+                fileReader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
         }
     }
 

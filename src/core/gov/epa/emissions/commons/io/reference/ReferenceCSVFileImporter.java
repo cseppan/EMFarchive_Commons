@@ -58,7 +58,7 @@ public class ReferenceCSVFileImporter implements Importer {
             dropTable(tableName);
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
         } finally {
-            close(tableModifier);
+            close(reader, tableModifier);
         }
     }
 
@@ -70,10 +70,13 @@ public class ReferenceCSVFileImporter implements Importer {
         }
     }
 
-    private void close(OptimizedTableModifier tableModifier) throws ImporterException {
+    private void close(Reader reader, OptimizedTableModifier tableModifier) throws ImporterException {
         try {
-            tableModifier.close();
-        } catch (SQLException e) {
+            if (reader != null)
+                reader.close();
+            if (tableModifier != null)
+                tableModifier.close();
+        } catch (Exception e) {
             throw new ImporterException(e.getMessage());
         }
     }

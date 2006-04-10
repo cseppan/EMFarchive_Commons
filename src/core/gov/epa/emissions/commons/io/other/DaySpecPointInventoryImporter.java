@@ -21,6 +21,7 @@ import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class DaySpecPointInventoryImporter implements Importer {
@@ -65,11 +66,26 @@ public class DaySpecPointInventoryImporter implements Importer {
 
     // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        Reader fileReader = new FixedWidthFileReader(file.getAbsolutePath(), formatUnit.fileFormat());
+        Reader fileReader = null;
+        try {
+            FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            fileReader = new FixedWidthFileReader(file.getAbsolutePath(), formatUnit.fileFormat());
 
-        loader.load(fileReader, dataset, table);
-        loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());
+            loader.load(fileReader, dataset, table);
+            loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());
+        } finally {
+            close(fileReader);
+        }
+    }
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {

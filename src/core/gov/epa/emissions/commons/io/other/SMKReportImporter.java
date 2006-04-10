@@ -16,10 +16,11 @@ import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.PipeDelimitedTokenizer;
+import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.SemiColonDelimitedTokenizer;
 
 import java.io.File;
@@ -75,11 +76,26 @@ public class SMKReportImporter implements Importer {
 
     // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        DelimitedFileReader reader = getFileReader();
-        List comments = getComments(reader);
-        loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
+        DelimitedFileReader reader = null;
+        try {
+            FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            reader = getFileReader();
+            List comments = getComments(reader);
+            loader.load(reader, dataset, table);
+            loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
+        }finally{
+            close(reader);
+        }
+    }
+    
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {

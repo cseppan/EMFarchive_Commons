@@ -18,6 +18,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -83,10 +84,25 @@ public class IDAImporter {
     }
 
     private void doImport(DatasetTypeUnit unit, Dataset dataset, String table) throws Exception {
-        Reader idaReader = new FixedWidthFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
-        IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
-        loader.load(idaReader, dataset, table);
-        loadDataset(idaReader.comments(), dataset);
+        Reader idaReader = null;
+        try {
+            idaReader = new FixedWidthFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
+            IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
+            loader.load(idaReader, dataset, table);
+            loadDataset(idaReader.comments(), dataset);
+        } finally {
+            close(idaReader);
+        }
+    }
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(List commentsList, Dataset dataset) {

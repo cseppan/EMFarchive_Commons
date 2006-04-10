@@ -64,11 +64,26 @@ public class ORLImporter {
 
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat,
             TableFormat tableFormat) throws Exception {
-        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
-        Reader reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
-        loader.load(reader, dataset, table);
+        Reader reader = null;
+        try {
+            OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
+            reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
+            loader.load(reader, dataset, table);
 
-        loadDataset(reader.comments(), dataset);
+            loadDataset(reader.comments(), dataset);
+        } finally {
+            close(reader);
+        }
+    }
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(List comments, Dataset dataset) {
@@ -98,9 +113,9 @@ public class ORLImporter {
 
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        //BUG: Country should not be created, but looked up
-//        String country = comments.content("COUNTRY");
-//        dataset.setCountry(new Country(country));
+        // BUG: Country should not be created, but looked up
+        // String country = comments.content("COUNTRY");
+        // dataset.setCountry(new Country(country));
 
         if (!comments.hasContent("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");

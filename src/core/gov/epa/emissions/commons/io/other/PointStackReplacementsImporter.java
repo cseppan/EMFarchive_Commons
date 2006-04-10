@@ -16,12 +16,13 @@ import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class PointStackReplacementsImporter implements Importer {
@@ -37,7 +38,7 @@ public class PointStackReplacementsImporter implements Importer {
             SqlDataTypes sqlDataTypes) throws ImporterException {
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
-    
+
     public PointStackReplacementsImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filenames);
@@ -55,7 +56,7 @@ public class PointStackReplacementsImporter implements Importer {
         String table = dataTable.name();
 
         try {
-            if(!dataTable.exists(table))
+            if (!dataTable.exists(table))
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
@@ -66,11 +67,26 @@ public class PointStackReplacementsImporter implements Importer {
 
     // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        Reader reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
+        Reader reader = null;
+        try {
+            FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
 
-        loader.load(reader, dataset, table);
-        loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
+            loader.load(reader, dataset, table);
+            loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
+        } finally {
+            close(reader);
+        }
+    }
+
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {

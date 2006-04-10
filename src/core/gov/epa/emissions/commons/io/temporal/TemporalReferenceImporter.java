@@ -15,14 +15,15 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
-import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 public class TemporalReferenceImporter implements Importer {
     private Dataset dataset;
@@ -62,12 +63,27 @@ public class TemporalReferenceImporter implements Importer {
     }
 
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
-        DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-        BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        Reader reader = new TemporalReferenceReader(fileReader, 0);
+        Reader reader = null;
+        try {
+            DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            BufferedReader fileReader = new BufferedReader(new FileReader(file));
+            reader = new TemporalReferenceReader(fileReader, 0);
 
-        loader.load(reader, dataset, table);
-        loadDataset(file, table, unit.tableFormat(), reader, dataset);
+            loader.load(reader, dataset, table);
+            loadDataset(file, table, unit.tableFormat(), reader, dataset);
+        }finally{
+            close(reader);
+        }
+    }
+    
+    private void close(Reader reader) throws ImporterException {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
+        }
     }
 
     private void loadDataset(File file, String table, TableFormat format, Reader reader, Dataset dataset) {
