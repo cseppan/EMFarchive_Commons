@@ -36,18 +36,10 @@ public class Project implements Serializable, Comparable {
     }
 
     public boolean equals(Object other) {
-        if (this == other)
-            return true;
-
-        if (!(other instanceof Project))
+        if (other == null || !(other instanceof Project))
             return false;
 
-        final Project project = (Project) other;
-
-        if (!(project.getName().equals(this.getName())))
-            return false;
-
-        return true;
+        return ((Project) other).name.equals(this.name);
     }
 
     public int hashCode() {
@@ -59,6 +51,6 @@ public class Project implements Serializable, Comparable {
     }
 
     public int compareTo(Object other) {
-        return name.compareTo(((Project)other).getName());
+        return name.compareTo(((Project) other).getName());
     }
 }
