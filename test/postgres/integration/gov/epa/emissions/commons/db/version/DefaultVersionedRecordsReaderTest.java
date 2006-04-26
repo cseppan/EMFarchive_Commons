@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DefaultVersionedRecordsReaderTest extends VersionedRecordsTestCase {
 
-    private DefaultVersionedRecordsReader reader;
+    private DefaultVersionedRecordsFactory reader;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -14,7 +14,7 @@ public class DefaultVersionedRecordsReaderTest extends VersionedRecordsTestCase 
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
 
-        reader = new DefaultVersionedRecordsReader(datasource);
+        reader = new DefaultVersionedRecordsFactory(datasource);
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {

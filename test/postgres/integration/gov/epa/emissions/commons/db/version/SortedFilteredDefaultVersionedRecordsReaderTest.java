@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilteredVersionedRecordsTestCase {
-    private DefaultVersionedRecordsReader reader;
+    private DefaultVersionedRecordsFactory reader;
 
     int datasetId;
 
@@ -18,7 +18,7 @@ public class SortedFilteredDefaultVersionedRecordsReaderTest extends SortedFilte
 
         setupVersionZero(datasource, versionsTable);
         setupVersionZeroData(datasource, dataTable);
-        reader = new DefaultVersionedRecordsReader(datasource);
+        reader = new DefaultVersionedRecordsFactory(datasource);
     }
 
     private void setupVersionZero(Datasource datasource, String table) throws SQLException {
