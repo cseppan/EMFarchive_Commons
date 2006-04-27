@@ -12,8 +12,6 @@ import java.util.List;
 
 public class OptimizedScrollableVersionedRecords implements ScrollableVersionedRecords {
 
-    private static final int FETCH_SIZE = 10000;
-
     private Datasource datasource;
 
     private String query;
@@ -24,18 +22,18 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
 
     private int totalCount;
 
-    private int start;
-
     private Statement statement;
+
+    private ScrollableResultSetIndex resultSetIndex;
 
     public OptimizedScrollableVersionedRecords(Datasource datasource, String query, String table, String whereClause)
             throws SQLException {
         this.datasource = datasource;
         this.query = query;
-        start = 0;
+        resultSetIndex = new ScrollableResultSetIndex();
 
         obtainTotalCount(table, whereClause);
-        executeQuery(start);
+        executeQuery(resultSetIndex.start());
     }
 
     private void obtainTotalCount(String table, String whereClause) throws SQLException {
@@ -81,20 +79,23 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
     private void createStatement() throws SQLException {
         Connection connection = datasource.getConnection();
         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        statement.setFetchSize(FETCH_SIZE);
-        statement.setMaxRows(FETCH_SIZE);
+        statement.setFetchSize(ScrollableResultSetIndex.FETCH_SIZE);
+        statement.setMaxRows(ScrollableResultSetIndex.FETCH_SIZE);
     }
 
     private void executeQuery(int offset) throws SQLException {
         createStatement();
 
-        String currentQuery = query + " LIMIT " + FETCH_SIZE + " OFFSET " + offset;
+        String currentQuery = query + " LIMIT " + ScrollableResultSetIndex.FETCH_SIZE + " OFFSET " + offset;
         resultSet = statement.executeQuery(currentQuery);
         metadata = resultSet.getMetaData();
     }
 
     private void moveTo(int index) throws SQLException {
-        index = positionCursorAt(index);
+        if (!resultSetIndex.inRange(index)) {
+            newResultSet(index);
+            index = resultSetIndex.relative(index);// relative index in new range
+        }
 
         if (index == 0)
             resultSet.beforeFirst();
@@ -102,29 +103,9 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
             resultSet.absolute(index);
     }
 
-    private int positionCursorAt(int index) throws SQLException {
-        if (inRange(index))
-            return index;
-
+    private void newResultSet(int index) throws SQLException {
         close();
-        return moveToNewRange(index);
-    }
-
-    private int moveToNewRange(int index) throws SQLException {
-        int steps = (index / FETCH_SIZE);
-        int stepSize = (steps * FETCH_SIZE);
-        start = (index < start) ? (start - stepSize) : (start + stepSize);// move backward/forward direction
-
-        executeQuery(start);
-        return index % FETCH_SIZE;// relative index to current range
-    }
-
-    private boolean inRange(int index) {
-        return (start <= index) && (index < end());
-    }
-
-    private int end() {
-        return (start + FETCH_SIZE);
+        executeQuery(resultSetIndex.newStart(index));
     }
 
     private VersionedRecord next() throws SQLException {
