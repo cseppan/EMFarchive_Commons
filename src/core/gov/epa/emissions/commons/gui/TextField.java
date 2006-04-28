@@ -1,8 +1,12 @@
 package gov.epa.emissions.commons.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -21,6 +25,20 @@ public class TextField extends JTextField implements Changeable {
     public TextField(String name, String value, int size) {
         this(name, size);
         super.setText(value != null ? value : "");
+    }
+
+    public TextField(String name, int size, AbstractAction action) {
+        this(name, size);
+        addActionListener(action);
+
+    }
+
+    protected void addActionListener(final Action action) {
+        super.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                action.actionPerformed(event);
+            }
+        });
     }
 
     private void addTextListener() {
