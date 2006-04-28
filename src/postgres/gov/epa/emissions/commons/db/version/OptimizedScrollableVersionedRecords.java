@@ -94,13 +94,14 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
     private void moveTo(int index) throws SQLException {
         if (!resultSetIndex.inRange(index)) {
             newResultSet(index);
-            index = resultSetIndex.relative(index);// relative index in new range
         }
-
-        if (index == 0)
+        
+        int relativeIndex = resultSetIndex.relative(index);// relative index in new range
+        
+        if (relativeIndex == 0)
             resultSet.beforeFirst();
         else
-            resultSet.absolute(index);
+            resultSet.absolute(relativeIndex);
     }
 
     private void newResultSet(int index) throws SQLException {
