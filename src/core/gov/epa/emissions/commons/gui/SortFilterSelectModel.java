@@ -37,6 +37,17 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         }
     }
 
+    private void resetSelections(int[] selections) {
+        this.selects = new Boolean[getRowCount()];
+        for (int i = 0; i < getRowCount(); i++) {
+            selects[i] = Boolean.FALSE;
+        }
+        
+        for(int j = 0; j < selections.length; j++) {
+            selects[selections[j]] = Boolean.TRUE;
+        }
+    }
+
     void setColumnHeaders(String[] columnNames) {
         String[][] columnHeaders = new String[1][];
 
@@ -121,7 +132,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
 
     public void refresh() {
         delegate.refresh();
-        resetSelections();
+        resetSelections(getSelectedIndexes());
     }
 
     public List selected() {
