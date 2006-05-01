@@ -14,14 +14,14 @@ public class IDANonPointNonRoadExporter extends GenericExporter {
 
     private FileFormat fileFormat;
     
-    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
-        super(dataset, dbServer, fileFormat);
+    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
+        super(dataset, dbServer, fileFormat, optimizedBatchSize);
         setup(fileFormat, "");
     }
 
     public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory) {
-        super(dataset, dbServer, fileFormat, dataFormatFactory);
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
         setup(fileFormat, "");
     }
     

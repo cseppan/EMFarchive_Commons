@@ -14,13 +14,13 @@ public class ORLNonRoadExporter implements Exporter {
 
     private ORLExporter delegate;
 
-    public ORLNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes));
+    public ORLNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
     }
 
     public ORLNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
-            DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory);
+            DataFormatFactory formatFactory, Integer optimizedBatchSize) {
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory, optimizedBatchSize);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

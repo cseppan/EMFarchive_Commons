@@ -9,14 +9,14 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 import java.io.PrintWriter;
 
 public class CEMHourSpecInventoryExporter extends GenericExporter {
-    public CEMHourSpecInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new CEMHourSpecInventFileFormat(types));
+    public CEMHourSpecInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new CEMHourSpecInventFileFormat(types), optimizedBatchSize);
         setup();
     }
     
     public CEMHourSpecInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new CEMHourSpecInventFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new CEMHourSpecInventFileFormat(types), factory, optimizedBatchSize);
         setup();
     }
     

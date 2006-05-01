@@ -7,14 +7,15 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class InventoryTableExporter extends GenericExporter {  
-    public InventoryTableExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new InventoryTableFileFormat(types, 1));
+    
+    public InventoryTableExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new InventoryTableFileFormat(types, 1), optimizedBatchSize);
         setDelimiter("");
     }
     
     public InventoryTableExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new InventoryTableFileFormat(types, 1), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new InventoryTableFileFormat(types, 1), factory, optimizedBatchSize);
         setDelimiter("");
     } 
 }

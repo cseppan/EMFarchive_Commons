@@ -44,7 +44,8 @@ public class DefaultVersionedRecordsReaderTest extends VersionedRecordsTestCase 
         versionZero.setDatasetId(1);
         versionZero.setVersion(0);
 
-        ScrollableVersionedRecords records = reader.optimizedFetch(versionZero, dataTable, session);
+        int batchSize = 10000;
+        ScrollableVersionedRecords records = reader.optimizedFetch(versionZero, dataTable, batchSize , session);
 
         assertEquals(5, records.total());
     }

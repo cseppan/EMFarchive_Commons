@@ -23,8 +23,13 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+    
+    
     protected void setUp() throws Exception {
         super.setUp();
+        
+        optimizedBatchSize = new Integer(10000);
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
@@ -46,7 +51,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, sqlDataTypes);
+        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);
@@ -65,7 +70,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         importerv.run();
 
         PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version),optimizedBatchSize);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);

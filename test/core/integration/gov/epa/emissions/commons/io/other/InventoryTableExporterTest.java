@@ -23,11 +23,15 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
+        
+        optimizedBatchSize = new Integer(10000);
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -47,7 +51,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         importer.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                dbServer, sqlDataTypes);
+                dbServer, sqlDataTypes,optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
@@ -65,7 +69,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         importerv.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version),optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.

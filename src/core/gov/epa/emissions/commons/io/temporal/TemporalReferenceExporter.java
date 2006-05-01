@@ -12,13 +12,13 @@ import java.util.StringTokenizer;
 
 public class TemporalReferenceExporter extends GenericExporter {
 
-    public TemporalReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        this(dataset, dbServer, types, new NonVersionedDataFormatFactory());
+    public TemporalReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        this(dataset, dbServer, types, new NonVersionedDataFormatFactory(),optimizedBatchSize);
     }
 
     public TemporalReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory dataFormatFactory) {
-        super(dataset, dbServer, new TemporalReferenceFileFormat(types), dataFormatFactory);
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new TemporalReferenceFileFormat(types), dataFormatFactory, optimizedBatchSize);
     }
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {

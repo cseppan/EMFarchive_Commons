@@ -11,13 +11,13 @@ import java.util.StringTokenizer;
 
 public class SpeciationCrossReferenceExporter extends GenericExporter {
     
-    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types));
+    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), optimizedBatchSize);
     }
     
     public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), factory, optimizedBatchSize);
     }
     
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {

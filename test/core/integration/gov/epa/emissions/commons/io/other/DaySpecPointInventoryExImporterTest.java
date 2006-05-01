@@ -27,12 +27,16 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
 
+        optimizedBatchSize = new Integer(10000);
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -52,7 +56,7 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
 
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
-        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, sqlDataTypes);
+        DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -76,7 +80,7 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
         DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version), optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

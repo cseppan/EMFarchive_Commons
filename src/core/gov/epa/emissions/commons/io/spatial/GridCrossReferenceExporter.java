@@ -8,13 +8,13 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class GridCrossReferenceExporter extends GenericExporter {
     
-    public GridCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new GridCrossRefFileFormat(types));
+    public GridCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new GridCrossRefFileFormat(types), optimizedBatchSize);
     }
     
     public GridCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new GridCrossRefFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new GridCrossRefFileFormat(types), factory, optimizedBatchSize);
     }
 
 }

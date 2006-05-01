@@ -28,11 +28,14 @@ public class LineExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
+        optimizedBatchSize = new Integer(10000);
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -50,7 +53,7 @@ public class LineExporterTest extends PersistenceTestCase {
                 sqlDataTypes);
         importer.run();
 
-        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes);
+        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());
@@ -80,7 +83,7 @@ public class LineExporterTest extends PersistenceTestCase {
         importer2.run();
 
         LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
-                version));
+                version), optimizedBatchSize);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());

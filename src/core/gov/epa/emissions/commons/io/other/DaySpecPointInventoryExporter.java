@@ -7,14 +7,15 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class DaySpecPointInventoryExporter extends GenericExporter {
-    public DaySpecPointInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new DaySpecPointInventoryFileFormat(types));
+    
+    public DaySpecPointInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new DaySpecPointInventoryFileFormat(types), optimizedBatchSize);
         super.setDelimiter("");
     }
     
     public DaySpecPointInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new DaySpecPointInventoryFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new DaySpecPointInventoryFileFormat(types), factory, optimizedBatchSize);
         super.setDelimiter("");
     }
 }

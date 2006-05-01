@@ -39,20 +39,23 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     private SqlDataTypes types;
 
-    public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
-        setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
+    private int batchSize;
+
+    public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
+        setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(),optimizedBatchSize);
     }
 
     public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        setup(dataset, dbServer, types, factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        setup(dataset, dbServer, types, factory, optimizedBatchSize);
     }
 
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory) {
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.types = types;
+        this.batchSize = optimizedBatchSize.intValue();
         setDelimiter("");
     }
 
@@ -131,7 +134,7 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments) throws SQLException {
         String query = getQueryString(source, datasource);
-        OptimizedQuery runner = datasource.optimizedQuery(query);
+        OptimizedQuery runner = datasource.optimizedQuery(query,batchSize);
 
         while (runner.execute())
             writeBatchOfData(writer, runner.getResultSet(), comments);

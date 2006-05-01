@@ -28,11 +28,15 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
+        
+        optimizedBatchSize = new Integer(10000);
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -52,7 +56,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         importer.run();
 
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, dbServer,
-                sqlDataTypes);
+                sqlDataTypes,optimizedBatchSize);
         File exportfile = File.createTempFile("SpeciatiationCrossRefExported", ".txt");
         exporter.export(exportfile);
 
@@ -74,7 +78,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         importerv.run();
 
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version),optimizedBatchSize);
         File exportfile = File.createTempFile("SpeciatiationCrossRefExported", ".txt");
         exporter.export(exportfile);
 

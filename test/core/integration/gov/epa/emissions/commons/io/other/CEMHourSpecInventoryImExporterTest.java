@@ -27,12 +27,16 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-
+        
+        optimizedBatchSize = new Integer(10000);
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -51,7 +55,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         importer.run();
 
         File exportfile = File.createTempFile("CEMpthourExported", ".txt");
-        CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, dbServer, sqlDataTypes);
+        CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -75,7 +79,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
 
         File exportfile = File.createTempFile("CEMpthourExported", ".txt");
         CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

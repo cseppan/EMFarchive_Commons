@@ -25,11 +25,15 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
+
+        optimizedBatchSize = new Integer(10000);
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -44,39 +48,39 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
 
     public void testImportSMKreportDataSemicolon() throws Exception {
         File folder = new File("test/data/other");
-        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-semicolon-state_scc.txt"},
-                dataset, dbServer, sqlDataTypes);
+        SMKReportImporter importer = new SMKReportImporter(folder,
+                new String[] { "smkreport-semicolon-state_scc.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
         assertEquals(34, countRecords());
-        
+
         File exportfile = File.createTempFile("SMKreportSemicolonExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(exportfile);
-        
+
         List data = readData(exportfile);
         assertEquals("Processed as Mobile sources", data.get(0));
-        assertEquals("06/09/2002;001000;Alabama;2201001110;0;0;0;" +
-                "0.7509;0;0.95146;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0", data.get(12));
-        assertEquals("06/09/2002;232000;Zacatecas;2230070000;5.913;" +
-                "0.87672;7.8905;0.1394;0;0;0.042398;0.072102;0.70752;" +
-                "0.0056709;0.0040507;0.11081;0.072643;0.10221;0.1324;0;" +
-                "0.058577;0.72796;0.067411;0.0076535;0.36858", data.get(45));
+        assertEquals("06/09/2002;001000;Alabama;2201001110;0;0;0;" + "0.7509;0;0.95146;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0",
+                data.get(12));
+        assertEquals("06/09/2002;232000;Zacatecas;2230070000;5.913;"
+                + "0.87672;7.8905;0.1394;0;0;0.042398;0.072102;0.70752;"
+                + "0.0056709;0.0040507;0.11081;0.072643;0.10221;0.1324;0;"
+                + "0.058577;0.72796;0.067411;0.0076535;0.36858", data.get(45));
     }
-    
+
     public void testImportSMKreportDataPipe() throws Exception {
         File folder = new File("test/data/other");
-        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-pipe-hour_scc.txt"},
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[] { "smkreport-pipe-hour_scc.txt" },
                 dataset, dbServer, sqlDataTypes);
         importer.run();
         assertEquals(44, countRecords());
-        
+
         File exportfile = File.createTempFile("SMKreportPipeExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));
         assertEquals("07/09/2002;01;9900000100;\"Description unavailable\";0;0;0;0.01946;0;0;0;0", data.get(55));
-        
+
         File exportfile2 = File.createTempFile("SMKreportPipeExported", ".txt");
         exporter.setDelimiter("|");
         exporter.export(exportfile2);
@@ -84,55 +88,56 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         assertEquals("Stationary area", data2.get(0));
         assertEquals("07/09/2002|01|9900000100|\"Description unavailable\"|0|0|0|0.01946|0|0|0|0", data2.get(55));
     }
-    
+
     public void testExImportSMKreportDataQuotes() throws Exception {
         File folder = new File("test/data/other");
-        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-quotes.txt"},
-                dataset, dbServer, sqlDataTypes);
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[] { "smkreport-quotes.txt" }, dataset,
+                dbServer, sqlDataTypes);
         importer.run();
 
         File exportfile = File.createTempFile("SMKreportQuotesExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Annual total data basis in report", data.get(8));
-        assertEquals("07/08/2002;02;2302003000;\"Description unavailable\";" +
-                "0;0;0.0027113;0;0;0.063472;0.032899;0.030573", data.get(16));
-        
+        assertEquals("07/08/2002;02;2302003000;\"Description unavailable\";"
+                + "0;0;0.0027113;0;0;0.063472;0.032899;0.030573", data.get(16));
+
         File exportfile2 = File.createTempFile("SMKreportQuotesExported", ".txt");
         exporter.setDelimiter("|");
         exporter.export(exportfile2);
         List data2 = readData(exportfile2);
         assertEquals("Annual total data basis in report", data2.get(8));
-        assertEquals("07/08/2002|02|2302003000|\"Description unavailable\"|" +
-                "0|0|0.0027113|0|0|0.063472|0.032899|0.030573", data2.get(16));
+        assertEquals("07/08/2002|02|2302003000|\"Description unavailable\"|"
+                + "0|0|0.0027113|0|0|0.063472|0.032899|0.030573", data2.get(16));
     }
-    
+
     public void testExImportSMKreportDataComma() throws Exception {
         File folder = new File("test/data/other");
-        SMKReportImporter importer = new SMKReportImporter(folder, new String[]{"smkreport-comma.txt"},
-                dataset, dbServer, sqlDataTypes);
+        SMKReportImporter importer = new SMKReportImporter(folder, new String[] { "smkreport-comma.txt" }, dataset,
+                dbServer, sqlDataTypes);
         importer.run();
         assertEquals(67, countRecords());
-        
+
         File exportfile = File.createTempFile("SMKreportCommaExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));
-        assertEquals("07/08/2002;232000;Zacatecas;4.0529;2.3955;85.799;100.51;25.768;21.124;6.1412;14.983", data.get(79));
+        assertEquals("07/08/2002;232000;Zacatecas;4.0529;2.3955;85.799;100.51;25.768;21.124;6.1412;14.983", data
+                .get(79));
     }
-    
+
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
-    
+
     protected TableReader tableReader(Datasource datasource) {
         return dbSetup.tableReader(datasource);
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 

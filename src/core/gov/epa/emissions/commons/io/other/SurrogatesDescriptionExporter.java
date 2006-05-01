@@ -12,13 +12,13 @@ import java.sql.SQLException;
 
 public class SurrogatesDescriptionExporter extends GenericExporter {
     
-    public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types));
+    public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types), optimizedBatchSize);
     }
     
     public SurrogatesDescriptionExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SurrogatesDescriptionFileFormat(types), factory, optimizedBatchSize);
     }
     
     protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {

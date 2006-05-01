@@ -35,18 +35,21 @@ public class SMKReportExporter implements Exporter {
 
     private DataFormatFactory dataFormatFactory;
 
-    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        setup(dataset, dbServer, types, new NonVersionedDataFormatFactory());
+    private int batchSize;
+
+    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        setup(dataset, dbServer, types, new NonVersionedDataFormatFactory(),optimizedBatchSize);
     }
 
-    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory) {
-        setup(dataset, dbServer, types, factory);
+    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory, Integer optimizedBatchSize) {
+        setup(dataset, dbServer, types, factory,optimizedBatchSize);
     }
 
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory) {
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
+        this.batchSize = optimizedBatchSize.intValue();
         setDelimiter(";");
     }
 
@@ -127,7 +130,7 @@ public class SMKReportExporter implements Exporter {
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws SQLException {
         String query = getQueryString(dataset, datasource);
-        OptimizedQuery runner = datasource.optimizedQuery(query);
+        OptimizedQuery runner = datasource.optimizedQuery(query,batchSize);
 
         int pad = 0;
         if (!comments) {

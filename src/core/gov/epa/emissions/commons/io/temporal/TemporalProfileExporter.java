@@ -21,14 +21,14 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     
     private FileFormat fileFormat;
     
-    public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
-        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
+    public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
+        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(),optimizedBatchSize);
         this.sqlDataTypes = sqlDataTypes;
     }
 
     public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
-            DataFormatFactory dataFormatFactory) {
-        super(dataset, dbServer, sqlDataTypes, dataFormatFactory);
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, sqlDataTypes, dataFormatFactory, optimizedBatchSize);
         this.sqlDataTypes = sqlDataTypes;
     }
     

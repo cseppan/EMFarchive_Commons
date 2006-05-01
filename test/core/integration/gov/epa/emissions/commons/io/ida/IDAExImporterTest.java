@@ -34,11 +34,13 @@ public class IDAExImporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-
+        optimizedBatchSize = new Integer(10000);
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -79,7 +81,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
 
         IDANonPointNonRoadFileFormat fileFormat = new IDANonPointNonRoadFileFormat(sqlDataTypes);
         fileFormat.addPollutantCols(getPollutantCols(dataset));
-        IDANonPointNonRoadExporter exporter = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat);
+        IDANonPointNonRoadExporter exporter = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAAreaExported", ".txt");
         exporter.export(exportfile);
 
@@ -121,7 +123,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
 
         IDAPointFileFormat fileFormat = new IDAPointFileFormat(sqlDataTypes);
         fileFormat.addPollutantCols(getPollutantCols(dataset));
-        IDAPointExporter exporter = new IDAPointExporter(dataset, dbServer, fileFormat);
+        IDAPointExporter exporter = new IDAPointExporter(dataset, dbServer, fileFormat, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAPointExported", ".txt");
         exporter.export(exportfile);
 
@@ -170,7 +172,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
 
         IDAMobileFileFormat fileFormat = new IDAMobileFileFormat(sqlDataTypes);
         fileFormat.addPollutantCols(getPollutantCols(dataset));
-        IDAMobileExporter exporter = new IDAMobileExporter(dataset, dbServer, fileFormat);
+        IDAMobileExporter exporter = new IDAMobileExporter(dataset, dbServer, fileFormat, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAMobileExported", ".txt");
         exporter.export(exportfile);
 
@@ -205,7 +207,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
                 throw new ImporterException("Can't create temp file IDAActivity.txt");
             }
             fileFormat.addPollutantCols(getPollutantCols(dataset));
-            IDAActivityExporter exporter = new IDAActivityExporter(dataset, dbServer, fileFormat);
+            IDAActivityExporter exporter = new IDAActivityExporter(dataset, dbServer, fileFormat, optimizedBatchSize);
             exporter.export(exportfile);
             String data1 = "37 1 0 2201001150 40 41.42";
             String data10 = "37 1 0 2201020150 40 16.77";

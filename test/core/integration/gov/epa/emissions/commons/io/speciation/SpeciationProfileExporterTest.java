@@ -23,12 +23,16 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
 
+        optimizedBatchSize = new Integer(10000);
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -46,7 +50,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes);
+        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
         File file = File.createTempFile("speciatiationprofileexported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.
@@ -64,7 +68,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         importerv.run();
 
         SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version),optimizedBatchSize);
         File file = File.createTempFile("speciatiationprofileexported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.

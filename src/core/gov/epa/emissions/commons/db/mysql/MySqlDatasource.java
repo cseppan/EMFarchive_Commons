@@ -19,7 +19,7 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
     private DataModifier dataAcceptor;
 
     private String name;
-    
+
     private SqlDataTypes sqlDataTypes;
 
     public MySqlDatasource(String name, Connection connection, SqlDataTypes types) {
@@ -54,7 +54,7 @@ public class MySqlDatasource implements Datasource, Cloneable, Serializable {
         return new MySqlTableDefinition(name, connection);
     }
 
-    public OptimizedQuery optimizedQuery(String query) {
+    public OptimizedQuery optimizedQuery(String query, int optimizedBatchSize) {
         throw new RuntimeException("Optimized Query is not implemented for MySql");
     }
 

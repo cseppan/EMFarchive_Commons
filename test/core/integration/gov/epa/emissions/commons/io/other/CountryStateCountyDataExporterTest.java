@@ -29,12 +29,16 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-
+        
+        optimizedBatchSize = new Integer(10000);
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -54,7 +58,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
                 new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes);
+        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
 
@@ -82,7 +86,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         importerv.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
 

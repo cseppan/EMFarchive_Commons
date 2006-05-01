@@ -23,11 +23,15 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
+        
+        optimizedBatchSize = new Integer(10000);
 
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -45,7 +49,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset,dbServer, sqlDataTypes);
+        SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset,dbServer, sqlDataTypes,optimizedBatchSize);
         File exportfile = File.createTempFile("SpetialSurrogatesExported", ".txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
@@ -63,7 +67,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         importerv.run();
 
         SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version),optimizedBatchSize);
         File exportfile = File.createTempFile("SpetialSurrogatesExported", ".txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.

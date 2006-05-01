@@ -8,12 +8,12 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class PointStackReplacementsExporter extends GenericExporter {
     
-    public PointStackReplacementsExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new PointStackReplacementsFileFormat(types));
+    public PointStackReplacementsExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new PointStackReplacementsFileFormat(types), optimizedBatchSize);
     }
     
     public PointStackReplacementsExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new PointStackReplacementsFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new PointStackReplacementsFileFormat(types), factory, optimizedBatchSize);
     }
 }

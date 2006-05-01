@@ -8,14 +8,14 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class IDAActivityExporter extends GenericExporter {
 
-    public IDAActivityExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
-        super(dataset, dbServer, fileFormat);
+    public IDAActivityExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
+        super(dataset, dbServer, fileFormat, optimizedBatchSize);
         setDelimiter(" ");
     }
 
     public IDAActivityExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory) {
-        super(dataset, dbServer, fileFormat, dataFormatFactory);
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
         setDelimiter(" ");
     }
 

@@ -14,13 +14,13 @@ public class ORLOnRoadExporter implements Exporter {
 
     private ORLExporter delegate;
 
-    public ORLOnRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes));
+    public ORLOnRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
     }
 
     public ORLOnRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
-            DataFormatFactory formatFactory) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory);
+            DataFormatFactory formatFactory, Integer optimizedBatchSize) {
+        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory, optimizedBatchSize);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

@@ -30,19 +30,23 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-
+        
+        optimizedBatchSize = new Integer(10000);
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
 
         doImport();
 
-        exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes);
+        exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
     }
 
     private void doImport() throws Exception {

@@ -7,7 +7,7 @@ public interface Datasource {
 
     DataQuery query();
     
-    OptimizedQuery optimizedQuery(String query) throws SQLException;
+    OptimizedQuery optimizedQuery(String query, int batchSize) throws SQLException;
 
     TableDefinition tableDefinition();
 

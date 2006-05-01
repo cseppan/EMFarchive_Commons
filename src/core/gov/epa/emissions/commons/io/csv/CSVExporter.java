@@ -15,18 +15,18 @@ public class CSVExporter implements Exporter {
     
     private SMKReportExporter delegate;
     
-    public CSVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
-        setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
+    public CSVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
+        setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(),optimizedBatchSize);
     }
 
     public CSVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
-            DataFormatFactory formatFactory) {
-        setup(dataset, dbServer, sqlDataTypes, formatFactory);
+            DataFormatFactory formatFactory, Integer optimizedBatchSize) {
+        setup(dataset, dbServer, sqlDataTypes, formatFactory,optimizedBatchSize);
     }
     
     private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory){
-        this.delegate = new SMKReportExporter(dataset, dbServer, types, factory);
+            DataFormatFactory factory, Integer optimizedBatchSize){
+        this.delegate = new SMKReportExporter(dataset, dbServer, types, optimizedBatchSize);
     }
     
     public void export(File file) throws ExporterException {

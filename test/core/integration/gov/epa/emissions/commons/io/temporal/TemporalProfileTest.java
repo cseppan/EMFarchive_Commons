@@ -31,11 +31,16 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         typeMapper = dbServer.getSqlDataTypes();
+
+        optimizedBatchSize = new Integer(10000);
+
         tableReader = tableReader(dbServer.getEmissionsDatasource());
         dataset = new SimpleDataset();
         dataset.setName("test");
@@ -92,7 +97,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(10, countRecords("Monthly"));
         assertEquals(13, countRecords("WEEKLY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -102,10 +108,10 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
         String expectedPattern1 = "    1   0   0   0   0   0 110 110 110 223 223 223   0  999";
         String expectedPattern2 = "    8 147 147 147 147 147 135 129  1000";
-        String expectedPattern3 = " 2006  88  49  33  24  36 119 332 854 588 493 485 520 535 " +
-                "557 648 710 789 867 660 456 387 338 257 176 1000";
-        String expectedPattern4 = " 2001 166 122 103  87  92 120 182 263 367 501 623 697 721 " +
-                "738 750 752 751 697 584 480 400 331 272 201 1000";
+        String expectedPattern3 = " 2006  88  49  33  24  36 119 332 854 588 493 485 520 535 "
+                + "557 648 710 789 867 660 456 387 338 257 176 1000";
+        String expectedPattern4 = " 2001 166 122 103  87  92 120 182 263 367 501 623 697 721 "
+                + "738 750 752 751 697 584 480 400 331 272 201 1000";
 
         assertEquals((String) records.get(0), expectedPattern1);
         assertEquals((String) records.get(17), expectedPattern2);
@@ -128,7 +134,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(13, countRecords("WEEKLY"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -138,10 +144,10 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
         String expectedPattern1 = "    1   0   0   0   0   0 110 110 110 223 223 223   0  999";
         String expectedPattern2 = "    8 147 147 147 147 147 135 129  1000";
-        String expectedPattern3 = " 2006  88  49  33  24  36 119 332 854 588 493 485 520 535 " +
-                "557 648 710 789 867 660 456 387 338 257 176 1000";
-        String expectedPattern4 = " 2001 166 122 103  87  92 120 182 263 367 501 623 697 721 " +
-                "738 750 752 751 697 584 480 400 331 272 201 1000";
+        String expectedPattern3 = " 2006  88  49  33  24  36 119 332 854 588 493 485 520 535 "
+                + "557 648 710 789 867 660 456 387 338 257 176 1000";
+        String expectedPattern4 = " 2001 166 122 103  87  92 120 182 263 367 501 623 697 721 "
+                + "738 750 752 751 697 584 480 400 331 272 201 1000";
         assertEquals((String) records.get(0), expectedPattern1);
         assertEquals((String) records.get(17), expectedPattern2);
         assertEquals((String) records.get(38), expectedPattern3);
@@ -158,7 +164,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         // assert
         assertEquals(20, countRecords("DIURNAL_WEEKDAY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -166,8 +173,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "    1   0   0   0   0   0   0   0   0 125 125 125 125 125 125 " +
-                "125 125   0   0   0   0   0   0   0   0 1000";
+        String expectedPattern = "    1   0   0   0   0   0   0   0   0 125 125 125 125 125 125 "
+                + "125 125   0   0   0   0   0   0   0   0 1000";
 
         String actual = (String) records.get(0);
         assertTrue(actual.matches(expectedPattern));
@@ -188,7 +195,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(20, countRecords("DIURNAL_WEEKDAY"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -196,8 +203,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "    1   0   0   0   0   0   0   0   0 125 125 125 125 " +
-                "125 125 125 125   0   0   0   0   0   0   0   0 1000";
+        String expectedPattern = "    1   0   0   0   0   0   0   0   0 125 125 125 125 "
+                + "125 125 125 125   0   0   0   0   0   0   0   0 1000";
 
         String actual = (String) records.get(0);
         assertTrue(actual.matches(expectedPattern));
@@ -213,7 +220,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         // assert
         assertEquals(20, countRecords("DIURNAL_WEEKEND"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -221,8 +229,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "   10   0   0   0   0   0   0   0 100 100 100 100 100 100 100 " +
-                "100 100 100   0   0   0   0   0   0   0 1000";
+        String expectedPattern = "   10   0   0   0   0   0   0   0 100 100 100 100 100 100 100 "
+                + "100 100 100   0   0   0   0   0   0   0 1000";
         String actual = (String) records.get(9);
         assertTrue(actual.matches(expectedPattern));
     }
@@ -241,7 +249,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(20, countRecords("DIURNAL_WEEKEND"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -249,8 +257,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         List records = readData(exportfile);
         assertEquals(20, records.size());
 
-        String expectedPattern = "   10   0   0   0   0   0   0   0 100 100 100 100 100 " +
-                "100 100 100 100 100   0   0   0   0   0   0   0 1000";
+        String expectedPattern = "   10   0   0   0   0   0   0   0 100 100 100 100 100 "
+                + "100 100 100 100 100   0   0   0   0   0   0   0 1000";
         String actual = (String) records.get(9);
         assertTrue(actual.matches(expectedPattern));
     }
@@ -265,7 +273,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         // assert
         assertEquals(10, countRecords("MONTHLY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -292,7 +301,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(10, countRecords("MONTHLY"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -316,7 +325,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
         // assert
         assertEquals(13, countRecords("WEEKLY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper);
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -325,7 +335,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(13, records.size());
 
         String expectedPattern = "    6 167 167 167 167 167 167   0  1000";
-        
+
         String actual = (String) records.get(5);
         assertTrue(actual.matches(expectedPattern));
     }
@@ -344,7 +354,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(13, countRecords("WEEKLY"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
 
@@ -353,7 +363,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(13, records.size());
 
         String expectedPattern = "    6 167 167 167 167 167 167   0  1000";
-        
+
         String actual = (String) records.get(5);
         assertTrue(actual.matches(expectedPattern));
     }

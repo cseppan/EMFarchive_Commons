@@ -36,16 +36,19 @@ public class GenericExporter implements Exporter {
 
     private FileFormat fileFormat;
 
-    public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
-        this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory());
+    private int batchSize;
+
+    public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
+        this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
     public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory) {
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.fileFormat = fileFormat;
+        this.batchSize = optimizedBatchSize.intValue();
 
         setDelimiter(";");
     }
@@ -112,7 +115,7 @@ public class GenericExporter implements Exporter {
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws SQLException {
         String query = getQueryString(dataset, datasource);
-        OptimizedQuery runner = datasource.optimizedQuery(query);
+        OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
 
         while (runner.execute()) {
             ResultSet resultSet = runner.getResultSet();

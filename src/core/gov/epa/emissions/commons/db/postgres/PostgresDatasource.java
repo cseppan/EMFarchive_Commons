@@ -12,8 +12,6 @@ import java.sql.SQLException;
 
 public class PostgresDatasource implements Datasource {
 
-    private static final int OPTIMIZED_FETCH_SIZE = 25000;// # of rows
-
     private Connection connection;
 
     private DataModifier dataAcceptor;
@@ -49,10 +47,10 @@ public class PostgresDatasource implements Datasource {
         return new PostgresTableDefinition(name, connection);
     }
 
-    public OptimizedQuery optimizedQuery(String query) throws SQLException {
-        return new OptimizedPostgresQuery(connection, query, OPTIMIZED_FETCH_SIZE);
+    public OptimizedQuery optimizedQuery(String query, int optimizedBatchSize) throws SQLException {
+        return new OptimizedPostgresQuery(connection, query, optimizedBatchSize);
     }
-    
+
     public SqlDataTypes getSqlDataType() {
         return sqlDataTypes;
     }

@@ -47,8 +47,8 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
         InternalSource table = new InternalSource();
         table.setTable(datasetName);
         dataset.addInternalSource(table);
-
-        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory);
+        Integer optimizedBatchSize = new Integer(10000);
+        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory, optimizedBatchSize);
         File file = File.createTempFile("exported", ".orl");
         file.deleteOnExit();
 

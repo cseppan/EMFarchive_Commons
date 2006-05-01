@@ -25,12 +25,16 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
 
     private DbServer dbServer;
 
+    private Integer optimizedBatchSize;
+
     protected void setUp() throws Exception {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
 
+        optimizedBatchSize  = new Integer(10000);
+        
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -53,7 +57,7 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         int rows = countRecords();
         assertEquals(34, rows);
 
-        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, dbServer, sqlDataTypes);
+        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedCrossRefExported", ".txt");
         exporter.export(exportfile);
         

@@ -13,15 +13,15 @@ public class IDAPointExporter extends GenericExporter {
 
     private IDANonPointNonRoadExporter deligate;
     
-    public IDAPointExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat) {
-        super(dataset, dbServer, fileFormat);
-        this.deligate = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat);
+    public IDAPointExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
+        super(dataset, dbServer, fileFormat, optimizedBatchSize);
+        this.deligate = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat, optimizedBatchSize);
     }
 
     public IDAPointExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory) {
-        super(dataset, dbServer, fileFormat, dataFormatFactory);
-        this.deligate = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat, dataFormatFactory);
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
+        this.deligate = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
     }
     
     public void export(File file) throws ExporterException {

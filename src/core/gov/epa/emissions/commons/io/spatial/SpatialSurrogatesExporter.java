@@ -7,13 +7,13 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class SpatialSurrogatesExporter extends GenericExporter {
-    public SpatialSurrogatesExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types) {
-        super(dataset, dbServer, new SpatialSurrogatesFileFormat(types));
+    public SpatialSurrogatesExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SpatialSurrogatesFileFormat(types), optimizedBatchSize);
     }
     
     public SpatialSurrogatesExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
-            DataFormatFactory factory) {
-        super(dataset, dbServer, new SpatialSurrogatesFileFormat(types), factory);
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SpatialSurrogatesFileFormat(types), factory, optimizedBatchSize);
     }
 
 }
