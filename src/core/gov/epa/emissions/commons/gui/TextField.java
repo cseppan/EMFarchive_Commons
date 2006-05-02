@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -13,6 +12,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 public class TextField extends JTextField implements Changeable {
+    
     private Changeables changeables;
 
     private boolean changed = false;
@@ -27,7 +27,7 @@ public class TextField extends JTextField implements Changeable {
         super.setText(value != null ? value : "");
     }
 
-    public TextField(String name, int size, AbstractAction action) {
+    public TextField(String name, int size, Action action) {
         this(name, size);
         addActionListener(action);
 
