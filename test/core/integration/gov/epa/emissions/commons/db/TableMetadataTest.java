@@ -61,8 +61,6 @@ public class TableMetadataTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(table);
-        System.out.println(datasource.getConnection().getAutoCommit());
-        // System.out.println(def.tableExists(table));
     }
 
     public void testGetColumns() throws SQLException {

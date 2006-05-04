@@ -38,7 +38,6 @@ public class DataTable {
             result = result.replace(result.charAt(0), '_');
             result = "DS" + result;
         }
-
         return result.trim().replaceAll(" ", "_");
     }
 

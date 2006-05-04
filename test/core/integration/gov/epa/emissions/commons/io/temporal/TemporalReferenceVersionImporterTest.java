@@ -47,6 +47,17 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
 
         dbUpdate.deleteAll(datasource.getName(), "versions");
     }
+    
+    public void testShouldImportLargeFileWithInlineComments() throws Exception {
+        File file = new File("test/data/temporal-crossreference", "amptref.m3.us+can.txt");
+        TemporalReferenceImporter importer = new TemporalReferenceImporter(file.getParentFile(), new String[] { file
+                .getName() }, dataset, dbServer, sqlDataTypes);
+        importer.run();
+
+        int rows = countRecords();
+        assertEquals(20944, rows);
+        
+    }
 
     public void testShouldImportReferenceFile() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");

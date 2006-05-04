@@ -19,6 +19,8 @@ public class FixedWidthParser implements Parser {
         return record;
     }
 
+    // FIXME: check for inline comments,
+    //FIXME: throw an exception while calling substring()
     private void addTokens(String line, Record record, Column[] columns) {
         int offset = 0;
 

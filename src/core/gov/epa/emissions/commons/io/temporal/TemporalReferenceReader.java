@@ -63,12 +63,10 @@ public class TemporalReferenceReader implements Reader {
     }
 
     public int lineNumber() {
-        // TODO Auto-generated method stub
-        return 0;
+        return delegate.lineNumber();
     }
 
     public String line() {
-        // TODO Auto-generated method stub
-        return null;
+        return delegate.line();
     }
 }

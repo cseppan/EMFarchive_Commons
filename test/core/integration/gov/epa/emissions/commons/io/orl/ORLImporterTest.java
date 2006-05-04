@@ -385,7 +385,7 @@ public class ORLImporterTest extends HibernateTestCase {
         int rows = countRecords();
         assertEquals(12, rows);
     }
-
+    
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);

@@ -2,19 +2,27 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
-import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.FillDefaultValues;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class TemporalReferenceFileFormat implements FileFormat {
+public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols {
 
-    private Column[] cols;
+    private Column[] requiredCols;
 
-    public TemporalReferenceFileFormat(SqlDataTypes types) {
-        this.cols = createCols(types);
+    private Column[] optionalCols;
+
+    private FillDefaultValues filler;
+
+    public TemporalReferenceFileFormat(SqlDataTypes types, FillDefaultValues filler) {
+        this.requiredCols = createRequiredCols(types);
+        this.optionalCols = createOptionalCols(types);
+        this.filler = filler;
     }
 
     public String identify() {
@@ -22,25 +30,51 @@ public class TemporalReferenceFileFormat implements FileFormat {
     }
 
     public Column[] cols() {
-        return cols;
+        List allCols = new ArrayList();
+        allCols.addAll(Arrays.asList(requiredCols));
+        allCols.addAll(Arrays.asList(optionalCols));
+
+        return (Column[]) allCols.toArray(new Column[0]);
     }
 
-    public Column[] createCols(SqlDataTypes types) {
-        List column = new ArrayList();
-        
-        column.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
-        column.add(new Column("Monthly_Code", types.intType(), new IntegerFormatter()));
-        column.add(new Column("Weekly_Code", types.intType(), new IntegerFormatter()));
-        column.add(new Column("Diurnal_Code", types.intType(), new IntegerFormatter()));
-        column.add(new Column("Pollutants", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
-        column.add(new Column("LinkID_PlantID", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("Characteristic_1", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("Characteristic_2", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("Characteristic_3", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("Characteristic_4", types.stringType(32), new StringFormatter(32)));
-        column.add(new Column("Characteristic_5", types.stringType(32), new StringFormatter(32)));
-        
-        return (Column[]) column.toArray(new Column[0]);
+    public Column[] optionalCols() {
+        return optionalCols;
     }
+
+    public Column[] minCols() {
+        return requiredCols;
+    }
+
+    public void fillDefaults(List data, long datasetId) {
+        filler.fill(this, data, datasetId);
+
+    }
+
+    public Column[] createRequiredCols(SqlDataTypes types) {
+        List columns = new ArrayList();
+
+        columns.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
+        columns.add(new Column("Monthly_Code", types.intType(), new IntegerFormatter()));
+        columns.add(new Column("Weekly_Code", types.intType(), new IntegerFormatter()));
+        columns.add(new Column("Diurnal_Code", types.intType(), new IntegerFormatter()));
+        
+
+        return (Column[]) columns.toArray(new Column[0]);
+    }
+
+    private Column[] createOptionalCols(SqlDataTypes types) {
+        List columns = new ArrayList();
+        
+        columns.add(new Column("Pollutants", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
+        columns.add(new Column("LinkID_PlantID", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("Characteristic_1", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("Characteristic_2", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("Characteristic_3", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("Characteristic_4", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("Characteristic_5", types.stringType(32), new StringFormatter(32)));
+
+        return (Column[]) columns.toArray(new Column[0]);
+    }
+
 }

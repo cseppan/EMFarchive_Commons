@@ -2,18 +2,18 @@ package gov.epa.emissions.commons.db;
 
 import java.sql.SQLException;
 
-public class OptimizedTableModifier extends TableModifier{
+public class OptimizedTableModifier extends TableModifier {
 
     private static final int BATCH_SIZE = 1000;
 
     private int counter;
 
     public OptimizedTableModifier(Datasource datasource, String tableName) throws SQLException {
-        super(datasource,tableName);
+        super(datasource, tableName);
         counter = 0;
     }
-    
-    public void start() throws SQLException{
+
+    public void start() throws SQLException {
         connection.setAutoCommit(false);
     }
 
@@ -24,13 +24,15 @@ public class OptimizedTableModifier extends TableModifier{
         }
         insertRow(tableName, data, columns);
     }
-    
-    public void finish() throws SQLException{
-        statement.executeBatch();// executing the last batch
-        connection.commit();
-        connection.setAutoCommit(true);
-    }
 
+    public void finish() throws SQLException {
+        try {
+            statement.executeBatch();// executing the last batch
+        } finally {
+            connection.commit();
+            connection.setAutoCommit(true);
+        }
+    }
 
     private void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
         StringBuffer insert = createInsertStatement(table, data, cols);

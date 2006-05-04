@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
@@ -14,10 +15,10 @@ import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
-import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
+import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
@@ -46,7 +47,7 @@ public class TemporalReferenceImporter implements Importer {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
 
-        FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes);
+        FileFormat fileFormat = new TemporalReferenceFileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
         unit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
@@ -55,27 +56,27 @@ public class TemporalReferenceImporter implements Importer {
         DataTable dataTable = new DataTable(dataset, datasource);
         dataTable.create(unit.tableFormat());
         try {
-            doImport(file, dataset, dataTable.name(), unit.tableFormat());
+            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) unit.fileFormat(), unit.tableFormat());
         } catch (Exception e) {
             dataTable.drop();
             throw new ImporterException(e.getMessage() + " Filename: " + file.getAbsolutePath() + "\n");
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
+    private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat, TableFormat tableFormat) throws Exception {
         Reader reader = null;
         try {
-            DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            DataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             reader = new TemporalReferenceReader(fileReader, 0);
 
             loader.load(reader, dataset, table);
             loadDataset(file, table, unit.tableFormat(), reader, dataset);
-        }finally{
+        } finally {
             close(reader);
         }
     }
-    
+
     private void close(Reader reader) throws ImporterException {
         if (reader != null) {
             try {

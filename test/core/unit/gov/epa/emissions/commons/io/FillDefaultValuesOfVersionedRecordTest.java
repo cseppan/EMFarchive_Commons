@@ -114,6 +114,32 @@ public class FillDefaultValuesOfVersionedRecordTest extends MockObjectTestCase {
         assertEquals("", data.get(8));// optional 2 - filler
         assertEquals("!Comments", data.get(9));// comments
     }
+    
+    public void testShouldAddDatasetIdAndAddComentAndFillersForAllOptionalColsOnFillDefaultValues() {
+        // setup
+        List data = new ArrayList();
+        data.add("fixed1");
+        data.add("fixed2");
+        data.add("fixed3");
+        long datasetId = 129;
+
+        // run
+        filler.fill(fileFormatProxy, data, datasetId);
+
+        // verify
+        // 1 dataset id, 3 - fixed, 2 optionals, 1 Comments
+        assertEquals((4 + 3 + 2 + 1), data.size());
+        assertEquals("", data.get(0));// record id - filler
+        assertEquals(datasetId + "", data.get(1));// dataset id
+        assertEquals("0", data.get(2)); // version
+        assertEquals("", data.get(3));// delete versions
+        assertEquals("fixed1", data.get(4));// fixed 1
+        assertEquals("fixed2", data.get(5));// fixed 2
+        assertEquals("fixed3", data.get(6));// fixed 3
+        assertEquals("", data.get(7));// optional 1 - filler
+        assertEquals("", data.get(8));// optional 2 - filler
+        assertEquals("", data.get(9));// comments
+    }
 
     public class ColumnStub extends Column {
         public ColumnStub() {
