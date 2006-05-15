@@ -70,7 +70,7 @@ public class TextField extends JTextField implements Changeable {
         this.changed = false;
     }
 
-    void notifyChanges() {
+    protected void notifyChanges() {
         changed = true;
         if (changeables != null)
             changeables.onChanges();
