@@ -42,8 +42,8 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
     }
 
     public void testImportCountryStateCountyData() throws Exception {
-        File folder = new File("test/data/other");
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
+        File folder = new File("D:\\emf_input\\other");
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.11may2006.txt"},
                 dataset, dbServer, sqlDataTypes);
         importer.run();
     }

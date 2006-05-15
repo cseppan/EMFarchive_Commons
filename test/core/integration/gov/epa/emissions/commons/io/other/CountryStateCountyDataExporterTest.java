@@ -71,7 +71,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         assertEquals("/COUNTRY/", (String) data.get(0));
         assertEquals("0                   US", (String) data.get(1));
         assertEquals("/STATE/", (String) data.get(8));
-        assertEquals(" 12FL              Florida 4  TEST", (String) data.get(18));
+        assertEquals(" 12FL              Florida 4  TEST!jlkjafdsjalsjfd;asdlkjf", (String) data.get(18));
         assertEquals("/COUNTY/", (String) data.get(20));
     }
 
@@ -99,9 +99,9 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         assertEquals("/COUNTRY/", (String) data.get(0));
         assertEquals("0                   US", (String) data.get(1));
         assertEquals("/STATE/", (String) data.get(8));
-        assertEquals(" 12FL              Florida 4  TEST", (String) data.get(18));
+        assertEquals(" 12FL              Florida 4  TEST!jlkjafdsjalsjfd;asdlkjf", (String) data.get(18));
         assertEquals("/COUNTY/", (String) data.get(20));
-        assertEquals(" TN         Claiborne Co  4 725 44 440 EST   -83.664   36.474 "
+        assertEquals(" TN         Claiborne Co  47 25 44 440 EST   -83.664   36.474 "
                 + "456.71943606  -84.0067  -83.3646  36.3284  36.5988    30059", data.get(36));
     }
 

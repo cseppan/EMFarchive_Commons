@@ -25,10 +25,10 @@ public class CountyFileFormat implements FileFormat {
         Column statebrev = new Column("STATEBREV", types.stringType(2), 2, new StringFormatter(2));
         Column spacer2 = new Column("spacer2", types.stringType(1), 1, new StringFormatter(1));
         Column name = new Column("COUNTYNAME", types.stringType(20), 20, new StringFormatter(20));
-        Column spacer3 = new Column("spacer3", types.stringType(2), 2, new StringFormatter(2));
+        Column spacer3 = new Column("spacer3", types.stringType(1), 1, new StringFormatter(2));
         Column countrycode = new Column("COUNTRYCODE", types.intType(), 1, new IntegerFormatter());
         Column statecode = new Column("STATECODE", types.intType(), 2, new IntegerFormatter());
-        Column countycode = new Column("COUNTYCODE", types.intType(), 2, new IntegerFormatter());
+        Column countycode = new Column("COUNTYCODE", types.intType(), 3, new IntegerFormatter());
         Column aerosstatecode = new Column("AEROSSTATECODE", types.intType(), 3, new IntegerFormatter());
         Column aeroscountycode = new Column("AEROSCOUNTYCODE", types.intType(), 4, new IntegerFormatter());
         Column spacer4 = new Column("spacer4", types.stringType(1), 1, new StringFormatter(1));

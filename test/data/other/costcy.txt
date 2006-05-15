@@ -1,26 +1,26 @@
 #POPULATION 2000
 /COUNTRY/
 0 US
-1 CANADA
+1 CANADA !ajsdflkj;lsakdjf
 2 MEXICO
 3 CUBA
 4 BAHAMAS
 5 HAITI
 6 DOMINICANREPUBLIC
 /STATE/
-  1AL Alabama              4 T CST
-  2AK Alaska              10 F PST
-  4AZ Arizona              9 F PST
-  5AR Arkansas             6 T CST
-  6CA California           9 F PST
+  1AL Alabama              4 T CST xxx ess
+  2AK Alaska              10 F P
+  4AZ Arizona              9 F PS
+  5AR Arkansas            10 F
+  6CA California           9
   8CO Colorado             8 F MST
   9CT Connecticut          1 T EST
  10DE Delaware             3 T EST
  11DC District of Columbia 3 T EST
- 12FL Florida              4 T EST
+ 12FL Florida              4 T EST !jlkjafdsjalsjfd;asdlkjf
  13GA Georgia              4 T EST
 /COUNTY/
- AL Autauga Co             1  1  1 240 CST  -86.6580  32.5200 602.11584581  -86.9126  -86.4060  32.3220  32.7117    44099
+ AL Autauga Co             1  1  1 240 CST  -86.6580  32.5200 602.11584581  -86.9126  -86.4060  32.3220  32.7117    44099 !lkjadsfjkljadsfj
  AL Baldwin Co             1  3  1 260 CST  -87.7220  30.7600 1668.6723493  -88.0344  -87.3796  30.2211  31.3276   139432
  AL Barbour Co             1  5  1 280 CST  -85.3940  31.8790 901.40859615  -85.7434  -85.0567  31.6253  32.1555    26657
  GA Telfair Co            13271 114880 EST  -82.8870  31.9460 445.64491428  -83.2094  -82.6573  31.7758  32.1365    11352
