@@ -1,4 +1,7 @@
 /POINT DEFN/  4 4
+# MRH: Updated 8/22/2005 to add Montana-supplied monthly RWC profile 17130
+#     and remove NEI default zone-based.
+# MRH: Updated 9/21/2005 to change dairy-cow profile assignments.
 0000000000   262     7    24                -9
   10100101   462     8    33                -9
   10100102   462     8    33                -9
@@ -2223,6 +2226,7 @@
   30300361   262     7    24                -9
   30300399   262     7    24                -9
   30300401   296     7    24                -9
+  30300500   262     7    24                -9
   30300502   262     7    24                -9
   30300503   262     7    24                -9
   30300504   262     7    24                -9
@@ -7281,6 +7285,7 @@
   68582002   262     7    24                -9
   68582599   262     7    24                -9
   99999999   262     7    24                -9
+2101000000   262     8    24                -9
 2101001000   262     8    24                -9
 2101002000   262     8    24                -9
 2101003000   262     8    24                -9
@@ -7307,6 +7312,7 @@
 2102009000   262     8    26                -9
 2102010000   262     8    26                -9
 2102011000   262     8    26                -9
+2103000000   469     8    26                -9
 2103001000   469     8    26                -9
 2103002000   469     8    26                -9
 2103004000   469     8    26                -9
@@ -7319,6 +7325,7 @@
 2103011000   262     8    26                -9
 2103011005   262     8    26                -9
 2103011010   262     8    26                -9
+2104000000   485     7    26                -9
 2104001000   485     7    26                -9
 2104002000   485     7    26                -9
 2104004000   485     7    26                -9
@@ -7326,14 +7333,6 @@
 2104006000   485     7    26                -9
 2104006010   262     7    26                -9
 2104007000   262     7    26                -9
-2104008000   485     7    26                -9
-2104008001   485     7    26                -9
-2104008010   485     7    26                -9
-2104008030   485     7    26                -9
-2104008050   485     7    26                -9
-2104008051   485     7    26                -9
-2104008052   262     7    26                -9
-2104008053   485     7    26                -9
 2104011000   262     7    26                -9
 2199001000   262     7    26                -9
 2199002000   262     7    26                -9
@@ -7350,6 +7349,90 @@
 2199009000   262     7    26                -9
 2199010000   262     7    26                -9
 2199011000   262     7    26                -9
+2200000110    9001    2002    2001 CO          6000
+2200000130    9001    2002    2002 CO          6000
+2200000150    9001    2002    2003 CO          6000
+2200000170    9001    2002    2004 CO          6000
+2200000190    9001    2002    2005 CO          6000
+2200000210    9001    2002    2006 CO          6000
+2200000230    9001    2003    2007 CO          6000
+2200000250    9001    2003    2008 CO          6000
+2200000270    9001    2003    2009 CO          6000
+2200000290    9001    2003    2009 CO          6000
+2200000310    9001    2003    2011 CO          6000
+2200000330    9001    2003    2012 CO          6000
+2200000110    9003    2002    2001 EXH__VOC    6000
+2200000130    9003    2002    2002 EXH__VOC    6000
+2200000150    9003    2002    2003 EXH__VOC    6000
+2200000170    9003    2002    2004 EXH__VOC    6000
+2200000190    9003    2002    2005 EXH__VOC    6000
+2200000210    9003    2002    2006 EXH__VOC    6000
+2200000230    9003    2003    2007 EXH__VOC    6000
+2200000250    9003    2003    2008 EXH__VOC    6000
+2200000270    9003    2003    2009 EXH__VOC    6000
+2200000290    9003    2003    2010 EXH__VOC    6000
+2200000310    9003    2003    2011 EXH__VOC    6000
+2200000330    9003    2003    2012 EXH__VOC    6000
+2200000110    9004    2002    2001 NH3         6000
+2200000130    9004    2002    2002 NH3         6000
+2200000150    9004    2002    2003 NH3         6000
+2200000170    9004    2002    2004 NH3         6000
+2200000190    9004    2002    2005 NH3         6000
+2200000210    9004    2002    2006 NH3         6000
+2200000230    9004    2003    2007 NH3         6000
+2200000250    9004    2003    2008 NH3         6000
+2200000270    9004    2003    2009 NH3         6000
+2200000290    9004    2003    2010 NH3         6000
+2200000310    9004    2003    2011 NH3         6000
+2200000330    9004    2003    2012 NH3         6000
+2200000110    9002    2002    2001 NOX         6000
+2200000130    9002    2002    2002 NOX         6000
+2200000150    9002    2002    2003 NOX         6000
+2200000170    9002    2002    2004 NOX         6000
+2200000190    9002    2002    2005 NOX         6000
+2200000210    9002    2002    2006 NOX         6000
+2200000230    9002    2003    2007 NOX         6000
+2200000250    9002    2003    2008 NOX         6000
+2200000270    9002    2003    2009 NOX         6000
+2200000290    9002    2003    2010 NOX         6000
+2200000310    9002    2003    2011 NOX         6000
+2200000330    9002    2003    2012 NOX         6000
+2200000110    9006    2002    2001 PM2_5       6000
+2200000130    9006    2002    2002 PM2_5       6000
+2200000150    9006    2002    2003 PM2_5       6000
+2200000170    9006    2002    2004 PM2_5       6000
+2200000190    9006    2002    2005 PM2_5       6000
+2200000210    9006    2002    2006 PM2_5       6000
+2200000230    9006    2003    2007 PM2_5       6000
+2200000250    9006    2003    2008 PM2_5       6000
+2200000270    9006    2003    2009 PM2_5       6000
+2200000290    9006    2003    2010 PM2_5       6000
+2200000310    9006    2003    2011 PM2_5       6000
+2200000330    9006    2003    2012 PM2_5       6000
+2200000110    9007    2002    2001 PMC         6000
+2200000130    9007    2002    2002 PMC         6000
+2200000150    9007    2002    2003 PMC         6000
+2200000170    9007    2002    2004 PMC         6000
+2200000190    9007    2002    2005 PMC         6000
+2200000210    9007    2002    2006 PMC         6000
+2200000230    9007    2003    2007 PMC         6000
+2200000250    9007    2003    2008 PMC         6000
+2200000270    9007    2003    2009 PMC         6000
+2200000290    9007    2003    2010 PMC         6000
+2200000310    9007    2003    2011 PMC         6000
+2200000330    9007    2003    2012 PMC         6000
+2200000110    9005    2002    2001 SO2         6000
+2200000130    9005    2002    2002 SO2         6000
+2200000150    9005    2002    2003 SO2         6000
+2200000170    9005    2002    2004 SO2         6000
+2200000190    9005    2002    2005 SO2         6000
+2200000210    9005    2002    2006 SO2         6000
+2200000230    9005    2003    2007 SO2         6000
+2200000250    9005    2003    2008 SO2         6000
+2200000270    9005    2003    2009 SO2         6000
+2200000290    9005    2003    2010 SO2         6000
+2200000310    9005    2003    2011 SO2         6000
+2200000330    9005    2003    2012 SO2         6000
 2201000000   262  2002  2013                -9
 2201001000   262  2002  2013                -9
 2201001110   110  2002  2001                -9
@@ -8557,8 +8640,9 @@
 2301020000   262     7    26                -9
 2301030000   262     7    26                -9
 2301040000   262     7    26                -9
-2302000000   262     7    26                -9
+2302000000   262     7   250                -9
 2302002000   262     7    26                -9
+2302003000   262     7    26                -9
 2302010000   262     7    26                -9
 2302040000   262     7    26                -9
 2302050000   262     7    26                -9
@@ -8574,6 +8658,7 @@
 2305000000   262     7    26                -9
 2305070000   262     7    26                -9
 2305080000   262     7    26                -9
+2305090000   262     7    26                -9
 2306000000   262     7    26                -9
 2306010000   262     7    26                -9
 2307000000   262     7    26                -9
@@ -8678,6 +8763,8 @@
 2401001285   199     7    26                -9
 2401001370   199     7    26                -9
 2401001999   199     7    26                -9
+2401002000   467     7    26                -9
+2401003000   467     7    26                -9
 2401005000   262     7    26                -9
 2401005030   262     7    26                -9
 2401005055   262     7    26                -9
@@ -10814,21 +10901,35 @@
 2801700010   985     7    26                -9    04000
 2801700010   975     7    26                -9    01000
 2801700010   998     7    26                -9    00000
-2805000000   262     7    26                -9    00000
-2805001000   262     7    26                -9    00000
-2805001001   262     7    26                -9    00000
-2805005000   262     7    26                -9    00000
-2805005001   262     7    26                -9    00000
-2805010000   262     7    26                -9    00000
-2805010001   262     7    26                -9    00000
-2805015000   262     7    26                -9    00000
-2805015001   262     7    26                -9    00000
-2805020000   489     7    26                -9    00000
-2805025000   489     7    26                -9    00000
-2805030000   489     7    26                -9    00000
-2805035000   262     7    26                -9    00000
-2805040000   489     7    26                -9    00000
-2805045001   489     7    26                -9    00000
+2805000000  1560     7    26                  ! Livestock Gilliland
+2805001000  1560     7    26
+2805002000  1560     7    26 
+2805003000  1560     7    26
+2805007000  1560     7    26
+2805008000  1560     7    26
+2805009000  1560     7    26
+2805020000  1560     7    26
+2805025000  1560     7    26
+2805030000  1560     7    26
+2805035000  1560     7    26
+2805038000  1560     7    26
+2805039100  1560     7    26
+2805039200  1560     7    26
+2805039300  1560     7    26
+2805040000  1560     7    26
+2805045000  1560     7    26
+2805046000  1560     7    26
+2805047100  1560     7    26
+2805047300  1560     7    26
+2805052000  1560     7    26
+2805053100  1560     7    26
+2805010000  1570     7    26                   ! Dairy cow Gilliland/Pinder
+2805010001  1570     7    26
+2805018000  1570     7    26
+2805019000  1570     7    26
+2805021000  1570     7    26
+2805022000  1570     7    26
+2805023000  1570     7    26
 2810001000     5     7   210                -9    00000
 2810003000   262     7    24                -9    00000
 2810005000    14     7    24                -9    00000
@@ -18323,3 +18424,2525 @@
 2230070290   262  2003    24     HOT__XYLENES
 2230070310   262  2003    24     HOT__XYLENES
 2230070330   262  2003    24     HOT__XYLENES
+2810015000  1002  7  1002  -9  002000   !  AK, Prescribed fires
+2810015000  1201  7  1001  -9  001000   !  AL, Prescribed fires
+2810015000  1005  7  1005  -9  005000   !  AR, Prescribed fires
+2810015000  1004  7  1004  -9  004000   !  AZ, Prescribed fires
+2810015000  1006  7  1006  -9  006000   !  CA, Prescribed fires
+2810015000  1008  7  1008  -9  008000   !  CO, Prescribed fires
+2810015000  1009  7  1009  -9  009000   !  CT, Prescribed fires
+2810015000  1011  7  1011  -9  011000   !  DC, Prescribed fires
+2810015000  1010  7  1010  -9  010000   !  DE, Prescribed fires
+2810015000  1212  7  1012  -9  012000   !  FL, Prescribed fires
+2810015000  1213  7  1013  -9  013000   !  GA, Prescribed fires
+2810015000  1015  7  1015  -9  015000   !  HI, Prescribed fires
+2810015000  1019  7  1019  -9  019000   !  IA, Prescribed fires
+2810015000  1016  7  1016  -9  016000   !  ID, Prescribed fires
+2810015000  1017  7  1017  -9  017000   !  IL, Prescribed fires
+2810015000  1018  7  1018  -9  018000   !  IN, Prescribed fires
+2810015000  1020  7  1020  -9  020000   !  KS, Prescribed fires
+2810015000  1200  7  1021  -9  021000   !  KY, Prescribed fires
+2810015000  1022  7  1022  -9  022000   !  LA, Prescribed fires
+2810015000  1025  7  1025  -9  025000   !  MA, Prescribed fires
+2810015000  1024  7  1024  -9  024000   !  MD, Prescribed fires
+2810015000  1023  7  1023  -9  023000   !  ME, Prescribed fires
+2810015000  1026  7  1026  -9  026000   !  MI, Prescribed fires
+2810015000  1027  7  1027  -9  027000   !  MN, Prescribed fires
+2810015000  1029  7  1029  -9  029000   !  MO, Prescribed fires
+2810015000  1228  7  1028  -9  028000   !  MS, Prescribed fires
+2810015000  1030  7  1030  -9  030000   !  MT, Prescribed fires
+2810015000  1037  7  1037  -9  037000   !  NC, Prescribed fires
+2810015000  1038  7  1038  -9  038000   !  ND, Prescribed fires
+2810015000  1031  7  1031  -9  031000   !  NE, Prescribed fires
+2810015000  1033  7  1033  -9  033000   !  NH, Prescribed fires
+2810015000  1034  7  1034  -9  034000   !  NJ, Prescribed fires
+2810015000  1035  7  1035  -9  035000   !  NM, Prescribed fires
+2810015000  1032  7  1032  -9  032000   !  NV, Prescribed fires
+2810015000  1036  7  1036  -9  036000   !  NY, Prescribed fires
+2810015000  1039  7  1039  -9  039000   !  OH, Prescribed fires
+2810015000  1040  7  1040  -9  040000   !  OK, Prescribed fires
+2810015000  1041  7  1041  -9  041000   !  OR, Prescribed fires
+2810015000  1042  7  1042  -9  042000   !  PA, Prescribed fires
+2810015000  1044  7  1044  -9  044000   !  RI, Prescribed fires
+2810015000  1245  7  1045  -9  045000   !  SC, Prescribed fires
+2810015000  1046  7  1046  -9  046000   !  SD, Prescribed fires
+2810015000  1200  7  1047  -9  047000   !  TN, Prescribed fires
+2810015000  1048  7  1048  -9  048000   !  TX, Prescribed fires
+2810015000  1049  7  1049  -9  049000   !  UT, Prescribed fires
+2810015000  1200  7  1051  -9  051000   !  VA, Prescribed fires
+2810015000  1050  7  1050  -9  050000   !  VT, Prescribed fires
+2810015000  1053  7  1053  -9  053000   !  WA, Prescribed fires
+2810015000  1055  7  1055  -9  055000   !  WI, Prescribed fires
+2810015000  1200  7  1054  -9  054000   !  WV, Prescribed fires
+2810015000  1056  7  1056  -9  056000   !  WY, Prescribed fires
+2810001000  1102  7  1102  -9  002000   !  AK, Wildfires
+2810001000  1101  7  1101  -9  001000   !  AL, Wildfires
+2810001000  1105  7  1105  -9  005000   !  AR, Wildfires
+2810001000  1104  7  1104  -9  004000   !  AZ, Wildfires
+2810001000  1106  7  1106  -9  006000   !  CA, Wildfires
+2810001000  1108  7  1108  -9  008000   !  CO, Wildfires
+2810001000  1109  7  1109  -9  009000   !  CT, Wildfires
+2810001000  1111  7  1111  -9  011000   !  DC, Wildfires
+2810001000  1110  7  1110  -9  010000   !  DE, Wildfires
+2810001000  1112  7  1112  -9  012000   !  FL, Wildfires
+2810001000  1113  7  1113  -9  013000   !  GA, Wildfires
+2810001000  1115  7  1115  -9  015000   !  HI, Wildfires
+2810001000  1119  7  1119  -9  019000   !  IA, Wildfires
+2810001000  1116  7  1116  -9  016000   !  ID, Wildfires
+2810001000  1117  7  1117  -9  017000   !  IL, Wildfires
+2810001000  1118  7  1118  -9  018000   !  IN, Wildfires
+2810001000  1120  7  1120  -9  020000   !  KS, Wildfires
+2810001000  1121  7  1121  -9  021000   !  KY, Wildfires
+2810001000  1122  7  1122  -9  022000   !  LA, Wildfires
+2810001000  1125  7  1125  -9  025000   !  MA, Wildfires
+2810001000  1124  7  1124  -9  024000   !  MD, Wildfires
+2810001000  1123  7  1123  -9  023000   !  ME, Wildfires
+2810001000  1126  7  1126  -9  026000   !  MI, Wildfires
+2810001000  1127  7  1127  -9  027000   !  MN, Wildfires
+2810001000  1129  7  1129  -9  029000   !  MO, Wildfires
+2810001000  1128  7  1128  -9  028000   !  MS, Wildfires
+2810001000  1130  7  1130  -9  030000   !  MT, Wildfires
+2810001000  1137  7  1137  -9  037000   !  NC, Wildfires
+2810001000  1138  7  1138  -9  038000   !  ND, Wildfires
+2810001000  1131  7  1131  -9  031000   !  NE, Wildfires
+2810001000  1133  7  1133  -9  033000   !  NH, Wildfires
+2810001000  1134  7  1134  -9  034000   !  NJ, Wildfires
+2810001000  1135  7  1135  -9  035000   !  NM, Wildfires
+2810001000  1132  7  1132  -9  032000   !  NV, Wildfires
+2810001000  1136  7  1136  -9  036000   !  NY, Wildfires
+2810001000  1139  7  1139  -9  039000   !  OH, Wildfires
+2810001000  1140  7  1140  -9  040000   !  OK, Wildfires
+2810001000  1141  7  1141  -9  041000   !  OR, Wildfires
+2810001000  1142  7  1142  -9  042000   !  PA, Wildfires
+2810001000  1144  7  1144  -9  044000   !  RI, Wildfires
+2810001000  1145  7  1145  -9  045000   !  SC, Wildfires
+2810001000  1146  7  1146  -9  046000   !  SD, Wildfires
+2810001000  1147  7  1147  -9  047000   !  TN, Wildfires
+2810001000  1148  7  1148  -9  048000   !  TX, Wildfires
+2810001000  1149  7  1149  -9  049000   !  UT, Wildfires
+2810001000  1151  7  1151  -9  051000   !  VA, Wildfires
+2810001000  1150  7  1150  -9  050000   !  VT, Wildfires
+2810001000  1153  7  1153  -9  053000   !  WA, Wildfires
+2810001000  1155  7  1155  -9  055000   !  WI, Wildfires
+2810001000  1154  7  1154  -9  054000   !  WV, Wildfires
+2810001000  1156  7  1156  -9  056000   !  WY, Wildfires
+2801500000  1401  7    26  -9  001000   ! AL, Ag burning
+2801500000  1412  7    26  -9  012000   ! FL, Ag burning
+2801500000  1413  7    26  -9  013000   ! GA, Ag burning
+2801500000  1400  7    26  -9  021000   ! KY, Ag burning
+2801500000  1400  7    26  -9  028000   ! MS, Ag burning
+2801500000  1400  7    26  -9  037000   ! NC, Ag burning
+2801500000  1445  7    26  -9  045000   ! SC, Ag burning
+2801500000  1400  7    26  -9  047000   ! TN, Ag burning
+2801500000  1400  7    26  -9  051000   ! VA, Ag burning
+2801500000  1400  7    26  -9  054000   ! WV, Ag burning
+2610000100  1601  7    26  -9  001000   ! AL, Land clearing
+2610000100  1612  7    26  -9  012000   ! FL, Land clearing
+2610000100  1613  7    26  -9  013000   ! GA, Land clearing
+2610000100  1600  7    26  -9  021000   ! KY, Land clearing
+2610000100  1600  7    26  -9  028000   ! MS, Land clearing
+2610000100  1600  7    26  -9  037000   ! NC, Land clearing
+2610000100  1645  7    26  -9  045000   ! SC, Land clearing
+2610000100  1600  7    26  -9  047000   ! TN, Land clearing
+2610000100  1600  7    26  -9  051000   ! VA, Land clearing
+2610000100  1600  7    26  -9  054000   ! WV, Land clearing
+2610000300  1601  7    26  -9  001000   ! AL, Land clearing
+2610000300  1612  7    26  -9  012000   ! FL, Land clearing
+2610000300  1613  7    26  -9  013000   ! GA, Land clearing
+2610000300  1600  7    26  -9  021000   ! KY, Land clearing
+2610000300  1600  7    26  -9  028000   ! MS, Land clearing
+2610000300  1600  7    26  -9  037000   ! NC, Land clearing
+2610000300  1645  7    26  -9  045000   ! SC, Land clearing
+2610000300  1600  7    26  -9  047000   ! TN, Land clearing
+2610000300  1600  7    26  -9  051000   ! VA, Land clearing
+2610000300  1600  7    26  -9  054000   ! WV, Land clearing
+2610000400  1601  7    26  -9  001000   ! AL, Land clearing
+2610000400  1612  7    26  -9  012000   ! FL, Land clearing
+2610000400  1613  7    26  -9  013000   ! GA, Land clearing
+2610000400  1600  7    26  -9  021000   ! KY, Land clearing
+2610000400  1600  7    26  -9  028000   ! MS, Land clearing
+2610000400  1600  7    26  -9  037000   ! NC, Land clearing
+2610000400  1645  7    26  -9  045000   ! SC, Land clearing
+2610000400  1600  7    26  -9  047000   ! TN, Land clearing
+2610000400  1600  7    26  -9  051000   ! VA, Land clearing
+2610000400  1600  7    26  -9  054000   ! WV, Land clearing
+2610000500  1601  7    26  -9  001000   ! AL, Land clearing
+2610000500  1612  7    26  -9  012000   ! FL, Land clearing
+2610000500  1613  7    26  -9  013000   ! GA, Land clearing
+2610000500  1600  7    26  -9  021000   ! KY, Land clearing
+2610000500  1600  7    26  -9  028000   ! MS, Land clearing
+2610000500  1600  7    26  -9  037000   ! NC, Land clearing
+2610000500  1645  7    26  -9  045000   ! SC, Land clearing
+2610000500  1600  7    26  -9  047000   ! TN, Land clearing
+2610000500  1600  7    26  -9  051000   ! VA, Land clearing
+2610000500  1600  7    26  -9  054000   ! WV, Land clearing
+2104008000  17010      7    26  -9   01000   ! AL-supplied 2002 NEI
+2104008000  17010      7    26  -9   12000   ! FL-supplied 2002 NEI
+2104008000  17010      7    26  -9   28000   ! MS-supplied 2002 NEI
+2104008000  17010      7    26  -9   45000   ! SC-supplied 2002 NEI
+2104008000  17011      7    26  -9   20000   ! KS-supplied 2002 NEI
+2104008000  17012      7    26  -9   29000   ! MO-supplied 2002 NEI
+2104008000  17013      7    26  -9   34000   ! NJ-supplied 2002 NEI
+2104008000  17014      7    26  -9   49000   ! UT-supplied 2002 NEI
+2104008000  17117      7    26  -9   17000   ! IL MWRPO HeatDegDays
+2104008000  17118      7    26  -9   18000   ! IN MWRPO HeatDegDays
+2104008000  17126      7    26  -9   26000   ! MI MWRPO HeatDegDays
+2104008000  17139      7    26  -9   39000   ! OH MWRPO HeatDegDays
+2104008000  17155      7    26  -9   55000   ! WI MWRPO HeatDegDays
+2104008000  17015      7    26  -9   04013   ! AZ-supld ClimZon5 '99 
+2104008000  17015      7    26  -9   04019   ! AZ-supld ClimZon5 '99 
+2104008000  17015      7    26  -9   04012   ! AZ-supld ClimZon5 '99 
+2104008000  17015      7    26  -9   04015   ! AZ-supld ClimZon5 '99  
+2104008000  17015      7    26  -9   04021   ! AZ-supld ClimZon5 '99  
+2104008000  17015      7    26  -9   04027   ! AZ-supld ClimZon5 '99 
+2104008000  17130      7    26  -9   30000   ! MT-supplied HeatDegDays
+2104008000  17003      7    26  -9   04001   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   04003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   04005   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   04007   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   04009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   04011   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   04012   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   04013   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   04015   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   04017   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   04019   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   04021   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   04023   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   04025   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   04027   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05001   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   05005   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   05007   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05011   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   05015   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05017   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05019   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05021   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05023   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05025   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05027   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05029   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05031   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05033   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05035   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05037   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05039   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05041   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05043   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05045   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05047   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05049   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05051   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05053   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05055   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05057   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05059   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05061   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05063   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05065   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05067   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05069   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05071   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05073   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05075   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05077   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05079   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05081   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05083   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05085   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05087   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   05089   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05091   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05093   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05095   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05097   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05099   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   05101   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05103   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05105   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05107   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05109   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05111   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05113   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05115   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05117   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05119   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05121   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05123   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05125   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05127   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05129   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05131   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05133   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05135   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05137   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05139   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05141   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   05143   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05145   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   05147   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   05149   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06001   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   06003   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06005   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06007   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06011   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   06015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06017   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06019   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06021   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06023   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   06025   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   06027   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06029   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06031   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06033   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06035   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06037   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06039   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06041   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06043   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06045   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06047   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06049   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   06051   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06053   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06055   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06057   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06059   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   06061   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06063   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   06065   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06067   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06069   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   06071   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06073   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06075   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06077   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06079   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06081   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06083   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06085   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06087   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06089   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06091   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   06093   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06095   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06097   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06099   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06101   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   06103   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   06105   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06107   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06109   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06111   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06113   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   06115   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08001   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08003   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08007   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   08009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   08011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08013   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08023   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08025   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08027   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08033   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08037   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08041   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08043   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08045   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08047   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08049   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08051   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08053   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08055   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08057   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08059   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08061   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08065   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08067   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08069   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08071   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08073   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08075   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08077   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08079   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08081   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08083   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08085   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08087   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   08089   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08091   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08093   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08095   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08097   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   08099   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08101   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08103   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08105   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08107   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08109   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08111   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08113   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08115   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08117   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   08119   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08121   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08123   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   08125   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13001   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13003   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13005   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13007   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13011   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13013   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13015   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13017   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13019   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13021   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13023   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13025   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13027   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13029   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13031   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13033   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13035   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13037   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13039   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13043   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13045   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13047   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13049   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13051   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13053   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13055   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13057   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13059   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13061   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13063   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13065   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13067   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13069   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13071   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13073   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13075   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13077   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13079   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13081   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13083   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13085   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13087   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13089   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13091   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13093   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13095   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13097   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13099   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13101   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13103   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13105   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13107   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13109   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13111   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13113   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13115   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13117   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13119   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13121   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13123   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13125   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13127   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13129   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13131   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13133   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13135   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13137   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13139   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13141   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13143   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13145   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13147   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13149   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13151   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13153   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13155   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13157   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13159   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13161   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13163   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13165   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13167   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13169   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13171   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13173   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13175   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13177   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13179   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13181   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13183   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13185   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13187   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13189   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13191   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13193   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13195   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13197   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13199   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13201   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13205   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13207   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13209   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13211   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13213   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13215   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13217   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13219   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13221   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13223   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13225   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13227   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13229   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13231   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13233   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13235   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13237   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13239   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13241   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13243   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13245   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13247   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13249   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13251   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13253   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13255   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13257   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13259   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13261   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13263   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13265   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13267   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13269   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13271   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13273   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13275   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13277   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13279   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13281   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13283   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13285   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13287   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13289   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   13291   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13293   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13295   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13297   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13299   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13301   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13303   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13305   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13307   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13309   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13311   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13313   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13315   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   13317   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13319   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   13321   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16001   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16003   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16007   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16009   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16013   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16015   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16023   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16025   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16027   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16037   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16041   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16043   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16045   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16047   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16049   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16051   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16053   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16055   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16057   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16059   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16065   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16067   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   16069   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16071   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16073   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16075   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16077   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16079   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16081   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16083   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   16085   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   16087   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19001   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19003   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19005   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19007   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19009   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19013   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19015   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19023   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19025   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19027   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19037   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19041   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19043   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19045   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19047   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19049   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19051   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19053   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19055   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19057   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19059   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19065   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19067   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19069   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19071   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19073   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19075   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19077   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19079   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19081   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19083   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19085   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19087   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19089   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19091   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19093   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19095   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19097   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19099   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19101   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19103   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19105   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19107   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19109   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19111   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19113   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19115   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19117   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19119   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19121   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19123   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19125   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19127   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19129   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19131   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19133   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19135   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19137   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19139   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19141   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19143   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19145   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19147   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19149   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19151   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19153   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19155   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19157   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19159   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19161   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19163   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19165   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19167   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19169   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19171   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19173   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19175   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19177   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19179   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19181   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19183   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19185   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19187   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19189   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19191   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   19193   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19195   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   19197   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21001   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21005   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21007   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21011   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21015   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21017   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21021   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21023   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21027   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21029   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21031   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21035   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21037   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21039   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21041   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21043   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21045   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21047   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21049   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21051   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21053   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21055   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21057   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21059   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21061   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21063   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21065   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21067   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21069   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21071   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21073   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21075   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21077   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21079   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21081   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21083   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21085   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21087   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21089   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21091   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21093   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21095   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21097   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21099   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21101   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21103   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21105   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21107   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21109   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21111   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21113   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21115   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21117   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21119   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21121   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21123   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21125   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21127   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21129   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21131   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21133   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21135   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21137   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21139   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21141   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21143   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21145   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21147   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21149   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21151   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21153   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21155   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21157   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21159   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21161   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21163   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21165   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21167   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21169   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21171   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21173   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21175   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21177   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21179   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21181   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21183   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21185   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21187   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21189   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21191   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21193   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21195   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21197   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21199   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21201   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21203   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21205   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21207   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21209   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21211   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21213   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21215   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21217   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21219   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21221   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21223   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21225   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21227   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21229   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21231   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21233   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21235   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21237   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   21239   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22001   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22003   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22005   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22007   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22009   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22011   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22013   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22015   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22017   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22019   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22021   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22023   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22025   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22027   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22029   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22031   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22033   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22035   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22037   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22039   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22041   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22043   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22045   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22047   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22049   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22051   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22053   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22055   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22057   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22059   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22061   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22063   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22065   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22067   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22069   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22071   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22073   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22075   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22077   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22079   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22081   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22083   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22085   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22087   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22089   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22091   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22093   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22095   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22097   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22099   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22101   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22103   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22105   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22107   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22109   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22111   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22113   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22115   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22117   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22119   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22121   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22123   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22125   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   22127   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27001   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27003   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27007   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27009   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27013   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27015   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27023   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27025   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27027   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27029   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27037   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27041   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27043   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27045   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27047   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27049   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27051   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27053   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27055   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27057   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27059   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27065   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27067   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27069   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27071   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27073   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27075   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27077   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27079   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27081   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27083   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27085   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27087   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27089   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27091   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27093   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27095   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27097   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27099   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27101   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27103   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27105   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27107   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27109   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27111   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27113   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27115   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27117   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27119   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27121   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27123   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27125   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27127   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27129   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27131   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27133   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27135   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27137   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27139   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27141   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27143   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27145   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27147   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27149   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27151   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27153   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27155   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27157   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27159   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27161   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27163   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27165   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27167   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27169   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27171   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   27173   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31001   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31003   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31005   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31007   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31009   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31011   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31013   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31017   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31019   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31021   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31023   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31025   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31027   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31031   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31033   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31035   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31037   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31039   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31041   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31043   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31045   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31047   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31049   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31051   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31053   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31055   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31057   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31059   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31061   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31063   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31065   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31067   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31069   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31071   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31073   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31075   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31077   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31079   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31081   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31083   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31085   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31087   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31089   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31091   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31093   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31095   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31097   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31099   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31101   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31103   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31105   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31107   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31109   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31111   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31113   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31115   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31117   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31119   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31121   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31123   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31125   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31127   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31129   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31131   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31133   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31135   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31137   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31139   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31141   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31143   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31145   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31147   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31149   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31151   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31153   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31155   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31157   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31159   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31161   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31163   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31165   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31167   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31169   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31171   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31173   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31175   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31177   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31179   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31181   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31183   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   31185   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32001   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   32003   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   32007   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32009   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   32011   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32013   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32017   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32019   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32021   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32023   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32027   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   32033   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   32510   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35001   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35003   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35005   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35006   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35007   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35011   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35013   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35015   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35017   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35021   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35023   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35027   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35028   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35031   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35035   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35037   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   35039   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35041   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35043   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35045   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35047   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35049   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   35051   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35053   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   35055   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35057   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   35059   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   35061   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37001   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37005   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37007   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37011   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37013   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37015   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37017   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37021   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37023   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37027   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37029   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37031   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37033   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37035   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37037   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37039   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37041   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37043   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37045   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37047   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37049   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37051   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37053   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37055   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37057   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37059   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37061   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37063   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37065   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37067   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37069   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37071   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37073   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37075   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37077   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37079   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37081   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37083   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37085   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37087   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37089   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37091   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37093   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37095   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37097   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37099   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37101   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37103   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37105   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37107   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37109   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37111   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37113   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37115   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37117   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37119   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37121   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37123   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37125   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37127   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37129   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37131   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37133   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37135   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37137   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37139   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37141   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37143   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37145   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37147   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37149   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37151   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37153   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37155   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37157   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37159   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37161   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37163   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37165   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37167   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37169   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37171   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37173   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37175   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37177   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37179   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37181   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37183   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37185   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37187   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37189   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37191   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37193   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37195   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   37197   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   37199   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38001   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38003   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38007   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38009   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38013   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38015   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38023   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38025   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38027   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38029   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38037   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38041   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38043   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38045   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38047   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38049   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38051   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38053   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38055   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38057   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38059   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38065   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38067   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38069   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38071   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38073   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38075   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38077   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38079   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38081   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38083   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38085   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38087   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38089   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38091   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38093   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38095   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38097   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38099   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38101   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38103   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   38105   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40001   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40003   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40005   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40007   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40011   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40013   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40015   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40017   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40019   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40021   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40023   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40025   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40027   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40029   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40031   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40035   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40037   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40039   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40041   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40043   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40045   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40047   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40049   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40051   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40053   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40055   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40057   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40059   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40061   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40063   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40065   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40067   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40069   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40071   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40073   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40075   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40077   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40079   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40081   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40083   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40085   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40087   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40089   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40091   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40093   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40095   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40097   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40099   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40101   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40103   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40105   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40107   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40109   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40111   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40113   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40115   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40117   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40119   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40121   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40123   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40125   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40127   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40129   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40131   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40133   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40135   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40137   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40139   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40141   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40143   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   40145   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40147   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   40149   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40151   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   40153   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41001   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41005   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41007   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41011   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41017   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41019   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   41023   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41025   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41027   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41029   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41031   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   41035   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41037   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41039   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41041   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41043   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41045   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41047   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41049   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41051   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41053   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41055   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41057   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41059   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   41061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   41063   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41065   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41067   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   41069   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   41071   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46003   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46007   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46009   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46013   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46015   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46023   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46025   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46027   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46029   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46037   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46041   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46043   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46045   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46047   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46049   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46051   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46053   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46055   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46057   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46059   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46065   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46067   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46069   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46071   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46073   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46075   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46077   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46079   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46081   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46083   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46085   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46087   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46089   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46091   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46093   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46095   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46097   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46099   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46101   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46103   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46105   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46107   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46109   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46111   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46113   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46115   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46117   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46119   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46121   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46123   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46125   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46127   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46129   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46135   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   46137   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47001   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47005   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47007   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47011   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47013   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47015   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47017   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47021   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47023   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47027   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47029   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47031   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47035   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47037   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47039   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47041   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47043   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47045   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47047   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47049   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47051   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47053   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47055   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47057   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47059   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47061   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47063   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47065   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47067   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47069   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47071   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47073   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47075   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47077   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47079   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47081   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47083   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47085   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47087   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47089   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47091   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47093   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47095   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47097   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47099   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47101   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47103   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47105   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47107   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47109   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47111   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47113   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47115   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47117   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47119   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47121   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47123   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47125   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47127   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47129   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47131   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47133   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47135   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47137   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47139   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47141   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47143   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47145   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47147   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47149   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47151   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47153   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47155   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47157   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47159   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47161   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47163   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47165   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47167   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47169   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47171   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47173   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47175   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47177   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47179   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47181   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47183   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47185   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   47187   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   47189   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48001   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48003   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48005   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48007   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48009   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48011   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48013   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48015   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48017   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48019   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48021   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48023   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48025   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48027   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48029   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48031   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48033   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48035   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48037   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48039   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48041   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48043   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48045   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48047   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48049   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48051   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48053   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48055   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48057   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48059   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48061   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48063   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48065   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48067   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48069   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48071   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48073   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48075   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48077   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48079   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48081   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48083   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48085   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48087   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48089   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48091   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48093   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48095   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48097   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48099   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48101   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48103   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48105   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48107   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48109   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48111   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48113   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48115   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48117   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48119   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48121   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48123   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48125   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48127   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48129   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48131   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48133   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48135   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48137   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48139   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48141   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48143   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48145   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48147   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48149   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48151   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48153   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48155   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48157   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48159   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48161   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48163   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48165   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48167   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48169   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48171   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48173   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48175   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48177   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48179   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48181   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48183   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48185   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48187   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48189   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48191   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48193   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48195   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48197   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48199   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48201   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48203   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48205   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48207   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48209   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48211   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48213   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48215   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48217   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48219   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48221   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48223   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48225   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48227   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48229   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48231   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48233   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48235   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48237   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48239   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48241   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48243   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48245   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48247   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48249   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48251   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48253   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48255   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48257   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48259   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48261   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48263   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48265   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48267   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48269   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48271   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48273   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48275   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48277   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48279   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48281   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48283   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48285   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48287   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48289   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48291   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48293   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48295   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48297   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48299   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48301   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48303   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48305   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48307   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48309   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48311   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48313   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48315   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48317   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48319   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48321   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48323   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48325   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48327   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48329   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48331   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48333   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48335   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48337   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48339   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48341   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48343   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48345   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48347   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48349   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48351   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48353   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48355   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48357   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48359   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48361   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48363   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48365   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48367   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48369   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48371   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48373   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48375   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48377   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48379   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48381   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48383   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48385   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48387   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48389   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48391   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48393   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48395   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48397   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48399   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48401   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48403   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48405   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48407   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48409   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48411   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48413   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48415   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48417   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48419   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48421   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48423   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48425   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48427   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48429   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48431   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48433   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48435   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48437   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48439   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48441   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48443   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48445   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48447   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48449   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48451   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48453   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48455   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48457   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48459   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48461   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48463   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48465   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48467   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48469   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48471   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48473   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48475   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48477   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48479   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48481   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48483   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48485   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48487   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48489   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48491   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48493   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48495   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48497   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48499   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   48501   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48503   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48505   ! NEI Climate-zone monthly
+2104008000  17005      7    26  -9   48507   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51001   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51005   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51007   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51011   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   51017   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51021   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51023   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51027   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51029   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51031   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51035   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51036   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51037   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51041   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51043   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51045   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51047   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51049   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51051   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51053   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51057   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51059   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51061   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51063   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51065   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51067   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51069   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51071   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51073   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51075   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51077   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51079   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51081   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51083   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51085   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51087   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51089   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   51091   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51093   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51095   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51097   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51099   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51101   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51103   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51105   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51107   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51109   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51111   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   51113   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51115   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51117   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51119   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   51121   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51125   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51127   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51131   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51133   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51135   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51137   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51139   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51141   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51143   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51145   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51147   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51149   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51153   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51155   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51157   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51159   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51161   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51163   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51165   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51167   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51169   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51171   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51173   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51175   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51177   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51179   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51181   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51183   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   51185   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51187   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51191   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51193   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51195   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51197   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51199   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51510   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51515   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51520   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51530   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51540   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51550   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51560   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51570   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51580   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51590   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51595   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51600   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51610   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51620   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51630   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51640   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51650   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51660   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51670   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51678   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51680   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51683   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51685   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51690   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51700   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51710   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51720   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51730   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51735   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51740   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51750   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51760   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51770   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51775   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51790   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51800   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51810   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51820   ! NEI Climate-zone monthly
+2104008000  17004      7    26  -9   51830   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   51840   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53001   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53005   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53007   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53011   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53015   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53021   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53023   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53027   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53029   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53031   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53037   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53039   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53041   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53043   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53045   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53047   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53049   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53051   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53053   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53055   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53057   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53059   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53061   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53063   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   53065   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53067   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53069   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   53071   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53073   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53075   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   53077   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54001   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54003   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54005   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54007   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54009   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54011   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54013   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54015   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54017   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54019   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54021   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54023   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54025   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54027   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54029   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54031   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54033   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54035   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54037   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54039   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54041   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54043   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54045   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54047   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54049   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54051   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54053   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54055   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54057   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54059   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54061   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54063   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54065   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54067   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54069   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54071   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54073   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54075   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54077   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54079   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54081   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54083   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54085   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54087   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54089   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54091   ! NEI Climate-zone monthly
+2104008000  17002      7    26  -9   54093   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54095   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54097   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54099   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54101   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54103   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54105   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54107   ! NEI Climate-zone monthly
+2104008000  17003      7    26  -9   54109   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56001   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56003   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56005   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56007   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56009   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56011   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56013   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56015   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56017   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56019   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56021   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56023   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56025   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56027   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56029   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56031   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56033   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56035   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56037   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56039   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56041   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56043   ! NEI Climate-zone monthly
+2104008000  17001      7    26  -9   56045   ! NEI Climate-zone monthly
+2104008000  17201      7    26  -9   09001   ! MANE-VU co-spec RWC monthly
+2104008000  17202      7    26  -9   09003   ! MANE-VU co-spec RWC monthly
+2104008000  17203      7    26  -9   09005   ! MANE-VU co-spec RWC monthly
+2104008000  17204      7    26  -9   09007   ! MANE-VU co-spec RWC monthly
+2104008000  17205      7    26  -9   09009   ! MANE-VU co-spec RWC monthly
+2104008000  17206      7    26  -9   09011   ! MANE-VU co-spec RWC monthly
+2104008000  17207      7    26  -9   09013   ! MANE-VU co-spec RWC monthly
+2104008000  17208      7    26  -9   09015   ! MANE-VU co-spec RWC monthly
+2104008000  17209      7    26  -9   10001   ! MANE-VU co-spec RWC monthly
+2104008000  17210      7    26  -9   10003   ! MANE-VU co-spec RWC monthly
+2104008000  17211      7    26  -9   10005   ! MANE-VU co-spec RWC monthly
+2104008000  17212      7    26  -9   11001   ! MANE-VU co-spec RWC monthly
+2104008000  17213      7    26  -9   23001   ! MANE-VU co-spec RWC monthly
+2104008000  17214      7    26  -9   23003   ! MANE-VU co-spec RWC monthly
+2104008000  17215      7    26  -9   23005   ! MANE-VU co-spec RWC monthly
+2104008000  17216      7    26  -9   23007   ! MANE-VU co-spec RWC monthly
+2104008000  17217      7    26  -9   23009   ! MANE-VU co-spec RWC monthly
+2104008000  17218      7    26  -9   23011   ! MANE-VU co-spec RWC monthly
+2104008000  17219      7    26  -9   23013   ! MANE-VU co-spec RWC monthly
+2104008000  17220      7    26  -9   23015   ! MANE-VU co-spec RWC monthly
+2104008000  17221      7    26  -9   23017   ! MANE-VU co-spec RWC monthly
+2104008000  17222      7    26  -9   23019   ! MANE-VU co-spec RWC monthly
+2104008000  17223      7    26  -9   23021   ! MANE-VU co-spec RWC monthly
+2104008000  17224      7    26  -9   23023   ! MANE-VU co-spec RWC monthly
+2104008000  17225      7    26  -9   23025   ! MANE-VU co-spec RWC monthly
+2104008000  17226      7    26  -9   23027   ! MANE-VU co-spec RWC monthly
+2104008000  17227      7    26  -9   23029   ! MANE-VU co-spec RWC monthly
+2104008000  17228      7    26  -9   23031   ! MANE-VU co-spec RWC monthly
+2104008000  17229      7    26  -9   24001   ! MANE-VU co-spec RWC monthly
+2104008000  17230      7    26  -9   24003   ! MANE-VU co-spec RWC monthly
+2104008000  17231      7    26  -9   24005   ! MANE-VU co-spec RWC monthly
+2104008000  17232      7    26  -9   24009   ! MANE-VU co-spec RWC monthly
+2104008000  17233      7    26  -9   24011   ! MANE-VU co-spec RWC monthly
+2104008000  17234      7    26  -9   24013   ! MANE-VU co-spec RWC monthly
+2104008000  17235      7    26  -9   24015   ! MANE-VU co-spec RWC monthly
+2104008000  17236      7    26  -9   24017   ! MANE-VU co-spec RWC monthly
+2104008000  17237      7    26  -9   24019   ! MANE-VU co-spec RWC monthly
+2104008000  17238      7    26  -9   24021   ! MANE-VU co-spec RWC monthly
+2104008000  17239      7    26  -9   24023   ! MANE-VU co-spec RWC monthly
+2104008000  17240      7    26  -9   24025   ! MANE-VU co-spec RWC monthly
+2104008000  17241      7    26  -9   24027   ! MANE-VU co-spec RWC monthly
+2104008000  17242      7    26  -9   24029   ! MANE-VU co-spec RWC monthly
+2104008000  17243      7    26  -9   24031   ! MANE-VU co-spec RWC monthly
+2104008000  17244      7    26  -9   24033   ! MANE-VU co-spec RWC monthly
+2104008000  17245      7    26  -9   24035   ! MANE-VU co-spec RWC monthly
+2104008000  17246      7    26  -9   24037   ! MANE-VU co-spec RWC monthly
+2104008000  17247      7    26  -9   24039   ! MANE-VU co-spec RWC monthly
+2104008000  17248      7    26  -9   24041   ! MANE-VU co-spec RWC monthly
+2104008000  17249      7    26  -9   24043   ! MANE-VU co-spec RWC monthly
+2104008000  17250      7    26  -9   24045   ! MANE-VU co-spec RWC monthly
+2104008000  17251      7    26  -9   24047   ! MANE-VU co-spec RWC monthly
+2104008000  17252      7    26  -9   24510   ! MANE-VU co-spec RWC monthly
+2104008000  17253      7    26  -9   25001   ! MANE-VU co-spec RWC monthly
+2104008000  17254      7    26  -9   25003   ! MANE-VU co-spec RWC monthly
+2104008000  17255      7    26  -9   25005   ! MANE-VU co-spec RWC monthly
+2104008000  17256      7    26  -9   25007   ! MANE-VU co-spec RWC monthly
+2104008000  17257      7    26  -9   25009   ! MANE-VU co-spec RWC monthly
+2104008000  17258      7    26  -9   25011   ! MANE-VU co-spec RWC monthly
+2104008000  17259      7    26  -9   25013   ! MANE-VU co-spec RWC monthly
+2104008000  17260      7    26  -9   25015   ! MANE-VU co-spec RWC monthly
+2104008000  17261      7    26  -9   25017   ! MANE-VU co-spec RWC monthly
+2104008000  17262      7    26  -9   25019   ! MANE-VU co-spec RWC monthly
+2104008000  17263      7    26  -9   25021   ! MANE-VU co-spec RWC monthly
+2104008000  17264      7    26  -9   25023   ! MANE-VU co-spec RWC monthly
+2104008000  17265      7    26  -9   25025   ! MANE-VU co-spec RWC monthly
+2104008000  17266      7    26  -9   25027   ! MANE-VU co-spec RWC monthly
+2104008000  17267      7    26  -9   33001   ! MANE-VU co-spec RWC monthly
+2104008000  17268      7    26  -9   33003   ! MANE-VU co-spec RWC monthly
+2104008000  17269      7    26  -9   33005   ! MANE-VU co-spec RWC monthly
+2104008000  17270      7    26  -9   33007   ! MANE-VU co-spec RWC monthly
+2104008000  17271      7    26  -9   33009   ! MANE-VU co-spec RWC monthly
+2104008000  17272      7    26  -9   33011   ! MANE-VU co-spec RWC monthly
+2104008000  17273      7    26  -9   33013   ! MANE-VU co-spec RWC monthly
+2104008000  17274      7    26  -9   33015   ! MANE-VU co-spec RWC monthly
+2104008000  17275      7    26  -9   33017   ! MANE-VU co-spec RWC monthly
+2104008000  17276      7    26  -9   33019   ! MANE-VU co-spec RWC monthly
+2104008000  17277      7    26  -9   34001   ! MANE-VU co-spec RWC monthly
+2104008000  17278      7    26  -9   34003   ! MANE-VU co-spec RWC monthly
+2104008000  17279      7    26  -9   34005   ! MANE-VU co-spec RWC monthly
+2104008000  17280      7    26  -9   34007   ! MANE-VU co-spec RWC monthly
+2104008000  17281      7    26  -9   34009   ! MANE-VU co-spec RWC monthly
+2104008000  17282      7    26  -9   34011   ! MANE-VU co-spec RWC monthly
+2104008000  17283      7    26  -9   34013   ! MANE-VU co-spec RWC monthly
+2104008000  17284      7    26  -9   34015   ! MANE-VU co-spec RWC monthly
+2104008000  17285      7    26  -9   34017   ! MANE-VU co-spec RWC monthly
+2104008000  17286      7    26  -9   34019   ! MANE-VU co-spec RWC monthly
+2104008000  17287      7    26  -9   34021   ! MANE-VU co-spec RWC monthly
+2104008000  17288      7    26  -9   34023   ! MANE-VU co-spec RWC monthly
+2104008000  17289      7    26  -9   34025   ! MANE-VU co-spec RWC monthly
+2104008000  17290      7    26  -9   34027   ! MANE-VU co-spec RWC monthly
+2104008000  17291      7    26  -9   34029   ! MANE-VU co-spec RWC monthly
+2104008000  17292      7    26  -9   34031   ! MANE-VU co-spec RWC monthly
+2104008000  17293      7    26  -9   34033   ! MANE-VU co-spec RWC monthly
+2104008000  17294      7    26  -9   34035   ! MANE-VU co-spec RWC monthly
+2104008000  17295      7    26  -9   34037   ! MANE-VU co-spec RWC monthly
+2104008000  17296      7    26  -9   34039   ! MANE-VU co-spec RWC monthly
+2104008000  17297      7    26  -9   34041   ! MANE-VU co-spec RWC monthly
+2104008000  17298      7    26  -9   36001   ! MANE-VU co-spec RWC monthly
+2104008000  17299      7    26  -9   36003   ! MANE-VU co-spec RWC monthly
+2104008000  17300      7    26  -9   36005   ! MANE-VU co-spec RWC monthly
+2104008000  17301      7    26  -9   36007   ! MANE-VU co-spec RWC monthly
+2104008000  17302      7    26  -9   36009   ! MANE-VU co-spec RWC monthly
+2104008000  17303      7    26  -9   36011   ! MANE-VU co-spec RWC monthly
+2104008000  17304      7    26  -9   36013   ! MANE-VU co-spec RWC monthly
+2104008000  17305      7    26  -9   36015   ! MANE-VU co-spec RWC monthly
+2104008000  17306      7    26  -9   36017   ! MANE-VU co-spec RWC monthly
+2104008000  17307      7    26  -9   36019   ! MANE-VU co-spec RWC monthly
+2104008000  17308      7    26  -9   36021   ! MANE-VU co-spec RWC monthly
+2104008000  17309      7    26  -9   36023   ! MANE-VU co-spec RWC monthly
+2104008000  17310      7    26  -9   36025   ! MANE-VU co-spec RWC monthly
+2104008000  17311      7    26  -9   36027   ! MANE-VU co-spec RWC monthly
+2104008000  17312      7    26  -9   36029   ! MANE-VU co-spec RWC monthly
+2104008000  17313      7    26  -9   36031   ! MANE-VU co-spec RWC monthly
+2104008000  17314      7    26  -9   36033   ! MANE-VU co-spec RWC monthly
+2104008000  17315      7    26  -9   36035   ! MANE-VU co-spec RWC monthly
+2104008000  17316      7    26  -9   36037   ! MANE-VU co-spec RWC monthly
+2104008000  17317      7    26  -9   36039   ! MANE-VU co-spec RWC monthly
+2104008000  17318      7    26  -9   36041   ! MANE-VU co-spec RWC monthly
+2104008000  17319      7    26  -9   36043   ! MANE-VU co-spec RWC monthly
+2104008000  17320      7    26  -9   36045   ! MANE-VU co-spec RWC monthly
+2104008000  17321      7    26  -9   36047   ! MANE-VU co-spec RWC monthly
+2104008000  17322      7    26  -9   36049   ! MANE-VU co-spec RWC monthly
+2104008000  17323      7    26  -9   36051   ! MANE-VU co-spec RWC monthly
+2104008000  17324      7    26  -9   36053   ! MANE-VU co-spec RWC monthly
+2104008000  17325      7    26  -9   36055   ! MANE-VU co-spec RWC monthly
+2104008000  17326      7    26  -9   36057   ! MANE-VU co-spec RWC monthly
+2104008000  17327      7    26  -9   36059   ! MANE-VU co-spec RWC monthly
+2104008000  17328      7    26  -9   36061   ! MANE-VU co-spec RWC monthly
+2104008000  17329      7    26  -9   36063   ! MANE-VU co-spec RWC monthly
+2104008000  17330      7    26  -9   36065   ! MANE-VU co-spec RWC monthly
+2104008000  17331      7    26  -9   36067   ! MANE-VU co-spec RWC monthly
+2104008000  17332      7    26  -9   36069   ! MANE-VU co-spec RWC monthly
+2104008000  17333      7    26  -9   36071   ! MANE-VU co-spec RWC monthly
+2104008000  17334      7    26  -9   36073   ! MANE-VU co-spec RWC monthly
+2104008000  17335      7    26  -9   36075   ! MANE-VU co-spec RWC monthly
+2104008000  17336      7    26  -9   36077   ! MANE-VU co-spec RWC monthly
+2104008000  17337      7    26  -9   36079   ! MANE-VU co-spec RWC monthly
+2104008000  17338      7    26  -9   36081   ! MANE-VU co-spec RWC monthly
+2104008000  17339      7    26  -9   36083   ! MANE-VU co-spec RWC monthly
+2104008000  17340      7    26  -9   36085   ! MANE-VU co-spec RWC monthly
+2104008000  17341      7    26  -9   36087   ! MANE-VU co-spec RWC monthly
+2104008000  17342      7    26  -9   36089   ! MANE-VU co-spec RWC monthly
+2104008000  17343      7    26  -9   36091   ! MANE-VU co-spec RWC monthly
+2104008000  17344      7    26  -9   36093   ! MANE-VU co-spec RWC monthly
+2104008000  17345      7    26  -9   36095   ! MANE-VU co-spec RWC monthly
+2104008000  17346      7    26  -9   36097   ! MANE-VU co-spec RWC monthly
+2104008000  17347      7    26  -9   36099   ! MANE-VU co-spec RWC monthly
+2104008000  17348      7    26  -9   36101   ! MANE-VU co-spec RWC monthly
+2104008000  17349      7    26  -9   36103   ! MANE-VU co-spec RWC monthly
+2104008000  17350      7    26  -9   36105   ! MANE-VU co-spec RWC monthly
+2104008000  17351      7    26  -9   36107   ! MANE-VU co-spec RWC monthly
+2104008000  17352      7    26  -9   36109   ! MANE-VU co-spec RWC monthly
+2104008000  17353      7    26  -9   36111   ! MANE-VU co-spec RWC monthly
+2104008000  17354      7    26  -9   36113   ! MANE-VU co-spec RWC monthly
+2104008000  17355      7    26  -9   36115   ! MANE-VU co-spec RWC monthly
+2104008000  17356      7    26  -9   36117   ! MANE-VU co-spec RWC monthly
+2104008000  17357      7    26  -9   36119   ! MANE-VU co-spec RWC monthly
+2104008000  17358      7    26  -9   36121   ! MANE-VU co-spec RWC monthly
+2104008000  17359      7    26  -9   36123   ! MANE-VU co-spec RWC monthly
+2104008000  17360      7    26  -9   42001   ! MANE-VU co-spec RWC monthly
+2104008000  17361      7    26  -9   42003   ! MANE-VU co-spec RWC monthly
+2104008000  17362      7    26  -9   42005   ! MANE-VU co-spec RWC monthly
+2104008000  17363      7    26  -9   42007   ! MANE-VU co-spec RWC monthly
+2104008000  17364      7    26  -9   42009   ! MANE-VU co-spec RWC monthly
+2104008000  17365      7    26  -9   42011   ! MANE-VU co-spec RWC monthly
+2104008000  17366      7    26  -9   42013   ! MANE-VU co-spec RWC monthly
+2104008000  17367      7    26  -9   42015   ! MANE-VU co-spec RWC monthly
+2104008000  17368      7    26  -9   42017   ! MANE-VU co-spec RWC monthly
+2104008000  17369      7    26  -9   42019   ! MANE-VU co-spec RWC monthly
+2104008000  17370      7    26  -9   42021   ! MANE-VU co-spec RWC monthly
+2104008000  17371      7    26  -9   42023   ! MANE-VU co-spec RWC monthly
+2104008000  17372      7    26  -9   42025   ! MANE-VU co-spec RWC monthly
+2104008000  17373      7    26  -9   42027   ! MANE-VU co-spec RWC monthly
+2104008000  17374      7    26  -9   42029   ! MANE-VU co-spec RWC monthly
+2104008000  17375      7    26  -9   42031   ! MANE-VU co-spec RWC monthly
+2104008000  17376      7    26  -9   42033   ! MANE-VU co-spec RWC monthly
+2104008000  17377      7    26  -9   42035   ! MANE-VU co-spec RWC monthly
+2104008000  17378      7    26  -9   42037   ! MANE-VU co-spec RWC monthly
+2104008000  17379      7    26  -9   42039   ! MANE-VU co-spec RWC monthly
+2104008000  17380      7    26  -9   42041   ! MANE-VU co-spec RWC monthly
+2104008000  17381      7    26  -9   42043   ! MANE-VU co-spec RWC monthly
+2104008000  17382      7    26  -9   42045   ! MANE-VU co-spec RWC monthly
+2104008000  17383      7    26  -9   42047   ! MANE-VU co-spec RWC monthly
+2104008000  17384      7    26  -9   42049   ! MANE-VU co-spec RWC monthly
+2104008000  17385      7    26  -9   42051   ! MANE-VU co-spec RWC monthly
+2104008000  17386      7    26  -9   42053   ! MANE-VU co-spec RWC monthly
+2104008000  17387      7    26  -9   42055   ! MANE-VU co-spec RWC monthly
+2104008000  17388      7    26  -9   42057   ! MANE-VU co-spec RWC monthly
+2104008000  17389      7    26  -9   42059   ! MANE-VU co-spec RWC monthly
+2104008000  17390      7    26  -9   42061   ! MANE-VU co-spec RWC monthly
+2104008000  17391      7    26  -9   42063   ! MANE-VU co-spec RWC monthly
+2104008000  17392      7    26  -9   42065   ! MANE-VU co-spec RWC monthly
+2104008000  17393      7    26  -9   42067   ! MANE-VU co-spec RWC monthly
+2104008000  17394      7    26  -9   42069   ! MANE-VU co-spec RWC monthly
+2104008000  17395      7    26  -9   42071   ! MANE-VU co-spec RWC monthly
+2104008000  17396      7    26  -9   42073   ! MANE-VU co-spec RWC monthly
+2104008000  17397      7    26  -9   42075   ! MANE-VU co-spec RWC monthly
+2104008000  17398      7    26  -9   42077   ! MANE-VU co-spec RWC monthly
+2104008000  17399      7    26  -9   42079   ! MANE-VU co-spec RWC monthly
+2104008000  17400      7    26  -9   42081   ! MANE-VU co-spec RWC monthly
+2104008000  17401      7    26  -9   42083   ! MANE-VU co-spec RWC monthly
+2104008000  17402      7    26  -9   42085   ! MANE-VU co-spec RWC monthly
+2104008000  17403      7    26  -9   42087   ! MANE-VU co-spec RWC monthly
+2104008000  17404      7    26  -9   42089   ! MANE-VU co-spec RWC monthly
+2104008000  17405      7    26  -9   42091   ! MANE-VU co-spec RWC monthly
+2104008000  17406      7    26  -9   42093   ! MANE-VU co-spec RWC monthly
+2104008000  17407      7    26  -9   42095   ! MANE-VU co-spec RWC monthly
+2104008000  17408      7    26  -9   42097   ! MANE-VU co-spec RWC monthly
+2104008000  17409      7    26  -9   42099   ! MANE-VU co-spec RWC monthly
+2104008000  17410      7    26  -9   42101   ! MANE-VU co-spec RWC monthly
+2104008000  17411      7    26  -9   42103   ! MANE-VU co-spec RWC monthly
+2104008000  17412      7    26  -9   42105   ! MANE-VU co-spec RWC monthly
+2104008000  17413      7    26  -9   42107   ! MANE-VU co-spec RWC monthly
+2104008000  17414      7    26  -9   42109   ! MANE-VU co-spec RWC monthly
+2104008000  17415      7    26  -9   42111   ! MANE-VU co-spec RWC monthly
+2104008000  17416      7    26  -9   42113   ! MANE-VU co-spec RWC monthly
+2104008000  17417      7    26  -9   42115   ! MANE-VU co-spec RWC monthly
+2104008000  17418      7    26  -9   42117   ! MANE-VU co-spec RWC monthly
+2104008000  17419      7    26  -9   42119   ! MANE-VU co-spec RWC monthly
+2104008000  17420      7    26  -9   42121   ! MANE-VU co-spec RWC monthly
+2104008000  17421      7    26  -9   42123   ! MANE-VU co-spec RWC monthly
+2104008000  17422      7    26  -9   42125   ! MANE-VU co-spec RWC monthly
+2104008000  17423      7    26  -9   42127   ! MANE-VU co-spec RWC monthly
+2104008000  17424      7    26  -9   42129   ! MANE-VU co-spec RWC monthly
+2104008000  17425      7    26  -9   42131   ! MANE-VU co-spec RWC monthly
+2104008000  17426      7    26  -9   42133   ! MANE-VU co-spec RWC monthly
+2104008000  17427      7    26  -9   44001   ! MANE-VU co-spec RWC monthly
+2104008000  17428      7    26  -9   44003   ! MANE-VU co-spec RWC monthly
+2104008000  17429      7    26  -9   44005   ! MANE-VU co-spec RWC monthly
+2104008000  17430      7    26  -9   44007   ! MANE-VU co-spec RWC monthly
+2104008000  17431      7    26  -9   44009   ! MANE-VU co-spec RWC monthly
+2104008000  17432      7    26  -9   50001   ! MANE-VU co-spec RWC monthly
+2104008000  17433      7    26  -9   50003   ! MANE-VU co-spec RWC monthly
+2104008000  17434      7    26  -9   50005   ! MANE-VU co-spec RWC monthly
+2104008000  17435      7    26  -9   50007   ! MANE-VU co-spec RWC monthly
+2104008000  17436      7    26  -9   50009   ! MANE-VU co-spec RWC monthly
+2104008000  17437      7    26  -9   50011   ! MANE-VU co-spec RWC monthly
+2104008000  17438      7    26  -9   50013   ! MANE-VU co-spec RWC monthly
+2104008000  17439      7    26  -9   50015   ! MANE-VU co-spec RWC monthly
+2104008000  17440      7    26  -9   50017   ! MANE-VU co-spec RWC monthly
+2104008000  17441      7    26  -9   50019   ! MANE-VU co-spec RWC monthly
+2104008000  17442      7    26  -9   50021   ! MANE-VU co-spec RWC monthly
+2104008000  17443      7    26  -9   50023   ! MANE-VU co-spec RWC monthly
+2104008000  17444      7    26  -9   50025   ! MANE-VU co-spec RWC monthly
+2104008000  17445      7    26  -9   50027   ! MANE-VU co-spec RWC monthly
+2104008070  17501      7    26  -9   09001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17502      7    26  -9   09003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17503      7    26  -9   09005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17504      7    26  -9   09007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17505      7    26  -9   09009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17506      7    26  -9   09011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17507      7    26  -9   09013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17508      7    26  -9   09015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17509      7    26  -9   10001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17510      7    26  -9   10003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17511      7    26  -9   10005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17512      7    26  -9   11001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17513      7    26  -9   23001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17514      7    26  -9   23003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17515      7    26  -9   23005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17516      7    26  -9   23007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17517      7    26  -9   23009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17518      7    26  -9   23011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17519      7    26  -9   23013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17520      7    26  -9   23015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17521      7    26  -9   23017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17522      7    26  -9   23019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17523      7    26  -9   23021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17524      7    26  -9   23023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17525      7    26  -9   23025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17526      7    26  -9   23027   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17527      7    26  -9   23029   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17528      7    26  -9   23031   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17529      7    26  -9   24001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17530      7    26  -9   24003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17531      7    26  -9   24005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17532      7    26  -9   24009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17533      7    26  -9   24011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17534      7    26  -9   24013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17535      7    26  -9   24015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17536      7    26  -9   24017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17537      7    26  -9   24019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17538      7    26  -9   24021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17539      7    26  -9   24023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17540      7    26  -9   24025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17541      7    26  -9   24027   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17542      7    26  -9   24029   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17543      7    26  -9   24031   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17544      7    26  -9   24033   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17545      7    26  -9   24035   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17546      7    26  -9   24037   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17547      7    26  -9   24039   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17548      7    26  -9   24041   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17549      7    26  -9   24043   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17550      7    26  -9   24045   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17551      7    26  -9   24047   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17552      7    26  -9   24510   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17553      7    26  -9   25001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17554      7    26  -9   25003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17555      7    26  -9   25005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17556      7    26  -9   25007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17557      7    26  -9   25009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17558      7    26  -9   25011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17559      7    26  -9   25013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17560      7    26  -9   25015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17561      7    26  -9   25017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17562      7    26  -9   25019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17563      7    26  -9   25021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17564      7    26  -9   25023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17565      7    26  -9   25025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17566      7    26  -9   25027   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17567      7    26  -9   33001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17568      7    26  -9   33003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17569      7    26  -9   33005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17570      7    26  -9   33007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17571      7    26  -9   33009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17572      7    26  -9   33011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17573      7    26  -9   33013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17574      7    26  -9   33015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17575      7    26  -9   33017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17576      7    26  -9   33019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17577      7    26  -9   34001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17578      7    26  -9   34003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17579      7    26  -9   34005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17580      7    26  -9   34007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17581      7    26  -9   34009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17582      7    26  -9   34011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17583      7    26  -9   34013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17584      7    26  -9   34015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17585      7    26  -9   34017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17586      7    26  -9   34019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17587      7    26  -9   34021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17588      7    26  -9   34023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17589      7    26  -9   34025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17590      7    26  -9   34027   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17591      7    26  -9   34029   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17592      7    26  -9   34031   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17593      7    26  -9   34033   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17594      7    26  -9   34035   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17595      7    26  -9   34037   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17596      7    26  -9   34039   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17597      7    26  -9   34041   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17598      7    26  -9   36001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17599      7    26  -9   36003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17600      7    26  -9   36005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17601      7    26  -9   36007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17602      7    26  -9   36009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17603      7    26  -9   36011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17604      7    26  -9   36013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17605      7    26  -9   36015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17606      7    26  -9   36017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17607      7    26  -9   36019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17608      7    26  -9   36021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17609      7    26  -9   36023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17610      7    26  -9   36025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17611      7    26  -9   36027   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17612      7    26  -9   36029   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17613      7    26  -9   36031   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17614      7    26  -9   36033   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17615      7    26  -9   36035   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17616      7    26  -9   36037   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17617      7    26  -9   36039   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17618      7    26  -9   36041   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17619      7    26  -9   36043   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17620      7    26  -9   36045   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17621      7    26  -9   36047   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17622      7    26  -9   36049   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17623      7    26  -9   36051   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17624      7    26  -9   36053   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17625      7    26  -9   36055   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17626      7    26  -9   36057   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17627      7    26  -9   36059   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17628      7    26  -9   36061   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17629      7    26  -9   36063   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17630      7    26  -9   36065   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17631      7    26  -9   36067   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17632      7    26  -9   36069   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17633      7    26  -9   36071   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17634      7    26  -9   36073   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17635      7    26  -9   36075   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17636      7    26  -9   36077   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17637      7    26  -9   36079   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17638      7    26  -9   36081   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17639      7    26  -9   36083   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17640      7    26  -9   36085   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17641      7    26  -9   36087   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17642      7    26  -9   36089   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17643      7    26  -9   36091   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17644      7    26  -9   36093   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17645      7    26  -9   36095   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17646      7    26  -9   36097   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17647      7    26  -9   36099   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17648      7    26  -9   36101   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17649      7    26  -9   36103   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17650      7    26  -9   36105   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17651      7    26  -9   36107   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17652      7    26  -9   36109   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17653      7    26  -9   36111   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17654      7    26  -9   36113   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17655      7    26  -9   36115   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17656      7    26  -9   36117   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17657      7    26  -9   36119   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17658      7    26  -9   36121   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17659      7    26  -9   36123   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17660      7    26  -9   42001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17661      7    26  -9   42003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17662      7    26  -9   42005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17663      7    26  -9   42007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17664      7    26  -9   42009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17665      7    26  -9   42011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17666      7    26  -9   42013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17667      7    26  -9   42015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17668      7    26  -9   42017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17669      7    26  -9   42019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17670      7    26  -9   42021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17671      7    26  -9   42023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17672      7    26  -9   42025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17673      7    26  -9   42027   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17674      7    26  -9   42029   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17675      7    26  -9   42031   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17676      7    26  -9   42033   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17677      7    26  -9   42035   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17678      7    26  -9   42037   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17679      7    26  -9   42039   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17680      7    26  -9   42041   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17681      7    26  -9   42043   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17682      7    26  -9   42045   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17683      7    26  -9   42047   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17684      7    26  -9   42049   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17685      7    26  -9   42051   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17686      7    26  -9   42053   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17687      7    26  -9   42055   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17688      7    26  -9   42057   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17689      7    26  -9   42059   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17690      7    26  -9   42061   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17691      7    26  -9   42063   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17692      7    26  -9   42065   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17693      7    26  -9   42067   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17694      7    26  -9   42069   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17695      7    26  -9   42071   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17696      7    26  -9   42073   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17697      7    26  -9   42075   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17698      7    26  -9   42077   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17699      7    26  -9   42079   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17700      7    26  -9   42081   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17701      7    26  -9   42083   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17702      7    26  -9   42085   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17703      7    26  -9   42087   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17704      7    26  -9   42089   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17705      7    26  -9   42091   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17706      7    26  -9   42093   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17707      7    26  -9   42095   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17708      7    26  -9   42097   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17709      7    26  -9   42099   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17710      7    26  -9   42101   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17711      7    26  -9   42103   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17712      7    26  -9   42105   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17713      7    26  -9   42107   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17714      7    26  -9   42109   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17715      7    26  -9   42111   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17716      7    26  -9   42113   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17717      7    26  -9   42115   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17718      7    26  -9   42117   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17719      7    26  -9   42119   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17720      7    26  -9   42121   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17721      7    26  -9   42123   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17722      7    26  -9   42125   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17723      7    26  -9   42127   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17724      7    26  -9   42129   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17725      7    26  -9   42131   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17726      7    26  -9   42133   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17727      7    26  -9   44001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17728      7    26  -9   44003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17729      7    26  -9   44005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17730      7    26  -9   44007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17731      7    26  -9   44009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17732      7    26  -9   50001   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17733      7    26  -9   50003   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17734      7    26  -9   50005   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17735      7    26  -9   50007   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17736      7    26  -9   50009   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17737      7    26  -9   50011   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17738      7    26  -9   50013   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17739      7    26  -9   50015   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17740      7    26  -9   50017   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17741      7    26  -9   50019   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17742      7    26  -9   50021   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17743      7    26  -9   50023   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17744      7    26  -9   50025   ! MANE-VU county-specific outdoor RWC monthly
+2104008070  17745      7    26  -9   50027   ! MANE-VU county-specific outdoor RWC monthly
