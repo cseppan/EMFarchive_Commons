@@ -19,13 +19,13 @@ public class ComboBox extends JComboBox implements Changeable {
 
     private boolean changed = false;
 
-    public ComboBox(String defaultValue, Object[] values) {
+    public ComboBox(String defaultLabel, Object[] values) {
         List list = new ArrayList(Arrays.asList(values));
-        if (!list.contains(defaultValue))
-            list.add(0, defaultValue);
+        if (!list.contains(defaultLabel))
+            list.add(0, defaultLabel);
 
         setModel(new DefaultComboBoxModel(list.toArray()));
-        setRenderer(new ComboBoxRenderer(defaultValue));
+        setRenderer(new ComboBoxRenderer(defaultLabel));
     }
 
     public ComboBox(ComboBoxModel model) {
