@@ -65,7 +65,6 @@ public class DelimitedFileReader implements Reader {
     }
 
     private boolean isComment(String line) {
-        System.out.println("DelimitedFileReader:comment line: " + line);
         return line.startsWith("#");
     }
 
