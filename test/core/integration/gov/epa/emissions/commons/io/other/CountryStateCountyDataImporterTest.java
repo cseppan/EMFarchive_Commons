@@ -41,9 +41,9 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), "county");
     }
 
-    public void FIXME_testImportCountryStateCountyData() throws Exception {
-        File folder = new File("D:\\emf_input\\other");
-        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.11may2006.txt"},
+    public void testImportCountryStateCountyData() throws Exception {
+        File folder = new File("test/data/other");
+        CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
                 dataset, dbServer, sqlDataTypes);
         importer.run();
     }
