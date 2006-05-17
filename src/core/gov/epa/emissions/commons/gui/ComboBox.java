@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.JComboBox;
@@ -19,7 +18,10 @@ public class ComboBox extends JComboBox implements Changeable {
 
     private boolean changed = false;
 
+    private String defaultLabel;
+
     public ComboBox(String defaultLabel, Object[] values) {
+        this.defaultLabel = defaultLabel;
         List list = new ArrayList(Arrays.asList(values));
         if (!list.contains(defaultLabel))
             list.add(0, defaultLabel);
@@ -28,11 +30,18 @@ public class ComboBox extends JComboBox implements Changeable {
         setRenderer(new ComboBoxRenderer(defaultLabel));
     }
 
-    public ComboBox(ComboBoxModel model) {
-        super(model);
+    public ComboBox(Object[] values) {
+        super(values);
+    }
+
+    public ComboBox() {
+        super();
     }
 
     public Object getSelectedItem() {
+        if (defaultLabel == null) {
+            return super.getSelectedItem();
+        }
         int index = super.getSelectedIndex();
         return (index > 0) ? super.getSelectedItem() : null;
     }
