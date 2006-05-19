@@ -42,8 +42,8 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         for (int i = 0; i < getRowCount(); i++) {
             selects[i] = Boolean.FALSE;
         }
-        
-        for(int j = 0; j < selections.length; j++) {
+
+        for (int j = 0; j < selections.length; j++) {
             selects[selections[j]] = Boolean.TRUE;
         }
     }
@@ -92,7 +92,10 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
     }
 
     public boolean isCellEditable(int row, int col) {
-        return (col == findColumn(SELECT_COL_NAME));// only 'Select' is editable
+        if (col == findColumn(SELECT_COL_NAME))
+            return true;
+
+        return delegate.isCellEditable(row, col);
     }
 
     public void setValueAt(Object value, int row, int col) {
