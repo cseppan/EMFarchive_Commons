@@ -18,7 +18,7 @@ public class SelectAwareButton extends Button {
         this.selectModel = model;
         this.threshHold = 5;
         this.confirmDialog = confirmDialog;
-
+        this.setMnemonic(label.charAt(0));
     }
 
     public SelectAwareButton(String label, final Action action, SelectModel model, int threshHold,
