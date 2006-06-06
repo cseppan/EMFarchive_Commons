@@ -4,11 +4,11 @@ import gov.epa.emissions.commons.gui.Button;
 
 import javax.swing.Action;
 
-public class RemoveButton extends Button {
+public class OKButton extends Button {
 
-    public RemoveButton(String label, final Action action) {
+    public OKButton(String label, final Action action) {
         super(label, action);
-        this.setMnemonic('M');
+        this.setMnemonic('O');
     }
 }    
 
