@@ -27,8 +27,8 @@ public class InventoryTableFileFormat implements FileFormat {
             spacer = 0;
         Column name = new Column("NAME", types.stringType(11), 11,
                 new StringFormatter(11));
-        Column cas = new Column("CAS", types.stringType(11),11,
-                new StringFormatter(11));
+        Column cas = new Column("CAS", types.stringType(17),17,
+                new StringFormatter(17));
         Column saroad = new Column("SAROAD", types.intType(), 6,
                 new IntegerFormatter());
         Column react = new Column("REACT", types.intType(), 1 + spacer,
