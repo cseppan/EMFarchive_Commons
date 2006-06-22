@@ -42,11 +42,11 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
 
     public void testImportInventoryTableData() throws Exception {
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
+        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable_cap.cb4.24mar2006.txt"}, 
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        assertEquals(164, countRecords());
+        assertEquals(16, countRecords());
     }
     
     public void testImportVersionedInventoryTableData() throws Exception {
@@ -54,12 +54,12 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
         version.setVersion(0);
 
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
+        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable_cap.cb4.24mar2006.txt"}, 
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
-        assertEquals(164, countRecords());
+        assertEquals(16, countRecords());
     }
     
     private int countRecords() {

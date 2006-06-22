@@ -46,7 +46,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
 
     public void testExportChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
+        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable_cap.cb4.24mar2006.txt"}, 
                 dataset, dbServer, sqlDataTypes);
         importer.run();
         
@@ -55,7 +55,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
-        assertEquals(164, countRecords());
+        assertEquals(16, countRecords());
     }
     
     public void testExportVersionedChemicalSpeciationData() throws Exception {
@@ -63,7 +63,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         version.setVersion(0);
 
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable.txt"}, 
+        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable_cap.cb4.24mar2006.txt"}, 
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
@@ -73,7 +73,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
-        assertEquals(164, countRecords());
+        assertEquals(16, countRecords());
     }
     
     private int countRecords() {
