@@ -194,18 +194,13 @@ public class GenericExporter implements Exporter {
     }
 
     final protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
-        return column.format(data).trim();
+        //return column.format(data).trim();
+        String val = data.getString(column.name());
+        return  val == null ? "" : val;
     }
 
     final protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
-        String value = getDelimitedValue(column, data);
-        String leadingSpace = "";
-        int spaceCount = column.width() - value.length();
-
-        for (int i = 0; i < spaceCount; i++)
-            leadingSpace += " ";
-
-        return leadingSpace + value;
+        return column.format(data);
     }
 
     final protected String getComment(String value) {

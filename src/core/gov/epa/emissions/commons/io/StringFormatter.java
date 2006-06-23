@@ -15,6 +15,10 @@ public class StringFormatter implements ColumnFormatter {
         format = new StringFormat(size);
     }
 
+    public StringFormatter(int size, int spaces) {
+        format = new StringFormat(size, spaces);
+    }
+
     public String format(String name, ResultSet data) throws SQLException {
         String value = data.getString(name);
         String evalValue = (value == null) || (value.equals(""))? "" : value;

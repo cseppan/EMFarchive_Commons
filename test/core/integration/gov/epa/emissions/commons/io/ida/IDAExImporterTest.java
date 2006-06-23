@@ -127,14 +127,14 @@ public class IDAExImporterTest extends PersistenceTestCase {
         File exportfile = File.createTempFile("IDAPointExported", ".txt");
         exporter.export(exportfile);
 
-        String data1 = "37  1           0010            001         001            01BFI WASTE SYSTEMS OF NORTH AMERICA, INC.  "
-                + "50300505   0   0  82   2.5 165    201.26       41       0 2525252524 07 1      11836           0       0    0    "
+        String data1 = "37  10010           001            001                     01BFI WASTE SYSTEMS OF NORTH AMERICA, INC."
+                + "50300505     0   0  82   2.5 165    201.26       41       0 2525252524 07 1      11836           0       0    0    "
                 + "0        04953    36.04     79.4          0.84       0.0023      0  0         0  0  0        21.98       0.0603      "
                 + "0  0         0  0  0         3.82       0.0104      0  0         0  0  0         1.54       0.0042     60  "
                 + "0         0  2  0        16.74       0.0459     60  0         0  2  0      14.8874       0.0409     60  0         0  "
                 + "2  0            0            0      0  0         0  0  0";
-        String data10 = "37  1           0034            006         001            02                           COPLAND, INC.  "
-                + "10200501   0   0  40     3 370    118.05     16.7       0 3025202524 05 1          2           0       0  0.5    "
+        String data10 = "37  10034           006            001                     02COPLAND, INC.                           10200501     "
+                + "0   0  40     3 370    118.05     16.7       0 3025202524 05 1          2           0       0  0.5    "
                 + "0        02221  36.1208  79.4042        0.0002            0      0  0         0  0  0       0.0249       0.0001      "
                 + "0  0         0  0  0       0.0062            0      0  0         0  0  0       0.0894       0.0002      0  0         0  "
                 + "0  0       0.0012            0      0  0         0  0  0       0.0003            0      0  0         0  0  0            "
@@ -176,9 +176,9 @@ public class IDAExImporterTest extends PersistenceTestCase {
         File exportfile = File.createTempFile("IDAMobileExported", ".txt");
         exporter.export(exportfile);
 
-        String data1 = " 1  1         02201001110    46.224     0.133    81.371    0.2334   "
+        String data1 = " 1  10         2201001110    46.224     0.133    81.371    0.2334   "
                 + "638.965    1.6686     2.225     0.007     0.974    0.0031     0.584    0.0018    2.7179    0.0086";
-        String data10 = " 1  1         02201001290   101.487    0.2639    67.366    0.1775  1020.877    2.4307     "
+        String data10 = " 1  10         2201001290   101.487    0.2639    67.366    0.1775  1020.877    2.4307     "
                 + "2.905    0.0084     1.271    0.0037     0.726    0.0021    3.5515     0.011";
         List data = readData(exportfile);
         assertEquals(data1, data.get(0));

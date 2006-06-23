@@ -3,21 +3,33 @@ package gov.epa.emissions.commons.io;
 public class StringFormat {
 
     private int size;
+    
+    private int spaces;
 
     public StringFormat(int size) {
         this.size = size;
+        this.spaces = 0;
     }
 
-    public String format(String val) {
-        if (val.length() == 0 || val.length() >= size)
-            return val;
+    public StringFormat(int size, int spaces) {
+        this.size = size;
+        this.spaces = spaces;
+    }
 
+    public String getSpaces(int n)
+    {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < (size - val.length()); i++)
+        for (int i = 0; i < n; i++)
             buf.append(" ");
-        buf.append(val);
-
         return buf.toString();
     }
-
+    
+    public String format(String val) {
+        
+        if (size == 0 || val.length() == 0 || val.length() > size)
+            return getSpaces(size+spaces);
+        
+        return val + getSpaces(size - val.length() + spaces);
+    }
+    
 }
