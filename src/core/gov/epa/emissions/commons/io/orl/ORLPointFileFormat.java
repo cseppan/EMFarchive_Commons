@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.CharFormatter;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ORLPointFileFormat implements FileFormatWithOptionalCols {
+public class ORLPointFileFormat implements FileFormatWithOptionalCols, DelimitedFileFormat {
 
     private SqlDataTypes types;
 

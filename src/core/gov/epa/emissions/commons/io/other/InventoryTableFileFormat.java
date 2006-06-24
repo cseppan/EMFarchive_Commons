@@ -3,11 +3,12 @@ package gov.epa.emissions.commons.io.other;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedWidthFileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
-public class InventoryTableFileFormat implements FileFormat {
+public class InventoryTableFileFormat implements FileFormat, FixedWidthFileFormat {
     private Column[] cols;   
 
     public InventoryTableFileFormat(SqlDataTypes types, int spacer) {

@@ -31,7 +31,7 @@ public class DelimitedFileLoaderTest extends PersistenceTestCase {
         File file = new File("test/data/orl/SimpleDelimited.txt");
         reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
 
-        tableFormat = new NonVersionedTableFormat(new DelimitedFileFormat("test", 7, dataType), dataType);
+        tableFormat = new NonVersionedTableFormat(new DepricatedDelimitedFileFormat("test", 7, dataType), dataType);
         createTable("SimpleDelimited", datasource, tableFormat);
     }
 

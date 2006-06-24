@@ -3,9 +3,10 @@ package gov.epa.emissions.commons.io.nif.point;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedWidthFileFormat;
 import gov.epa.emissions.commons.io.nif.NIFFileFormat;
 
-public class EmissionReleasesFileFormat implements FileFormat {
+public class EmissionReleasesFileFormat implements FileFormat, FixedWidthFileFormat {
 
     private Column[] cols;
 

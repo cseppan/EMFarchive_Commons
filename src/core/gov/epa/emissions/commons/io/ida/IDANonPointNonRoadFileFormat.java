@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.FixedWidthFileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
@@ -9,7 +10,7 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IDANonPointNonRoadFileFormat implements IDAFileFormat {
+public class IDANonPointNonRoadFileFormat implements IDAFileFormat, FixedWidthFileFormat {
 
     private List cols;
 

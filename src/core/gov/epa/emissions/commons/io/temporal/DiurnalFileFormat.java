@@ -3,9 +3,10 @@ package gov.epa.emissions.commons.io.temporal;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedWidthFileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 
-public class DiurnalFileFormat implements FileFormat {
+public class DiurnalFileFormat implements FileFormat, FixedWidthFileFormat {
 
     private SqlDataTypes types;
 

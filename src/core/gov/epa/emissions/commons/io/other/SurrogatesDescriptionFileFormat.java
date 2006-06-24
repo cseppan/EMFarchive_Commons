@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
@@ -9,7 +10,7 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SurrogatesDescriptionFileFormat implements FileFormat {
+public class SurrogatesDescriptionFileFormat implements FileFormat, DelimitedFileFormat {
     private Column[] columns;
     
     public SurrogatesDescriptionFileFormat(SqlDataTypes type){

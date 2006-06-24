@@ -8,13 +8,13 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DelimitedFileFormat implements FileFormat {
+public class DepricatedDelimitedFileFormat implements FileFormat {
 
     private String identifier;
 
     private Column[] columns;
 
-    public DelimitedFileFormat(String identifier, int cols, SqlDataTypes typeMapper) {
+    public DepricatedDelimitedFileFormat(String identifier, int cols, SqlDataTypes typeMapper) {
         columns = createCols(typeMapper, cols);
         this.identifier = identifier;
     }

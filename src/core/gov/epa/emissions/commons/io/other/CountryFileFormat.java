@@ -3,10 +3,11 @@ package gov.epa.emissions.commons.io.other;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedWidthFileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
-public class CountryFileFormat implements FileFormat {
+public class CountryFileFormat implements FileFormat, FixedWidthFileFormat {
     private SqlDataTypes types;
 
     public CountryFileFormat(SqlDataTypes types) {

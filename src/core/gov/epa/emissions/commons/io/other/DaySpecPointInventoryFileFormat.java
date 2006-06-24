@@ -6,11 +6,12 @@ import java.util.List;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.FixedWidthFileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 
-public class DaySpecPointInventoryFileFormat implements FileFormat {
+public class DaySpecPointInventoryFileFormat implements FileFormat, FixedWidthFileFormat {
     private Column[] columns;
     
     public DaySpecPointInventoryFileFormat(SqlDataTypes type){
