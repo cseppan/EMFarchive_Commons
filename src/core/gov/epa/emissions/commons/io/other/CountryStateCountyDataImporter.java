@@ -55,8 +55,8 @@ public class CountryStateCountyDataImporter implements Importer {
 
     public void run() throws ImporterException {
         BufferedReader fileReader = null;
+        int lineNumber = 0;
         try {
-            int lineNumber = 0;
             fileReader = new BufferedReader(new FileReader(file));
 
             while (!isEndOfFile(fileReader)) {
@@ -64,7 +64,6 @@ public class CountryStateCountyDataImporter implements Importer {
                 FileFormat fileFormat = fileFormat(header);
                 TableFormat tableFormat = dataFormatFactory.tableFormat(fileFormat, sqlType);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat, fileFormat);
-
                 DataTable dataTable = new DataTable(dataset, datasource);
                 String table = table(header);
                 if (!dataTable.exists(table))
@@ -73,10 +72,12 @@ public class CountryStateCountyDataImporter implements Importer {
                 lineNumber = doImport(fileReader, lineNumber, dataset, unit, header);
             }
         } catch (Exception e) {
+            System.err.println(e.toString());
             Throwable t = e.getCause();
             String message = (t == null) ? e.getMessage() : t.getMessage();
-            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName() + "\n" + message);
+            throw new ImporterException("could not import File - " + file.getAbsolutePath() + 
+                    " at line "+ lineNumber + " into Dataset - "
+                    + dataset.getName() + e.getMessage() + message);
         } finally {
             close(fileReader);
         }

@@ -60,7 +60,7 @@ public class SurrogatesDescriptionImporter implements Importer {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName());
+                    + dataset.getName()+"; "+e.getMessage());
         }
     }
 

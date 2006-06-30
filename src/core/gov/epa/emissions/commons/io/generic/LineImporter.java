@@ -63,7 +63,7 @@ public class LineImporter implements Importer {
         } catch (Exception e) {
             dataTable.drop(table);
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName() + "\n" + e.getMessage());
+                    + dataset.getName()+"; " + e.getMessage());
         }
     }
 
