@@ -27,6 +27,7 @@ public class CSVExporter implements Exporter {
     private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory, Integer optimizedBatchSize){
         this.delegate = new SMKReportExporter(dataset, dbServer, types, optimizedBatchSize);
+        this.delegate.setDelimiter(",");
     }
     
     public void export(File file) throws ExporterException {
