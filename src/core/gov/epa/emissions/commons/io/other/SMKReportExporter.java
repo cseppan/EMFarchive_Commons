@@ -67,7 +67,7 @@ public class SMKReportExporter implements Exporter {
     protected void write(File file, PrintWriter writer) throws ExporterException {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
-            boolean inlinecomments = dataset.getInlineCommentSetting();
+            boolean inlinecomments = false;//FIXME: dataset.getInlineCommentSetting();
 
             if (headercomments && inlinecomments) {
                 writeHeaders(writer, dataset);
