@@ -1,10 +1,10 @@
 package gov.epa.emissions.commons.data;
 
-
 import java.io.Serializable;
 import java.util.Date;
 
 public interface Dataset extends Serializable {
+    
     public static final String inline_comment_key = "EXPORT_INLINE_COMMENTS";
     
     public static final String header_comment_key = "EXPORT_HEADER_COMMENTS";
