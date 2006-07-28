@@ -18,9 +18,8 @@ public class Pollutant implements Serializable, Lockable{
         this.lock = new Mutex();
     }
 
-    public Pollutant(String description, String name) {
+    public Pollutant(String name) {
         this();
-        this.description = description;
         this.name = name;
     }
 
