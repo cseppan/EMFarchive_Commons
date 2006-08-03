@@ -10,5 +10,9 @@ public class SaveButton extends Button {
         super(label, action);
         this.setMnemonic('S');
     }
+    
+    public SaveButton(final Action action) {
+        this("Save", action);
+    }
 }    
 
