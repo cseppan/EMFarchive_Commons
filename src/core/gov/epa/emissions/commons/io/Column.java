@@ -65,4 +65,8 @@ public class Column implements DbColumn {
         return constraints != null;
     }
 
+    public String toString() {
+        return name;
+    }
+
 }

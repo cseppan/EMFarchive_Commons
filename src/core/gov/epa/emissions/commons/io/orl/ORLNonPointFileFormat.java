@@ -19,8 +19,14 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
 
     private FillDefaultValues filler;
 
+    private Column[] minCols;
+
+    private Column[] optionalCols;
+
     public ORLNonPointFileFormat(SqlDataTypes types) {
         this(types, new FillRecordWithBlankValues());
+        this.minCols = createMinCols();
+        this.optionalCols = createOptionalCols();
     }
 
     public ORLNonPointFileFormat(SqlDataTypes types, FillDefaultValues filler) {
@@ -33,7 +39,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
     }
 
     public Column[] cols() {
-        return asArray(minCols(), optionalCols());
+        return asArray(minCols, optionalCols);
     }
 
     private Column[] asArray(Column[] minCols, Column[] optionalCols) {
@@ -45,6 +51,14 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
     }
 
     public Column[] minCols() {
+        return minCols;
+    }
+
+    public Column[] optionalCols() {
+        return optionalCols;
+    }
+
+    private Column[] createMinCols() {
         List cols = new ArrayList();
 
         cols.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
@@ -59,7 +73,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
         return (Column[]) cols.toArray(new Column[0]);
     }
 
-    public Column[] optionalCols() {
+    private Column[] createOptionalCols() {
         List cols = new ArrayList();
 
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
@@ -91,6 +105,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
         cols.add(new Column("PERIOD_HOURS_PER_PERIOD", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
+
     }
 
     public void fillDefaults(List data, long datasetId) {
