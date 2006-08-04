@@ -25,13 +25,13 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
 
     public ORLNonPointFileFormat(SqlDataTypes types) {
         this(types, new FillRecordWithBlankValues());
-        this.minCols = createMinCols();
-        this.optionalCols = createOptionalCols();
     }
 
     public ORLNonPointFileFormat(SqlDataTypes types, FillDefaultValues filler) {
         this.types = types;
         this.filler = filler;
+        this.minCols = createMinCols();
+        this.optionalCols = createOptionalCols();
     }
 
     public String identify() {
