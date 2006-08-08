@@ -2,23 +2,21 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
-import gov.epa.emissions.commons.db.TableDefinition;
+import gov.epa.emissions.commons.db.TableCreator;
 import gov.epa.emissions.commons.io.TableFormat;
-
-import java.sql.SQLException;
 
 public class DataTable {
 
     private Dataset dataset;
 
-    private Datasource datasource;
-
     private String name;
+
+    private TableCreator delegate;
 
     public DataTable(Dataset dataset, Datasource datasource) {
         this.dataset = dataset;
-        this.datasource = datasource;
         this.name = createName();
+        this.delegate = new TableCreator(datasource);
     }
 
     public String name() {
@@ -42,25 +40,11 @@ public class DataTable {
     }
 
     public void create(String table, TableFormat tableFormat) throws ImporterException {
-        TableDefinition tableDefinition = datasource.tableDefinition();
-        checkTableExist(tableDefinition, table);
         try {
-            tableDefinition.createTable(table, tableFormat.cols());
-        } catch (SQLException e) {
-            throw new ImporterException("could not create table - " + table + "\n" + e.getMessage(), e);
-        }
-    }
-
-    private void checkTableExist(TableDefinition tableDefinition, String table) throws ImporterException {
-        try {
-            if (tableDefinition.tableExists(table)) {
-                throw new ImporterException("Table '" + table
-                        + "' already exists in the database, and cannot be created");
-            }
+            delegate.create(table, tableFormat);
         } catch (Exception e) {
-            throw new ImporterException("Could not check table '" + table + "' exist or not\n" + e.getMessage());
+            throw new ImporterException(e.getMessage());
         }
-
     }
 
     public void create(TableFormat tableFormat) throws ImporterException {
@@ -69,9 +53,8 @@ public class DataTable {
 
     public void drop(String table) throws ImporterException {
         try {
-            TableDefinition def = datasource.tableDefinition();
-            def.dropTable(table);
-        } catch (SQLException e) {
+            delegate.drop(table);
+        } catch (Exception e) {
             throw new ImporterException(
                     "could not drop table " + table + " after encountering error importing dataset", e);
         }
@@ -82,7 +65,7 @@ public class DataTable {
     }
 
     public boolean exists(String table) throws Exception {
-        return datasource.tableDefinition().tableExists(table);
+        return delegate.exists(table);
     }
 
 }
