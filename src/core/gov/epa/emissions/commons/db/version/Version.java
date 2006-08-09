@@ -14,6 +14,7 @@ public class Version implements Lockable {
 
     private int version;
 
+    /*parent versions*/
     private String path;
 
     private boolean finalVersion = false;
