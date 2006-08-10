@@ -7,7 +7,6 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.SummaryTable;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -205,7 +204,7 @@ public class ORLPointSummary implements SummaryTable {
                     emissionsDatasource.tableDefinition().dropTable(tempTableNames[i]);
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ImporterException("Error in create summary table-"+ e.getMessage());
         }
     }

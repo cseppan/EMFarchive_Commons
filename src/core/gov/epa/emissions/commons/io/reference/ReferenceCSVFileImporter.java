@@ -84,7 +84,7 @@ public class ReferenceCSVFileImporter implements Importer {
     private void dropTable(String tableName) throws ImporterException {
         try {
             datasource.tableDefinition().dropTable(tableName);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ImporterException("could not drop table '" + tableName + "'");
         }
     }

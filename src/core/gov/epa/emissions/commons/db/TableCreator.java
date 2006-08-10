@@ -36,18 +36,14 @@ public class TableCreator {
 
     }
 
+    /* table name(without the schema name) */
     public void drop(String table) throws Exception {
         TableDefinition def = datasource.tableDefinition();
-        try {
-            def.dropTable(table);
-        } catch (SQLException e) {
-            throw new Exception("could not drop table " + table);
-        }
+        def.dropTable(table);
     }
-    
+
     public boolean exists(String table) throws Exception {
         return datasource.tableDefinition().tableExists(table);
     }
-
 
 }

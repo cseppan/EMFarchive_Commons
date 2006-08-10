@@ -43,7 +43,7 @@ public abstract class VersionedRecordsTestCase extends HibernateTestCase {
         super.doTearDown();
     }
 
-    private void dropDataTable() throws SQLException {
+    private void dropDataTable() throws Exception {
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(dataTable);
     }
@@ -54,7 +54,7 @@ public abstract class VersionedRecordsTestCase extends HibernateTestCase {
 
         try {
             dropDataTable();
-        } catch (SQLException e) {// Ignore, as table may not exist
+        } catch (Exception e) {// Ignore, as table may not exist
         }
     }
 

@@ -38,7 +38,7 @@ public class DefaultScrollableVersionedRecordsTest extends PersistenceTestCase {
                 + dataTable);
     }
 
-    private void clean() throws SQLException {
+    private void clean() throws Exception {
         TableDefinition def = datasource.tableDefinition();
         def.dropTable(dataTable);
     }
