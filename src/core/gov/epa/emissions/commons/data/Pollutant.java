@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.security.User;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Pollutant implements Serializable, Lockable{
+public class Pollutant implements Serializable, Lockable {
     private int id;
 
     private String name;
@@ -76,14 +76,18 @@ public class Pollutant implements Serializable, Lockable{
     }
 
     public boolean equals(Object other) {
-        return (other instanceof Pollutant) && (((Pollutant) other).id == id);
+        if (other == null || !(other instanceof Pollutant))
+            return false;
+
+        Pollutant pollutant = (Pollutant) other;
+        return (pollutant.id == id || pollutant.getName().equals(name));
     }
 
     public int hashCode() {
         return id;
     }
-    
-    public String toString(){
+
+    public String toString() {
         return name;
     }
 }
