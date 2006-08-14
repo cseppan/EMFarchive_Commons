@@ -22,7 +22,7 @@ public class PostgresTableReader extends DbOperation implements TableReader {
             ITable tableObj = table(table);
             return tableObj.getRowCount();
         } catch (Exception e) {
-            throw new RuntimeException("could not query table - " + table);
+            throw new RuntimeException("could not query table - " + table + "\n" + e.getMessage());
         }
     }
 
@@ -36,7 +36,7 @@ public class PostgresTableReader extends DbOperation implements TableReader {
 
             return iterator.getTable();
         } catch (Exception e) {
-            throw new RuntimeException("could not lookup table - " + table);
+            throw new RuntimeException("could not lookup table - " + table + "\n" + e.getMessage());
         }
     }
 
