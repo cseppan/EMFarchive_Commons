@@ -22,20 +22,21 @@ public class DatabaseSetup {
 
         String emissionsDatasource = pref.getProperty("datasource.emissions.name");
         String referenceDatasource = pref.getProperty("datasource.reference.name");
+        String emfDatasource = pref.getProperty("datasource.emf.name");
 
         String dbName = pref.getProperty("database.name");
         String host = pref.getProperty("database.host");
         String port = pref.getProperty("database.port");
         String username = pref.getProperty("database.username");
         String password = pref.getProperty("database.password");
-
+        //FIXME: emfDatasource is not implemented in MySql
         if (isMySql()) {
             ConnectionParams emissionParams = new ConnectionParams(emissionsDatasource, host, port, username, password);
             ConnectionParams referenceParams = new ConnectionParams(referenceDatasource, host, port, username, password);
             createMySqlDbServer(emissionParams, referenceParams);
         } else {
             ConnectionParams params = new ConnectionParams(dbName, host, port, username, password);
-            createPostgresDbServer(emissionsDatasource, referenceDatasource, params);
+            createPostgresDbServer(emissionsDatasource, referenceDatasource,emfDatasource, params);
         }
     }
 
@@ -43,10 +44,10 @@ public class DatabaseSetup {
         return dbType.equals("mysql");
     }
 
-    private void createPostgresDbServer(String emissionsDatasource, String referenceDatasource, ConnectionParams params)
+    private void createPostgresDbServer(String emissionsDatasource, String referenceDatasource, String emfDatasource, ConnectionParams params)
             throws SQLException {
         PostgresConnectionFactory factory = PostgresConnectionFactory.get(params);
-        dbServer = new PostgresDbServer(factory.getConnection(), referenceDatasource, emissionsDatasource);
+        dbServer = new PostgresDbServer(factory.getConnection(), referenceDatasource, emissionsDatasource,emfDatasource);
     }
 
     private void createMySqlDbServer(ConnectionParams emissionParams, ConnectionParams referenceparams)

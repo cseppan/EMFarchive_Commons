@@ -7,6 +7,8 @@ public interface DbServer {
     Datasource getEmissionsDatasource();
 
     Datasource getReferenceDatasource();
+    
+    Datasource getEmfDatasource();
 
     SqlDataTypes getSqlDataTypes();
 

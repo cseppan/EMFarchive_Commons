@@ -16,14 +16,18 @@ public class PostgresDbServer implements DbServer {
 
     private Datasource referenceDatasource;
 
+    private Datasource emfDatasource;
+
     private Connection connection;
 
-    public PostgresDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName) {
+    public PostgresDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName,
+            String emfDatasourceName) {
         this.types = new PostgresSqlDataTypes();
         this.connection = connection;
 
         referenceDatasource = createDatasource(referenceDatasourceName, connection);
         emissionsDatasource = createDatasource(emissionsDatasourceName, connection);
+        emfDatasource = createDatasource(emfDatasourceName, connection);
     }
 
     public Datasource getEmissionsDatasource() {
@@ -32,6 +36,10 @@ public class PostgresDbServer implements DbServer {
 
     public Datasource getReferenceDatasource() {
         return referenceDatasource;
+    }
+
+    public Datasource getEmfDatasource() {
+        return emfDatasource;
     }
 
     private Datasource createDatasource(String datasourceName, Connection connection) {
@@ -54,4 +62,5 @@ public class PostgresDbServer implements DbServer {
     public void disconnect() throws SQLException {
         connection.close();
     }
+
 }

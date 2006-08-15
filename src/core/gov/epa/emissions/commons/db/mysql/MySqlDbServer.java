@@ -106,4 +106,9 @@ public class MySqlDbServer implements DbServer {
         MySqlConnectionFactory.get().close();
     }
 
+    public Datasource getEmfDatasource() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
