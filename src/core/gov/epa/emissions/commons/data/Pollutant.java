@@ -84,7 +84,7 @@ public class Pollutant implements Serializable, Lockable {
     }
 
     public int hashCode() {
-        return id;
+        return name.hashCode();
     }
 
     public String toString() {
