@@ -54,6 +54,11 @@ public class ReferenceDatasourceTablesCreator {
         importer = new ReferenceCSVFileImporter(statesFile, "states", reference, sqlDataTypes);
         importer.run();
         System.out.println("States table created.");
+        
+        File gdpFile = new File(folder, "gdplev.txt");
+        importer = new ReferenceCSVFileImporter(gdpFile, "gdplev", reference, sqlDataTypes);
+        importer.run();
+        System.out.println("GDPLev table created.");
 
         System.out.println("Reference Datasource setup completed.");
     }
