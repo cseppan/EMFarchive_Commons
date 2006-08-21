@@ -10,5 +10,9 @@ public class CancelButton extends Button {
         super(label, action);
         this.setMnemonic('l');
     }
-}    
 
+    public CancelButton(final Action action) {
+        super("Cancel", action);
+        this.setMnemonic('l');
+    }
+}

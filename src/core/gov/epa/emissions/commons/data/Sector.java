@@ -100,14 +100,17 @@ public class Sector implements Serializable, Lockable {
     }
 
     public boolean equals(Object other) {
-        return (other instanceof Sector) && (((Sector) other).id == id);
+        if (other == null || !(other instanceof Sector))
+            return false;
+        Sector sector = (Sector) other;
+        return (sector.getId() == id || sector.getName().equals(name));
     }
 
     public int hashCode() {
-        return id;
+        return name.hashCode();
     }
-    
-    public String toString(){
+
+    public String toString() {
         return name;
     }
 }
