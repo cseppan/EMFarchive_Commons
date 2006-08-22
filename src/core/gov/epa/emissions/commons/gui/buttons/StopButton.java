@@ -8,7 +8,11 @@ public class StopButton extends Button {
 
     public StopButton(String label, final Action action) {
         super(label, action);
-        this.setMnemonic('T');
+        this.setMnemonic('t');
     }
-}    
+
+    public StopButton(final Action action) {
+        this("Stop", action);
+    }
+}        
 

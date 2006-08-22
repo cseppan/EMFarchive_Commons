@@ -8,7 +8,11 @@ public class RemoveButton extends Button {
 
     public RemoveButton(String label, final Action action) {
         super(label, action);
-        this.setMnemonic('M');
+        this.setMnemonic('m');
     }
-}    
+
+    public RemoveButton(final Action action) {
+        this("Remove", action);
+    }
+}        
 

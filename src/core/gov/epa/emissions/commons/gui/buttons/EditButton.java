@@ -10,5 +10,10 @@ public class EditButton extends Button {
         super(label, action);
         this.setMnemonic('E');
     }
-}    
+
+    public EditButton(final Action action) {
+        this("Edit", action);
+    }
+}
+
 

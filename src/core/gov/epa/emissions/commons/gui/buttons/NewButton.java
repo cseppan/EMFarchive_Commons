@@ -10,5 +10,10 @@ public class NewButton extends Button {
         super(label, action);
         this.setMnemonic('N');
     }
-}    
+
+    public NewButton(final Action action) {
+        this("New", action);
+    }
+}
+    
 

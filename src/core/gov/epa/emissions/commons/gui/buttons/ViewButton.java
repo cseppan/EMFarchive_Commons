@@ -10,5 +10,9 @@ public class ViewButton extends Button {
         super(label, action);
         this.setMnemonic('V');
     }
-}    
+
+    public ViewButton(final Action action) {
+        this("View", action);
+    }
+}        
 

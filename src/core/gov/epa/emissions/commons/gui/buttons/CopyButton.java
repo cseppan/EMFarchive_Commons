@@ -10,5 +10,10 @@ public class CopyButton extends Button {
         super(label, action);
         this.setMnemonic('C');
     }
-}    
+    
+    public CopyButton(final Action action) {
+        this("Copy", action);
+    }
+}
+    
 

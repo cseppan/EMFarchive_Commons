@@ -10,5 +10,10 @@ public class CloseButton extends Button {
         super(label, action);
         this.setMnemonic('l');
     }
-}    
+
+    public CloseButton(final Action action) {
+        this("Close", action);
+    }
+}
+    
 
