@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class Sector implements Serializable, Lockable {
+public class Sector implements Serializable, Lockable, Comparable {
     private int id;
 
     private String name;
@@ -112,5 +112,9 @@ public class Sector implements Serializable, Lockable {
 
     public String toString() {
         return name;
+    }
+    
+    public int compareTo(Object other) {
+        return name.compareTo(((Sector) other).getName());
     }
 }
