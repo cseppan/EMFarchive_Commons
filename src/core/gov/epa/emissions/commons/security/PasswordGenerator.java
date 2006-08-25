@@ -2,11 +2,12 @@ package gov.epa.emissions.commons.security;
 
 import gov.epa.emissions.commons.CommonsException;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 
 import sun.misc.BASE64Encoder;
 
-public class PasswordGenerator {
+public class PasswordGenerator implements Serializable {
 
     /**
      * This method encrypts the plain text password and returns a string.

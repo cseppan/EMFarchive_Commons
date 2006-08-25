@@ -4,9 +4,10 @@ import gov.epa.emissions.commons.data.Lockable;
 import gov.epa.emissions.commons.data.Mutex;
 import gov.epa.emissions.commons.security.User;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Version implements Lockable {
+public class Version implements Lockable, Serializable {
 
     private int id;
 

@@ -2,9 +2,10 @@ package gov.epa.emissions.commons.data;
 
 import gov.epa.emissions.commons.security.User;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Mutex {
+public class Mutex implements Serializable {
 
     private String owner;
 
