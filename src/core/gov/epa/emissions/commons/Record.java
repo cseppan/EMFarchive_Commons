@@ -11,6 +11,11 @@ public class Record {
     public Record() {
         this.tokens = new ArrayList();
     }
+    
+    public Record(String[] tokens) {
+        this();
+        setTokens(tokens);
+    }
 
     public String token(int position) {
         return (String) tokens.get(position);
