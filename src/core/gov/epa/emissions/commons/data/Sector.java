@@ -103,7 +103,7 @@ public class Sector implements Serializable, Lockable, Comparable {
         if (other == null || !(other instanceof Sector))
             return false;
         Sector sector = (Sector) other;
-        return (sector.getId() == id || sector.getName().equals(name));
+        return (id == sector.getId()) || name.equals(sector.getName());
     }
 
     public int hashCode() {
@@ -113,7 +113,7 @@ public class Sector implements Serializable, Lockable, Comparable {
     public String toString() {
         return name;
     }
-    
+
     public int compareTo(Object other) {
         return name.compareTo(((Sector) other).getName());
     }
