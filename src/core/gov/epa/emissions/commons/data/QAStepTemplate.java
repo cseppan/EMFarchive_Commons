@@ -6,7 +6,7 @@ public class QAStepTemplate {
 
     private String name;
 
-    private String program;
+    private QAProgram program;
 
     private String programArguments;
 
@@ -24,11 +24,11 @@ public class QAStepTemplate {
         return name;
     }
 
-    public String getProgram() {
+    public QAProgram getProgram() {
         return program;
     }
 
-    public void setProgram(String program) {
+    public void setProgram(QAProgram program) {
         this.program = program;
     }
 
