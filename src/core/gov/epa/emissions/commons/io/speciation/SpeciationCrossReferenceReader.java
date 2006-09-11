@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SpeciationCrossReferenceReader implements Reader {
-    
-//    private FileFormat fileFormat;
-    
+
+    // private FileFormat fileFormat;
+
     private BufferedReader fileReader;
 
     private List comments;
@@ -29,9 +29,10 @@ public class SpeciationCrossReferenceReader implements Reader {
     private int lineNumber;
 
     private String line;
-    
-    public SpeciationCrossReferenceReader(File file, FileFormat format, Tokenizer tokenizer) throws FileNotFoundException {
-        //fileFormat = format;
+
+    public SpeciationCrossReferenceReader(File file, FileFormat format, Tokenizer tokenizer)
+            throws FileNotFoundException {
+        // fileFormat = format;
         fileReader = new BufferedReader(new FileReader(file));
         comments = new ArrayList();
         this.tokenizer = tokenizer;
@@ -66,30 +67,20 @@ public class SpeciationCrossReferenceReader implements Reader {
     private Record doRead(String line) throws ImporterException {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
-        
-//        int numCols = fileFormat.cols().length;
-//        int numTokens = tokens.length;
-//        String lastToken = tokens[numTokens - 1].trim();
-//        String[] newTokens = new String[numCols + 1];    
-//        
-//        for(int i = 0; i < numCols; i++){
-//            if(i < numTokens)
-//                newTokens[i] = tokens[i].trim();
-//            else
-//                newTokens[i] = "";
-//        }
-//        
-//        if(lastToken.startsWith("!")){
-//            newTokens[numTokens - 1] = "";
-//            newTokens[numCols] = lastToken;
-//        }else{
-//            newTokens[numCols] = "";
-//        }
-//        
-//        record.add(Arrays.asList(newTokens));
+        trimInlineComment(tokens);
         record.add(Arrays.asList(tokens));
 
         return record;
+    }
+
+    private void trimInlineComment(String[] tokens) {
+        int length = tokens.length;
+        if (length > 0) {
+            String lastToken = tokens[length - 1].trim();
+            if (lastToken.startsWith("!") && lastToken.length() > 128) {
+                tokens[length - 1] = lastToken.substring(0, 128);
+            }
+        }
     }
 
     private boolean isComment(String line) {
@@ -99,8 +90,8 @@ public class SpeciationCrossReferenceReader implements Reader {
     public List comments() {
         return comments;
     }
-    
-    public int lineNumber(){
+
+    public int lineNumber() {
         return lineNumber;
     }
 

@@ -43,24 +43,38 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     public void testImportSpeciationCrossRefData() throws Exception {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref.cmaq.cb4p25.txt"}, dataset, dbServer, sqlDataTypes);
+                new String[] { "gsref.cmaq.cb4p25.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
         assertEquals(2000, countRecords());
     }
-    
+
     public void testImportVersionedSpeciationCrossRefData() throws Exception {
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[]{"gsref-point.txt"}, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+                        version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         assertEquals(153, countRecords());
+    }
+
+    public void testImportSpeciationCrossRefData_WithLongInlineComments() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+
+        File folder = new File("test/data/speciation");
+        SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
+                new String[] { "gsrefsample_withLongInlineComments.txt" }, dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        importerv.run();
+
+        assertEquals(250, countRecords());
     }
 
     private int countRecords() {

@@ -42,26 +42,27 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
 
     public void testImportInventoryTableData() throws Exception {
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable_cap.cb4.24mar2006.txt"}, 
-                dataset, dbServer, sqlDataTypes);
+        InventoryTableImporter importer = new InventoryTableImporter(folder,
+                new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        assertEquals(16, countRecords());
+        assertEquals(598, countRecords());
     }
-    
+
     public void testImportVersionedInventoryTableData() throws Exception {
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"invtable_cap.cb4.24mar2006.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+        InventoryTableImporter importer = new InventoryTableImporter(folder,
+                new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
-        assertEquals(16, countRecords());
+        assertEquals(598, countRecords());
     }
-    
+
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
