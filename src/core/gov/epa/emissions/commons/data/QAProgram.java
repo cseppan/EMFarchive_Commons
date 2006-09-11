@@ -7,6 +7,8 @@ public class QAProgram implements Serializable, Comparable {
     private int id;
 
     private String name;
+    
+    private String runClassName;
 
     /*
      * Default constructor needed for hibernate and axis serialization
@@ -52,5 +54,13 @@ public class QAProgram implements Serializable, Comparable {
 
     public int compareTo(Object other) {
         return name.compareTo(((QAProgram) other).getName());
+    }
+
+    public String getRunClassName() {
+        return runClassName;
+    }
+
+    public void setRunClassName(String runClassName) {
+        this.runClassName = runClassName;
     }
 }
