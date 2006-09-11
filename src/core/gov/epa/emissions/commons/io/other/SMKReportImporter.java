@@ -69,8 +69,8 @@ public class SMKReportImporter implements Importer {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             dataTable.drop();
-            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName()+"; "+e.getMessage());
+            throw new ImporterException("could not import File - " + file.getAbsolutePath() + "; Details: "
+                    +e.getMessage());
         }
     }
 

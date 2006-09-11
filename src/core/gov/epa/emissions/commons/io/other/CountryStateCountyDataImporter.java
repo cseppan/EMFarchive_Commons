@@ -76,8 +76,8 @@ public class CountryStateCountyDataImporter implements Importer {
             Throwable t = e.getCause();
             String message = (t == null) ? e.getMessage() : t.getMessage();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + 
-                    " at line "+ lineNumber + " into Dataset - "
-                    + dataset.getName() + e.getMessage() + message);
+                    " at line "+ lineNumber + "; Details: "+
+                     e.getMessage() + message);
         } finally {
             close(fileReader);
         }

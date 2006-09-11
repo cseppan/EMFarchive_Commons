@@ -68,8 +68,8 @@ public class TemporalProfileImporter implements Importer {
                 doImport(fileReader, unit, header);
             }
         } catch (Exception e) {
-            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName() + "; " + e.getMessage());
+            throw new ImporterException("could not import File - " + file.getAbsolutePath() + "; Details: "
+                    + e.getMessage());
         } finally {
             close(fileReader);
         }

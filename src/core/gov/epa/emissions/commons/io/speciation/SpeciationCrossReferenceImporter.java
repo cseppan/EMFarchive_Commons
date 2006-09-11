@@ -67,8 +67,8 @@ public class SpeciationCrossReferenceImporter implements Importer {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
                     .tableFormat());
         } catch (Exception e) {
-            throw new ImporterException("could not import File - " + file.getAbsolutePath() + " into Dataset - "
-                    + dataset.getName()+"; "+e.getMessage());
+            throw new ImporterException("could not import File - " + file.getAbsolutePath() + "; Details: "
+                    +e.getMessage());
         }
     }
 

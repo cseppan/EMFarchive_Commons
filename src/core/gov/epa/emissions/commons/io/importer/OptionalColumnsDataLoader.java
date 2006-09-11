@@ -78,7 +78,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
             }
         } catch (SQLException e) {
-            throw new ImporterException("Error in inserting query\n" + e.getMessage());
+            throw new ImporterException("Error processing insert query: " + e.getMessage());
         } finally {
             dataModifier.finish();
         }
