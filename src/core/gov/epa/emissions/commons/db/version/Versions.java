@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.security.User;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,7 +98,7 @@ public class Versions {
         }
     }
 
-    public Version derive(Version base, String name, Session session) {
+    public Version derive(Version base, String name, User user, Session session) {
         if (!base.isFinalVersion())
             throw new RuntimeException("cannot derive a new version from a non-final version");
 
@@ -107,8 +109,8 @@ public class Versions {
         version.setVersion(newVersionNum);
         version.setPath(path(base));
         version.setDatasetId(base.getDatasetId());
-        version.setDate(new Date());
-        // version.setCreator(user); TODO
+        version.setLastModifiedDate(new Date());
+        version.setCreator(user);
 
         save(version, session);
 
@@ -129,7 +131,7 @@ public class Versions {
 
     public Version markFinal(Version derived, Session session) {
         derived.markFinal();
-        derived.setDate(new Date());
+        derived.setLastModifiedDate(new Date());
 
         Transaction tx = null;
         try {

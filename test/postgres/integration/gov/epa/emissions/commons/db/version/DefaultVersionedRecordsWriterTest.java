@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.security.User;
 
 import java.sql.SQLException;
 
@@ -41,7 +42,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         ChangeSet changeset = new ChangeSet();
 
         Version baseVersion = versions.get(1, 0, session);
-        Version versionOne = versions.derive(baseVersion, "version one", session);
+        Version versionOne = versions.derive(baseVersion, "version one", user(), session);
         changeset.setVersion(versionOne);
 
         DefaultVersionedRecordsFactory reader = new DefaultVersionedRecordsFactory(datasource);
@@ -56,12 +57,13 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         Version version = versions.get(1, versionOne.getVersion(), session);
         assertEquals(1, version.getVersion());
     }
+    
 
     public void testUpdate() throws Exception {
         ChangeSet changeset = new ChangeSet();
 
         Version versionZero = versions.get(1, 0, session);
-        Version versionOne = versions.derive(versionZero, "version one", session);
+        Version versionOne = versions.derive(versionZero, "version one", user(), session);
         changeset.setVersion(versionOne);
 
         DefaultVersionedRecordsFactory reader = new DefaultVersionedRecordsFactory(datasource);
@@ -92,7 +94,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         ChangeSet changeSetForVersionOne = new ChangeSet();
 
         Version versionZero = versions.get(1, 0, session);
-        Version versionOne = versions.derive(versionZero, "version one", session);
+        Version versionOne = versions.derive(versionZero, "version one", user(), session);
         changeSetForVersionOne.setVersion(versionOne);
 
         DefaultVersionedRecordsFactory reader = new DefaultVersionedRecordsFactory(datasource);
@@ -112,7 +114,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
         // version two (based on version zero): update 3, add (new) 8
         ChangeSet changeSetForVersionTwo = new ChangeSet();
-        Version versionTwo = versions.derive(versionZero, "version two", session);
+        Version versionTwo = versions.derive(versionZero, "version two", user(), session);
         changeSetForVersionTwo.setVersion(versionTwo);
 
         VersionedRecord record3 = versionZeroRecords[2];
@@ -143,7 +145,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         ChangeSet changeset = new ChangeSet();
 
         Version versionZero = versions.get(1, 0, session);
-        Version versionOne = versions.derive(versionZero, "version one", session);
+        Version versionOne = versions.derive(versionZero, "version one", user(), session);
         changeset.setVersion(versionOne);
 
         DefaultVersionedRecordsFactory reader = new DefaultVersionedRecordsFactory(datasource);
@@ -162,7 +164,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
 
     public void testChangeSetWithNewRecordsResultsInNewVersion() throws Exception {
         Version versionZero = versions.get(1, 0, session);
-        Version versionOne = versions.derive(versionZero, "version one", session);
+        Version versionOne = versions.derive(versionZero, "version one", user(), session);
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -193,7 +195,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         DefaultVersionedRecordsFactory reader = new DefaultVersionedRecordsFactory(datasource);
 
         Version versionZero = versions.get(1, 0, session);
-        Version versionOne = versions.derive(versionZero, "version one", session);
+        Version versionOne = versions.derive(versionZero, "version one", user(), session);
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -225,7 +227,7 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         DefaultVersionedRecordsFactory reader = new DefaultVersionedRecordsFactory(datasource);
 
         Version versionZero = versions.get(1, 0, session);
-        Version versionOne = versions.derive(versionZero, "version one", session);
+        Version versionOne = versions.derive(versionZero, "version one", user(), session);
 
         ChangeSet changeset = new ChangeSet();
         changeset.setVersion(versionOne);
@@ -246,6 +248,12 @@ public class DefaultVersionedRecordsWriterTest extends VersionedRecordsTestCase 
         assertEquals(init + 2, versionOneRecords[1].getRecordId());
         assertEquals(init + 3, versionOneRecords[2].getRecordId());
         assertEquals(init + 4, versionOneRecords[3].getRecordId());
+    }
+
+    private User user() {
+        User user = new User();
+        user.setName("well");
+        return user;
     }
 
 }

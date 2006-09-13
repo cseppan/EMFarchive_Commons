@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.HibernateTestCase;
+import gov.epa.emissions.commons.security.User;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -58,12 +59,12 @@ public class VersionsTest extends HibernateTestCase {
         int datasetId = 1;
         Version base = versions.get(datasetId, 0, session);
 
-        Version derivedFromBase = versions.derive(base, "version one", session);
+        Version derivedFromBase = versions.derive(base, "version one", user(), session);
         versions.markFinal(derivedFromBase, session);
         int versionOne = versions.getLastFinalVersion(datasetId, session);
         assertEquals(derivedFromBase.getVersion(), versionOne);
 
-        Version derivedFromOne = versions.derive(derivedFromBase, "version two", session);
+        Version derivedFromOne = versions.derive(derivedFromBase, "version two", user(), session);
         versions.markFinal(derivedFromOne, session);
         int versionTwo = versions.getLastFinalVersion(datasetId, session);
         assertEquals(derivedFromOne.getVersion(), versionTwo);
@@ -72,14 +73,14 @@ public class VersionsTest extends HibernateTestCase {
     public void testShouldDeriveVersionFromAFinalVersion() throws Exception {
         Version base = versions.get(1, 0, session);
 
-        Version derived = versions.derive(base, "version one", session);
+        Version derived = versions.derive(base, "version one", user(), session);
 
         assertNotNull("Should be able to derive from a Final version", derived);
         assertEquals(1, derived.getDatasetId());
         assertEquals(1, derived.getVersion());
         assertEquals("0", derived.getPath());
         assertFalse("Derived version should be non-final", derived.isFinalVersion());
-        assertNotNull(derived.getDate());
+        assertNotNull(derived.getLastModifiedDate());
     }
 
     public void testShouldGetAVersionUsingHibernate() throws Exception {
@@ -89,7 +90,7 @@ public class VersionsTest extends HibernateTestCase {
         assertEquals(0, base.getVersion());
         assertEquals("", base.getPath());
         assertTrue("Version zero should be final", base.isFinalVersion());
-        assertNotNull(base.getDate());
+        assertNotNull(base.getLastModifiedDate());
     }
 
     public void testShouldBeAbleToFetchCurrentVersion() throws Exception {
@@ -105,7 +106,7 @@ public class VersionsTest extends HibernateTestCase {
 
     public void testShouldGetAllVersionsBasedOnADerivedVersion() throws Exception {
         Version base = versions.get(1, 0, session);
-        Version derived = versions.derive(base, "version one", session);
+        Version derived = versions.derive(base, "version one", user(), session);
 
         Version[] allVersions = versions.get(1, session);
 
@@ -128,9 +129,9 @@ public class VersionsTest extends HibernateTestCase {
     public void testShouldFailWhenTryingToDeriveVersionFromANonFinalVersion() throws Exception {
         Version base = versions.get(1, 0, session);
 
-        Version derived = versions.derive(base, "version one", session);
+        Version derived = versions.derive(base, "version one", user(), session);
         try {
-            versions.derive(derived, "version two", session);
+            versions.derive(derived, "version two", user(), session);
         } catch (Exception e) {
             return;
         }
@@ -140,8 +141,8 @@ public class VersionsTest extends HibernateTestCase {
 
     public void testShouldBeAbleToMarkADerivedVersionAsFinal() throws Exception {
         Version base = versions.get(1, 0, session);
-        Version derived = versions.derive(base, "version one", session);
-        Date creationDate = derived.getDate();
+        Version derived = versions.derive(base, "version one", user(), session);
+        Date creationDate = derived.getLastModifiedDate();
 
         Version finalVersion = versions.markFinal(derived, session);
 
@@ -157,11 +158,17 @@ public class VersionsTest extends HibernateTestCase {
         assertEquals(derived.getPath(), results.getPath());
         assertTrue("Derived version should be marked final in db", results.isFinalVersion());
 
-        Date finalDate = results.getDate();
+        Date finalDate = results.getLastModifiedDate();
         assertTrue("Creation Date should be different from Final Date", !finalDate.before(creationDate));
 
         Version[] all = versions.get(1, session);
         assertEquals(2, all.length);
+    }
+
+    private User user() {
+        User user = new User();
+        user.setName("cep");
+        return user;
     }
 
     public void testNonLinearVersionFourShouldHaveZeroAndOneInThePath() throws Exception {

@@ -22,7 +22,7 @@ public class Version implements Lockable, Serializable {
 
     private String name;
 
-    private Date date;
+    private Date lastModifiedDate;
 
     private User creator;
 
@@ -91,12 +91,12 @@ public class Version implements Lockable, Serializable {
         return Long.parseLong(path.substring(start));
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
     public void setCreator(User creator) {
