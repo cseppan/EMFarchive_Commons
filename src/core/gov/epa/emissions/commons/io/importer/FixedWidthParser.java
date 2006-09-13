@@ -19,14 +19,45 @@ public class FixedWidthParser implements Parser {
         return record;
     }
 
-    // FIXME: check for inline comments,
-    //FIXME: throw an exception while calling substring()
-    private void addTokens(String line, Record record, Column[] columns) {
-        int offset = 0;
+    private void addTokens(String inLine, Record record, Column[] columns) {
+        int numCols = columns.length, i;
+        String[] bipart = splitLineByInlineComment(inLine);
+        String left = bipart[0];
 
-        for (int i = 0; i < columns.length; i++) {
-            record.add(line.substring(offset, offset + columns[i].width()));
-            offset += columns[i].width();
+        for (i = 0; i < numCols; i++) {
+            if (left.length() < columns[i].width()) {
+                String data = left.substring(0);
+                record.add(data);
+                break;
+            }
+
+            String data = left.substring(0, columns[i].width());
+            left = left.substring(columns[i].width());
+
+            record.add(data);
         }
+
+        // If line ends without specified column values, we need to put blank
+        // string there
+        while (i < numCols - 1) {
+            record.add("");
+            i++;
+        }
+
+        if (bipart[1].length() > 0) // add inline comment if there is one
+            record.add(bipart[1]);
     }
+
+    private String[] splitLineByInlineComment(String line) {
+        String[] bipart = { line, "" };
+        int bang = line.indexOf('!');
+
+        if (bang >= 0) {
+            bipart[0] = line.substring(0, bang);
+            bipart[1] = line.substring(bang);
+        }
+
+        return bipart;
+    }
+
 }

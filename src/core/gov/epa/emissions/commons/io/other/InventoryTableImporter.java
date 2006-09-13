@@ -15,6 +15,7 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.FixedWidthParser;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
@@ -77,7 +78,7 @@ public class InventoryTableImporter implements Importer {
             // FIXME: Due to irregularity in inventory data names (1st column in
             // input data file),
             // some extra chars may be extracted into 2nd column (CAS number).
-            fileReader = new DataReader(reader, 0, new InventoryTableParser(formatUnit.fileFormat()));
+            fileReader = new DataReader(reader, 0, new FixedWidthParser(formatUnit.fileFormat()));
             loader.load(fileReader, dataset, table);
             loadDataset(file, table, formatUnit.tableFormat(), dataset, fileReader.comments());
         } finally {

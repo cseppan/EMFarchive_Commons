@@ -18,12 +18,6 @@ public class VersionedImporter implements Importer {
         this.datasource = dbServer.getEmissionsDatasource();
     }
 
-    private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws Exception {
-        TableModifier modifier = new TableModifier(datasource,"versions");
-        String[] data = { null, dataset.getId() + "", "0", "Initial Version", "", "true", null };
-        modifier.insertOneRow(data);
-    }
-
     public void run() throws ImporterException {
         delegate.run();
         try {
@@ -31,5 +25,11 @@ public class VersionedImporter implements Importer {
         } catch (Exception e) {
             throw new ImporterException("Could not add Version Zero entry to the Versions Table." + e.getMessage());
         }
+    }
+    
+    private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws Exception {
+        TableModifier modifier = new TableModifier(datasource,"versions");
+        String[] data = { null, dataset.getId() + "", "0", "Initial Version", "", "true", null };
+        modifier.insertOneRow(data);
     }
 }

@@ -13,6 +13,7 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.FixedWidthParser;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -95,7 +96,7 @@ public class CountryStateCountyDataImporter implements Importer {
 
     private int doImport(BufferedReader fileReader, int lineNumber, Dataset dataset, DatasetTypeUnit unit, String header)
             throws ImporterException {
-        Reader reader = new CountryStateCountyFileReader(fileReader, lineNumber, header, new InventoryTableParser(unit
+        Reader reader = new CountryStateCountyFileReader(fileReader, lineNumber, header, new FixedWidthParser(unit
                 .fileFormat()));
         DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
