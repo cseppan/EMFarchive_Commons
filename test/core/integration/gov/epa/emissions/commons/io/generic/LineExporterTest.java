@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -39,6 +40,7 @@ public class LineExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -76,12 +78,12 @@ public class LineExporterTest extends PersistenceTestCase {
         Version version = version();
         File folder = new File("test/data/orl/nc");
         LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 
         LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
-                version), optimizedBatchSize);
+                version, dataset), optimizedBatchSize);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());

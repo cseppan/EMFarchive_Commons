@@ -80,7 +80,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         version.setVersion(0);
 
         // create table
-        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory(version);
+        VersionedDataFormatFactory formatFactory = new VersionedDataFormatFactory(version, null);
         ORLNonPointFileFormat fileFormat = new ORLNonPointFileFormat(sqlDataTypes, formatFactory.defaultValuesFiller());
         TableFormat tableFormat = setupVersionedTable(fileFormat);
 

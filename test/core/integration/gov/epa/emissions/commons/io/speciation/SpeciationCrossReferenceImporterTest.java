@@ -56,7 +56,7 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
-                        version));
+                        version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
@@ -70,7 +70,7 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[] { "gsrefsample_withLongInlineComments.txt" }, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 

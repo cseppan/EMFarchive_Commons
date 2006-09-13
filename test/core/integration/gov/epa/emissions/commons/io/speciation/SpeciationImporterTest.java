@@ -56,7 +56,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/speciation");
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
                 new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 

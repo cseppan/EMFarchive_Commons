@@ -56,7 +56,7 @@ public class InventoryTableImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder,
                 new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 

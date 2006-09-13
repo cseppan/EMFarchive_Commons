@@ -39,7 +39,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         version.setVersion(0);
 
         ORLNonPointImporter importer = new ORLNonPointImporter(file.getParentFile(), new String[] { file.getName() },
-                dataset, dbServer(), dataTypes(), new VersionedDataFormatFactory(version));
+                dataset, dbServer(), dataTypes(), new VersionedDataFormatFactory(version, dataset));
         importer.run();
     }
 

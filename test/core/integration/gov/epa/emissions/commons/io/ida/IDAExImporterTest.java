@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -44,6 +45,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -71,7 +73,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-area.txt" };
         IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
         // assert
@@ -162,7 +164,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-mobile.txt" };
         IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
         // assert

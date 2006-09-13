@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -50,6 +51,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         Dataset dataset = new SimpleDataset();
         dataset.setName(name);
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
         return dataset;
     }
 
@@ -342,14 +344,14 @@ public class TemporalProfileTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-profiles", fileName);
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(version));
+                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer);
         importer.run();
     }
 
     private File runVersionProfileExporter(Version version) throws IOException, ExporterException {
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
-                new VersionedDataFormatFactory(version), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         return exportfile;

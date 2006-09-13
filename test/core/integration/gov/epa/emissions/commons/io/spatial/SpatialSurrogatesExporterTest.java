@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.spatial;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -36,6 +37,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -62,12 +64,12 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/spatial");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File exportfile = File.createTempFile("SpetialSurrogatesExported", ".txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.

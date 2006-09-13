@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -38,6 +39,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         tableName = "test";
         dataset = new SimpleDataset();
         dataset.setName("test");
+        dataset.setDatasetType(new DatasetType("dsType"));
+        
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
@@ -73,7 +76,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/reference");
         Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version));
+                new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
@@ -82,7 +85,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         exporter.export(file);
 
         List data = readData(file);
@@ -136,7 +139,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/csv");
         Importer importer = new CSVImporter(folder, new String[] { "shapefile_catalog.csv" }, dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
@@ -145,7 +148,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         exporter.export(file);
 
         List data = readData(file);

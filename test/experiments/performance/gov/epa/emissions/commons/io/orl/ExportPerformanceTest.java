@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.PerformanceTestCase;
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.DbServer;
@@ -36,10 +37,11 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setId(Math.abs(new Random().nextInt()));
-
+        dataset.setDatasetType(new DatasetType("dsType"));
+        
         version = new Version();
         version.setVersion(0);
-        formatFactory = new VersionedDataFormatFactory(version);
+        formatFactory = new VersionedDataFormatFactory(version, dataset);
     }
 
     protected void doExport(String datasetName) throws Exception {

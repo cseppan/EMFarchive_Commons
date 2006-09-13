@@ -54,7 +54,7 @@ public class SpatialSurrogatesImporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/spatial");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 

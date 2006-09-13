@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -38,6 +39,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {

@@ -59,7 +59,7 @@ public class LineImporterTest extends HibernateTestCase {
 
         File folder = new File("test/data/orl/nc");
         LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(version));
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
         importer2.run();
 

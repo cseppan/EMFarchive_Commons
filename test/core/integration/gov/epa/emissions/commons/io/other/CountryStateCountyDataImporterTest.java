@@ -54,7 +54,7 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
     }

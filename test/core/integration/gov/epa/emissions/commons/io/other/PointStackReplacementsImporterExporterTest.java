@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -37,6 +38,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -65,12 +67,12 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
 
         File folder = new File("test/data/other");
         PointStackReplacementsImporter importer = new PointStackReplacementsImporter(folder, new String[]{"pstk.m3.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(version),optimizedBatchSize);
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);

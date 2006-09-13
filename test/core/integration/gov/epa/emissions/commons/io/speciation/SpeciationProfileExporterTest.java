@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -36,6 +37,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -63,12 +65,12 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/speciation");
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File file = File.createTempFile("speciatiationprofileexported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.

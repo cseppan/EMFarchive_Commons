@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -40,6 +41,7 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -74,14 +76,14 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         
         File folder = new File("test/data/other");
         DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
         DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(version), optimizedBatchSize);
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

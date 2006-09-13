@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -36,6 +37,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -64,12 +66,12 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
 
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"CAPandHAP_INVTABLE31aug2006.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version),optimizedBatchSize);
+                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         //FIXME: compare the original file and the exported file.

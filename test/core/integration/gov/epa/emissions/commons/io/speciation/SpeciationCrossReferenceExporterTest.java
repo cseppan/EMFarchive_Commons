@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -41,6 +42,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
@@ -72,12 +74,12 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
-                        version));
+                        version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
         importerv.run();
 
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, dbServer,
-                sqlDataTypes, new VersionedDataFormatFactory(version),optimizedBatchSize);
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File exportfile = File.createTempFile("SpeciatiationCrossRefExported", ".txt");
         exporter.export(exportfile);
 

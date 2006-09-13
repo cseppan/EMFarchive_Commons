@@ -40,7 +40,7 @@ public class ImportPerformanceTestCase extends PerformanceTestCase {
 
         version = new Version();
         version.setVersion(0);
-        formatFactory = new VersionedDataFormatFactory(version);
+        formatFactory = new VersionedDataFormatFactory(version, dataset);
     }
 
     protected void doImport(File importFile, String datasetName) throws Exception {
@@ -52,7 +52,7 @@ public class ImportPerformanceTestCase extends PerformanceTestCase {
     }
 
     private void doImport(File importFile) throws ImporterException {
-        DataFormatFactory formatFactory = new VersionedDataFormatFactory(version);
+        DataFormatFactory formatFactory = new VersionedDataFormatFactory(version, dataset);
         Importer importer = new ORLNonRoadImporter(importFile.getParentFile(), new String[] { importFile.getName() },
                 dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();
