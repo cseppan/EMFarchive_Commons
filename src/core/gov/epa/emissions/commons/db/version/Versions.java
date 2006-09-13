@@ -117,11 +117,11 @@ public class Versions {
         return version;
     }
 
-    private void save(Version version, Session session) {
+    public void save(Version version, Session session) {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.save(version);
+            session.saveOrUpdate(version);
             tx.commit();
         } catch (HibernateException e) {
             tx.rollback();
