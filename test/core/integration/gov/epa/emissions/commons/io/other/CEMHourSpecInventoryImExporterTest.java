@@ -68,9 +68,8 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
     }
     
     public void testImportVersionedCEMpthourData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
-
+        Version version = version();
+        
         File folder = new File("test/data/other");
         CEMHourSpecInventoryImporter importer = new CEMHourSpecInventoryImporter(folder, new String[]{"CEMpthour.txt"}, 
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
@@ -89,6 +88,13 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
                 (String) data.get(0));
         assertEquals("2161,**GT2,113,19,0,,,,,,,", (String) data.get(21));
         exportfile.delete();
+    }
+
+    private Version version() {
+        Version version = new Version();
+        version.setVersion(0);
+        version.setDatasetId(dataset.getId());
+        return version;
     }
 
     private List readData(File file) throws IOException {

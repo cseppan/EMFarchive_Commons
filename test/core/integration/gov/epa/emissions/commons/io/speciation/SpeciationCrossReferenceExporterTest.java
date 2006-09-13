@@ -67,9 +67,8 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
-
+        Version version = version();
+        
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
@@ -86,6 +85,13 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         assertEquals(153, countRecords());
         assertEquals("0;0000;EXH__CO;;;;;;;! exhaust for MOBILE5", data.get(2));
         assertEquals("2850000010;99999;PM2_5;;;;;;;", data.get(153));
+    }
+
+    private Version version() {
+        Version version = new Version();
+        version.setVersion(0);
+        version.setDatasetId(dataset.getId());
+        return version;
     }
 
     private int countRecords() {

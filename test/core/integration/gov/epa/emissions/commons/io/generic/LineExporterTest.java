@@ -73,9 +73,7 @@ public class LineExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedSmallLineFile() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
-
+        Version version = version();
         File folder = new File("test/data/orl/nc");
         LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version));
@@ -100,6 +98,13 @@ public class LineExporterTest extends PersistenceTestCase {
         assertEquals(expectedPattern2, records.get(6));
         assertEquals(expectedPattern3, records.get(15));
         assertEquals(expectedPattern4, records.get(21));
+    }
+
+    private Version version() {
+        Version version = new Version();
+        version.setVersion(0);
+        version.setDatasetId(dataset.getId());
+        return version;
     }
 
     private int countRecords() {

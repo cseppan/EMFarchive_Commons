@@ -120,8 +120,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     public void testShouldImportExportVersionedSamllPacketData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
+        Version version = version();
         File file = new File("test/data/temporal-profiles/small.txt");
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
@@ -181,9 +180,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     public void testShouldImportExportVersionedDiurnalWeekdayPacketData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
-
+        Version version = version();
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
@@ -209,6 +206,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         String actual = (String) records.get(0);
         assertTrue(actual.matches(expectedPattern));
     }
+
 
     public void testShouldReadFromFileAndLoadDiurnalWeekendPacketIntoTable() throws Exception {
         File file = new File("test/data/temporal-profiles/diurnal-weekend.txt");
@@ -236,8 +234,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     public void testShouldImportExportVersionedDiurnalWeekendPacketData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
+        Version version =version();
+        
         File file = new File("test/data/temporal-profiles/diurnal-weekend.txt");
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
@@ -288,8 +286,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     public void testShouldImportExportVersionedMonthlyPacketData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
+        Version version = version();
+        
         File file = new File("test/data/temporal-profiles/monthly.txt");
 
         TemporalProfileImporter importer = new TemporalProfileImporter(file.getParentFile(), new String[] { file
@@ -341,8 +339,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     public void testShouldImportExportVersionedWeeklyPacket() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
+        Version version = version();
+        
         File file = new File("test/data/temporal-profiles/weekly.txt");
 
         TemporalProfileImporter temporalProfileImporter = new TemporalProfileImporter(file.getParentFile(),
@@ -391,6 +389,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
     private boolean isComment(String line) {
         return line.startsWith("/");
+    }
+    
+    private Version version() {
+        Version version = new Version();
+        version.setVersion(0);
+        version.setDatasetId(dataset.getId());
+        return version;
     }
 
 }

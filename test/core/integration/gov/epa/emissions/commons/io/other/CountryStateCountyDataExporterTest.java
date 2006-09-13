@@ -76,9 +76,8 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedCountryStateCountyData() throws Exception {
-        Version version = new Version();
-        version.setVersion(0);
-
+        Version version = version();
+        
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder,
                 new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));
@@ -103,6 +102,13 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         assertEquals("/COUNTY/", (String) data.get(20));
         assertEquals(" TN         Claiborne Co  47 25 44 440 EST   -83.664   36.474 "
                 + "456.71943606  -84.0067  -83.3646  36.3284  36.5988    30059", data.get(36));
+    }
+
+    private Version version() {
+        Version version = new Version();
+        version.setVersion(0);
+        version.setDatasetId(dataset.getId());
+        return version;
     }
 
     private void assertComments(File file) throws IOException {

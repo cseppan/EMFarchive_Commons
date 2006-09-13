@@ -70,7 +70,8 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     public void testImportVersionedCEMpthourData() throws Exception {
         Version version = new Version();
         version.setVersion(0);
-
+        version.setDatasetId(dataset.getId());
+        
         File folder = new File("test/data/other");
         DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version));

@@ -72,6 +72,7 @@ public class ORLExportersTest extends PersistenceTestCase {
     public void testShouldExportOnRoadVersionZero() throws Exception {
         Version version = new Version();
         version.setVersion(0);
+        version.setDatasetId(dataset.getId());
 
         File importFile = new File("test/data/orl/nc", "small-onroad.txt");
         DataFormatFactory formatFactory = new VersionedDataFormatFactory(version);

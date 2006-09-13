@@ -16,7 +16,8 @@ public class VersionedDatasetQuery implements ExportStatement {
         String versionsPath = version.createCompletePath();
         String deleteClause = createDeleteClause(versionsPath);
 
-        return "SELECT * FROM " + table + " WHERE version IN (" + versionsPath + ") AND " + deleteClause;
+        return "SELECT * FROM " + table + " AS a WHERE version IN (" + versionsPath + ") AND " + deleteClause
+                + " AND a.dataset_id=" + version.getDatasetId();
     }
 
     private String createDeleteClause(String versions) {
