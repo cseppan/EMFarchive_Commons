@@ -15,6 +15,11 @@ public class DelimiterIdentifyingFileReader implements Reader {
         reader = new DelimitedFileReader(file, new DelimiterIdentifyingTokenizer(minTokens));
     }
 
+    public DelimiterIdentifyingFileReader(File file, String[] inlineComments, int minTokens)
+            throws FileNotFoundException {
+        reader = new DelimitedFileReader(file, inlineComments, new DelimiterIdentifyingTokenizer(minTokens));
+    }
+
     public void close() throws IOException {
         reader.close();
     }
@@ -26,8 +31,8 @@ public class DelimiterIdentifyingFileReader implements Reader {
     public List comments() {
         return reader.comments();
     }
-    
-    public int lineNumber(){
+
+    public int lineNumber() {
         return reader.lineNumber();
     }
 

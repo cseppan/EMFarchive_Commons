@@ -92,7 +92,7 @@ public class CSVFileReader implements Reader {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
         for (int i = 0; i < tokens.length; i++) {
-            if (tokens[i].indexOf(":\\") >= 0) {
+            if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
                 tokens[i] = checkBackSlash(tokens[i]);
             }
         }

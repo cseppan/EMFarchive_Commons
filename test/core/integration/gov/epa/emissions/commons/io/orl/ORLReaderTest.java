@@ -1,27 +1,35 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
+import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedFileReader;
 
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
-public class ORLReaderTest extends TestCase {
+public class ORLReaderTest extends PersistenceTestCase {
 
     private Reader reader;
 
     private String dataFolder = "test/data/orl/nc";
 
-    protected void tearDown() throws IOException {
+    private SqlDataTypes sqlDataTypes;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        sqlDataTypes = dbServer().getSqlDataTypes();
+    }
+
+    protected void doTearDown() throws IOException {
         reader.close();
     }
 
     public void testShouldIdentifyFirstSixLinesOfSmallPointFileAsComments() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
-        reader = new WhitespaceDelimitedFileReader(file);
+        reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
 
         assertNotNull(reader.read());
         assertEquals(6, reader.comments().size());
@@ -29,7 +37,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testShouldCollectAllTenCommentsOfSmallPointFile() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
-        reader = new WhitespaceDelimitedFileReader(file);
+        reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
 
         reader.read();
         assertEquals(6, reader.comments().size());
@@ -46,7 +54,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testShouldCreateRecordWithTwelveTokensForEachLineOfSmallNonPointFile() throws Exception {
         File file = new File(dataFolder, "small-nonpoint.txt");
-        reader = new WhitespaceDelimitedFileReader(file);
+        reader = new DelimiterIdentifyingFileReader(file, new ORLNonPointFileFormat(sqlDataTypes).minCols().length);
 
         Record record = reader.read();
         assertNotNull(record);
@@ -55,7 +63,7 @@ public class ORLReaderTest extends TestCase {
 
     public void testVariationsOfDelimiterWidthsAndQuotesInAPointFile() throws Exception {
         File file = new File(dataFolder, "point-with-variations.txt");
-        reader = new WhitespaceDelimitedFileReader(file);
+        reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
 
         for (int i = 0; i < 4; i++) {
             assertEquals(28, reader.read().size());
@@ -66,10 +74,13 @@ public class ORLReaderTest extends TestCase {
 
     public void testVariationsOfDelimiterWidthsAndQuotesInTheSmallPointFile() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
-        reader = new WhitespaceDelimitedFileReader(file);
+        reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
 
         for (int i = 0; i < 10; i++) {
-            assertEquals(28, reader.read().size());
+            if (i == 0 || i == 1 || i == 4 || i == 9)
+                assertEquals(29, reader.read().size());
+            else
+                assertEquals(28, reader.read().size());
         }
 
         assertTrue(reader.read().isEnd());

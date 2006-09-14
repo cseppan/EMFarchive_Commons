@@ -113,7 +113,7 @@ public class ORLImporter {
 
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        // BUG: Country should not be created, but looked up
+        //BUG: Country should not be created, but looked up
         // String country = comments.content("COUNTRY");
         // dataset.setCountry(new Country(country));
 

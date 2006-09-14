@@ -9,8 +9,8 @@
 #
 /POINT DEFN/ 4 4
 0           0000 CO
-0           0000 EXH__CO      ! exhaust for MOBILE5
-0           0000 EXR__CO      ! running exhaust for MOBILE6
+0           0000 EXH__CO! exhaust for MOBILE5
+0           0000 EXR__CO! running exhaust for MOBILE6
 0           0000 EXS__CO      ! start   exhaust for MOBILE6
 0           0000 ISOP
 0           0000 NH3
@@ -160,4 +160,4 @@
 10100102    1178  VOC
 2810060000  0307  VOC
 2820000000  0035  VOC
-2850000010 99999 PM2_5
+2850000010 99999 PM2_5! heavy duty diesel trucks-specific

@@ -98,4 +98,10 @@ public abstract class PersistenceTestCase extends TestCase {
     protected TableReader tableReader(Datasource datasource) {
         return dbSetup.tableReader(datasource);
     }
+
+    public int countRecords(DbServer dbServer, String tableName) {
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        TableReader tableReader = tableReader(datasource);
+        return tableReader.count(datasource.getName(), tableName);
+    }
 }
