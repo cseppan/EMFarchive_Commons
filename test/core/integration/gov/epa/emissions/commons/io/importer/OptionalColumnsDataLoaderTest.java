@@ -58,7 +58,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         dataset.setName("test");
 
         File file = new File("test/data/variable-cols.txt");
-        Reader reader = new WhitespaceDelimitedFileReader(file);
+        Reader reader = new DelimitedFileReader(file,new DelimiterIdentifyingTokenizer(2));
         loader.load(reader, dataset, table);
 
         // assert

@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.BufferedReader;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
+public class TemporalReferenceImporterTest extends PersistenceTestCase {
 
     private SqlDataTypes sqlDataTypes;
 
@@ -65,7 +66,12 @@ public class TemporalReferenceVersionImporterTest extends PersistenceTestCase {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
         TemporalReferenceImporter importer = new TemporalReferenceImporter(file.getParentFile(), new String[] { file
                 .getName() }, dataset, dbServer, sqlDataTypes);
-        importer.run();
+        try {
+            importer.run();
+        } catch (ImporterException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         int rows = countRecords();
         assertEquals(34, rows);

@@ -11,9 +11,9 @@ import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
-import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
+import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -21,9 +21,7 @@ import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class TemporalReferenceImporter implements Importer {
@@ -66,11 +64,10 @@ public class TemporalReferenceImporter implements Importer {
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat, TableFormat tableFormat) throws Exception {
         Reader reader = null;
         try {
-            DataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
-            BufferedReader fileReader = new BufferedReader(new FileReader(file));
-            reader = new TemporalReferenceReader(fileReader, 0);
-
+            OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
+            reader = new DelimiterIdentifyingFileReader(file,new String[]{"#","/POINT DEFN/"}, fileFormat.minCols().length);
             loader.load(reader, dataset, table);
+
             loadDataset(file, table, unit.tableFormat(), reader, dataset);
         } finally {
             close(reader);
