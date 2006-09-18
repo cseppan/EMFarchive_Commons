@@ -45,7 +45,7 @@ public class GSCNVImporter implements Importer {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
 
-        FileFormatWithOptionalCols fileFormat = new GSCNVFileFormat(sqlDataTypes);
+        FileFormatWithOptionalCols fileFormat = new GSCNVFileFormat(sqlDataTypes,factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
