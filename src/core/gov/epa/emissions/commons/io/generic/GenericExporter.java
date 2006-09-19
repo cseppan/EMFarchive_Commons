@@ -117,10 +117,15 @@ public class GenericExporter implements Exporter {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
 
-        while (runner.execute()) {
-            ResultSet resultSet = runner.getResultSet();
-            writeBatchOfData(writer, resultSet, comments);
-            resultSet.close();
+        try {
+            while (runner.execute()) {
+                ResultSet resultSet = runner.getResultSet();
+                writeBatchOfData(writer, resultSet, comments);
+                resultSet.close();
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error in executing export query. Check the sort order in the dataset type.\n"
+                    + e.getMessage());
         }
 
         runner.close();
@@ -194,9 +199,9 @@ public class GenericExporter implements Exporter {
     }
 
     final protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
-        //return column.format(data).trim();
+        // return column.format(data).trim();
         String val = data.getString(column.name());
-        return  val == null ? "" : val;
+        return val == null ? "" : val;
     }
 
     final protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
