@@ -18,6 +18,9 @@ public class InternalSource implements Serializable {
     private long sourceSize;
 
     public String getColsList() {
+        if (cols == null)
+            return "";
+
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < cols.length; i++) {
             buf.append(cols[i]);
