@@ -60,7 +60,6 @@ public class GSCNVImporter implements Importer {
             doImport(file, dataset, table, (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
                     .tableFormat());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
 
