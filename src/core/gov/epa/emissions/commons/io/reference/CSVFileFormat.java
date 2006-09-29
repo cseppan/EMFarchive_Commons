@@ -12,9 +12,8 @@ import java.util.List;
 public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
 
     private Column[] cols;
-    
-    private SqlDataTypes types;
 
+    private SqlDataTypes types;
 
     public CSVFileFormat(SqlDataTypes types, String[] colNames) {
         this.types = types;
@@ -23,11 +22,16 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
 
     private Column[] createCols(String[] colNames) {
         List cols = new ArrayList();
-        for(int i=0; i<colNames.length; i++){
-            Column col = new Column(colNames[i],types.stringType(255),new StringFormatter(255));
+        for (int i = 0; i < colNames.length; i++) {
+            String name = replaceSpecialChars(colNames[i]);
+            Column col = new Column(name, types.stringType(255), new StringFormatter(255));
             cols.add(col);
         }
-        return (Column[]) cols.toArray(new Column[]{});
+        return (Column[]) cols.toArray(new Column[] {});
+    }
+
+    private String replaceSpecialChars(String colName) {
+        return colName.replace(' ', '_');
     }
 
     public String identify() {

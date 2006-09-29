@@ -55,8 +55,10 @@ public class ReferenceCSVFileImporter implements Importer {
         try {
             doImport(tableModifier);
         } catch (Exception e) {
+            e.printStackTrace();
             dropTable(tableName);
-            throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + e.getMessage());
+            throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + "Line No-"
+                    + reader.lineNumber() + ", line-" + reader.line());
         } finally {
             close(reader, tableModifier);
         }
