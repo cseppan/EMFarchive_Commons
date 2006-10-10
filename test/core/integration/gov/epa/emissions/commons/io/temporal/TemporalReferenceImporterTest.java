@@ -8,7 +8,6 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
-import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 
 import java.io.BufferedReader;
@@ -35,8 +34,8 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
 
-        optimizedBatchSize  = new Integer(10000);
-        
+        optimizedBatchSize = new Integer(10000);
+
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -50,7 +49,7 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
 
         dbUpdate.deleteAll(datasource.getName(), "versions");
     }
-    
+
     public void testShouldImportLargeFileWithInlineComments() throws Exception {
         File file = new File("test/data/temporal-crossreference", "amptref.m3.us+can.txt");
         TemporalReferenceImporter importer = new TemporalReferenceImporter(file.getParentFile(), new String[] { file
@@ -59,27 +58,23 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
 
         int rows = countRecords();
         assertEquals(20944, rows);
-        
+
     }
 
     public void testShouldImportReferenceFile() throws Exception {
         File file = new File("test/data/temporal-crossreference", "areatref.txt");
         TemporalReferenceImporter importer = new TemporalReferenceImporter(file.getParentFile(), new String[] { file
                 .getName() }, dataset, dbServer, sqlDataTypes);
-        try {
-            importer.run();
-        } catch (ImporterException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        importer.run();
 
         int rows = countRecords();
         assertEquals(34, rows);
 
-        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
+        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, dbServer, sqlDataTypes,
+                optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedCrossRefExported", ".txt");
         exporter.export(exportfile);
-        
+
         List data = readData(exportfile);
         String data1 = "0000000000;262;7;24;;;;;;;;";
         String data5 = "10100202;262;8;33;;;;;;;;";
@@ -94,7 +89,7 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
-    
+
     private List readData(File file) throws IOException {
         List data = new ArrayList();
 

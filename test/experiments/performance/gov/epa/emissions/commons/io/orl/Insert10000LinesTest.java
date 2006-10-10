@@ -13,13 +13,11 @@ public class Insert10000LinesTest extends ImportPerformanceTestCase {
         for (int i = 0; i < 3; i++) {
             try {
                 long before = time();
-                System.out.println("\tstart-"+usedMemory());
+                System.out.println("\tstart-" + usedMemory());
                 super.doImport(importFile, "nonroad_10000Insert");
-                System.out.println("\tend-"+usedMemory());
+                System.out.println("\tend-" + usedMemory());
                 System.out.println("10000 inserts completed in seconds " + (time() - before));
                 assertEquals(10000, countRecords());
-            } catch (Exception e) {
-                e.printStackTrace();
             } finally {
                 dropTable(dataset.getName(), dbServer.getEmissionsDatasource());
             }
