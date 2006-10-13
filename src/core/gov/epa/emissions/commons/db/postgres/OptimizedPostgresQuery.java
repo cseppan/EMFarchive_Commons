@@ -30,12 +30,16 @@ public class OptimizedPostgresQuery implements OptimizedQuery {
     }
 
     public boolean execute() throws SQLException {
-        String currentQuery = query + " LIMIT " + rows + " OFFSET " + count;
+        try {
+            String currentQuery = query + " LIMIT " + rows + " OFFSET " + count;
 
-        resultSet = statement.executeQuery(currentQuery);
+            resultSet = statement.executeQuery(currentQuery);
 
-        count += rows;
-        return resultSet.isBeforeFirst();
+            count += rows;
+            return resultSet.isBeforeFirst();
+        } catch (SQLException e) {
+            throw new SQLException("Error in executing the query -" + query+"; "+e.getMessage());
+        }
     }
 
     public ResultSet getResultSet() {
