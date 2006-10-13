@@ -1,65 +1,51 @@
 package gov.epa.emissions.commons;
 
-import java.util.Date;
-
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
+import gov.epa.emissions.commons.util.AnalyzePerformance;
 
 public abstract class PerformanceTestCase extends PersistenceTestCase {
 
-    private long startMemory;
-
-    private long startTime;
+    private AnalyzePerformance analyzePerformance;
 
     public PerformanceTestCase(String name) {
         super(name);
+        this.analyzePerformance = new AnalyzePerformance();
     }
 
     protected void doTearDown() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     protected void dumpMemory() {
-        System.out.println(usedMemory() + " MB");
+        analyzePerformance.dumpMemory();
     }
 
     protected long usedMemory() {
-        return (totalMemory() - freeMemory());
+        return analyzePerformance.usedMemory();
     }
 
     protected long maxMemory() {
-        return (Runtime.getRuntime().maxMemory() / megabyte());
+        return analyzePerformance.maxMemory();
     }
 
     protected long freeMemory() {
-        return Runtime.getRuntime().freeMemory() / megabyte();
+        return analyzePerformance.freeMemory();
     }
-    
-
-    private int megabyte() {
-        return (1024 * 1024);
-    }
-    
 
     protected long totalMemory() {
-        return Runtime.getRuntime().totalMemory() / megabyte();
+        return analyzePerformance.totalMemory();
     }
 
     protected long time() {
-        return new Date().getTime() / 1000;
+        return analyzePerformance.time();
     }
-    
 
     protected void startTracking() {
-        startMemory = usedMemory();
-        startTime = time();
+        analyzePerformance.startTracking();
     }
-    
 
     protected void dumpStats() {
-        long current = usedMemory();
-        System.out.println("Time: " + (time() - startTime) + " secs using " + (current - startMemory) + " MB memory "
-                + "(current:" + current + ", start: " + startMemory + ")");
+        analyzePerformance.dumpStats();
     }
 
 }
