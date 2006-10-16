@@ -51,7 +51,7 @@ public class AnalyzePerformance {
     public void dumpStats() {
         long current = usedMemory();
         System.out.println("Current Time: "+dateFormatter.format(new Date()));
-        System.out.println("Time Tookc: " + (time() - startTime) + " secs using " + (current - startMemory) + " MB memory "
+        System.out.println("Time Took: " + (time() - startTime) + " secs using " + (current - startMemory) + " MB memory "
                 + "(current:" + current + ", start: " + startMemory + ")");
     }
 
