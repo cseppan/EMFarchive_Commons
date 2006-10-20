@@ -1,6 +1,8 @@
 package gov.epa.emissions.commons.data;
 
-public class QAStepTemplate {
+import java.io.Serializable;
+
+public class QAStepTemplate implements Serializable{
 
     private long listIndex;
 
