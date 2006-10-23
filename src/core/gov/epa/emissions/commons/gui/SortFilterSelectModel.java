@@ -30,6 +30,14 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         setColumnHeaders(getDelegateColumnNames());
     }
 
+    public Class getColumnClass(int col) {
+        if (col == 0)
+            return super.getColumnClass(col);
+
+        return delegate.getColumnClass(col - 1);
+
+    }
+
     private void resetSelections() {
         this.selects = new Boolean[getRowCount()];
         for (int i = 0; i < getRowCount(); i++) {
