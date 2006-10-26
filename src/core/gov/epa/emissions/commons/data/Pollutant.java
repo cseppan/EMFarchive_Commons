@@ -20,7 +20,7 @@ public class Pollutant implements Serializable, Lockable {
 
     public Pollutant(String name) {
         this();
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 
     public String getDescription() {
@@ -44,7 +44,7 @@ public class Pollutant implements Serializable, Lockable {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 
     public Date getLockDate() {
