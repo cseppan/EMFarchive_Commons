@@ -67,8 +67,16 @@ public class TableModifier {
             if ((data[i] == null || (data[i].trim().length() == 0)) && (!isTypeString(cols[i])))
                 data[i] = "DEFAULT";
             if (isTypeString(cols[i])) {
+                if (cols[i].name().equalsIgnoreCase("POLL")) {
+                    data[i] = data[i].toUpperCase();
+                    if (data[i].equals("PM10-PRI"))
+                        data[i] = "PM10";
+                    else if (data[i].equals("PM2_5-PRI"))
+                        data[i] = "PM2_5";
+                }
                 data[i] = escapeString(data[i]);
             }
+            
 
             insert.append(data[i]);
 
