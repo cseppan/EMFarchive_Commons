@@ -75,8 +75,9 @@ public class TableModifier {
                         data[i] = "PM2_5";
                 }
                 data[i] = escapeString(data[i]);
+            } else if (isTypeTimeStamp(cols[i])) {
+                data[i] = escapeString(data[i]) + "::" + cols[i].sqlType();
             }
-            
 
             insert.append(data[i]);
 
@@ -88,8 +89,13 @@ public class TableModifier {
         return insert;
     }
 
+    private boolean isTypeTimeStamp(DbColumn column) {
+        String sqlType = column.sqlType().toUpperCase();
+        return sqlType.startsWith("TIMESTAMP");
+    }
+
     private boolean isTypeString(DbColumn column) {
-        String sqlType = column.sqlType();
+        String sqlType = column.sqlType().toUpperCase();
         return sqlType.startsWith("VARCHAR") || sqlType.equalsIgnoreCase("TEXT");
     }
 

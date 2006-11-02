@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -79,7 +80,7 @@ public class LineExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/orl/nc");
         LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"small-point.txt"));
         importer2.run();
 
         LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
@@ -100,6 +101,10 @@ public class LineExporterTest extends PersistenceTestCase {
         assertEquals(expectedPattern2, records.get(6));
         assertEquals(expectedPattern3, records.get(15));
         assertEquals(expectedPattern4, records.get(21));
+    }
+
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder,fileName).lastModified());
     }
 
     private Version version() {

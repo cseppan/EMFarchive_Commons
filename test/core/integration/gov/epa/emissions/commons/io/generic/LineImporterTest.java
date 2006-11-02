@@ -14,6 +14,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 import org.dbunit.dataset.ITable;
@@ -60,12 +61,16 @@ public class LineImporterTest extends HibernateTestCase {
         File folder = new File("test/data/orl/nc");
         LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"small-point.txt"));
         importer2.run();
 
         int rows = countRecords();
         assertEquals(22, rows);
         assertVersionInfo(dataset.getName(), rows);
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder,fileName).lastModified());
     }
 
     private int countRecords() {

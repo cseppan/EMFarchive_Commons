@@ -14,6 +14,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
@@ -65,7 +66,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/spatial");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, 
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"abmgpro.txt"));
         importerv.run();
 
         SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, dbServer, sqlDataTypes,
@@ -80,5 +81,9 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

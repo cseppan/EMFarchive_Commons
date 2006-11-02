@@ -12,6 +12,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
@@ -55,8 +56,12 @@ public class CountryStateCountyDataImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder, new String[]{"costcy.txt"},
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"costcy.txt"));
         importerv.run();
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
     
 }

@@ -23,12 +23,42 @@ public class IDADataLoader implements DataLoader {
 
     private TableFormat tableFormat;
 
+    private String countryAbbr;
+
     // TODO: pull out the common code between FixedColumnDataLoader and
     // IDADataLoader
-    public IDADataLoader(Datasource emissionDatasource, Datasource referenceDatasource, TableFormat tableFormat) {
+    public IDADataLoader(Datasource emissionDatasource, Datasource referenceDatasource, TableFormat tableFormat,
+            String country) throws ImporterException {
         this.emissionDatasource = emissionDatasource;
         this.tableFormat = tableFormat;
         this.referenceDatasource = referenceDatasource;
+        this.countryAbbr = countryAbbr(country);
+    }
+
+    private String countryAbbr(String country) throws ImporterException {
+        if(country.toUpperCase().equals("US"))//for US, IDA file uses the abbr
+            return "US";
+        
+        String query = "SELECT country_abbr FROM reference.countries WHERE country_name='" + country + "'";
+        ResultSet rs = null;
+        try {
+            rs = referenceDatasource.query().executeQuery(query);
+            rs.next();
+            return rs.getString(1);
+        } catch (SQLException e) {
+            throw new ImporterException("Could not get the abbr. query-" + query);
+        } finally {
+            closeResultSet(rs);
+        }
+    }
+
+    private void closeResultSet(ResultSet rs) throws ImporterException {
+        if (rs != null)
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                throw new ImporterException("Could not close the result set");
+            }
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -129,14 +159,16 @@ public class IDADataLoader implements DataLoader {
 
     private String stateAbbr(Datasource referenceDatasource, String fips) throws SQLException {
         String dsName = referenceDatasource.getName();
-        String query = "SELECT fips.state_abbr FROM " + dsName
-                + ".fips WHERE fips.country_code='US' AND fips.state_county_fips='" + fips + "'";
+        String query = "SELECT fips.state_abbr FROM " + dsName + ".fips WHERE fips.country_code='" + countryAbbr
+                + "' AND fips.state_county_fips='" + fips + "'";
         ResultSet rs = referenceDatasource.query().executeQuery(query);
         try {
             rs.next();
             return rs.getString(1);
         } catch (SQLException e) {
             throw new SQLException("No State abbr found:\nQuery-" + query + "\n" + e.getMessage());
+        } finally {
+            rs.close();
         }
     }
 

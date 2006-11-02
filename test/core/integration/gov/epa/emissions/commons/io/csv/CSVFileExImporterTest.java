@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CSVFileExImporterTest extends PersistenceTestCase {
@@ -77,7 +78,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/reference");
         Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder, "pollutants.txt"));
         importerv.run();
 
         int rows = countRecords();
@@ -92,6 +93,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         assertEquals(data.get(1), "CO,CO");
         assertEquals(data.get(8), "VOC,VOC");
     }
+
+    
 
     public void testShouldExImportSimpleCommaDelimitedCSVFile() throws Exception {
         File folder = new File("test/data/csv");
@@ -140,7 +143,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/csv");
         Importer importer = new CSVImporter(folder, new String[] { "shapefile_catalog.csv" }, dataset, dbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"shapefile_catalog.csv" ));
         importerv.run();
 
         int rows = countRecords();
@@ -182,5 +185,9 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
     private boolean isComment(String line) {
         return line.startsWith("#");
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder,fileName).lastModified());
     }
 }

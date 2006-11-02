@@ -14,6 +14,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class PointStackReplacementsImporterExporterTest extends PersistenceTestCase {
@@ -68,7 +69,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         File folder = new File("test/data/other");
         PointStackReplacementsImporter importer = new PointStackReplacementsImporter(folder, new String[]{"pstk.m3.txt"},
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"pstk.m3.txt"));
         importerv.run();
 
         PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 
@@ -84,5 +85,9 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

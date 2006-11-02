@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -345,7 +346,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
                 .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer);
+        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer, lastModifiedDate(file.getParentFile(),fileName));
         importer.run();
     }
 
@@ -362,6 +363,10 @@ public class TemporalProfileTest extends PersistenceTestCase {
         version.setVersion(0);
         version.setDatasetId(datasetId);
         return version;
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder,fileName).lastModified());
     }
 
 }

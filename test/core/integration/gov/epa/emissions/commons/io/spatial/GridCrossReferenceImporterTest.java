@@ -13,6 +13,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class GridCrossReferenceImporterTest extends PersistenceTestCase {
@@ -57,7 +58,7 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/spatial");
         GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"amgref.txt"));
         importerv.run();
 
         assertEquals(22, countRecords());
@@ -67,5 +68,9 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

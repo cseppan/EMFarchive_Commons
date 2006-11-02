@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -54,7 +55,7 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         Importer importer = new GSCNVImporter(folder, new String[] { "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt" },
                 dataset, dbServer, sqlDataTypes);
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
         importerv.run();
 
         assertEquals(1231, countRecords(dbServer, "GSCNV"));
@@ -64,7 +65,7 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         Importer importer = new GSCNVImporter(folder, new String[] { "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt" },
                 dataset, dbServer, sqlDataTypes);
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
         importerv.run();
 
         assertEquals(1231, countRecords(dbServer, "GSCNV"));
@@ -103,6 +104,10 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
     
     private boolean isComment(String line) {
         return line.startsWith("#");
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 
 }

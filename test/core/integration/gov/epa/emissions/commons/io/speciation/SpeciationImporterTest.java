@@ -13,6 +13,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class SpeciationImporterTest extends PersistenceTestCase {
@@ -57,7 +58,7 @@ public class SpeciationImporterTest extends PersistenceTestCase {
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
                 new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gspro-speciation.txt"));
         importer2.run();
 
         assertEquals(88, countRecords());
@@ -67,5 +68,9 @@ public class SpeciationImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

@@ -64,7 +64,7 @@ public class PostgresSqlDataTypes implements SqlDataTypes {
     }
 
     public String timestamp() {
-        return "";
+        return "TIMESTAMP";
     }
     
     public String stringType() {

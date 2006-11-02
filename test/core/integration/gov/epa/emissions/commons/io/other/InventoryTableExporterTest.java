@@ -14,6 +14,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class InventoryTableExporterTest extends PersistenceTestCase {
@@ -67,7 +68,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"CAPandHAP_INVTABLE31aug2006.txt"}, 
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"CAPandHAP_INVTABLE31aug2006.txt"));
         importerv.run();
         
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
@@ -82,5 +83,9 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

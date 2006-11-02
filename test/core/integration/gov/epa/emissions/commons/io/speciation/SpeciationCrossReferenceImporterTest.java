@@ -13,6 +13,7 @@ import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Random;
 
 public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
@@ -57,7 +58,8 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
                         version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+                "gsref-point.txt"));
         importerv.run();
 
         assertEquals(153, countRecords());
@@ -71,7 +73,8 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
                 new String[] { "gsrefsample_withLongInlineComments.txt" }, dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+                "gsrefsample_withLongInlineComments.txt"));
         importerv.run();
 
         assertEquals(250, countRecords());
@@ -81,5 +84,9 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
+    }
+
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

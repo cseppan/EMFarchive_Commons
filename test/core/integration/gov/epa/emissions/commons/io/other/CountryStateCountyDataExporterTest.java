@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -83,7 +84,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder,
                 new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"costcy.txt"));
         importerv.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes,
@@ -157,5 +158,9 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
 
     private boolean isComment(String line) {
         return line.startsWith("#");
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder,fileName).lastModified());
     }
 }

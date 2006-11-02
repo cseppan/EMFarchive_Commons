@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -79,7 +80,7 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(folder, new String[]{"SRGDESC.txt"}, 
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"SRGDESC.txt"));
         importerv.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
@@ -116,5 +117,9 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
 
     private boolean isComment(String line) {
         return line.startsWith("#");
+    }
+    
+    private Date lastModifiedDate(File folder, String fileName) {
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

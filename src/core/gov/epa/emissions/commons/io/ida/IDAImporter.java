@@ -42,6 +42,8 @@ public class IDAImporter {
 
     private DataTable dataTable;
 
+    private String country;
+
     public IDAImporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes) {
         this.dataset = dataset;
         this.emissionDatasource = dbServer.getEmissionsDatasource();
@@ -87,7 +89,7 @@ public class IDAImporter {
         Reader idaReader = null;
         try {
             idaReader = new FixedWidthFileReader(unit.getInternalSource().getSource(), unit.fileFormat());
-            IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat());
+            IDADataLoader loader = new IDADataLoader(emissionDatasource, referenceDatasource, unit.tableFormat(),country);
             loader.load(idaReader, dataset, table);
             loadDataset(idaReader.comments(), dataset);
         } finally {
@@ -123,10 +125,8 @@ public class IDAImporter {
 
         if (!comments.have("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        // TODO:Support all countries, Currently only files from US is supported
-        String country = comments.content("COUNTRY");
-        if (!country.toLowerCase().equals("us"))
-            throw new ImporterException("Currently the IDA importer supports files for US not for '" + country + "'");
+        country = comments.content("COUNTRY");
+
         // FIXME: get the country object from the db
         // dataset.setCountry(new Country(country));
         // dataset.setRegion(new Region(country));
