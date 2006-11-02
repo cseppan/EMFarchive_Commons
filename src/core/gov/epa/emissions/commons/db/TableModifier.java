@@ -17,7 +17,7 @@ public class TableModifier {
     protected Statement statement;
 
     protected String tableName;
-    
+
     public TableModifier(Datasource datasource, String tableName) throws SQLException {
         this.connection = datasource.getConnection();
         this.schema = datasource.getName();
@@ -64,8 +64,6 @@ public class TableModifier {
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
         for (int i = 0; i < data.length; i++) {
-            if ((data[i] == null || (data[i].trim().length() == 0)) && (!isTypeString(cols[i])))
-                data[i] = "DEFAULT";
             if (isTypeString(cols[i])) {
                 if (cols[i].name().equalsIgnoreCase("POLL")) {
                     data[i] = data[i].toUpperCase();
@@ -75,12 +73,14 @@ public class TableModifier {
                         data[i] = "PM2_5";
                 }
                 data[i] = escapeString(data[i]);
-            } else if (isTypeTimeStamp(cols[i])) {
-                data[i] = escapeString(data[i]) + "::" + cols[i].sqlType();
+            } else {
+                if ((data[i] == null || (data[i].trim().length() == 0)))
+                    data[i] = "DEFAULT";
+                else if (isTypeTimeStamp(cols[i]))
+                    data[i] = escapeString(data[i]) + "::" + cols[i].sqlType();
             }
 
             insert.append(data[i]);
-
             if (i < (data.length - 1))
                 insert.append(',');
         }
