@@ -17,7 +17,7 @@ public class TableModifier {
     protected Statement statement;
 
     protected String tableName;
-
+    
     public TableModifier(Datasource datasource, String tableName) throws SQLException {
         this.connection = datasource.getConnection();
         this.schema = datasource.getName();
