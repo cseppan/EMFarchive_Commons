@@ -92,10 +92,6 @@ public class IDAActivityImporter implements Importer {
 
         if (!comments.have("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        // TODO:Support all countries, Currently only files from US is supported
-        String country = comments.content("COUNTRY");
-        if (!country.toLowerCase().equals("us"))
-            throw new ImporterException("Currently the IDA importer supports files for US not for '" + country + "'");
         // FIXME: get the country object from the db
         // dataset.setCountry(new Country(country));
         // dataset.setRegion(new Region(country));

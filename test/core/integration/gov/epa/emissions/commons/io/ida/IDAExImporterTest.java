@@ -279,7 +279,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
     }
     
     
-    public void FIXME_testShouldImportACanadaNonpointFile() throws Exception {
+    public void testShouldImportACanadaNonpointFile() throws Exception {
         File folder = new File("test/data/ida");
         String[] fileNames = { "arinv.ca96_v3_stat.ida" };
         IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
@@ -302,7 +302,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
     }
     
     
-    public void FIXME_testShouldImportAMexicoPointFile() throws Exception {
+    public void testShouldImportAMexicoPointFile() throws Exception {
         File folder = new File("test/data/ida");
         String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };
         IDAPointImporter importer = new IDAPointImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
@@ -310,40 +310,40 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(748, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
-    public void FIXME_testShouldImportAMexicoNonPointFile() throws Exception {
+    public void testShouldImportAMexicoNonPointFile() throws Exception {
         File folder = new File("test/data/ida");
-        String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };
+        String[] fileNames = { "IDA-nonpoint-MX-BorderStates-20051027.txt" };
         IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(9181, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
-    public void FIXME_testShouldImportAMexicoNonRoadFile() throws Exception {
+    public void testShouldImportAMexicoNonRoadFile() throws Exception {
         File folder = new File("test/data/ida");
-        String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };
+        String[] fileNames = { "IDA-MexicoBorderNonroad_20051220.txt" };
         IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(514, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
-    public void FIXME_testShouldImportAMexicoOnRoadFile() throws Exception {
+    public void testShouldImportAMexicoOnRoadFile() throws Exception {
         File folder = new File("test/data/ida");
-        String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };
-        IDAActivityImporter importer = new IDAActivityImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
+        String[] fileNames = { "IDA-onroad-MX-BorderStates-20051021.txt" };
+        IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
         importer.run();
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(1932, tableReader.count(datasource.getName(), dataset.getName()));
     }
     
     private Date lastModifiedDate(File folder, String fileName) {

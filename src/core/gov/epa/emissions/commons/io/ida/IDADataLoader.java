@@ -36,9 +36,9 @@ public class IDADataLoader implements DataLoader {
     }
 
     private String countryAbbr(String country) throws ImporterException {
-        if(country.toUpperCase().equals("US"))//for US, IDA file uses the abbr
+        if (country.toUpperCase().equals("US"))// for US, IDA file uses the abbr
             return "US";
-        
+
         String query = "SELECT country_abbr FROM reference.countries WHERE country_name='" + country + "'";
         ResultSet rs = null;
         try {
@@ -163,10 +163,9 @@ public class IDADataLoader implements DataLoader {
                 + "' AND fips.state_county_fips='" + fips + "'";
         ResultSet rs = referenceDatasource.query().executeQuery(query);
         try {
-            rs.next();
-            return rs.getString(1);
-        } catch (SQLException e) {
-            throw new SQLException("No State abbr found:\nQuery-" + query + "\n" + e.getMessage());
+            if (rs.next())
+                return rs.getString(1);
+            throw new SQLException("No State abbr found:\nQuery-" + query);
         } finally {
             rs.close();
         }
