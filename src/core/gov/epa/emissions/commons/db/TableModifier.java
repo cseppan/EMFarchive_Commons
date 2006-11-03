@@ -69,8 +69,13 @@ public class TableModifier {
                     data[i] = data[i].toUpperCase();
                     if (data[i].equals("PM10-PRI"))
                         data[i] = "PM10";
-                    else if (data[i].equals("PM2_5-PRI"))
+                    else if (data[i].equals("PM25-PRI"))
                         data[i] = "PM2_5";
+                }
+                else if (cols[i].name().equalsIgnoreCase("FIPS")) {
+                    // add a leading zero if it is missing
+                    if (data[i].trim().length() == 4)
+                        data[i] = "0"+data[i];
                 }
                 data[i] = escapeString(data[i]);
             } else {
