@@ -16,6 +16,8 @@ public interface TableDefinition {
     boolean tableExists(String tableName) throws Exception;
 
     TableMetadata getTableMetaData(String tableName) throws SQLException;
+    
+    int totalRows(String tableName) throws SQLException;
 
     /**
      * ALTER TABLE ADD INDEX indexName (indexColumnNames0, indexColumnNames1, ....)

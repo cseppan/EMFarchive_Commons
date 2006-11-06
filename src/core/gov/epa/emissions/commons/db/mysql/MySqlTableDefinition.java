@@ -96,4 +96,8 @@ public class MySqlTableDefinition implements TableDefinition {
         return null;
     }
 
+    public int totalRows(String tableName) throws SQLException {
+        return delegate.totalRows(qualified(tableName));
+    }
+
 }

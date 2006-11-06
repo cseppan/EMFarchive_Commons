@@ -116,6 +116,21 @@ public class TableDefinitionDelegateTest extends PersistenceTestCase {
         dropTables(names);
     }
 
+    public void testShoudReturnNoOfRowsInTheTable() throws Exception {
+        TableDefinitionDelegate definition = new TableDefinitionDelegate(datasource.getConnection());
+        String tableName = "test";
+        createTables(new String[] { tableName });
+        try{
+        for (int i = 0; i < 100; i++)
+            datasource.dataModifier().insertRow(tableName, new String[] { "" + i });
+
+        int totalRows = definition.totalRows(datasource.getName() + "." + tableName);
+        assertEquals(100, totalRows);
+        }finally{
+            dropTable(tableName,datasource);
+        }
+    }
+
     private void createTables(String[] names) throws SQLException {
         // create table with one column
 

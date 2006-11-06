@@ -81,4 +81,20 @@ public class TableDefinitionDelegate {
                 statement.close();
         }
     }
+
+    public int totalRows(String qualfiedTableName) throws SQLException {
+        String query = "SELECT COUNT(*) FROM " + qualfiedTableName;
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new SQLException("Could not execute query-" + query + "\n" + e.getMessage());
+        } finally {
+            if (statement != null)
+                statement.close();
+        }
+    }
 }

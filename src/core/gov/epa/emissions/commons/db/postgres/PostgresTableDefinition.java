@@ -85,4 +85,8 @@ public class PostgresTableDefinition implements TableDefinition {
        return delegate.getTableMetaData(qualified(tableName));
     }
 
+    public int totalRows(String tableName) throws SQLException {
+        return delegate.totalRows(qualified(tableName));
+    }
+
 }
