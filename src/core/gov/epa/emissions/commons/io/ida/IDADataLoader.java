@@ -120,7 +120,6 @@ public class IDADataLoader implements DataLoader {
         int stateIndex = 1;
         int fipsIndex = 2;
         List data = new ArrayList();
-        // FIXME: demo code
         if (tableFormat instanceof VersionedTableFormat) {
             addVersionData(data, dataset.getId(), 0);
             stateIndex = 4;

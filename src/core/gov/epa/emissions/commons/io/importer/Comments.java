@@ -27,10 +27,8 @@ public class Comments {
     }
 
     /**
-     * Have a comment starting with 'tag'.
-     * 
-     * @param tag
-     *            Do not specify '#'. Implicit.
+     * Have a comment starting with
+     *  'tag'. tag -Do not specify '#'. Implicit.
      */
     public boolean have(String tag) {
         return content(tag) != null;

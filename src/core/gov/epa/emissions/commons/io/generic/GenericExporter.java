@@ -26,15 +26,16 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class GenericExporter implements Exporter {
+
     private Dataset dataset;
 
     private Datasource datasource;
 
-    private String delimiter;
+    protected String delimiter;
 
     private DataFormatFactory dataFormatFactory;
 
-    private FileFormat fileFormat;
+    protected FileFormat fileFormat;
 
     private int batchSize;
 

@@ -2,30 +2,33 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
+import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.generic.GenericExporter;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;
 
-public class IDAPointExporter extends GenericExporter {
+public class IDAPointExporter implements Exporter {
 
-    private IDANonPointNonRoadExporter deligate;
-    
-    public IDAPointExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat, optimizedBatchSize);
-        this.deligate = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat, optimizedBatchSize);
+    private IDAExporter delegate;
+
+    public IDAPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) throws ImporterException {
+        this.delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
     }
 
-    public IDAPointExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
-        this.deligate = new IDANonPointNonRoadExporter(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
+    public IDAPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) throws ImporterException {
+        this.delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), dataFormatFactory, optimizedBatchSize);
     }
     
+    private IDAFileFormat fileFormat(SqlDataTypes sqlDataTypes) {
+        return new IDAPointFileFormat(sqlDataTypes);
+    }
+
     public void export(File file) throws ExporterException {
-        deligate.export(file);
+        delegate.export(file);
     }
 
 }

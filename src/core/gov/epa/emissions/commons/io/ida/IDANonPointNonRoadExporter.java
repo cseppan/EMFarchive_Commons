@@ -1,51 +1,36 @@
 package gov.epa.emissions.commons.io.ida;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.generic.GenericExporter;
+import gov.epa.emissions.commons.io.Exporter;
+import gov.epa.emissions.commons.io.ExporterException;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 
-public class IDANonPointNonRoadExporter extends GenericExporter {
+import java.io.File;
 
-    private FileFormat fileFormat;
-    
-    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat, optimizedBatchSize);
-        setup(fileFormat, "");
+public class IDANonPointNonRoadExporter implements Exporter {
+
+    private IDAExporter delegate;
+
+    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+            Integer optimizedBatchSize) throws ImporterException {
+        delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
     }
 
-    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
-        setup(fileFormat, "");
+    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) throws ImporterException {
+        delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), dataFormatFactory, optimizedBatchSize);
     }
-    
-    private void setup(FileFormat fileFormat, String delimiter) {
-        this.fileFormat = fileFormat;
-        setDelimiter(delimiter);
-    }
-    
-    protected String formatValue(String[] cols, int index, ResultSet data) throws SQLException {
-        int fileIndex = index;
-        if (isTableVersioned(cols))
-            fileIndex = index - 3;
 
-        Column column = fileFormat.cols()[fileIndex - 4];
-        return getFixedPositionValue(column, data);
+    private IDAFileFormat fileFormat(SqlDataTypes sqlDataTypes) {
+        return new IDANonPointNonRoadFileFormat(sqlDataTypes);
     }
-    
-    // Due to two more columns added to dataset during import
-    protected int startCol(String[] cols) {
-        int i = 4;
-        if (isTableVersioned(cols))
-            i = 7;
 
-        return i;
+    public void export(File file) throws ExporterException {
+        delegate.export(file);
+
     }
 
 }
