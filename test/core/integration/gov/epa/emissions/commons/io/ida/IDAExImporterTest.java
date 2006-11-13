@@ -210,7 +210,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
                 assertEquals(pollutant, readComments(exportfile).get(7));
                 assertEquals(data1, data.get(0));
                 assertEquals(data10, data.get(9));
-                
+
             } catch (IOException e) {
                 throw new ImporterException("Can't make assertion.");
             }
@@ -277,19 +277,15 @@ public class IDAExImporterTest extends PersistenceTestCase {
         assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
-    public void FIXME_testShouldImportAMexicoPointFile() throws Exception {
-        try {
-            File folder = new File("test/data/ida");
-            String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };
-            IDAPointImporter importer = new IDAPointImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
-            importer.run();
-            // assert
-            Datasource datasource = dbServer.getEmissionsDatasource();
-            TableReader tableReader = tableReader(datasource);
-            assertEquals(748, tableReader.count(datasource.getName(), dataset.getName()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }        
+    public void testShouldImportAMexicoPointFile() throws Exception {
+        File folder = new File("test/data/ida");
+        String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };
+        IDAPointImporter importer = new IDAPointImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
+        importer.run();
+        // assert
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        TableReader tableReader = tableReader(datasource);
+        assertEquals(748, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
     public void testShouldImportAMexicoNonPointFile() throws Exception {
