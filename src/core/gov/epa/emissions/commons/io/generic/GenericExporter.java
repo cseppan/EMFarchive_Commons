@@ -94,12 +94,18 @@ public class GenericExporter implements Exporter {
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {
         String header = dataset.getDescription();
+        String cr = System.getProperty("line.separator");
 
         if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
+            String lasttoken = "";
             while (st.hasMoreTokens()) {
-                writer.print("#" + st.nextToken());
+                lasttoken = st.nextToken();
+                writer.print("#" + lasttoken);
             }
+
+            if (lasttoken.indexOf(cr) < 0)
+                writer.print(cr);
         }
     }
 

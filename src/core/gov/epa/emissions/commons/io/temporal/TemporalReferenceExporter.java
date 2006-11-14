@@ -25,6 +25,7 @@ public class TemporalReferenceExporter extends GenericExporter {
     protected void writeHeaders(PrintWriter writer, Dataset dataset) {
         String header = dataset.getDescription();
         String lasttoken = null;
+        String cr = System.getProperty("line.separator");
 
         if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
@@ -33,8 +34,13 @@ public class TemporalReferenceExporter extends GenericExporter {
                 int index = lasttoken.indexOf("/POINT DEFN/");
                 if (index < 0)
                     writer.print("#" + lasttoken);
-                else
-                    writer.print(lasttoken);
+                else {
+                    int crIndex = lasttoken.indexOf(cr);
+                    if (crIndex >= 0)
+                        lasttoken = lasttoken.substring(0, crIndex);
+
+                    writer.print(lasttoken + cr);
+                }
             }
         }
     }
