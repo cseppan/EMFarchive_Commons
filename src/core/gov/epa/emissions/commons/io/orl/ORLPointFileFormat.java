@@ -88,7 +88,7 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
         // extended orl columns
         cols.add(new Column("NEI_UNIQUE_ID", types.stringType(20), new StringFormatter(20)));
         cols.add(new Column("ORIS_FACILITY_CODE", types.stringType(6), new StringFormatter(6)));
-        cols.add(new Column("ORIS_BOILER_ID", types.stringType(5), new StringFormatter(5)));
+        cols.add(new Column("ORIS_BOILER_ID", types.stringType(6), new StringFormatter(6)));
         cols.add(new Column("IPM_YN", types.charType(), new CharFormatter()));
         cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
         cols.add(new Column("STACK_DEFAULT_FLAG", types.stringType(10), new StringFormatter(10)));
