@@ -379,9 +379,13 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldImportExtendedOnRoad() throws Exception {
         File folder = new File("test/data/orl/extended");
+        try{
         Importer importer = new ORLOnRoadImporter(folder, new String[] { "orl-extended-onroad.txt" }, dataset,
                 dbServer, sqlDataTypes);
         importer.run();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         int rows = countRecords();
         assertEquals(12, rows);
     }
