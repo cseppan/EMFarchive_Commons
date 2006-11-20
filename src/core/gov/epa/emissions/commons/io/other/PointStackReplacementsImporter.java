@@ -9,11 +9,10 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
-import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
-import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
+import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Importer;
@@ -65,13 +64,12 @@ public class PointStackReplacementsImporter implements Importer {
         }
     }
 
-    // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         Reader reader = null;
         try {
             FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-            reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
-
+            reader = new DelimiterIdentifyingFileReader(file, ((PointStackReplacementsFileFormat) formatUnit.fileFormat())
+                    .cols().length);
             loader.load(reader, dataset, table);
             loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
         } finally {

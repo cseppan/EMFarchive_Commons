@@ -64,7 +64,6 @@ public class SurrogatesDescriptionImporter implements Importer {
         }
     }
 
-    // FIXME: have to use a delimited identifying reader
     private void doImport(File file, Dataset dataset, String table, TableFormat tableFormat) throws Exception {
         Reader reader = null;
         try {
