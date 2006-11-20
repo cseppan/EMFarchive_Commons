@@ -157,6 +157,48 @@ public class ORLExportersTest extends PersistenceTestCase {
         assertEquals(expectedPattern, actual);
     }
 
+    public void testShouldExportFiresInv() throws Exception {
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLFiresInvImporter(folder, new String[] { "ptinv_fire_2002nei_26jul2006.txt" }, dataset, dbServer,
+                sqlDataTypes);
+        importer.run();
+        
+        Exporter exporter = new ORLFiresInvExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        File file = doExport(exporter);
+        
+        // assert headers
+        assertComments(file);
+        
+        // assert records
+        List records = readData(file);
+        assertEquals(180, records.size());
+        
+        String expectedPattern = "37001,35273,,28100010F0,0,35.91,-79.31,P,936,8000";
+        String actual = (String) records.get(0);
+        assertEquals(expectedPattern, actual);
+    }
+
+    public void testShouldExportDaySpecFiresInv() throws Exception {
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new ORLDaySpecFiresImporter(folder, new String[] { "ptday_firedata_hap2002nei_26jul2006.txt" }, dataset, dbServer,
+                sqlDataTypes);
+        importer.run();
+        
+        Exporter exporter = new ORLDaySpecFiresExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        File file = doExport(exporter);
+        
+        // assert headers
+        assertComments(file);
+        
+        // assert records
+        List records = readData(file);
+        assertEquals(783, records.size());
+        
+        String expectedPattern = "37001,35273,,28100010F0,106990,02/04/02,0.000172125,0,23";
+        String actual = (String) records.get(0);
+        assertEquals(expectedPattern, actual);
+    }
+
     private void assertComments(File file) throws IOException {
         List comments = readComments(file);
         assertEquals(headers(dataset.getDescription()).size(), comments.size());
