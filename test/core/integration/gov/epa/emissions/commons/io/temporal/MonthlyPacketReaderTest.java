@@ -30,7 +30,8 @@ public class MonthlyPacketReaderTest extends MockObjectTestCase {
         FileFormat cols = new MonthlyFileFormat((SqlDataTypes) typeMapper.proxy());
         
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), cols);
+        int lineNumber=0;
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), cols, lineNumber);
     }
 
     protected void tearDown() throws Exception {

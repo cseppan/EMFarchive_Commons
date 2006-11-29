@@ -1,3 +1,9 @@
+# file imported from fig was called amptpro.m3.default.us+can+IPM.05sep2006
+
+#Last change was to add weekly profiles for onroad mobile sources
+
+# Expect to revisit and potentially change these, as well as add diurnal based on info provided at Oct 23 2006 CRC MSAT workshop
+# Replaced 2001 CEM-based diurnal profiles with 2002 CEM-based profiles - Nov. 29, 2006
 /MONTHLY/                                                                                                  
     1   0   0   0   0   0 110 110 110 223 223 223   0  999
     2   0   0   0   0   0 290 290 290  43  43  43   0  999
@@ -47,6 +53,14 @@
  2009  93  53  39  34  51 166 390 613 557 514 544 593 660 660 674 734 792 813 584 415 329 280 238 173 10000     #NC Default for road type 270
  2010  68  42  34  23  30  84 231 625 550 516 564 661 757 735 736 821 837 865 548 384 324 255 181 129 10000     #NC Default for road type 290
 /END/
+
+# file imported from fig was called amptpro.m3.default.us+can+IPM.05sep2006
+
+#Last change was to add weekly profiles for onroad mobile sources
+
+# Expect to revisit and potentially change these, as well as add diurnal based on info provided at Oct 23 2006 CRC MSAT workshop
+# Replaced 2001 CEM-based diurnal profiles with 2002 CEM-based profiles - Nov. 29, 2006
+
 /DIURNAL WEEKEND/
     1   0   0   0   0   0   0   0   0 125 125 125 125 125 125 125 125   0   0   0   0   0   0   0   0 1000 
     2   0   0   0   0   0   0   0   0 125 125 125 125 125 125 125 125   0   0   0   0   0   0   0   0 1000 
@@ -69,3 +83,9 @@
  2009 189 117  99  67  53  87 195 274 331 467 577 635 727 749 769 777 758 720 646 497 405 346 291 222 10000     #NC Default for road type 270
  2010 179 118 109  58  40  59 114 183 277 510 585 619 825 772 835 845 799 712 641 487 406 347 273 208 10000     #NC Default for road type 290
 /END/
+# file imported from fig was called amptpro.m3.default.us+can+IPM.05sep2006
+
+#Last change was to add weekly profiles for onroad mobile sources
+
+# Expect to revisit and potentially change these, as well as add diurnal based on info provided at Oct 23 2006 CRC MSAT workshop
+# Replaced 2001 CEM-based diurnal profiles with 2002 CEM-based profiles - Nov. 29, 2006

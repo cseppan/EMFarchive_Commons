@@ -46,7 +46,8 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
+        int lineNumber=0;
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat, lineNumber);
     }
 
     protected void doTearDown() throws Exception {

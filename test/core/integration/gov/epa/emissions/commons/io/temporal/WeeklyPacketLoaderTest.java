@@ -50,7 +50,8 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
+        int lineNumber = 0;
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat, lineNumber);
 
         try {
             DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
@@ -74,7 +75,8 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
     public void testShouldDropDataOnEncounteringBadData() throws Exception {
         File file = new File("test/data/temporal-profiles/BAD-weekly.txt");
         BufferedReader fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), tableFormat);
+        int lineNumber=0;
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), tableFormat, lineNumber);
 
         DataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
 

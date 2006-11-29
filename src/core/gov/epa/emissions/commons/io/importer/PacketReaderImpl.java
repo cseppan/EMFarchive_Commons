@@ -19,11 +19,17 @@ public class PacketReaderImpl implements PacketReader {
 
     private Parser parser;
 
-    public PacketReaderImpl(BufferedReader reader, String headerLine, Parser parser) {
+    private int lineNumber;
+
+    private String line;
+
+    public PacketReaderImpl(BufferedReader reader, String headerLine, Parser parser, int lineNumber) {
         fileReader = reader;
         header = parseHeader(headerLine);
         this.parser = parser;
+        this.lineNumber = lineNumber;
         comments = new ArrayList();
+        line = null;
     }
 
     private String parseHeader(String header) {
@@ -42,6 +48,7 @@ public class PacketReaderImpl implements PacketReader {
 
     public Record read() throws IOException {
         for (String line = fileReader.readLine(); !isEnd(line); line = fileReader.readLine()) {
+            this.line = line;
             if (isData(line))
                 return parser.parse(line);
             if (isComment(line))
@@ -72,13 +79,11 @@ public class PacketReaderImpl implements PacketReader {
     }
 
     public int lineNumber() {
-        // TODO Auto-generated method stub
-        return 0;
+        return lineNumber;
     }
 
     public String line() {
-        // TODO Auto-generated method stub
-        return null;
+        return line;
     }
 
 }

@@ -43,7 +43,8 @@ public class MonthlyPacketLoaderTest extends PersistenceTestCase {
         createTable("Monthly", datasource, tableFormat);
 
         fileReader = new BufferedReader(new FileReader(file));
-        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat);
+        int lineNumber=0;
+        reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat, lineNumber);
     }
 
     protected void doTearDown() throws Exception {

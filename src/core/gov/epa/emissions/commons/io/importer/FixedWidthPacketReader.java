@@ -11,8 +11,8 @@ public class FixedWidthPacketReader implements PacketReader {
 
     private PacketReaderImpl delegate;
 
-    public FixedWidthPacketReader(BufferedReader reader, String headerLine, FileFormat fileFormat) {
-        delegate = new PacketReaderImpl(reader, headerLine, new FixedWidthParser(fileFormat));
+    public FixedWidthPacketReader(BufferedReader reader, String headerLine, FileFormat fileFormat, int lineNumber) {
+        delegate = new PacketReaderImpl(reader, headerLine, new FixedWidthParser(fileFormat), lineNumber);
     }
 
     public Record read() throws IOException {
@@ -32,8 +32,7 @@ public class FixedWidthPacketReader implements PacketReader {
     }
 
     public int lineNumber() {
-        // TODO Auto-generated method stub
-        return 0;
+        return delegate.lineNumber();
     }
 
     public String line() {

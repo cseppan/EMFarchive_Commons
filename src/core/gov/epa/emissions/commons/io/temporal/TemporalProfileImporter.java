@@ -37,6 +37,8 @@ public class TemporalProfileImporter implements Importer {
     private File file;
 
     private DataFormatFactory dataFormatFactory;
+    
+    private int lineNumber;
 
     public TemporalProfileImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
@@ -54,6 +56,7 @@ public class TemporalProfileImporter implements Importer {
 
         fileFormatFactory = new TemporalFileFormatFactory(sqlDataTypes);
         dataFormatFactory = factory;
+        this.lineNumber=0;
     }
 
     public void run() throws ImporterException {
@@ -63,6 +66,8 @@ public class TemporalProfileImporter implements Importer {
 
             while (!isEndOfFile(fileReader)) {
                 String header = readHeader(fileReader);
+                if (header == null)
+                    return;
                 FileFormat fileFormat = fileFormat(header);
                 DatasetTypeUnit unit = new DatasetTypeUnit(tableFormat(fileFormat), fileFormat);
                 doImport(fileReader, unit, header);
@@ -105,7 +110,7 @@ public class TemporalProfileImporter implements Importer {
 
     private void doImport(BufferedReader fileReader, Dataset dataset, DatasetTypeUnit unit, String header)
             throws Exception {
-        Reader reader = new FixedWidthPacketReader(fileReader, header, unit.fileFormat());
+        Reader reader = new FixedWidthPacketReader(fileReader, header, unit.fileFormat(), lineNumber);
         DataLoader loader = new FixedColumnsDataLoader(datasource, unit.tableFormat());
         // Note: header is the same as table name
         loader.load(reader, dataset, table(header));
@@ -129,9 +134,20 @@ public class TemporalProfileImporter implements Importer {
         return meta;
     }
 
-    private String readHeader(BufferedReader fileReader) throws IOException {
-        String line = fileReader.readLine();
-        return line.trim().replaceAll("/", "");
+    private String readHeader(BufferedReader fileReader) throws IOException, ImporterException {
+        String line = null;
+        while ((line = fileReader.readLine()) != null) {
+            this.lineNumber++;
+            line = line.trim();
+            if (line.startsWith("/") && line.endsWith("/")) {
+                return line.trim().replaceAll("/", "");
+            }
+        }
+
+        if (!isEndOfFile(fileReader))
+            throw new ImporterException("Expecting a temporal header tag");
+
+        return null;
     }
 
     private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset) {
