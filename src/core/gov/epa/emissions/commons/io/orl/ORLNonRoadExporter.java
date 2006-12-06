@@ -31,4 +31,8 @@ public class ORLNonRoadExporter implements Exporter {
         delegate.export(file);
     }
 
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
+
 }

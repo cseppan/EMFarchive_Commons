@@ -36,6 +36,8 @@ public class SMKReportExporter implements Exporter {
     private DataFormatFactory dataFormatFactory;
 
     private int batchSize;
+    
+    private long exportedLinesCount = 0;
 
     public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
         setup(dataset, dbServer, types, new NonVersionedDataFormatFactory(),optimizedBatchSize);
@@ -192,6 +194,7 @@ public class SMKReportExporter implements Exporter {
                 writer.print(delimiter);// delimiter
         }
         writer.println();
+        ++exportedLinesCount;
     }
 
     protected String getValue(String[] cols, int index, String value) {
@@ -261,6 +264,10 @@ public class SMKReportExporter implements Exporter {
 
     protected boolean isTableVersioned(String[] cols) {
         return cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions");
+    }
+
+    public long getExportedLinesCount() {
+        return this.exportedLinesCount;
     }
 
 }

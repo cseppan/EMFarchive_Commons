@@ -31,4 +31,8 @@ public class ORLNonPointExporter implements Exporter {
         delegate.export(file);
     }
 
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
+
 }

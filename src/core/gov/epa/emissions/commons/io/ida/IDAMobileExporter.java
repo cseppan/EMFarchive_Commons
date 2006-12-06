@@ -32,4 +32,8 @@ public class IDAMobileExporter implements Exporter {
         delegate.export(file);
     }
 
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
+
 }

@@ -31,4 +31,8 @@ public class IDAPointExporter implements Exporter {
         delegate.export(file);
     }
 
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
+
 }

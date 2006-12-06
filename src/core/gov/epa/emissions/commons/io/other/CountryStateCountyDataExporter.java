@@ -41,6 +41,8 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     private int batchSize;
 
+    private long exportedLinesCount;
+    
     public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
         setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(),optimizedBatchSize);
     }
@@ -196,6 +198,7 @@ public class CountryStateCountyDataExporter implements Exporter {
                 writer.print(delimiter);// delimiter
         }
         writer.println();
+        ++exportedLinesCount;
     }
 
     protected String getValue(String[] cols, int index, String value, ResultSet data) throws SQLException {
@@ -269,6 +272,10 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     public void setDelimiter(String del) {
         this.delimiter = del;
+    }
+    
+    public long getExportedLinesCount() {
+        return this.exportedLinesCount;
     }
 
 }

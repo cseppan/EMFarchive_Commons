@@ -30,5 +30,9 @@ public class ORLPointExporter implements Exporter {
     public void export(File file) throws ExporterException {
         delegate.export(file);
     }
+    
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
 
 }

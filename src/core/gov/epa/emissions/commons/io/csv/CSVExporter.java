@@ -34,4 +34,8 @@ public class CSVExporter implements Exporter {
         delegate.export(file);
     }
 
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
+
 }

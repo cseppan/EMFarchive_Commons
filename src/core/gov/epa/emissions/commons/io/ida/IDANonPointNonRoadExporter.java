@@ -33,4 +33,8 @@ public class IDANonPointNonRoadExporter implements Exporter {
 
     }
 
+    public long getExportedLinesCount() {
+        return delegate.getExportedLinesCount();
+    }
+
 }

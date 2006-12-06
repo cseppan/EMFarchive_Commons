@@ -38,6 +38,8 @@ public class GenericExporter implements Exporter {
     protected FileFormat fileFormat;
 
     private int batchSize;
+    
+    private long exportedLinesCount = 0;
 
     public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
         this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize);
@@ -184,6 +186,7 @@ public class GenericExporter implements Exporter {
                 writer.print(delimiter);// delimiter
         }
         writer.println();
+        ++exportedLinesCount;
     }
 
     final protected String getValue(String[] cols, int index, String value, ResultSet data) throws SQLException {
@@ -248,6 +251,10 @@ public class GenericExporter implements Exporter {
 
     final protected String getDelimiter() {
         return delimiter;
+    }
+    
+    public long getExportedLinesCount() {
+        return this.exportedLinesCount;
     }
 
 }
