@@ -78,7 +78,7 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
         List data = readData(exportfile);
         String data1 = "0000000000;262;7;24;;;;;;;;";
         String data5 = "10100202;262;8;33;;;;;;;;";
-        String data34 = "2201080000;262;7;24;DNL__ETHYLBENZN;;;;;;;";
+        String data34 = "2201080000;262;7;24;\"DNL__ETHYLBENZN\";;;;;;;";
         assertEquals(data1, data.get(1));
         assertEquals(data5, data.get(5));
         assertEquals(data34, data.get(34));

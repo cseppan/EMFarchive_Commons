@@ -64,10 +64,10 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         List data = readData(exportfile);
         assertEquals(66, data.size());
         assertEquals(
-                "USA;100;\"Population\";/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt",
+                "USA;100;\"Population\";\"/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt\"",
                 (String) data.get(0));
         assertEquals(
-                "USA;580;\"Food, Drug, Chemical Industrial (IND3)\";/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt",
+                "USA;580;\"Food, Drug, Chemical Industrial (IND3)\";\"/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt\"",
                 (String) data.get(65));
         exportfile.delete();
     }
@@ -91,10 +91,10 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         List data = readData(exportfile);
         assertEquals(66, data.size());
         assertEquals(
-                "USA;100;\"Population\";/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt",
+                "USA;100;\"Population\";\"/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_100_NOFILL.txt\"",
                 (String) data.get(0));
         assertEquals(
-                "USA;580;\"Food, Drug, Chemical Industrial (IND3)\";/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt",
+                "USA;580;\"Food, Drug, Chemical Industrial (IND3)\";\"/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt\"",
                 (String) data.get(65));
         exportfile.delete();
     }

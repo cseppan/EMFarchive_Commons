@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LineExporter extends GenericExporter {
+    private long exportedLinesCount = 0;
+    
     public LineExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
         super(dataset, dbServer, new LineFileFormat(sqlDataTypes), optimizedBatchSize);
     }
@@ -25,6 +27,11 @@ public class LineExporter extends GenericExporter {
                 writer.write(getValue(cols, i, value, data));
         }
         writer.println();
+        ++exportedLinesCount;
+    }
+    
+    public long getExportedLinesCount() {
+        return this.exportedLinesCount;
     }
 
 }

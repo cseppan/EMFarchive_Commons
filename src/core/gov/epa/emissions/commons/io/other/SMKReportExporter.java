@@ -205,8 +205,11 @@ public class SMKReportExporter implements Exporter {
     }
 
     protected String formatValue(String[] cols, int index, String value) {
-        if (cols[index - 1].equalsIgnoreCase("sccdesc") || containsDelimiter(value))
+        if (value.length() > 10
+                || containsDelimiter(value)
+                || cols[index - 1].equalsIgnoreCase("sccdesc")) {
             return "\"" + value + "\"";
+        }
 
         return value;
     }

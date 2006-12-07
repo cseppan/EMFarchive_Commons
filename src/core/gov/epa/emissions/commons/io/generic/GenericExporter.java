@@ -38,7 +38,7 @@ public class GenericExporter implements Exporter {
     protected FileFormat fileFormat;
 
     private int batchSize;
-    
+
     private long exportedLinesCount = 0;
 
     public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
@@ -210,8 +210,15 @@ public class GenericExporter implements Exporter {
 
     final protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
         // return column.format(data).trim();
+        String colType = column.sqlType().toUpperCase();
         String val = data.getString(column.name());
-        return val == null ? "" : val;
+        if (val == null)
+            return "";
+
+        if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && val.length() > 10)
+            return "\"" + val + "\"";
+        
+        return val;
     }
 
     final protected String getFixedPositionValue(Column column, ResultSet data) throws SQLException {
@@ -252,7 +259,7 @@ public class GenericExporter implements Exporter {
     final protected String getDelimiter() {
         return delimiter;
     }
-    
+
     public long getExportedLinesCount() {
         return this.exportedLinesCount;
     }
