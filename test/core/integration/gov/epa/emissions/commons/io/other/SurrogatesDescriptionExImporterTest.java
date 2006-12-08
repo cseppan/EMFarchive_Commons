@@ -70,6 +70,7 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
                 "USA;580;\"Food, Drug, Chemical Industrial (IND3)\";\"/nas/uncch/depts/cep/emc/lran/mims/mimssp_7_2005/output/US36KM_148X112/USA_580_FILL.txt\"",
                 (String) data.get(65));
         exportfile.delete();
+        assertEquals(66, exporter.getExportedLinesCount());
     }
     
     public void testExportImportVersionedCEMpthourData() throws Exception {

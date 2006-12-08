@@ -82,6 +82,7 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
         assertEquals(data1, data.get(1));
         assertEquals(data5, data.get(5));
         assertEquals(data34, data.get(34));
+        assertEquals(34, exporter.getExportedLinesCount());
     }
 
     private int countRecords() {

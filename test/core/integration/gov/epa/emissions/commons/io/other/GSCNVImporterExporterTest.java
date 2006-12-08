@@ -74,7 +74,7 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         File file = doExport(exporter);
         List records = readData(file);
         assertEquals(1231, records.size());
-
+        assertEquals(1231, exporter.getExportedLinesCount());
     }
 
     private File doExport(Exporter exporter) throws Exception {

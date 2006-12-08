@@ -73,6 +73,7 @@ public class LineExporterTest extends PersistenceTestCase {
         assertEquals(expectedPattern2, records.get(6));
         assertEquals(expectedPattern3, records.get(15));
         assertEquals(expectedPattern4, records.get(21));
+        assertEquals(22, exporter.getExportedLinesCount());
     }
 
     public void testExportVersionedSmallLineFile() throws Exception {

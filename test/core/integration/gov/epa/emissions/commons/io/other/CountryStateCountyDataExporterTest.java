@@ -76,6 +76,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         assertEquals("/STATE/", (String) data.get(8));
         assertEquals(" 12FL              Florida 4  TEST!jlkjafdsjalsjfd;asdlkjf", (String) data.get(18));
         assertEquals("/COUNTY/", (String) data.get(20));
+        assertEquals(34, exporter.getExportedLinesCount());
     }
 
     public void testExportVersionedCountryStateCountyData() throws Exception {

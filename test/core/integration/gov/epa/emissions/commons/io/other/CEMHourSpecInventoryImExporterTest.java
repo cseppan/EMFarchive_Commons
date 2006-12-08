@@ -68,6 +68,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
                 (String) data.get(0));
         assertEquals("2161,**GT2,113,19,0,,,,,,,", (String) data.get(21));
         exportfile.delete();
+        assertEquals(39, exporter.getExportedLinesCount());
     }
     
     public void testImportVersionedCEMpthourData() throws Exception {

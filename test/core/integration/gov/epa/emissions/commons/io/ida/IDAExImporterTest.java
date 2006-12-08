@@ -95,6 +95,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         List data = readData(exportfile);
         assertEquals(data3, data.get(2));
         assertEquals(data10, data.get(9));
+        assertEquals(10, exporter.getExportedLinesCount());
     }
 
     public void testShouldImportASmallPointFile() throws Exception {
@@ -139,6 +140,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         List data = readData(exportfile);
         assertEquals(data1, data.get(0));
         assertEquals(data10, data.get(9));
+        assertEquals(10, exporter.getExportedLinesCount());
     }
 
     public void testShouldImportASmallMobileFile() throws Exception {
@@ -179,6 +181,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         List data = readData(exportfile);
         assertEquals(data1, data.get(0));
         assertEquals(data10, data.get(9));
+        assertEquals(10, exporter.getExportedLinesCount());
     }
 
     public void testShouldImportExportASmallActivityFile() throws ImporterException, ExporterException {
@@ -210,7 +213,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
                 assertEquals(pollutant, readComments(exportfile).get(7));
                 assertEquals(data1, data.get(0));
                 assertEquals(data10, data.get(9));
-
+                assertEquals(10, exporter.getExportedLinesCount());
             } catch (IOException e) {
                 throw new ImporterException("Can't make assertion.");
             }

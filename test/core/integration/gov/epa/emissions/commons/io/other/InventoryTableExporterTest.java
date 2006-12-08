@@ -59,6 +59,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         exporter.export(file);
         //FIXME: compare the original file and the exported file.
         assertEquals(598, countRecords());
+        assertEquals(598, exporter.getExportedLinesCount());
     }
     
     public void testExportVersionedChemicalSpeciationData() throws Exception {

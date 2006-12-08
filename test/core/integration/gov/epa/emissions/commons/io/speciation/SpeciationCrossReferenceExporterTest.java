@@ -67,6 +67,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
         assertEquals(153, countRecords());
         assertEquals("0;0000;EXH__CO;;;;;;;! exhaust for MOBILE5", data.get(2));
         assertEquals("2850000010;99999;PM2_5;;;;;;;! heavy duty diesel trucks-specific", data.get(153));
+        assertEquals(153, exporter.getExportedLinesCount());
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {

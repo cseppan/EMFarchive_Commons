@@ -300,6 +300,24 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertTrue(actual.matches(expectedPattern));
     }
 
+    public void testShouldGiveCorrectExportedLinesNumber() throws Exception {
+        Version version = version(dataset.getId());
+        runVersionProfileImporter("weekly.txt",dataset,version);
+        assertEquals(13, countRecords("WEEKLY"));
+        
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
+        exporter.export(exportfile);
+        assertEquals(13, exporter.getExportedLinesCount());
+        
+        TemporalProfileExporter exporter2 = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+                optimizedBatchSize);
+        File exportfile2 = File.createTempFile("VersionedTemporalProfileExported", ".txt");
+        exporter2.export(exportfile2);
+        assertEquals(13, exporter2.getExportedLinesCount());
+    }
+
     private int countRecords(String table) {
         Datasource datasource = dbServer.getEmissionsDatasource();
         return tableReader.count(datasource.getName(), table);

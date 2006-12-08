@@ -60,6 +60,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
         assertEquals(104, countRecords());
+        assertEquals(104, exporter.getExportedLinesCount());
     }
 
     public void testExportVersionedPointStackReplacementsData() throws Exception {

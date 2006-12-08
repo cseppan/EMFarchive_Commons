@@ -69,6 +69,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         assertEquals(18, data.size());
         assertEquals("37001,2201001150,100414,1.06262,,,,,,,,! EPA-derived", (String) data.get(0));
         assertEquals("37001,2201001150,100425,0.20263,,,,,,,,! EPA-derived", (String) data.get(1));
+        assertEquals(18, exporter.getExportedLinesCount());
     }
 
     public void testShouldExportOnRoadVersionZero() throws Exception {
@@ -112,6 +113,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         assertEquals(16, data.size());
         assertEquals("37001,2260001010,100414,0.56,,,,,,,,,,,,,,,,,,,,,,", (String) data.get(0));
         assertEquals("37001,2260001010,100425,0.03,,,,,,,,,,,,,,,,,,,,,,", (String) data.get(1));
+        assertEquals(16, exporter.getExportedLinesCount());
     }
 
     public void testShouldExportNonPoint() throws Exception {
@@ -132,6 +134,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         // regex is used because of precision diff between mysql and postgres
         assertEquals("37001,10201302,0,0107,2,0,246,0.0003872963052,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(0)));
         assertEquals("37001,10201302,0,0107,2,0,253,0.0006910581132,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(1)));
+        assertEquals(6, exporter.getExportedLinesCount());
     }
 
     public void testShouldExportPoint() throws Exception {
@@ -155,6 +158,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 ",,,,,,,,,,,,,,,,,,,,,,,,,,!inline conmments  wihout delimitter separating";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
+        assertEquals(10, exporter.getExportedLinesCount());
     }
 
     public void testShouldExportFiresInv() throws Exception {
@@ -176,6 +180,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         String expectedPattern = "37001,35273,,28100010F0,0,35.91,-79.31,P,936,8000";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
+        assertEquals(180, exporter.getExportedLinesCount());
     }
 
     public void testShouldExportDaySpecFiresInv() throws Exception {
@@ -197,6 +202,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         String expectedPattern = "37001,35273,,28100010F0,106990,02/04/02,0.000172125,0,23";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
+        assertEquals(783, exporter.getExportedLinesCount());
     }
 
     private void assertComments(File file) throws IOException {

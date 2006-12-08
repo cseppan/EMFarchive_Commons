@@ -57,6 +57,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.
         assertEquals(43, countRecords());
+        assertEquals(43, exporter.getExportedLinesCount());
     }
     
     public void testExportVersionedSpetailSurrogatesData() throws Exception {

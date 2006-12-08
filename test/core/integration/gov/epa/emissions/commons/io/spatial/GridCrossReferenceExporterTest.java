@@ -58,6 +58,7 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
         exporter.export(file);
         // FIXME: compare the original file and the exported file.
         assertEquals(22, countRecords());
+        assertEquals(22, exporter.getExportedLinesCount());
     }
     
     public void testExportVersionedGridCrossRefData() throws Exception {
