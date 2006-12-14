@@ -46,22 +46,22 @@ public class SpeciationCrossRefFileFormat implements FileFormatWithOptionalCols,
     
     public Column[] optionalCols() {
         List columns = new ArrayList();
-        columns.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
-        columns.add(new Column("MACT", types.stringType(6), new StringFormatter(6)));
+        columns.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
+        columns.add(new Column("MACT", types.stringType(6), 6, new StringFormatter(6)));
         columns.add(new Column("SIC", types.intType(), new IntegerFormatter()));
-        columns.add(new Column("PLANTID", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("POINTID", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("STACKID", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("SEGMENTID", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("PLANTID", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("POINTID", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("STACKID", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("SEGMENTID", types.stringType(32), 32, new StringFormatter(32)));
 
         return (Column[]) columns.toArray(new Column[0]);
     }
     
     public Column[] minCols() {
         List columns = new ArrayList();
-        columns.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
-        columns.add(new Column("CODE", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("POLLUTANT", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
+        columns.add(new Column("CODE", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("POLLUTANT", types.stringType(32), 32, new StringFormatter(32)));
         
         return (Column[]) columns.toArray(new Column[0]);
     }

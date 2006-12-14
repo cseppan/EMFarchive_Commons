@@ -48,8 +48,8 @@ public class IDAActivityFileFormat implements IDAFileFormat, FileFormatWithOptio
 
         cols.add(new Column("STID", types.intType(), new IntegerFormatter()));
         cols.add(new Column("CYID", types.intType(), new IntegerFormatter()));
-        cols.add(new Column("LINK_ID", types.stringType(10), new StringFormatter(10)));
-        cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("LINK_ID", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
         return cols;
     }
 

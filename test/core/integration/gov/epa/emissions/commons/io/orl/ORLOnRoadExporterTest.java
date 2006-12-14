@@ -83,7 +83,7 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         List lines = readData(file);
         assertEquals(18, lines.size());
         String line = (String) lines.get(0);
-        assertEquals("37001,2201001150,100414,1.06262,,,,,,,,! EPA-derived", line);
+        assertEquals("37001,2201001150,\"100414\",1.06262,,,,,,,,! EPA-derived", line);
     }
 
     private List readData(File file) throws IOException {

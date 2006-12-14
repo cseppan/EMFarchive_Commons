@@ -61,13 +61,13 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
     private Column[] createMinCols() {
         List cols = new ArrayList();
 
-        cols.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
-        cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
-        cols.add(new Column("SIC", types.stringType(4), new StringFormatter(4)));
-        cols.add(new Column("MACT", types.stringType(6), new StringFormatter(6)));
-        cols.add(new Column("SRCTYPE", types.stringType(2), new StringFormatter(2)));
-        cols.add(new Column("NAICS", types.stringType(6), new StringFormatter(6)));
-        cols.add(new Column("POLL", types.stringType(16), new StringFormatter(16)));
+        cols.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("SIC", types.stringType(4), 4, new StringFormatter(4)));
+        cols.add(new Column("MACT", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("SRCTYPE", types.stringType(2), 2, new StringFormatter(2)));
+        cols.add(new Column("NAICS", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("POLL", types.stringType(16), 16, new StringFormatter(16)));
         cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
@@ -81,16 +81,16 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
         cols.add(new Column("RPEN", types.realType(), new RealFormatter()));
         // extended orl columns
-        cols.add(new Column("PRIMARY_DEVICE_TYPE_CODE", types.stringType(4), new StringFormatter(4)));
-        cols.add(new Column("SECONDARY_DEVICE_TYPE_CODE", types.stringType(4), new StringFormatter(4)));
-        cols.add(new Column("DATA_SOURCE", types.stringType(10), new StringFormatter(10)));
-        cols.add(new Column("YEAR", types.stringType(4), new StringFormatter(4)));
-        cols.add(new Column("TRIBAL_CODE", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("PRIMARY_DEVICE_TYPE_CODE", types.stringType(4), 4, new StringFormatter(4)));
+        cols.add(new Column("SECONDARY_DEVICE_TYPE_CODE", types.stringType(4), 4, new StringFormatter(4)));
+        cols.add(new Column("DATA_SOURCE", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("YEAR", types.stringType(4), 4, new StringFormatter(4)));
+        cols.add(new Column("TRIBAL_CODE", types.stringType(3), 3, new StringFormatter(3)));
         // columns in extended orl but not for SMOKE use
-        cols.add(new Column("MACT_FLAG", types.stringType(15), new StringFormatter(15)));
-        cols.add(new Column("PROCESS_MACT_COMPLIANCE_STATUS", types.stringType(6), new StringFormatter(8)));
-        cols.add(new Column("START_DATE", types.stringType(8), new StringFormatter(8)));
-        cols.add(new Column("END_DATE", types.stringType(8), new StringFormatter(8)));
+        cols.add(new Column("MACT_FLAG", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("PROCESS_MACT_COMPLIANCE_STATUS", types.stringType(6), 6, new StringFormatter(8)));
+        cols.add(new Column("START_DATE", types.stringType(8), 8, new StringFormatter(8)));
+        cols.add(new Column("END_DATE", types.stringType(8), 8, new StringFormatter(8)));
         cols.add(new Column("WINTER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
         cols.add(new Column("SPRING_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
         cols.add(new Column("SUMMER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));

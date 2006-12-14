@@ -19,8 +19,8 @@ public class GridCrossRefFileFormat implements FileFormat, DelimitedFileFormat {
     }
 
     public Column[] cols() {
-        Column fips = new Column("FIPS", types.stringType(6), new StringFormatter(6));
-        Column scc = new Column("SCC", types.stringType(10), new StringFormatter(10));
+        Column fips = new Column("FIPS", types.stringType(6), 6, new StringFormatter(6));
+        Column scc = new Column("SCC", types.stringType(10), 10, new StringFormatter(10));
         Column code = new Column("CODE", types.intType(), new IntegerFormatter());
         
         return new Column[] { fips, scc, code };

@@ -48,20 +48,20 @@ public class ORLFiresInvFileFormat implements FileFormatWithOptionalCols, Delimi
     public Column[] minCols() {
         List cols = new ArrayList();
 
-        cols.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
-        cols.add(new Column("FIREID", types.stringType(15), new StringFormatter(15)));
-        cols.add(new Column("LOCID", types.stringType(15), new StringFormatter(15)));
-        cols.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("FIREID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("LOCID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
 
         return (Column[]) cols.toArray(new Column[0]);
     }
 
     public Column[] optionalCols() {
         List cols = new ArrayList();
-        cols.add(new Column("FIRENAME", types.stringType(40), new StringFormatter(40)));
+        cols.add(new Column("FIRENAME", types.stringType(40), 40, new StringFormatter(40)));
         cols.add(new Column("LAT", types.realType(), new RealFormatter()));
         cols.add(new Column("LON", types.realType(), new RealFormatter()));
-        cols.add(new Column("NFDRSCODE", types.stringType(3), new StringFormatter(3)));
+        cols.add(new Column("NFDRSCODE", types.stringType(3), 3, new StringFormatter(3)));
         cols.add(new Column("MATBURNED", types.intType(), new IntegerFormatter()));
         cols.add(new Column("DATAVALUE", types.realType(), new RealFormatter()));
         

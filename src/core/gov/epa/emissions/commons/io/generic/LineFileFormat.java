@@ -23,7 +23,8 @@ public class LineFileFormat implements FileFormat {
     }
 
     private Column[] createCols(SqlDataTypes types) {
-        return new Column[]{new Column("Line_Number", types.realType(), new RealFormatter()),
-                new Column("Lines", types.text(), new StringFormatter())};
+        return new Column[] { new Column("Line_Number", types.realType(), new RealFormatter()),
+                new Column("Lines", types.text(), 255, new StringFormatter()) }; // use 255 to get double quotes when
+                                                                                    // export
     }
 }

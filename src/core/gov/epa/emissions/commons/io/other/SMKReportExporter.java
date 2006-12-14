@@ -205,12 +205,24 @@ public class SMKReportExporter implements Exporter {
     }
 
     protected String formatValue(String[] cols, int index, String value) {
-        if (value.length() > 10
-                || containsDelimiter(value)
-                || cols[index - 1].equalsIgnoreCase("sccdesc")) {
+        if (cols[index - 1].equalsIgnoreCase("SCCDESC"))
             return "\"" + value + "\"";
-        }
 
+        if (cols[index - 1].equalsIgnoreCase("DATE"))
+            return "\"" + value + "\"";
+
+        if (cols[index - 1].equalsIgnoreCase("HOUR"))
+            return "\"" + value + "\"";
+
+        if (cols[index - 1].equalsIgnoreCase("STATE"))
+            return "\"" + value + "\"";
+        
+        if (cols[index - 1].equalsIgnoreCase("COUNTY"))
+            return "\"" + value + "\"";
+        
+        if (containsDelimiter(value))
+            return "\"" + value + "\"";
+        
         return value;
     }
 

@@ -54,7 +54,7 @@ public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols, 
     public Column[] createRequiredCols(SqlDataTypes types) {
         List columns = new ArrayList();
 
-        columns.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
+        columns.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
         columns.add(new Column("Monthly_Code", types.intType(), new IntegerFormatter()));
         columns.add(new Column("Weekly_Code", types.intType(), new IntegerFormatter()));
         columns.add(new Column("Diurnal_Code", types.intType(), new IntegerFormatter()));
@@ -66,14 +66,14 @@ public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols, 
     private Column[] createOptionalCols(SqlDataTypes types) {
         List columns = new ArrayList();
         
-        columns.add(new Column("Pollutants", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
-        columns.add(new Column("LinkID_PlantID", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("Characteristic_1", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("Characteristic_2", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("Characteristic_3", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("Characteristic_4", types.stringType(32), new StringFormatter(32)));
-        columns.add(new Column("Characteristic_5", types.stringType(32), new StringFormatter(32)));
+        columns.add(new Column("Pollutants", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
+        columns.add(new Column("LinkID_PlantID", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("Characteristic_1", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("Characteristic_2", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("Characteristic_3", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("Characteristic_4", types.stringType(32), 32, new StringFormatter(32)));
+        columns.add(new Column("Characteristic_5", types.stringType(32), 32, new StringFormatter(32)));
 
         return (Column[]) columns.toArray(new Column[0]);
     }

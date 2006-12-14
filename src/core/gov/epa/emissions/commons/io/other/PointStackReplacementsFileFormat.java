@@ -29,8 +29,8 @@ public class PointStackReplacementsFileFormat implements FileFormat, DelimitedFi
     private Column[] createCols(SqlDataTypes types) {
         List columns = new ArrayList();
 
-        columns.add(new Column("FIPS", types.stringType(6), new StringFormatter(6)));
-        columns.add(new Column("SCC", types.stringType(10), new StringFormatter(10)));
+        columns.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
+        columns.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
         columns.add(new Column("STKHGT", types.realType(), new RealFormatter()));
         columns.add(new Column("STKDIAM", types.realType(), new RealFormatter()));
         columns.add(new Column("STKTEMP", types.realType(), new RealFormatter()));

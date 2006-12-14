@@ -68,7 +68,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         List data = readData(file);
         assertEquals(data.get(0), "pollutant_code,pollutant_name,comments");
-        assertEquals(data.get(8), "VOC,VOC");
+        assertEquals(data.get(8), "\"VOC\",\"VOC\"");
         assertEquals(8, exporter.getExportedLinesCount());
     }
 
@@ -91,8 +91,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
 
         List data = readData(file);
-        assertEquals(data.get(1), "CO,CO");
-        assertEquals(data.get(8), "VOC,VOC");
+        assertEquals(data.get(1), "\"CO\",\"CO\"");
+        assertEquals(data.get(8), "\"VOC\",\"VOC\"");
     }
 
     
@@ -111,8 +111,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
 
         List data = readData(file);
-        assertEquals(data.get(1), "USA,Population,100,NO,YES");
-        assertEquals(data.get(7), "USA,\"3/4 Total Roadway Miles plus 1/4 Population\",255,YES,");
+        assertEquals(data.get(1), "\"USA\",\"Population\",\"100\",\"NO\",\"YES\"");
+        assertEquals(data.get(7), "\"USA\",\"3/4 Total Roadway Miles plus 1/4 Population\",\"255\",\"YES\",\"\"");
     }
 
     public void testShouldExImportSurrogateSpecFile() throws Exception {
@@ -129,11 +129,11 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
 
         List data = readData(file);
-        String expect = "USA,Population,100,pophu2k,POP2000,,,,,,," + "\"Total population from Census 2000 blocks\",";
+        String expect = "\"USA\",\"Population\",\"100\",\"pophu2k\",\"POP2000\",\"\",\"\",\"\",\"\",\"\",\"\"," + "\"Total population from Census 2000 blocks\",\"\"";
         assertEquals(data.get(1), expect);
-        expect = "USA,\"3/4 Total Roadway Miles plus 1/4 Population\",255,,,,,"
-                + "\"0.75*Total Road Miles+0.25*Population\",Population,,,"
-                + "\"Combination of  3/4 total road miles surrogate ratio and 1/4 population surrogate ratio\",";
+        expect = "\"USA\",\"3/4 Total Roadway Miles plus 1/4 Population\",\"255\",\"\",\"\",\"\",\"\","
+                + "\"0.75*Total Road Miles+0.25*Population\",\"Population\",\"\",\"\","
+                + "\"Combination of  3/4 total road miles surrogate ratio and 1/4 population surrogate ratio\",\"\"";
         assertEquals(data.get(7), expect);
     }
 
@@ -156,10 +156,10 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
 
         List data = readData(file);
-        String expect = "\"cnty_tn_lcc\",\"D:\\MIMS\\mimssp_7_2005\\data\\\",SPHERE,"
-                + "\"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97\"," + "\"TN county boundaries\",\"from UNC CEP machine\",";
+        String expect = "\"cnty_tn_lcc\",\"D:\\MIMS\\mimssp_7_2005\\data\\\",\"SPHERE\","
+                + "\"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97\"," + "\"TN county boundaries\",\"from UNC CEP machine\",\"\"";
         assertEquals(expect, data.get(1));
-        expect = "us_ph,\"D:\\MIMS\\emiss_shp2003\\us\\\",,,\"The change in housing between 1990 and 2000\",\"US Census Bureau\",No Data";
+        expect = "\"us_ph\",\"D:\\MIMS\\emiss_shp2003\\us\\\",\"\",\"\",\"The change in housing between 1990 and 2000\",\"US Census Bureau\",\"No Data\"";
         assertEquals(data.get(7), expect);
     }
 

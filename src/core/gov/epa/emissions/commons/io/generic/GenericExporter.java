@@ -121,7 +121,7 @@ public class GenericExporter implements Exporter {
         writeData(writer, dataset, datasource, false);
     }
 
-    private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
+    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws SQLException {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
@@ -140,7 +140,7 @@ public class GenericExporter implements Exporter {
         runner.close();
     }
 
-    private void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
+    protected void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
         String[] cols = getCols(data);
 
         if (comments) {
@@ -160,7 +160,7 @@ public class GenericExporter implements Exporter {
             writeRecord(cols, data, writer, 1);
     }
 
-    private String getQueryString(Dataset dataset, Datasource datasource) {
+    protected String getQueryString(Dataset dataset, Datasource datasource) {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
@@ -215,7 +215,7 @@ public class GenericExporter implements Exporter {
         if (val == null)
             return "";
 
-        if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && val.length() > 10)
+        if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && column.width() > 10)
             return "\"" + val + "\"";
         
         return val;

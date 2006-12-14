@@ -24,7 +24,7 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
         List cols = new ArrayList();
         for (int i = 0; i < colNames.length; i++) {
             String name = replaceSpecialChars(colNames[i]);
-            Column col = new Column(name, types.stringType(255), new StringFormatter(255));
+            Column col = new Column(name, types.stringType(255), 255, new StringFormatter(255));
             cols.add(col);
         }
         return (Column[]) cols.toArray(new Column[] {});

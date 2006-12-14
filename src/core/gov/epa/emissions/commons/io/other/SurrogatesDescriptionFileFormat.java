@@ -28,10 +28,10 @@ public class SurrogatesDescriptionFileFormat implements FileFormat, DelimitedFil
     private Column[] createCols(SqlDataTypes types) {
         List columns = new ArrayList();
 
-        columns.add(new Column("REGION", types.stringType(10), new StringFormatter(10)));
+        columns.add(new Column("REGION", types.stringType(10), 10, new StringFormatter(10)));
         columns.add(new Column("CODE", types.intType(), new IntegerFormatter()));
-        columns.add(new Column("NAME", types.stringType(128), new StringFormatter(128)));
-        columns.add(new Column("FILENAME", types.stringType(128), new StringFormatter(128)));
+        columns.add(new Column("NAME", types.stringType(128), 128, new StringFormatter(128)));
+        columns.add(new Column("FILENAME", types.stringType(128), 128, new StringFormatter(128)));
         
         return (Column[]) columns.toArray(new Column[0]);
     }

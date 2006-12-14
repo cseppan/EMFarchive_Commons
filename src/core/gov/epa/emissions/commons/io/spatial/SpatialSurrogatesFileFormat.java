@@ -21,7 +21,7 @@ public class SpatialSurrogatesFileFormat implements FileFormat, DelimitedFileFor
 
     public Column[] cols() {
         Column code = new Column("CODE", types.intType(), new IntegerFormatter());
-        Column fips = new Column("FIPS", types.stringType(6), new StringFormatter(6));
+        Column fips = new Column("FIPS", types.stringType(6), 6, new StringFormatter(6));
         Column col = new Column("COLNUM", types.intType(), new IntegerFormatter());
         Column row = new Column("ROWNUM", types.intType(), new IntegerFormatter());
         Column ratio = new Column("RATIO", types.realType(), new RealFormatter());

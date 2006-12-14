@@ -33,13 +33,13 @@ public class SMKReportFileFormat implements FileFormat, DelimitedFileFormat {
     
     private Map createMap(SqlDataTypes types) {
         HashMap map = new HashMap();
-        map.put("Date", new Column("DATE", types.stringType(32),new StringFormatter(32)));
-        map.put("State", new Column("STATE", types.stringType(32),new StringFormatter(32)));
-        map.put("Region", new Column("REGION", types.stringType(32),new StringFormatter(32)));
-        map.put("Hour", new Column("HOUR", types.stringType(32),new StringFormatter(32)));
-        map.put("SCC", new Column("SCC", types.stringType(32),new StringFormatter(32)));
-        map.put("SCC Description", new Column("SCCDESC", types.stringType(128),new StringFormatter(128)));
-        map.put("County", new Column("COUNTY", types.stringType(32),new StringFormatter(32)));
+        map.put("Date", new Column("DATE", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("State", new Column("STATE", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("Region", new Column("REGION", types.stringType(10), 10, new StringFormatter(10)));
+        map.put("Hour", new Column("HOUR", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("SCC", new Column("SCC", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("SCC Description", new Column("SCCDESC", types.stringType(128), 128, new StringFormatter(128)));
+        map.put("County", new Column("COUNTY", types.stringType(32), 32, new StringFormatter(32)));
         
         return map;
     }
