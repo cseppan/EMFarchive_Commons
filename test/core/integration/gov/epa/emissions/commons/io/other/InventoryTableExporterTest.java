@@ -13,8 +13,13 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class InventoryTableExporterTest extends PersistenceTestCase {
@@ -32,7 +37,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-        
+
         optimizedBatchSize = new Integer(10000);
 
         dataset = new SimpleDataset();
@@ -49,43 +54,62 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
 
     public void testExportChemicalSpeciationData() throws Exception {
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"CAPandHAP_INVTABLE31aug2006.txt"}, 
-                dataset, dbServer, sqlDataTypes);
+        InventoryTableImporter importer = new InventoryTableImporter(folder,
+                new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
-        
-        InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                dbServer, sqlDataTypes,optimizedBatchSize);
+
+        InventoryTableExporter exporter = new InventoryTableExporter(dataset, dbServer, sqlDataTypes,
+                optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
-        //FIXME: compare the original file and the exported file.
+        
+        List data = readData(file);
+
+        String expectedFirst = "HGSUM           593748                   Y 0.8696       N     tons/yr          Mercury, Unspeciated                    Methyl Mercury                          ";
+        String expectedLast = "DIMTHYLAMAZ     60117                    N     1   N   N     tons/yr          Dimethyl aminoazobenzene, 4- , fine PM  4-Dimethylaminoazobenzene               ";
+        assertEquals(expectedFirst, data.get(5));
+        assertEquals(expectedLast, data.get(602));
         assertEquals(598, countRecords());
         assertEquals(598, exporter.getExportedLinesCount());
     }
-    
+
     public void testExportVersionedChemicalSpeciationData() throws Exception {
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/other");
-        InventoryTableImporter importer = new InventoryTableImporter(folder, new String[]{"CAPandHAP_INVTABLE31aug2006.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"CAPandHAP_INVTABLE31aug2006.txt"));
+        InventoryTableImporter importer = new InventoryTableImporter(folder,
+                new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+                "CAPandHAP_INVTABLE31aug2006.txt"));
         importerv.run();
-        
-        InventoryTableExporter exporter = new InventoryTableExporter(dataset, 
-                dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+
+        InventoryTableExporter exporter = new InventoryTableExporter(dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
-        //FIXME: compare the original file and the exported file.
+        
+        //FIXME: compare with original data
         assertEquals(598, countRecords());
     }
-    
+
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), dataset.getName());
     }
     
+    private List readData(File file) throws IOException {
+        List data = new ArrayList();
+
+        BufferedReader r = new BufferedReader(new FileReader(file));
+        for (String line = r.readLine(); line != null; line = r.readLine())
+            data.add(line);
+
+        return data;
+    }
+
     private Date lastModifiedDate(File folder, String fileName) {
         return new Date(new File(folder, fileName).lastModified());
     }

@@ -7,6 +7,8 @@ public interface DataFormatFactory {
 
     TableFormat tableFormat(FileFormat fileFormat, SqlDataTypes sqlDataTypes);
 
+    TableFormat tableFormatWithLineNoCol(FileFormat fileFormat, SqlDataTypes sqlDataTypes, String lineNum);
+    
     FillDefaultValues defaultValuesFiller();
 
     ExportStatement exportStatement();

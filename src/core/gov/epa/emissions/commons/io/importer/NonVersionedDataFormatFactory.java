@@ -13,6 +13,10 @@ public class NonVersionedDataFormatFactory implements DataFormatFactory {
     public TableFormat tableFormat(FileFormat fileFormat, SqlDataTypes sqlDataTypes) {
         return new NonVersionedTableFormat(fileFormat, sqlDataTypes);
     }
+    
+    public TableFormat tableFormatWithLineNoCol(FileFormat fileFormat, SqlDataTypes sqlDataTypes, String lineNum) {
+        return  new NonVersionedTableFormat(fileFormat, sqlDataTypes, lineNum);
+    }
 
     public FillDefaultValues defaultValuesFiller() {
         return new FillRecordWithBlankValues();

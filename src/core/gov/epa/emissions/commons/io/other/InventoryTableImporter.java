@@ -10,11 +10,12 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
+import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.DataReader;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
-import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
+import gov.epa.emissions.commons.io.importer.FixedColumnsWithLineNoColDataLoader;
 import gov.epa.emissions.commons.io.importer.FixedWidthParser;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
@@ -49,7 +50,7 @@ public class InventoryTableImporter implements Importer {
         this.datasource = dbServer.getEmissionsDatasource();
 
         FileFormat fileFormat = new InventoryTableFileFormat(sqlDataTypes, 1);
-        TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
+        TableFormat tableFormat = factory.tableFormatWithLineNoCol(fileFormat, sqlDataTypes, "Line_Number");
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
 
@@ -62,6 +63,7 @@ public class InventoryTableImporter implements Importer {
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
+            e.printStackTrace();
             dataTable.drop();
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + "; Details: "
                     +e.getMessage());
@@ -73,7 +75,7 @@ public class InventoryTableImporter implements Importer {
 
         Reader fileReader = null;
         try {
-            FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
+            DataLoader loader = new FixedColumnsWithLineNoColDataLoader(datasource, tableFormat);
             BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
             // FIXME: Due to irregularity in inventory data names (1st column in
             // input data file),

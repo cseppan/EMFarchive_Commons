@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.NullFormatter;
+import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.TableFormat;
 
@@ -20,6 +21,11 @@ public class VersionedTableFormat implements TableFormat {
     public VersionedTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
         cols = createCols(base, types);
+    }
+
+    public VersionedTableFormat(FileFormat base, SqlDataTypes types, String lineNum) {
+        this.base = base;
+        cols = createCols(base, types, lineNum); //add one more column named "lineNum"
     }
 
     public String key() {
@@ -39,6 +45,19 @@ public class VersionedTableFormat implements TableFormat {
         Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
         cols.add(inlineComments);
 
+        return (Column[]) cols.toArray(new Column[0]);
+    }
+
+    private Column[] createCols(FileFormat base, SqlDataTypes types, String lineNum) {
+        List cols = new ArrayList();
+        
+        cols.addAll(Arrays.asList(versionCols(types)));
+        cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
+        cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
+        
+        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
+        cols.add(inlineComments);
+        
         return (Column[]) cols.toArray(new Column[0]);
     }
 

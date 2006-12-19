@@ -25,6 +25,10 @@ public class VersionedDataFormatFactory implements DataFormatFactory {
         return new VersionedTableFormat(fileFormat, sqlDataTypes);
     }
 
+    public TableFormat tableFormatWithLineNoCol(FileFormat fileFormat, SqlDataTypes sqlDataTypes, String lineNum) {
+        return new VersionedTableFormat(fileFormat, sqlDataTypes, lineNum);
+    }
+
     public FillDefaultValues defaultValuesFiller() {
         return new FillDefaultValuesOfVersionedRecord();
     }

@@ -76,7 +76,7 @@ public class FixedColumnsDataLoader implements DataLoader {
         }
     }
 
-    private String[] data(Dataset dataset, Record record) {
+    protected String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
 
         if (tableFormat instanceof VersionedTableFormat)
@@ -91,14 +91,14 @@ public class FixedColumnsDataLoader implements DataLoader {
         return (String[]) data.toArray(new String[0]);
     }
 
-    private void addVersionData(List data, long datasetId, int version) {
+    protected void addVersionData(List data, long datasetId, int version) {
         data.add(0, "");// record id
         data.add(1, datasetId + "");
         data.add(2, version + "");// version
         data.add(3, "");// delete versions
     }
 
-    private void massageNullMarkers(List data) {
+    protected void massageNullMarkers(List data) {
         for (int i = 0; i < data.size(); i++) {
             String element = (String) data.get(i);
             if (element.equals("-9"))// NULL marker
