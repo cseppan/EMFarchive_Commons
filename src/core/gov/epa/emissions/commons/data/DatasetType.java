@@ -22,6 +22,8 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     private boolean external;
 
+    private boolean oneTablePerDataset;
+
     private String defaultSortOrder;
 
     private String importerClassName;
@@ -185,5 +187,13 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public QAStepTemplate[] getQaStepTemplates() {
         return (QAStepTemplate[]) qaStepTemplates.toArray(new QAStepTemplate[0]);
+    }
+
+    public boolean isOneTablePerDataset() {
+        return oneTablePerDataset;
+    }
+
+    public void setOneTablePerDataset(boolean oneTablePerDataset) {
+        this.oneTablePerDataset = oneTablePerDataset;
     }
 }

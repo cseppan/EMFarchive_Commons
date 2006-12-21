@@ -21,7 +21,7 @@ public class LineExporter extends GenericExporter {
     }
 
     protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        writer.write(data.getString("Lines"));
+        writer.write(data.getString(startColNumber));
     }
 
     protected int startCol(String[] cols) {

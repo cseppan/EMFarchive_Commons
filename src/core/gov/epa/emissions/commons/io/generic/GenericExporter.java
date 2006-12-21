@@ -213,7 +213,7 @@ public class GenericExporter implements Exporter {
         String colType = column.sqlType().toUpperCase();
         String val = data.getString(column.name());
 
-        if (val == null)
+        if (val == null || val.equals(""))
             return "";
 
         if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && column.width() > 10)

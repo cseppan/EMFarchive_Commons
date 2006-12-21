@@ -61,9 +61,9 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
 
         List data = readData(exportfile);
         assertEquals("Processed as Mobile sources", data.get(0));
-        assertEquals("\"06/09/2002\";001000;\"Alabama\";2201001110;0;0;0;0.7509;0;0.95146;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0",
+        assertEquals("06/09/2002;001000;\"Alabama\";2201001110;0;0;0;0.7509;0;0.95146;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0",
                 data.get(12));
-        assertEquals("\"06/09/2002\";232000;\"Zacatecas\";2230070000;5.913;"
+        assertEquals("06/09/2002;232000;\"Zacatecas\";2230070000;5.913;"
                 + "0.87672;7.8905;0.1394;0;0;0.042398;0.072102;0.70752;"
                 + "0.0056709;0.0040507;0.11081;0.072643;0.10221;0.1324;0;"
                 + "0.058577;0.72796;0.067411;0.0076535;0.36858", data.get(45));
@@ -82,7 +82,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));
-        assertEquals("\"07/09/2002\";\"01\";9900000100;\"Description unavailable\";0;0;0;0.01946;0;0;0;0", data.get(55));
+        assertEquals("07/09/2002;1;9900000100;\"Description unavailable\";0;0;0;0.01946;0;0;0;0", data.get(55));
         assertEquals(44, exporter.getExportedLinesCount());
         
         File exportfile2 = File.createTempFile("SMKreportPipeExported", ".txt");
@@ -90,7 +90,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         exporter.export(exportfile2);
         List data2 = readData(exportfile2);
         assertEquals("Stationary area", data2.get(0));
-        assertEquals("\"07/09/2002\"|\"01\"|9900000100|\"Description unavailable\"|0|0|0|0.01946|0|0|0|0", data2.get(55));
+        assertEquals("07/09/2002|1|9900000100|\"Description unavailable\"|0|0|0|0.01946|0|0|0|0", data2.get(55));
         assertEquals(88, exporter.getExportedLinesCount());
     }
 
@@ -105,7 +105,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Annual total data basis in report", data.get(8));
-        assertEquals("\"07/08/2002\";\"02\";2302003000;\"Description unavailable\";"
+        assertEquals("07/08/2002;2;2302003000;\"Description unavailable\";"
                 + "0;0;0.0027113;0;0;0.063472;0.032899;0.030573", data.get(16));
         assertEquals(4, exporter.getExportedLinesCount());
         
@@ -114,7 +114,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         exporter.export(exportfile2);
         List data2 = readData(exportfile2);
         assertEquals("Annual total data basis in report", data2.get(8));
-        assertEquals("\"07/08/2002\"|\"02\"|2302003000|\"Description unavailable\"|"
+        assertEquals("07/08/2002|2|2302003000|\"Description unavailable\"|"
                 + "0|0|0.0027113|0|0|0.063472|0.032899|0.030573", data2.get(16));
         assertEquals(8, exporter.getExportedLinesCount());
     }
@@ -131,7 +131,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));
-        assertEquals("\"07/08/2002\";232000;\"Zacatecas\";4.0529;2.3955;85.799;100.51;25.768;21.124;6.1412;14.983", data
+        assertEquals("07/08/2002;232000;\"Zacatecas\";4.0529;2.3955;85.799;100.51;25.768;21.124;6.1412;14.983", data
                 .get(79));
         assertEquals(67, exporter.getExportedLinesCount());
     }

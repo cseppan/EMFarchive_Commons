@@ -225,12 +225,6 @@ public class SMKReportExporter implements Exporter {
         if (cols[index - 1].equalsIgnoreCase("SCCDESC"))
             return "\"" + value + "\"";
 
-        if (cols[index - 1].equalsIgnoreCase("DATE"))
-            return "\"" + value + "\"";
-
-        if (cols[index - 1].equalsIgnoreCase("HOUR"))
-            return "\"" + value + "\"";
-
         if (cols[index - 1].equalsIgnoreCase("STATE"))
             return "\"" + value + "\"";
 
