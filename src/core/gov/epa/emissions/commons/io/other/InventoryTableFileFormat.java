@@ -32,7 +32,7 @@ public class InventoryTableFileFormat implements FileFormat, FixedWidthFileForma
         Column saroad = new Column("SPEC4ID", types.intType(), 5+spacer, new IntegerFormatter(5, spacer));
         Column react = new Column("REACT", types.intType(), 1 + spacer, new IntegerFormatter(1, spacer));
         Column keep = new Column("KEEP", types.stringType(1), 1 + spacer, new StringFormatter(1, spacer));
-        Column factor = new Column("FACTOR", types.realType(), 5 + spacer, new RealFormatter(5, spacer));
+        Column factor = new Column("FACTOR", types.realType(), 6, new RealFormatter(6, 0));
         Column voctog = new Column("VOCTOG", types.stringType(1), 1 + spacer, new StringFormatter(1, spacer));
         Column species = new Column("SPECIES", types.stringType(1), 1 + spacer, new StringFormatter(1, spacer));
         Column explicit = new Column("EXPLICIT", types.stringType(1), 1 + spacer, new StringFormatter(1, spacer));
