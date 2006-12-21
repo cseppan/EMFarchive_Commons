@@ -15,8 +15,8 @@ public class StringFormatter implements ColumnFormatter {
         format = new StringFormat(size);
     }
 
-    public StringFormatter(int size, int spaces) {
-        format = new StringFormat(size, spaces);
+    public StringFormatter(int size, int trailingSpaces) {
+        format = new StringFormat(size, trailingSpaces);
     }
 
     public String format(String name, ResultSet data) throws SQLException {

@@ -11,9 +11,9 @@ public class StringFormat {
         this.spaces = 0;
     }
 
-    public StringFormat(int size, int spaces) {
+    public StringFormat(int size, int trailingSpaces) {
         this.size = size;
-        this.spaces = spaces;
+        this.spaces = trailingSpaces;
     }
 
     public String getSpaces(int n)
