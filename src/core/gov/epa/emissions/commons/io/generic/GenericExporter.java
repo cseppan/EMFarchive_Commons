@@ -37,7 +37,11 @@ public class GenericExporter implements Exporter {
 
     protected FileFormat fileFormat;
 
+    private String inlineCommentChar;
+
     private int batchSize;
+
+    protected int startColNumber = 2; // shifted by "obj_id","record_id" when write data
 
     private long exportedLinesCount = 0;
 
@@ -52,6 +56,7 @@ public class GenericExporter implements Exporter {
         this.dataFormatFactory = dataFormatFactory;
         this.fileFormat = fileFormat;
         this.batchSize = optimizedBatchSize.intValue();
+        this.inlineCommentChar = dataset.getInlineCommentChar();
 
         setDelimiter(";");
     }
@@ -125,11 +130,20 @@ public class GenericExporter implements Exporter {
             throws SQLException {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
+        boolean firstbatch = true;
+        String[] cols = null;
 
         try {
             while (runner.execute()) {
                 ResultSet resultSet = runner.getResultSet();
-                writeBatchOfData(writer, resultSet, comments);
+
+                if (firstbatch) {
+                    cols = getCols(resultSet);
+                    this.startColNumber = startCol(cols);
+                    firstbatch = false;
+                }
+
+                writeBatchOfData(writer, resultSet, cols, comments);
                 resultSet.close();
             }
         } catch (SQLException e) {
@@ -140,26 +154,6 @@ public class GenericExporter implements Exporter {
         runner.close();
     }
 
-    protected void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
-        String[] cols = getCols(data);
-
-        if (comments) {
-            writeComments(writer, data, cols);
-            return;
-        }
-        writeDataWithoutComments(writer, data, cols);
-    }
-
-    private void writeDataWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
-        while (data.next())
-            writeRecord(cols, data, writer, 0);
-    }
-
-    private void writeComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
-        while (data.next())
-            writeRecord(cols, data, writer, 1);
-    }
-
     protected String getQueryString(Dataset dataset, Datasource datasource) {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
@@ -168,56 +162,63 @@ public class GenericExporter implements Exporter {
         return export.generate(qualifiedTable);
     }
 
-    private String[] getCols(ResultSet data) throws SQLException {
-        List cols = new ArrayList();
-        ResultSetMetaData md = data.getMetaData();
-        for (int i = 1; i <= md.getColumnCount(); i++)
-            cols.add(md.getColumnName(i));
-
-        return (String[]) cols.toArray(new String[0]);
+    protected void writeBatchOfData(PrintWriter writer, ResultSet data, String[] cols, boolean comments)
+            throws SQLException {
+        if (comments)
+            writeWithComments(writer, data, cols);
+        else
+            writeWithoutComments(writer, data, cols);
     }
 
-    protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
-        for (int i = startCol(cols); i < cols.length + commentspad; i++) {
-            String value = data.getString(i);
-            writer.write(getValue(cols, i, value, data));
+    private void writeWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecordWithoutComment(cols, data, writer);
+    }
 
-            if (i + 1 < cols.length)
-                writer.print(delimiter);// delimiter
-        }
+    private void writeWithComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecordWithComment(cols, data, writer);
+    }
+
+    protected void writeRecordWithComment(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        writeDataCols(cols, data, writer);
+        String value = data.getString(cols.length);
+        writer.write(value == null ? "" : getComment(value));
+
         writer.println();
         ++exportedLinesCount;
     }
 
-    final protected String getValue(String[] cols, int index, String value, ResultSet data) throws SQLException {
-        if (!isComment(index, cols))
-            return formatValue(cols, index, data);
-
-        if (value != null)
-            return getComment(value);
-
-        return "";
+    protected void writeRecordWithoutComment(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        writeDataCols(cols, data, writer);
+        writer.println();
+        ++exportedLinesCount;
     }
 
-    protected String formatValue(String[] cols, int index, ResultSet data) throws SQLException {
-        int fileIndex = index;
-        if (isTableVersioned(cols))
-            fileIndex = index - 3;
+    protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        for (int i = startColNumber; i < cols.length; i++) {
+            writer.write(formatValue(i, data));
 
-        Column column = fileFormat.cols()[fileIndex - 2];
+            if (i + 1 < cols.length)
+                writer.print(delimiter);// delimiter
+        }
+    }
+
+    protected String formatValue(int index, ResultSet data) throws SQLException {
+        Column column = fileFormat.cols()[index - startColNumber];
         return (delimiter.equals("")) ? getFixedPositionValue(column, data) : getDelimitedValue(column, data);
     }
 
     final protected String getDelimitedValue(Column column, ResultSet data) throws SQLException {
-        // return column.format(data).trim();
         String colType = column.sqlType().toUpperCase();
         String val = data.getString(column.name());
+
         if (val == null)
             return "";
 
         if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && column.width() > 10)
             return "\"" + val + "\"";
-        
+
         return val;
     }
 
@@ -230,22 +231,27 @@ public class GenericExporter implements Exporter {
         if (value.equals(""))
             return value;
 
-        if (!value.startsWith(dataset.getInlineCommentChar()))
-            value = dataset.getInlineCommentChar() + value;
+        if (!value.startsWith(inlineCommentChar))
+            value = inlineCommentChar + value;
 
         return value;
     }
 
-    final protected boolean isComment(int index, String[] cols) {
-        return (index == cols.length);
+    private String[] getCols(ResultSet data) throws SQLException {
+        List cols = new ArrayList();
+        ResultSetMetaData md = data.getMetaData();
+        for (int i = 1; i <= md.getColumnCount(); i++)
+            cols.add(md.getColumnName(i));
+
+        return (String[]) cols.toArray(new String[0]);
     }
 
     protected int startCol(String[] cols) {
-        int i = 2;
         if (isTableVersioned(cols))
-            i = 5;
+            return 5; // shifted by "Obj_Id", "Record_Id",
+        // "Dataset_Id", "Version", "Delete_Versions"
 
-        return i;
+        return 2; // shifted by "Obj_Id", "Record_Id"
     }
 
     final protected boolean isTableVersioned(String[] cols) {

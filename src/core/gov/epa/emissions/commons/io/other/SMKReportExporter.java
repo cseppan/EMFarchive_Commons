@@ -36,22 +36,29 @@ public class SMKReportExporter implements Exporter {
     private DataFormatFactory dataFormatFactory;
 
     private int batchSize;
-    
+
     private long exportedLinesCount = 0;
 
+    private String inlineCommentChar;
+
+    protected int startColNumber;
+
     public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
-        setup(dataset, dbServer, types, new NonVersionedDataFormatFactory(),optimizedBatchSize);
+        setup(dataset, dbServer, types, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory, Integer optimizedBatchSize) {
-        setup(dataset, dbServer, types, factory,optimizedBatchSize);
+    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory,
+            Integer optimizedBatchSize) {
+        setup(dataset, dbServer, types, factory, optimizedBatchSize);
     }
 
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory,
+            Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.batchSize = optimizedBatchSize.intValue();
+        this.inlineCommentChar = dataset.getInlineCommentChar();
         setDelimiter(";");
     }
 
@@ -132,7 +139,9 @@ public class SMKReportExporter implements Exporter {
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws SQLException {
         String query = getQueryString(dataset, datasource);
-        OptimizedQuery runner = datasource.optimizedQuery(query,batchSize);
+        OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
+        boolean firstbatch = true;
+        String[] cols = null;
 
         int pad = 0;
         if (!comments) {
@@ -141,38 +150,67 @@ public class SMKReportExporter implements Exporter {
 
         while (runner.execute()) {
             ResultSet rs = runner.getResultSet();
-            
+
+            if (firstbatch) {
+                cols = getCols(rs);
+                this.startColNumber = startCol(cols);
+                firstbatch = false;
+            }
+
             if (pad < 2)
-                writeCols(writer, getCols(rs), pad);
-            
-            writeBatchOfData(writer, rs, comments);
+                writeCols(writer, cols, pad);
+
+            writeBatchOfData(writer, rs, cols, comments);
             pad = 2;
+            rs.close();
         }
         runner.close();
         if (tableframe != null)
             writer.println(System.getProperty("line.separator") + tableframe);
     }
 
-    private void writeBatchOfData(PrintWriter writer, ResultSet data, boolean comments) throws SQLException {
-        String[] cols = getCols(data);
+    private void writeBatchOfData(PrintWriter writer, ResultSet data, String[] cols, boolean comments)
+            throws SQLException {
+        if (comments)
+            writeWithComments(writer, data, cols);
+        else
+            writeWithoutComments(writer, data, cols);
+    }
 
-        if (comments) {
-            writeComments(writer, data, cols);
-            return;
+    private void writeWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecordWithoutComment(cols, data, writer);
+    }
+
+    private void writeWithComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
+        while (data.next())
+            writeRecordWithComment(cols, data, writer);
+    }
+
+    protected void writeRecordWithComment(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        writeDataCols(cols, data, writer);
+        String value = data.getString(cols.length);
+        writer.write(value == null ? "" : getComment(value));
+
+        writer.println();
+        ++exportedLinesCount;
+    }
+
+    protected void writeRecordWithoutComment(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        writeDataCols(cols, data, writer);
+        writer.println();
+        ++exportedLinesCount;
+    }
+
+    protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        for (int i = startColNumber; i < cols.length; i++) {
+            String value = data.getString(i);
+            if (value != null)
+                writer.write(formatValue(cols, i, value));
+
+            if (i + 1 < cols.length)
+                writer.print(delimiter);// delimiter
         }
-        writeDataWithoutComments(writer, data, cols);
-    }
-
-    private void writeDataWithoutComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
-        while (data.next())
-            writeRecord(data, writer, cols, 0);
-        data.close();
-    }
-
-    private void writeComments(PrintWriter writer, ResultSet data, String[] cols) throws SQLException {
-        while (data.next())
-            writeRecord(data, writer, cols, 1);
-        data.close();
     }
 
     private String getQueryString(Dataset dataset, Datasource datasource) {
@@ -181,27 +219,6 @@ public class SMKReportExporter implements Exporter {
         ExportStatement export = dataFormatFactory.exportStatement();
 
         return export.generate(qualifiedTable);
-    }
-
-    private void writeRecord(ResultSet data, PrintWriter writer, String[] cols, int commentspad) throws SQLException {
-        int i = startCol(cols);
-        for (; i < cols.length + commentspad; i++) {
-            String value = data.getString(i);
-            if (value != null)
-                writer.write(getValue(cols, i, value));
-
-            if (i + 1 < cols.length)
-                writer.print(delimiter);// delimiter
-        }
-        writer.println();
-        ++exportedLinesCount;
-    }
-
-    protected String getValue(String[] cols, int index, String value) {
-        if (!isComment(index, cols))
-            return formatValue(cols, index, value);
-
-        return getComment(value);
     }
 
     protected String formatValue(String[] cols, int index, String value) {
@@ -216,13 +233,13 @@ public class SMKReportExporter implements Exporter {
 
         if (cols[index - 1].equalsIgnoreCase("STATE"))
             return "\"" + value + "\"";
-        
+
         if (cols[index - 1].equalsIgnoreCase("COUNTY"))
             return "\"" + value + "\"";
-        
+
         if (containsDelimiter(value))
             return "\"" + value + "\"";
-        
+
         return value;
     }
 
@@ -231,14 +248,10 @@ public class SMKReportExporter implements Exporter {
         if (value.equals(""))
             return value;
 
-        if (!value.startsWith(dataset.getInlineCommentChar()))
-            value = dataset.getInlineCommentChar() + value;
+        if (!value.startsWith(inlineCommentChar))
+            value = inlineCommentChar + value;
 
         return " " + value;
-    }
-
-    protected boolean isComment(int index, String[] cols) {
-        return (index == cols.length);
     }
 
     private String[] getCols(ResultSet data) throws SQLException {
@@ -270,11 +283,10 @@ public class SMKReportExporter implements Exporter {
     }
 
     protected int startCol(String[] cols) {
-        int i = 2;
         if (isTableVersioned(cols))
-            i = 5;
+            return 5;
 
-        return i;
+        return 2;
     }
 
     protected boolean isTableVersioned(String[] cols) {

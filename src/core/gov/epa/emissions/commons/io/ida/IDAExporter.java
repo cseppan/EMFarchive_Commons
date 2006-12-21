@@ -47,22 +47,17 @@ public class IDAExporter extends GenericExporter {
         return description.split("\n");
     }
 
-    protected String formatValue(String[] cols, int index, ResultSet data) throws SQLException {
-        int fileIndex = index;
-        if (isTableVersioned(cols))
-            fileIndex = index - 3;
-
-        Column column = fileFormat.cols()[fileIndex - 4];
+    protected String formatValue(int index, ResultSet data) throws SQLException {
+        Column column = fileFormat.cols()[index - startColNumber];
         return getFixedPositionValue(column, data);
     }
 
     // Due to two more columns added to dataset during import
     protected int startCol(String[] cols) {
-        int i = 4;
         if (isTableVersioned(cols))
-            i = 7;
+            return 7;
 
-        return i;
+        return 4;
     }
 
 }

@@ -10,28 +10,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LineExporter extends GenericExporter {
-    private long exportedLinesCount = 0;
-    
+
     public LineExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
         super(dataset, dbServer, new LineFileFormat(sqlDataTypes), optimizedBatchSize);
     }
 
-    public LineExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory formatFactory, Integer optimizedBatchSize) {
+    public LineExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory formatFactory,
+            Integer optimizedBatchSize) {
         super(dataset, dbServer, new LineFileFormat(sqlDataTypes), formatFactory, optimizedBatchSize);
     }
 
-    protected void writeRecord(String[] cols, ResultSet data, PrintWriter writer, int commentspad) throws SQLException {
-        for (int i = startCol(cols) + 1; i < cols.length + commentspad; i++) {
-            String value = data.getString(i);
-            if (value != null)
-                writer.write(getValue(cols, i, value, data));
-        }
-        writer.println();
-        ++exportedLinesCount;
+    protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
+        writer.write(data.getString("Lines"));
     }
-    
-    public long getExportedLinesCount() {
-        return this.exportedLinesCount;
+
+    protected int startCol(String[] cols) {
+        if (isTableVersioned(cols))
+            return 6; // shifted by "Obj_Id", "Record_Id",
+        // "Dataset_Id", "Version", "Delete_Versions", "Line_Number"
+
+        return 3; // shifted by "Obj_Id", "Record_Id", "Line_Number"
     }
 
 }

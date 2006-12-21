@@ -5,21 +5,17 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.other.CountryStateCountyDataExporter;
 
 import java.io.PrintWriter;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     
     private SqlDataTypes sqlDataTypes;
-    
-    private FileFormat fileFormat;
     
     public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
         this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(),optimizedBatchSize);
@@ -50,13 +46,4 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
         return factory.get(fileFormatName);
     }
     
-    protected String formatValue(String[] cols, int index, ResultSet data) throws SQLException {
-        int fileIndex = index;
-        if (isTableVersioned(cols))
-            fileIndex = index - 3;
-
-        Column column = fileFormat.cols()[fileIndex - 2];
-        return getFixedPositionValue(column, data);
-    }
-
 }
