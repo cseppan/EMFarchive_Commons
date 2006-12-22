@@ -7,15 +7,12 @@ import gov.epa.emissions.commons.io.TableFormat;
 
 public class DataTable {
 
-    private Dataset dataset;
-
     private String name;
 
     private TableCreator delegate;
 
     public DataTable(Dataset dataset, Datasource datasource) {
-        this.dataset = dataset;
-        this.name = createName();
+        this.name = createName(dataset.getName());
         this.delegate = new TableCreator(datasource);
     }
 
@@ -23,9 +20,7 @@ public class DataTable {
         return name;
     }
 
-    private String createName() {
-        String result = dataset.getName();
-
+    private String createName(String result) {
         for (int i = 0; i < result.length(); i++) {
             if (!Character.isJavaLetterOrDigit(result.charAt(i))) {
                 result = result.replace(result.charAt(i), '_');
@@ -64,6 +59,14 @@ public class DataTable {
         drop(name());
     }
 
+    public void rename(String newName) throws ImporterException {
+        try {
+            delegate.rename(name, createName(newName));
+        } catch (Exception e) {
+            throw new ImporterException("could not rename table " + name + ", " + e.getMessage());
+        }
+    }
+    
     public boolean exists(String table) throws Exception {
         return delegate.exists(table);
     }

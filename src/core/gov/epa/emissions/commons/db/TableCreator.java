@@ -24,6 +24,17 @@ public class TableCreator {
 
     }
 
+    public void rename(String table, String newName) throws Exception {
+        TableDefinition tableDefinition = datasource.tableDefinition();
+        checkTableExist(tableDefinition, newName);
+        try {
+            tableDefinition.renameTable(table, newName);
+        } catch (SQLException e) {
+            throw new Exception("could not rename table - " + table + " to " + newName + "\n" + e.getMessage(), e);
+        }
+        
+    }
+
     private void checkTableExist(TableDefinition tableDefinition, String table) throws Exception {
         try {
             if (tableDefinition.tableExists(table)) {

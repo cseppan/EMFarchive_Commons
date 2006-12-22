@@ -11,6 +11,8 @@ public interface TableDefinition {
 
     void createTable(String table, DbColumn[] cols) throws SQLException;
 
+    void renameTable(String table, String newName) throws SQLException;
+
     void dropTable(String table) throws SQLException, Exception;
 
     boolean tableExists(String tableName) throws Exception;

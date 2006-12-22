@@ -89,4 +89,9 @@ public class PostgresTableDefinition implements TableDefinition {
         return delegate.totalRows(qualified(tableName));
     }
 
+    public void renameTable(String table, String newName) throws SQLException {
+        String renameQuery = "ALTER TABLE " + qualified(table) + " RENAME TO " + newName;
+        execute(renameQuery);
+    }
+
 }
