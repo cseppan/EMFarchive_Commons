@@ -31,7 +31,7 @@ public class TableCreator {
                         + "' already exists in the database, and cannot be created");
             }
         } catch (Exception e) {
-            throw new Exception("Could not check table '" + table + "' exist or not\n" + e.getMessage());
+            throw new Exception(e.getMessage());
         }
 
     }
