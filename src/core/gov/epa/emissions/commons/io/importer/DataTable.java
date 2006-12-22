@@ -20,9 +20,9 @@ public class DataTable {
         return name;
     }
 
-    private String createName(String result) {
+    public String createName(String result) {
         for (int i = 0; i < result.length(); i++) {
-            if (!Character.isJavaLetterOrDigit(result.charAt(i))) {
+            if (!Character.isLetterOrDigit(result.charAt(i))) {
                 result = result.replace(result.charAt(i), '_');
             }
         }
