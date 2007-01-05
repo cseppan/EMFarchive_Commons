@@ -203,4 +203,19 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("", tokens[7]);
 
     }
+    
+    public void testLineStartsWithTheDoubleQuoteForDelimitedIdenitifyingTokenizer() throws ImporterException {
+        String input = "\"00,0,0\";\"ACROLEI_NOI\";\"ACROLEIN\";1;56.0633;1";
+        Tokenizer tokenizer = new DelimiterIdentifyingTokenizer(3);
+        String[] tokens = tokenizer.tokens(input);
+        
+        assertEquals(6, tokens.length);
+        assertEquals("00,0,0", tokens[0]);
+        assertEquals("ACROLEI_NOI", tokens[1]);
+        assertEquals("ACROLEIN", tokens[2]);
+        assertEquals("1", tokens[3]);
+        assertEquals("56.0633", tokens[4]);
+        assertEquals("1", tokens[5]);
+    }
+    
 }

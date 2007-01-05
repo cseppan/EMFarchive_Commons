@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DataModifier;
 import gov.epa.emissions.commons.db.DatabaseSetup;
 import gov.epa.emissions.commons.db.Datasource;
@@ -10,9 +11,14 @@ import gov.epa.emissions.commons.db.TableDefinition;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.io.TableFormat;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -30,6 +36,7 @@ public abstract class PersistenceTestCase extends TestCase {
     }
 
     public PersistenceTestCase() {
+        //Nothing
     }
 
     protected void setUp() throws Exception {
@@ -103,5 +110,35 @@ public abstract class PersistenceTestCase extends TestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
         return tableReader.count(datasource.getName(), tableName);
+    }
+
+    protected List readData(File file) throws IOException {
+        List data = new ArrayList();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(file));
+            for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+                if (isNotEmpty(line) && !isComment(line))
+                    data.add(line);
+            }
+        } finally {
+            if (bufferedReader != null)
+                bufferedReader.close();
+        }
+        return data;
+    }
+
+    protected boolean isNotEmpty(String line) {
+        return line.length() != 0;
+    }
+
+    protected boolean isComment(String line) {
+        return line.startsWith("#");
+    }
+
+    protected void dropDatasetDataTable(Dataset dataset) throws Exception {
+        Datasource datasource = dbServer().getEmissionsDatasource();
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
+        dbUpdate.dropTable(datasource.getName(), dataset.getName());
     }
 }

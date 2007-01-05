@@ -20,28 +20,65 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
 
     private void identifyTokenizer(String input) throws ImporterException {
         initialize = true;
-        Tokenizer commaTokenizer = new CommaDelimitedTokenizer();
-        String[] tokens = commaTokenizer.tokens(input);
-        if (tokens.length >= minTokens) {
+
+        Tokenizer commaTokenizer = commaTokenizer(input);
+        if (commaTokenizer != null) {
             tokenizer = commaTokenizer;
             return;
         }
 
-        Tokenizer semiColonTokenizer = new SemiColonDelimitedTokenizer();
-        tokens = semiColonTokenizer.tokens(input);
-        if (tokens.length >= minTokens) {
+        Tokenizer semiColonTokenizer = semiColonTokenizer(input);
+        if (semiColonTokenizer != null) {
             tokenizer = semiColonTokenizer;
             return;
         }
 
-        Tokenizer whiteSpaceDelimiter = new WhitespaceDelimitedTokenizer();
-        tokens = whiteSpaceDelimiter.tokens(input);
-        if (tokens.length >= minTokens) {
-            tokenizer = whiteSpaceDelimiter;
+        Tokenizer whiteSpaceTokenizer = whitespaceTokenizer(input);
+        if (whiteSpaceTokenizer != null) {
+            tokenizer = whiteSpaceTokenizer;
             return;
         }
 
         throw new ImporterException("Could not identify the delimiter");
 
+    }
+
+    private Tokenizer commaTokenizer(String input) throws ImporterException {
+        Tokenizer commaTokenizer = new CommaDelimitedTokenizer();
+        try {
+            String[] tokens = commaTokenizer.tokens(input);
+            if (tokens.length >= minTokens) {
+                return commaTokenizer;
+            }
+            return null;
+        } catch (IllegalStateException e) {
+            return null;
+        }
+    }
+
+    private Tokenizer semiColonTokenizer(String input) throws ImporterException {
+        Tokenizer semiColonTokenizer = new SemiColonDelimitedTokenizer();
+        try {
+            String[] tokens = semiColonTokenizer.tokens(input);
+            if (tokens.length >= minTokens) {
+                return semiColonTokenizer;
+            }
+            return null;
+        } catch (IllegalStateException e) {
+            return null;
+        }
+    }
+
+    private Tokenizer whitespaceTokenizer(String input) throws ImporterException {
+        Tokenizer whiteSpaceTokenizer = new WhitespaceDelimitedTokenizer();
+        try {
+            String[] tokens = whiteSpaceTokenizer.tokens(input);
+            if (tokens.length >= minTokens) {
+                return whiteSpaceTokenizer;
+            }
+            return null;
+        } catch (IllegalStateException e) {
+            return null;
+        }
     }
 }

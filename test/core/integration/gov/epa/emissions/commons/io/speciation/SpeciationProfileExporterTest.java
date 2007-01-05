@@ -3,18 +3,18 @@ package gov.epa.emissions.commons.io.speciation;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
-import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.io.ExporterException;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class SpeciationProfileExporterTest extends PersistenceTestCase {
@@ -23,7 +23,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
 
     private Dataset dataset;
 
-    private DbServer dbServer;
+    public DbServer dbServer;
 
     private Integer optimizedBatchSize;
 
@@ -34,31 +34,56 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         sqlDataTypes = dbServer.getSqlDataTypes();
 
         optimizedBatchSize = new Integer(10000);
-        
-        dataset = new SimpleDataset();
-        dataset.setName("test");
+
+        dataset = dataset("test");
+    }
+
+    private Dataset dataset(String name) {
+        Dataset dataset = new SimpleDataset();
+        dataset.setName(name);
         dataset.setId(Math.abs(new Random().nextInt()));
         dataset.setDatasetType(new DatasetType("dsType"));
+        return dataset;
     }
 
     protected void doTearDown() throws Exception {
-        Datasource datasource = dbServer.getEmissionsDatasource();
-        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dropDatasetDataTable(dataset);
     }
 
     public void testExportChemicalSpeciationData() throws Exception {
-        File folder = new File("test/data/speciation");
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, dbServer, sqlDataTypes);
-        importer.run();
+        Dataset repeatDataset = dataset("repeatTest");
+        try {
+            File folder = new File("test/data/speciation");
+            SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
+                    new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes);
+            importer.run();
 
-        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
-        File file = File.createTempFile("speciatiationprofileexported", ".txt");
-        exporter.export(file);
-        // FIXME: compare the original file and the exported file.
-        assertEquals(88, countRecords());
-        assertEquals(88, exporter.getExportedLinesCount());
+            SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
+                    optimizedBatchSize);
+            File file = File.createTempFile("speciatiationprofileexported", ".txt");
+            exporter.export(file);
+            List data = readData(file);
+
+            // reimport the exported file
+            SpeciationProfileImporter repeatImporter = new SpeciationProfileImporter(file.getParentFile(),
+                    new String[] { file.getName() }, repeatDataset, dbServer, sqlDataTypes);
+            repeatImporter.run();
+
+            File repeatFile = File.createTempFile("repeatSpeciatiationprofileexported", ".txt");
+            SpeciationProfileExporter repeatExporter = new SpeciationProfileExporter(repeatDataset, dbServer,
+                    sqlDataTypes, optimizedBatchSize);
+            repeatExporter.export(repeatFile);
+            List repeatData = readData(repeatFile);
+
+            assertEquals(data.size(), repeatData.size());
+            for (int i = 0; i < data.size(); i++) {
+                assertEquals(data.get(i), repeatData.get(i));
+            }
+
+            assertEquals(88, exporter.getExportedLinesCount());
+        } finally {
+            dropDatasetDataTable(repeatDataset);
+        }
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
@@ -66,26 +91,28 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         version.setVersion(0);
 
         File folder = new File("test/data/speciation");
-        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder, new String[]{"gspro-speciation.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gspro-speciation.txt"));
-        importerv.run();
+        importFile(folder, "gspro-speciation.txt", dataset, version);
 
-        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File file = File.createTempFile("speciatiationprofileexported", ".txt");
-        exporter.export(file);
-        // FIXME: compare the original file and the exported file.
-        assertEquals(88, countRecords());
+        exportFile(dataset, version, file);
+
     }
 
-    
-    private int countRecords() {
-        Datasource datasource = dbServer.getEmissionsDatasource();
-        TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+    private void exportFile(Dataset dataset, Version version, File file) throws ExporterException {
+        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        exporter.export(file);
     }
-    
+
+    private void importFile(File folder, String fileName, Dataset dataset, Version version) throws ImporterException {
+        SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
+                new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes,
+                new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+                fileName));
+        importerv.run();
+    }
+
     private Date lastModifiedDate(File folder, String fileName) {
         return new Date(new File(folder, fileName).lastModified());
     }

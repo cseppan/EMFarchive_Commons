@@ -225,22 +225,6 @@ public class IDAExImporterTest extends PersistenceTestCase {
 
     }
 
-    private List readData(File file) throws IOException {
-        List data = new ArrayList();
-
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        for (String line = r.readLine(); line != null; line = r.readLine()) {
-            if (isNotEmpty(line) && !isComment(line))
-                data.add(line);
-        }
-
-        return data;
-    }
-
-    private boolean isNotEmpty(String line) {
-        return line.length() != 0;
-    }
-
     private List readComments(File file) throws IOException {
         List lines = new ArrayList();
 
@@ -251,10 +235,6 @@ public class IDAExImporterTest extends PersistenceTestCase {
         }
 
         return lines;
-    }
-
-    private boolean isComment(String line) {
-        return line.startsWith("#");
     }
 
     public void testShouldImportACanadaNonpointFile() throws Exception {

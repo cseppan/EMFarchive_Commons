@@ -19,6 +19,9 @@ public class DelimitedTokenizer {
         while (m.find()) {
             String token = input.substring(m.start(), m.end()).trim();
 
+            if (token.length() == input.trim().length())
+                return new String[] { token };
+
             if (token.startsWith("\"")) {
                 tokens.add(startWithDoubleQuote(input, m, token));
             } else if (token.startsWith("'")) {

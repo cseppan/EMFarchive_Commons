@@ -15,11 +15,8 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -288,10 +285,10 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
     public void testShouldImportExportVersionedWeeklyPacket() throws Exception {
         Version version = version(dataset.getId());
-        runVersionProfileImporter("weekly.txt",dataset,version);
+        runVersionProfileImporter("weekly.txt", dataset, version);
         assertEquals(13, countRecords("WEEKLY"));
 
-        File exportfile =runVersionProfileExporter(version);
+        File exportfile = runVersionProfileExporter(version);
         List records = readData(exportfile);
         assertEquals(13, records.size());
 
@@ -302,15 +299,15 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
     public void testShouldGiveCorrectExportedLinesNumber() throws Exception {
         Version version = version(dataset.getId());
-        runVersionProfileImporter("weekly.txt",dataset,version);
+        runVersionProfileImporter("weekly.txt", dataset, version);
         assertEquals(13, countRecords("WEEKLY"));
-        
+
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         assertEquals(13, exporter.getExportedLinesCount());
-        
+
         TemporalProfileExporter exporter2 = new TemporalProfileExporter(dataset, dbServer, typeMapper,
                 optimizedBatchSize);
         File exportfile2 = File.createTempFile("VersionedTemporalProfileExported", ".txt");
@@ -321,26 +318,6 @@ public class TemporalProfileTest extends PersistenceTestCase {
     private int countRecords(String table) {
         Datasource datasource = dbServer.getEmissionsDatasource();
         return tableReader.count(datasource.getName(), table);
-    }
-
-    private List readData(File file) throws IOException {
-        List data = new ArrayList();
-
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        for (String line = r.readLine(); line != null; line = r.readLine()) {
-            if (isNotEmpty(line) && !isComment(line))
-                data.add(line);
-        }
-
-        return data;
-    }
-
-    private boolean isNotEmpty(String line) {
-        return line.length() != 0;
-    }
-
-    private boolean isComment(String line) {
-        return line.startsWith("/");
     }
 
     private void runProfileImporter(String fileName) throws ImporterException {
@@ -364,7 +341,8 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
                 .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer, lastModifiedDate(file.getParentFile(),fileName));
+        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer, lastModifiedDate(file
+                .getParentFile(), fileName));
         importer.run();
     }
 
@@ -382,9 +360,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         version.setDatasetId(datasetId);
         return version;
     }
-    
+
     private Date lastModifiedDate(File folder, String fileName) {
-        return new Date(new File(folder,fileName).lastModified());
+        return new Date(new File(folder, fileName).lastModified());
+    }
+
+    protected boolean isComment(String line) {
+        return line.startsWith("/") ||line.startsWith("#");
     }
 
 }

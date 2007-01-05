@@ -86,22 +86,6 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         assertEquals("37001,2201001150,\"100414\",1.06262,,,,,,,,! EPA-derived", line);
     }
 
-    private List readData(File file) throws IOException {
-        List data = new ArrayList();
-
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        for (String line = r.readLine(); line != null; line = r.readLine()) {
-            if (isNotEmpty(line) && !isComment(line))
-                data.add(line);
-        }
-
-        return data;
-    }
-
-    private boolean isNotEmpty(String line) {
-        return line.length() != 0;
-    }
-
     private List headers(String description) {
         List headers = new ArrayList();
         Pattern p = Pattern.compile("\n");
@@ -121,10 +105,6 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
         }
 
         return lines;
-    }
-
-    private boolean isComment(String line) {
-        return line.startsWith("#");
     }
 
 }

@@ -13,11 +13,7 @@ import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -67,8 +63,8 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
 
         String expectedFirst = "HGSUM           593748                   Y 0.8696      N     tons/yr          Mercury, Unspeciated                    Methyl Mercury                          ";
         String expectedLast = "DIMTHYLAMAZ     60117                    N      1  N   N     tons/yr          Dimethyl aminoazobenzene, 4- , fine PM  4-Dimethylaminoazobenzene               ";
-        assertEquals(expectedFirst, data.get(5));
-        assertEquals(expectedLast, data.get(602));
+        assertEquals(expectedFirst, data.get(0));
+        assertEquals(expectedLast, data.get(597));
         assertEquals(598, countRecords());
         assertEquals(598, exporter.getExportedLinesCount());
     }
@@ -100,16 +96,6 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         return tableReader.count(datasource.getName(), dataset.getName());
     }
     
-    private List readData(File file) throws IOException {
-        List data = new ArrayList();
-
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        for (String line = r.readLine(); line != null; line = r.readLine())
-            data.add(line);
-
-        return data;
-    }
-
     private Date lastModifiedDate(File folder, String fileName) {
         return new Date(new File(folder, fileName).lastModified());
     }

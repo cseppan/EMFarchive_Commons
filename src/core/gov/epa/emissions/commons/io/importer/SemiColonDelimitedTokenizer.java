@@ -2,12 +2,10 @@ package gov.epa.emissions.commons.io.importer;
 
 public class SemiColonDelimitedTokenizer implements Tokenizer {
 
-    private static final String ANY_CHAR_EXCEPT_SEMICOLON = "[^;]+";
-
     private DelimitedTokenizer delegate;
 
     public SemiColonDelimitedTokenizer() {
-        String pattern = ANY_CHAR_EXCEPT_SEMICOLON + "|" + INLINE_COMMENTS;
+        String pattern =  pattern = "[^;]+";
         delegate = new DelimitedTokenizer(pattern);
     }
 
@@ -26,5 +24,5 @@ public class SemiColonDelimitedTokenizer implements Tokenizer {
 
         return input;
     }
-
+    
 }
