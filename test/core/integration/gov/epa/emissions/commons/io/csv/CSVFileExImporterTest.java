@@ -9,7 +9,9 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.importer.Importer;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
@@ -34,20 +36,27 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tableName = "test";
-        dataset = new SimpleDataset();
-        dataset.setName("test");
-        dataset.setDatasetType(new DatasetType("dsType"));
-        
+        dataset = dataset(tableName);
+
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         datasource = dbServer.getEmissionsDatasource();
         optimizedBatchSize = new Integer(10000);
     }
 
+    private Dataset dataset(String name) {
+        SimpleDataset dataset = new SimpleDataset();
+        dataset.setName(name);
+        DatasetType datasetType = new DatasetType("dsType");
+        dataset.setDatasetType(datasetType);
+        dataset.setInlineCommentSetting(false);
+
+        return dataset;
+    }
+
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), tableName);
-        dropData("versions", datasource);
     }
 
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
@@ -63,7 +72,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
 
         List data = readData(file);
-        assertEquals(data.get(0), "pollutant_code,pollutant_name,comments");
+        assertEquals(data.get(0), "pollutant_code,pollutant_name");
         assertEquals(data.get(8), "\"VOC\",\"VOC\"");
         assertEquals(8, exporter.getExportedLinesCount());
     }
@@ -75,23 +84,22 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/reference");
         Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, dbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder, "pollutants.txt"));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+                "pollutants.txt"));
         importerv.run();
 
         int rows = countRecords();
         assertEquals(8, rows);
 
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version,
+                dataset), optimizedBatchSize);
         exporter.export(file);
 
         List data = readData(file);
         assertEquals(data.get(1), "\"CO\",\"CO\"");
         assertEquals(data.get(8), "\"VOC\",\"VOC\"");
     }
-
-    
 
     public void testShouldExImportSimpleCommaDelimitedCSVFile() throws Exception {
         File folder = new File("test/data/csv");
@@ -112,25 +120,44 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldExImportSurrogateSpecFile() throws Exception {
-        File folder = new File("test/data/csv");
-        Importer importer = new CSVImporter(folder, new String[] { "surrogate_specification.csv" }, dataset, dbServer,
-                sqlDataTypes);
-        importer.run();
+        Dataset repeatDataset = dataset("repeatTest");
 
-        int rows = countRecords();
-        assertEquals(14, rows);
+        try {
+            File folder = new File("test/data/csv");
+            String fileName = "surrogate_specification.csv";
+            importFile(folder, fileName, dataset);
 
-        File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
+            int rows = countRecords();
+            assertEquals(14, rows);
+
+            File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
+            exportFile(file, dataset);
+
+            importFile(file.getParentFile(), file.getName(), repeatDataset);
+            File repeatFile = File.createTempFile("RepeatExportedCommaDelimitedFile", ".txt");
+            exportFile(repeatFile, repeatDataset);
+
+            List data = readData(file);
+            List repeatData = readData(repeatFile);
+
+            assertEquals(data.size(), repeatData.size());
+            for (int i = 0; i < data.size(); i++) {
+                assertEquals(data.get(i), repeatData.get(i));
+            }
+        } finally {
+            dropTable(repeatDataset.getName(), datasource);
+        }
+
+    }
+
+    private void exportFile(File file, Dataset dataset) throws ExporterException {
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(file);
+    }
 
-        List data = readData(file);
-        String expect = "\"USA\",\"Population\",\"100\",\"pophu2k\",\"POP2000\",\"\",\"\",\"\",\"\",\"\",\"\"," + "\"Total population from Census 2000 blocks\",\"\"";
-        assertEquals(data.get(1), expect);
-        expect = "\"USA\",\"3/4 Total Roadway Miles plus 1/4 Population\",\"255\",\"\",\"\",\"\",\"\","
-                + "\"0.75*Total Road Miles+0.25*Population\",\"Population\",\"\",\"\","
-                + "\"Combination of  3/4 total road miles surrogate ratio and 1/4 population surrogate ratio\",\"\"";
-        assertEquals(data.get(7), expect);
+    private void importFile(File folder, String fileName, Dataset dataset) throws ImporterException {
+        Importer importer = new CSVImporter(folder, new String[] { fileName }, dataset, dbServer, sqlDataTypes);
+        importer.run();
     }
 
     public void testShouldExImportShapeCatFile() throws Exception {
@@ -140,20 +167,22 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/csv");
         Importer importer = new CSVImporter(folder, new String[] { "shapefile_catalog.csv" }, dataset, dbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"shapefile_catalog.csv" ));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+                "shapefile_catalog.csv"));
         importerv.run();
 
         int rows = countRecords();
         assertEquals(41, rows);
 
         File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version,
+                dataset), optimizedBatchSize);
         exporter.export(file);
 
         List data = readData(file);
         String expect = "\"cnty_tn_lcc\",\"D:\\MIMS\\mimssp_7_2005\\data\\\",\"SPHERE\","
-                + "\"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97\"," + "\"TN county boundaries\",\"from UNC CEP machine\",\"\"";
+                + "\"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97\","
+                + "\"TN county boundaries\",\"from UNC CEP machine\",\"\"";
         assertEquals(expect, data.get(1));
         expect = "\"us_ph\",\"D:\\MIMS\\emiss_shp2003\\us\\\",\"\",\"\",\"The change in housing between 1990 and 2000\",\"US Census Bureau\",\"No Data\"";
         assertEquals(data.get(7), expect);
@@ -165,6 +194,6 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     }
 
     private Date lastModifiedDate(File folder, String fileName) {
-        return new Date(new File(folder,fileName).lastModified());
+        return new Date(new File(folder, fileName).lastModified());
     }
 }

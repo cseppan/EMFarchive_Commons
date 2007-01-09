@@ -70,6 +70,7 @@ public abstract class PersistenceTestCase extends TestCase {
 
     protected final void tearDown() throws Exception {
         doTearDown();
+        dropData("versions", dbServer().getEmissionsDatasource());
         dbSetup.tearDown();
     }
 

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SimpleDataset implements Dataset {
+    
     private int datasetid;
 
     private String name;
@@ -43,13 +44,15 @@ public class SimpleDataset implements Dataset {
 
     private Country country;
 
+    private boolean inlineComments;
+
     /**
      * No argument constructor needed for hibernate bean mapping
      */
     public SimpleDataset() {
         internalSources = new ArrayList();
         externalSources = new ArrayList();
-
+        inlineComments = true;
     }
 
     public String getDatasetTypeName() {
@@ -218,7 +221,7 @@ public class SimpleDataset implements Dataset {
     }
 
     public boolean getInlineCommentSetting() {
-        return true;
+        return inlineComments;
     }
 
     public boolean getHeaderCommentsSetting() {
@@ -231,6 +234,11 @@ public class SimpleDataset implements Dataset {
 
     public String getHeaderCommentChar() {
         return "#";
+    }
+
+    
+    public void setInlineCommentSetting(boolean inlineComments) {
+        this.inlineComments = inlineComments;
     }
 
 }
