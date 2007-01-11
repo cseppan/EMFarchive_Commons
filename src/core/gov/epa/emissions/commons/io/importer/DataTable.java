@@ -10,7 +10,7 @@ public class DataTable {
     private String name;
 
     private TableCreator delegate;
-
+    
     public DataTable(Dataset dataset, Datasource datasource) {
         this.name = createName(dataset.getName());
         this.delegate = new TableCreator(datasource);
@@ -59,9 +59,9 @@ public class DataTable {
         drop(name());
     }
 
-    public void rename(String newName) throws ImporterException {
+    public void rename(String oldName, String newName) throws ImporterException {
         try {
-            delegate.rename(name, createName(newName));
+            delegate.rename(oldName, createName(newName));
         } catch (Exception e) {
             throw new ImporterException("could not rename table " + name + ", " + e.getMessage());
         }
