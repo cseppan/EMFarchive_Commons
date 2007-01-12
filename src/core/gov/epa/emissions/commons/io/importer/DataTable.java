@@ -61,7 +61,7 @@ public class DataTable {
 
     public void rename(String oldName, String newName) throws ImporterException {
         try {
-            delegate.rename(oldName, createName(newName));
+            delegate.rename(oldName, newName);
         } catch (Exception e) {
             throw new ImporterException("could not rename table " + name + ", " + e.getMessage());
         }
