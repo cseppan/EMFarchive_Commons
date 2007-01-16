@@ -5,7 +5,7 @@ public class SemiColonDelimitedTokenizer implements Tokenizer {
     private DelimitedTokenizer delegate;
 
     public SemiColonDelimitedTokenizer() {
-        String pattern =  pattern = "[^;]+";
+        String pattern =  "[^;]+";
         delegate = new DelimitedTokenizer(pattern);
     }
 
