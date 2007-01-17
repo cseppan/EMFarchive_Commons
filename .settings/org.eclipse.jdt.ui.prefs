@@ -1,7 +1,7 @@
-#Mon Dec 26 21:59:39 EST 2005
+#Wed Jan 17 17:09:41 EST 2007
 eclipse.preferences.version=1
 formatter_profile=_CEP
-formatter_settings_version=9
+formatter_settings_version=10
 internal.default.compliance=default
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
