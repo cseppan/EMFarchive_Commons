@@ -60,6 +60,9 @@ public class Page {
     }
 
     public int getMax() {
+        if (count() == 0)
+            return min;
+        
         return min + count() - 1;
     }
 
