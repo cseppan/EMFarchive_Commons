@@ -36,10 +36,12 @@ public class IDADataLoader implements DataLoader {
     }
 
     private String countryAbbr(String country) throws ImporterException {
-        if (country.toUpperCase().equals("US"))// for US, IDA file uses the abbr
-            return "US";
+        String countryInUpperCase = country.toUpperCase();
 
-        String query = "SELECT country_abbr FROM reference.countries WHERE country_name='" + country + "'";
+        //In IDA file for country, full name or country abbr is used 
+        String query = "SELECT country_abbr FROM reference.countries WHERE country_name='" + countryInUpperCase + "'"
+                + " OR " + "country_abbr='" + countryInUpperCase + "'";
+
         ResultSet rs = null;
         try {
             rs = referenceDatasource.query().executeQuery(query);
