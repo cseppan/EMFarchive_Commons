@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public class OptimizedTableModifier extends TableModifier {
 
-    private static final int BATCH_SIZE = 1000;
+    private static final int BATCH_SIZE = 20000;
 
     private int counter;
 
@@ -15,6 +15,7 @@ public class OptimizedTableModifier extends TableModifier {
 
     public void start() throws SQLException {
         connection.setAutoCommit(false);
+        System.out.println("Batch size = "+BATCH_SIZE);
     }
 
     public void insert(String[] data) throws Exception {
