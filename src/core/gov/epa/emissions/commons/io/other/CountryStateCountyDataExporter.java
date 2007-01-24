@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
@@ -14,9 +15,8 @@ import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -71,7 +71,8 @@ public class CountryStateCountyDataExporter implements Exporter {
     public void export(File file) throws ExporterException {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            //writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         }

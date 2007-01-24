@@ -100,6 +100,31 @@ public class LineExporterTest extends PersistenceTestCase {
         assertEquals(expectedPattern3, records.get(15));
         assertEquals(expectedPattern4, records.get(21));
     }
+ 
+    public void testExportSmallLineFileWithSepcialChars() throws Exception {
+        Version version = version();
+        File folder = new File("test/data/ida");
+        LineImporter importer = new LineImporter(folder, new String[] { "short_2000negu_canada_province_truncated_ida.txt" }, dataset, dbServer,
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        "small-point.txt"));
+        importer2.run();
+        
+        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+                version, dataset), optimizedBatchSize);
+        File file = File.createTempFile("lineexporter", ".txt");
+        exporter.export(file);
+        assertEquals(29, countRecords());
+        
+        // assert records
+        List records = readData(file);
+        
+        String expectedPattern1 = "HYDRO-QUÉBEC;Centrale des Iles-de-la-Mad39999999";
+        String expectedPattern2 = "LES PAPIERS PERKINS LTÉE;Division Lachut10200501";
+        
+        assertTrue(records.get(11).toString().indexOf(expectedPattern1) > 0);
+        assertTrue(records.get(12).toString().indexOf(expectedPattern2) > 0);
+    }
 
     private Date lastModifiedDate(File folder, String fileName) {
         return new Date(new File(folder, fileName).lastModified());
