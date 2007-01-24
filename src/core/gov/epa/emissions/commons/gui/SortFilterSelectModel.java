@@ -30,7 +30,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         setColumnHeaders(getDelegateColumnNames());
     }
 
-    public Class getColumnClass(int col) {
+    public Class<?> getColumnClass(int col) {
         if (col == 0)
             return super.getColumnClass(col);
 
@@ -118,12 +118,12 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
     }
 
     String[] getDelegateColumnNames() {
-        List names = new ArrayList();
+        List<String> names = new ArrayList<String>();
         for (int i = 0; i < delegate.getColumnCount(); i++) {
             names.add(delegate.getColumnName(i));
         }
 
-        return (String[]) names.toArray(new String[0]);
+        return names.toArray(new String[0]);
     }
 
     public int getSelectedCount() {
@@ -146,7 +146,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         resetSelections(getSelectedIndexes());
     }
 
-    public List selected() {
+    public List<?> selected() {
         int[] selected = getSelectedIndexes();
         return delegate.elements(selected);
     }
