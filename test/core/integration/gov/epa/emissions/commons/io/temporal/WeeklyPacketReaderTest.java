@@ -2,15 +2,15 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.FixedWidthPacketReader;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PacketReader;
-import gov.epa.emissions.commons.io.temporal.WeeklyFileFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.jmock.Mock;
@@ -29,7 +29,7 @@ public class WeeklyPacketReaderTest extends MockObjectTestCase {
         typeMapper.stubs().method(ANYTHING).will(returnValue("ANY"));
 
         FileFormat cols = new WeeklyFileFormat((SqlDataTypes) typeMapper.proxy());
-        fileReader = new BufferedReader(new FileReader(file));
+        fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
         int lineNumber = 0;
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), cols, lineNumber);
     }

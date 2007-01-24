@@ -1,12 +1,14 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +33,15 @@ public class DelimitedFileReader implements Reader {
     }
 
     public DelimitedFileReader(File file, String[] inLineComments, Tokenizer tokenizer) throws FileNotFoundException {
-        fileReader = new BufferedReader(new FileReader(file));
+        //fileReader = new BufferedReader(new FileReader(file));
+        try {
+            fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("File not found.");
+        } catch (UnsupportedEncodingException e) {
+            throw new FileNotFoundException("Unsupported char set encoding.");
+        }
+        
         comments = new ArrayList();
         this.tokenizer = tokenizer;
         this.inLineComments = inLineComments;

@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.data.DatasetTypeUnit;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.TableFormat;
@@ -21,7 +22,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class TemporalProfileImporter implements Importer {
@@ -62,7 +63,8 @@ public class TemporalProfileImporter implements Importer {
     public void run() throws ImporterException {
         BufferedReader fileReader = null;
         try {
-            fileReader = new BufferedReader(new FileReader(file));
+            //fileReader = new BufferedReader(new FileReader(file));
+            fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
 
             while (!isEndOfFile(fileReader)) {
                 String header = readHeader(fileReader);

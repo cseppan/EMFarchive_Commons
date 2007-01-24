@@ -260,6 +260,17 @@ public class IDAExImporterTest extends PersistenceTestCase {
         assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
     }
 
+    public void testShouldImportACanadaPointFileWithLatinChars() throws Exception {
+        File folder = new File("test/data/ida");
+        String[] fileNames = { "short_2000negu_canada_province_truncated_ida.txt" };
+        IDAPointImporter importer = new IDAPointImporter(folder, fileNames, dataset, dbServer, sqlDataTypes);
+        importer.run();
+        // assert
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        TableReader tableReader = tableReader(datasource);
+        assertEquals(22, tableReader.count(datasource.getName(), dataset.getName()));
+    }
+
     public void testShouldImportAMexicoPointFile() throws Exception {
         File folder = new File("test/data/ida");
         String[] fileNames = { "IDA-MexicoBorderPoint_20051220.txt" };

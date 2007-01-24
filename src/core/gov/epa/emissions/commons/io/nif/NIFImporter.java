@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.TableFormat;
@@ -19,7 +20,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,8 @@ public class NIFImporter {
         Reader fileReader = null;
         try {
             FixedColumnsDataLoader loader = new FixedColumnsDataLoader(datasource, tableFormat);
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+//            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            BufferedReader reader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(fileName)));
             fileReader = new DataReader(reader, 0, new FixedWidthParser(fileFormat));
             loader.load(fileReader, dataset, tableName);
             loadDataset(fileReader.comments(), dataset);

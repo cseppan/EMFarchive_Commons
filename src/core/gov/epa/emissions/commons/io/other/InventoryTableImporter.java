@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.data.DatasetTypeUnit;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.FormatUnit;
@@ -24,7 +25,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -76,7 +77,8 @@ public class InventoryTableImporter implements Importer {
         Reader fileReader = null;
         try {
             DataLoader loader = new FixedColumnsWithLineNoColDataLoader(datasource, tableFormat);
-            BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
+//            BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
+            BufferedReader reader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file.getAbsolutePath())));
             // FIXME: Due to irregularity in inventory data names (1st column in
             // input data file),
             // some extra chars may be extracted into 2nd column (CAS number).

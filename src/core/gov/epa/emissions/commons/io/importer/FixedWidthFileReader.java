@@ -1,12 +1,14 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormat;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,11 @@ public class FixedWidthFileReader implements Reader {
 
     public FixedWidthFileReader(String source, FileFormat fileFormat) throws ImporterException {
         try {
-            fileReader = new BufferedReader(new FileReader(source));
+            fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(source)));
         } catch (FileNotFoundException e) {
             throw new ImporterException("File not found", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new ImporterException("Encoding char set not supported.");
         }
         this.fixedWidthParser = new FixedWidthParser(fileFormat);
         this.comments = new ArrayList();
@@ -39,6 +43,7 @@ public class FixedWidthFileReader implements Reader {
 
     public Record read() throws IOException {
         String line = fileReader.readLine();
+        //System.out.println("Line read through IDA file reader: " + line); //debug purpose
         while (line != null) {
             lineNumber++;
             this.line = line;

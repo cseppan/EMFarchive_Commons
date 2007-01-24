@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
@@ -17,6 +18,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 
 public class WeeklyPacketLoaderTest extends PersistenceTestCase {
@@ -49,7 +51,7 @@ public class WeeklyPacketLoaderTest extends PersistenceTestCase {
 
     public void testShouldLoadRecordsIntoWeeklyTable() throws Exception {
         File file = new File("test/data/temporal-profiles/weekly.txt");
-        BufferedReader fileReader = new BufferedReader(new FileReader(file));
+        BufferedReader fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
         int lineNumber = 0;
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat, lineNumber);
 

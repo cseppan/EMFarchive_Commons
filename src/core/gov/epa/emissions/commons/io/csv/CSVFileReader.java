@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PipeDelimitedTokenizer;
@@ -12,9 +13,10 @@ import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedTokenizer;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +49,8 @@ public class CSVFileReader implements Reader {
 
     public CSVFileReader(File file) throws ImporterException {
         try {
-            fileReader = new BufferedReader(new FileReader(file));
+//            fileReader = new BufferedReader(new FileReader(file));
+            fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
             comments = new ArrayList();
             this.file = file;
             this.lineNumber = 0;
@@ -55,7 +58,10 @@ public class CSVFileReader implements Reader {
         } catch (FileNotFoundException e) {
             log.error("Importer failure: File not found" + "\n" + e);
             throw new ImporterException("Importer failure: File not found");
-        } 
+        } catch (UnsupportedEncodingException e) {
+            log.error("Importer failure: character set encoding not supported" + "\n" + e);
+            throw new ImporterException("Importer failure: character set encoding not supported");
+        }
     }
 
     public void close() throws IOException {

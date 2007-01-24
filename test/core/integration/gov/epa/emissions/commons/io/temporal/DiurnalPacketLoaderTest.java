@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.importer.DataLoader;
 import gov.epa.emissions.commons.io.importer.FixedColumnsDataLoader;
@@ -16,7 +17,7 @@ import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 
 public class DiurnalPacketLoaderTest extends PersistenceTestCase {
 
@@ -45,7 +46,7 @@ public class DiurnalPacketLoaderTest extends PersistenceTestCase {
         loader = new FixedColumnsDataLoader(datasource, tableFormat);
 
         File file = new File("test/data/temporal-profiles/diurnal-weekday.txt");
-        fileReader = new BufferedReader(new FileReader(file));
+        fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
         int lineNumber=0;
         reader = new FixedWidthPacketReader(fileReader, fileReader.readLine().trim(), fileFormat, lineNumber);
     }
