@@ -75,8 +75,8 @@
                destdir="${build.classes.dir}"
                classpathref="classpath"
                debug="on"
-               target="1.4"
-               source="1.4"
+               target="1.6"
+               source="1.6"
         />
         <copy todir="${build.classes.dir}">
             <fileset dir="${src.dir}" includes="**/*.*" />
