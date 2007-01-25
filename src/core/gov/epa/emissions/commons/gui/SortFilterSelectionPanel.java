@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -16,11 +17,11 @@ import javax.swing.ListSelectionModel;
 
 /**
  * <p>
- * Description: This table can both sort and filter data based on criteria
- * entred by the user.
+ * Description: This table can both sort and filter data based on criteria entred by the user.
  * </p>
  */
 public class SortFilterSelectionPanel extends SortFilterTablePanel {
+
     public final static String SELECT_COL_NAME = "Select";
 
     protected JButton selectAllButton;
@@ -35,11 +36,9 @@ public class SortFilterSelectionPanel extends SortFilterTablePanel {
     }
 
     /**
-     * Adding/Removing different actions are implemented in
-     * createPopupMenuAndToolBar This is only implemented in the
-     * gov.epa.emissions.emisview.gui.SortFilterSelectionPanel So if you want to
-     * use this constructor from some other class please refactor the
-     * createPopupMenuAndToolBar()
+     * Adding/Removing different actions are implemented in createPopupMenuAndToolBar This is only implemented in the
+     * gov.epa.emissions.emisview.gui.SortFilterSelectionPanel So if you want to use this constructor from some other
+     * class please refactor the createPopupMenuAndToolBar()
      * 
      */
     public SortFilterSelectionPanel(Component parent, MultiRowHeaderTableModel model, boolean popupMenu, boolean sort,
@@ -48,8 +47,7 @@ public class SortFilterSelectionPanel extends SortFilterTablePanel {
     }
 
     /**
-     * Create the popup menu for the table. Also add any items that are not
-     * column specific to the toolbar.
+     * Create the popup menu for the table. Also add any items that are not column specific to the toolbar.
      */
     protected void createPopupMenuAndToolBar() {
         Action action = null;
@@ -175,6 +173,26 @@ public class SortFilterSelectionPanel extends SortFilterTablePanel {
         }
 
         return null;
+    }
+
+    /**
+     * @return the selected object from the column ASSUMING UNIQUE column names
+     */
+    public int[] getSelectedIndexes() {
+        int numRows = overallModel.getRowCount();
+        int boolColNo = overallModel.findColumn(SELECT_COL_NAME);
+        List<Integer> selList = new ArrayList<Integer>();
+        for (int i = 0; i < numRows; i++) {
+            Boolean selected = (Boolean) overallModel.getValueAt(i, boolColNo);
+            if (selected.booleanValue()) {
+                selList.add(new Integer(overallModel.getBaseModelRowIndex(i)));
+            }
+        }
+        int[] selectedIndexes = new int[selList.size()];
+        for (int i = 0; i < selectedIndexes.length; i++) {
+            selectedIndexes[i] = selList.get(i).intValue();
+        }
+        return selectedIndexes;
     }
 
     public void addSelectionListener(MouseListener m) {

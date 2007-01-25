@@ -126,8 +126,8 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
         return names.toArray(new String[0]);
     }
 
-    public int getSelectedCount() {
-        return getSelectedIndexes().length;
+    public int getSelectedCount(int[] selected) {
+        return selected(selected).size();
     }
 
     public int[] getSelectedIndexes() {
@@ -149,5 +149,14 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
     public List<?> selected() {
         int[] selected = getSelectedIndexes();
         return delegate.elements(selected);
+    }
+
+    public List<?> selected(int[] selected) {
+        return delegate.elements(selected);
+    }
+
+    //FIXME: remove this method & after propagating SelectableSortFilterWrapper to all the Managers
+    public int getSelectedCount() {
+        return getSelectedIndexes().length;
     }
 }
