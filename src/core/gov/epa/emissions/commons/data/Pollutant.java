@@ -5,7 +5,7 @@ import gov.epa.emissions.commons.security.User;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Pollutant implements Serializable, Lockable {
+public class Pollutant implements Serializable, Lockable, Comparable {
     private int id;
 
     private String name;
@@ -89,5 +89,13 @@ public class Pollutant implements Serializable, Lockable {
 
     public String toString() {
         return name;
+    }
+
+    public int compareTo(Object other) {
+        if (other == null || !(other instanceof Pollutant))
+            return -1;
+
+        Pollutant pollutant = (Pollutant) other;
+        return (pollutant.id == id || pollutant.getName().equalsIgnoreCase(name) ? 0 : -1);
     }
 }
