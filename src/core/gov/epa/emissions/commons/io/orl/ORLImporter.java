@@ -57,6 +57,7 @@ public class ORLImporter {
             doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
                     .tableFormat());
         } catch (Exception e) {
+            e.printStackTrace();
             dataTable.drop();
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }

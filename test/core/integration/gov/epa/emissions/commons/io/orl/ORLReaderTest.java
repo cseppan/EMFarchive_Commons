@@ -66,7 +66,7 @@ public class ORLReaderTest extends PersistenceTestCase {
         reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
 
         for (int i = 0; i < 4; i++) {
-            assertEquals(28, reader.read().size());
+            assertEquals(29, reader.read().size());
         }
 
         assertTrue(reader.read().isEnd());

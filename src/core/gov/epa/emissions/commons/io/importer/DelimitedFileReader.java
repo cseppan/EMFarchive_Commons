@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DelimitedFileReader implements Reader {
@@ -33,7 +34,7 @@ public class DelimitedFileReader implements Reader {
     }
 
     public DelimitedFileReader(File file, String[] inLineComments, Tokenizer tokenizer) throws FileNotFoundException {
-        //fileReader = new BufferedReader(new FileReader(file));
+        // fileReader = new BufferedReader(new FileReader(file));
         try {
             fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
         } catch (FileNotFoundException e) {
@@ -41,7 +42,7 @@ public class DelimitedFileReader implements Reader {
         } catch (UnsupportedEncodingException e) {
             throw new FileNotFoundException("Unsupported char set encoding.");
         }
-        
+
         comments = new ArrayList();
         this.tokenizer = tokenizer;
         this.inLineComments = inLineComments;
@@ -81,13 +82,41 @@ public class DelimitedFileReader implements Reader {
 
             return record;
         }
-        String[] dataAndInlineComments = line.split("!");
-        String[] tokens = tokenizer.tokens(dataAndInlineComments[0]);
+
+        int inlineCommentPosition = getInlineCommentPosition('!', line);
+        String[] tokens = tokenizer.tokens(line.substring(0, inlineCommentPosition));
         record.add(Arrays.asList(tokens));
-        record.add(trimInlineComment(dataAndInlineComments[1]));
+
+        if (inlineCommentPosition < line.length())
+            record.add(trimInlineComment(line.substring(inlineCommentPosition)));
 
         return record;
 
+    }
+
+    private int getInlineCommentPosition(char commentChar, String line) {
+        int first = line.indexOf(commentChar);
+
+        //to search pattern "xxx!xxx" or 'xxx!xxx'
+        Pattern p = Pattern.compile("(\"(.)*[!](.)*\")|('(.)*[!](.)*')");
+        Matcher m = p.matcher(line);
+
+        if (!m.find()) {
+            return first;
+        }
+
+        int end = m.end();
+        
+        while (m.find()) {
+            end = m.end();
+        }
+
+        int index = line.substring(end).indexOf(commentChar);
+
+        if (index < 0)
+            return line.length();
+
+        return end + index;
     }
 
     private String trimInlineComment(String comment) {
@@ -95,7 +124,7 @@ public class DelimitedFileReader implements Reader {
         // 127= 128-1=> for inline comment char '!'
         if (comment.length() > 127)
             comment = comment.substring(0, 127);
-        return "!" + comment;
+        return comment.startsWith("!") ? comment : "!" + comment;
     }
 
     private boolean isComment(String line) {

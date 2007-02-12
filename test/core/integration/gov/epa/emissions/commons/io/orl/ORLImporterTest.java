@@ -82,6 +82,21 @@ public class ORLImporterTest extends HibernateTestCase {
         assertVersionInfo(dataset.getName(), rows);
     }
 
+    public void testShouldImportASmallAndSimpleVersionedPointFileWithExclamationInDoubleQuotes() throws Exception {
+        Version version = new Version();
+        version.setVersion(0);
+        
+        File file = new File("test/data/orl/nc", "point-with-variations.txt");
+        ORLPointImporter orlImporter = new ORLPointImporter(file.getParentFile(), new String[] { file.getName() },
+                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importer = new VersionedImporter(orlImporter, dataset, dbServer, lastModifiedDate(file.getParentFile(),file.getName()));
+        importer.run();
+        
+        int rows = countRecords();
+        assertEquals(4, rows);
+        assertVersionInfo(dataset.getName(), rows);
+    }
+
     private void assertVersionInfo(String name, int rows) throws Exception {
         verifyVersionCols(name, rows);
         verifyVersionZeroEntryInVersionsTable();
