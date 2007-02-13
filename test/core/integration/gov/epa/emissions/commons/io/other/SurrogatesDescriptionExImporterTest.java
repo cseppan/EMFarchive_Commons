@@ -70,14 +70,15 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
     }
     
     public void testExportImportVersionedCEMpthourData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
         version.setDatasetId(dataset.getId());
         
         File folder = new File("test/data/other");
         SurrogatesDescriptionImporter importer = new SurrogatesDescriptionImporter(folder, new String[]{"SRGDESC.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"SRGDESC.txt"));
+                dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"SRGDESC.txt"));
         importerv.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");

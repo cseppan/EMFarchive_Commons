@@ -64,13 +64,14 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
     }
 
     public void testExportVersionedPointStackReplacementsData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/other");
         PointStackReplacementsImporter importer = new PointStackReplacementsImporter(folder, new String[]{"pstk.m3.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"pstk.m3.txt"));
+                dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"pstk.m3.txt"));
         importerv.run();
 
         PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 

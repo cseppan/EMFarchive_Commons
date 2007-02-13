@@ -336,12 +336,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         return exportfile;
     }
 
-    private void runVersionProfileImporter(String fileName, Dataset dataset, Version version) throws ImporterException {
+    private void runVersionProfileImporter(String fileName, Dataset dataset, Version version) throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         File file = new File("test/data/temporal-profiles", fileName);
 
         TemporalProfileImporter tempProImporter = new TemporalProfileImporter(file.getParentFile(), new String[] { file
-                .getName() }, dataset, dbServer, typeMapper, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, dbServer, lastModifiedDate(file
+                .getName() }, dataset, localDbServer, typeMapper, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importer = new VersionedImporter(tempProImporter, dataset, localDbServer, lastModifiedDate(file
                 .getParentFile(), fileName));
         importer.run();
     }

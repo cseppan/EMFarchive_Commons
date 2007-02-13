@@ -68,14 +68,15 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     }
 
     public void testImportVersionedCEMpthourData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
         version.setDatasetId(dataset.getId());
         
         File folder = new File("test/data/other");
         DaySpecPointInventoryImporter importer = new DaySpecPointInventoryImporter(folder, new String[]{"nonCEMptday.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"nonCEMptday.txt"));
+                dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"nonCEMptday.txt"));
         importerv.run();
 
         File exportfile = File.createTempFile("ptdayExported", ".txt");

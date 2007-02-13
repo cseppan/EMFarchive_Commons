@@ -73,11 +73,12 @@ public class LineExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedSmallLineFile() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = version();
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
+        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, localDbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 "small-point.txt"));
         importer2.run();
 
@@ -102,11 +103,12 @@ public class LineExporterTest extends PersistenceTestCase {
     }
  
     public void testExportSmallLineFileWithSepcialChars() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = version();
         File folder = new File("test/data/ida");
-        LineImporter importer = new LineImporter(folder, new String[] { "short_2000negu_canada_province_truncated_ida.txt" }, dataset, dbServer,
+        LineImporter importer = new LineImporter(folder, new String[] { "short_2000negu_canada_province_truncated_ida.txt" }, dataset, localDbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
         "small-point.txt"));
         importer2.run();
         

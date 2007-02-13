@@ -16,13 +16,21 @@ public class DatabaseSetup {
     private DbServer dbServer;
 
     private String dbType;
+    
+    private ConnectionParams params;
+    
+    private String emissionsDatasource;
+    
+    private String referenceDatasource;
+    
+    private String emfDatasource;
 
     public DatabaseSetup(Properties pref) throws SQLException {
         dbType = pref.getProperty("database.type");
 
-        String emissionsDatasource = pref.getProperty("datasource.emissions.name");
-        String referenceDatasource = pref.getProperty("datasource.reference.name");
-        String emfDatasource = pref.getProperty("datasource.emf.name");
+        emissionsDatasource = pref.getProperty("datasource.emissions.name");
+        referenceDatasource = pref.getProperty("datasource.reference.name");
+        emfDatasource = pref.getProperty("datasource.emf.name");
 
         String dbName = pref.getProperty("database.name");
         String host = pref.getProperty("database.host");
@@ -35,7 +43,7 @@ public class DatabaseSetup {
             ConnectionParams referenceParams = new ConnectionParams(referenceDatasource, host, port, username, password);
             createMySqlDbServer(emissionParams, referenceParams);
         } else {
-            ConnectionParams params = new ConnectionParams(dbName, host, port, username, password);
+            params = new ConnectionParams(dbName, host, port, username, password);
             createPostgresDbServer(emissionsDatasource, referenceDatasource,emfDatasource, params);
         }
     }
@@ -48,6 +56,11 @@ public class DatabaseSetup {
             throws SQLException {
         PostgresConnectionFactory factory = PostgresConnectionFactory.get(params);
         dbServer = new PostgresDbServer(factory.getConnection(), referenceDatasource, emissionsDatasource,emfDatasource);
+    }
+
+    public DbServer getNewPostgresDbServerInstance() throws SQLException {
+        PostgresConnectionFactory factory = PostgresConnectionFactory.get(params);
+        return new PostgresDbServer(factory.getConnection(), referenceDatasource, emissionsDatasource,emfDatasource);
     }
 
     private void createMySqlDbServer(ConnectionParams emissionParams, ConnectionParams referenceparams)

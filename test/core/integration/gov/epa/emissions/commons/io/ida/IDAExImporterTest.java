@@ -64,14 +64,15 @@ public class IDAExImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldExportASmallAreaFile() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-area.txt" };
-        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, dbServer,
+        IDANonPointNonRoadImporter importer = new IDANonPointNonRoadImporter(folder, fileNames, dataset, localDbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 fileNames[0]));
         importer2.run();
         // assert
@@ -155,14 +156,15 @@ public class IDAExImporterTest extends PersistenceTestCase {
     }
 
     public void testShouldExportASmallMobileFile() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/ida");
         String[] fileNames = { "small-mobile.txt" };
-        IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, dbServer, sqlDataTypes,
+        IDAMobileImporter importer = new IDAMobileImporter(folder, fileNames, dataset, localDbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 fileNames[0]));
         importer2.run();
         // assert

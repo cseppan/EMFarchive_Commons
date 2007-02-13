@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -16,8 +17,11 @@ public class VersionedImporter implements Importer {
     private Datasource datasource;
 
     private Date lastModifiedDate;
+    
+    private DbServer dbServer;
 
     public VersionedImporter(Importer delegate, Dataset dataset, DbServer dbServer, Date lastModifiedDate) {
+        this.dbServer = dbServer;
         this.delegate = delegate;
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
@@ -30,6 +34,12 @@ public class VersionedImporter implements Importer {
             addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (Exception e) {
             throw new ImporterException("Could not add Version Zero entry to the Versions Table." + e.getMessage());
+        } finally {
+            try {
+                this.dbServer.disconnect();
+            } catch (SQLException exc) {
+                throw new ImporterException("Could not disconnect db server: " + exc.getMessage());
+            }
         }
     }
     

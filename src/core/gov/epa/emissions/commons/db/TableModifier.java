@@ -43,8 +43,12 @@ public class TableModifier {
             throw new Exception("Invalid number of data tokens - " + data.length + ". Number of columns in the table: "
                     + columns.length);
         }
-        insertRow(tableName, data, columns);
-        close();
+
+        try {
+            insertRow(tableName, data, columns);
+        } finally {
+            close();
+        }
     }
 
     private String qualified(String table) {
@@ -71,11 +75,10 @@ public class TableModifier {
                         data[i] = "PM10";
                     else if (data[i].equals("PM25-PRI"))
                         data[i] = "PM2_5";
-                }
-                else if (cols[i].name().equalsIgnoreCase("FIPS")) {
+                } else if (cols[i].name().equalsIgnoreCase("FIPS")) {
                     // add a leading zero if it is missing
                     if (data[i].trim().length() == 4)
-                        data[i] = "0"+data[i];
+                        data[i] = "0" + data[i];
                 }
                 data[i] = escapeString(data[i]);
             } else {

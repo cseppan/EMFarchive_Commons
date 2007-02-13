@@ -80,12 +80,13 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedCountryStateCountyData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = version();
         
         File folder = new File("test/data/other");
         CountryStateCountyDataImporter importer = new CountryStateCountyDataImporter(folder,
-                new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"costcy.txt"));
+                new String[] { "costcy.txt" }, dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"costcy.txt"));
         importerv.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes,

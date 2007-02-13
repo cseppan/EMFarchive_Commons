@@ -51,14 +51,15 @@ public class SpeciationImporterTest extends PersistenceTestCase {
     }
 
     public void testImportVersionedChemicalSpeciationData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/speciation");
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
-                new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes,
+                new String[] { "gspro-speciation.txt" }, dataset, localDbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gspro-speciation.txt"));
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"gspro-speciation.txt"));
         importer2.run();
 
         assertEquals(88, countRecords());

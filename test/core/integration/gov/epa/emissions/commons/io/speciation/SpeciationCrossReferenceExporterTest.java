@@ -76,15 +76,16 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = version(dataset.getId());
 
         File folder = new File("test/data/speciation");
         String fileName = "gsref-point.txt";
 
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[] { fileName }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version,
+                new String[] { fileName }, dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version,
                         dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 fileName));
         importerv.run();
 

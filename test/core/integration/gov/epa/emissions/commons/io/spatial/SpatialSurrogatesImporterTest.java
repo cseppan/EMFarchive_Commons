@@ -50,13 +50,14 @@ public class SpatialSurrogatesImporterTest extends PersistenceTestCase {
     }
 
     public void testImportVersionedSpetialSurrogatesData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/spatial");
         SpatialSurrogatesImporter importer = new SpatialSurrogatesImporter(folder, new String[]{"abmgpro.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"abmgpro.txt"));
+                dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"abmgpro.txt"));
         importerv.run();
 
         assertEquals(43, countRecords());

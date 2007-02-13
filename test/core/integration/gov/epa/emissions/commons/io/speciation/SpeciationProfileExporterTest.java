@@ -7,7 +7,6 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.ExporterException;
-import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
@@ -104,11 +103,12 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
         exporter.export(file);
     }
 
-    private void importFile(File folder, String fileName, Dataset dataset, Version version) throws ImporterException {
+    private void importFile(File folder, String fileName, Dataset dataset, Version version) throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         SpeciationProfileImporter importer = new SpeciationProfileImporter(folder,
-                new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes,
+                new String[] { "gspro-speciation.txt" }, dataset, localDbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 fileName));
         importerv.run();
     }

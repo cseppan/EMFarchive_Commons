@@ -80,11 +80,12 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     public void testImportASmallAndSimplePointFileWithVersionedCSVImporter() throws Exception {
         Version version = new Version();
         version.setVersion(0);
+        DbServer localDBServer = dbSetup.getNewPostgresDbServerInstance();
 
         File folder = new File("test/data/reference");
-        Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, dbServer, sqlDataTypes,
+        Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, localDBServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDBServer, lastModifiedDate(folder,
                 "pollutants.txt"));
         importerv.run();
 
@@ -181,11 +182,12 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     public void testShouldExImportShapeCatFile() throws Exception {
         Version version = new Version();
         version.setVersion(0);
+        DbServer localDBServer = dbSetup.getNewPostgresDbServerInstance();
 
         File folder = new File("test/data/csv");
-        Importer importer = new CSVImporter(folder, new String[] { "shapefile_catalog.csv" }, dataset, dbServer,
+        Importer importer = new CSVImporter(folder, new String[] { "shapefile_catalog.csv" }, dataset, localDBServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDBServer, lastModifiedDate(folder,
                 "shapefile_catalog.csv"));
         importerv.run();
 

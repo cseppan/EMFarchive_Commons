@@ -9,7 +9,6 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.importer.Importer;
-import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
@@ -47,21 +46,23 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         dbUpdate.dropTable(datasource.getName(), "GSCNV");
     }
 
-    public void testImportVersionedGSCNVFile() throws ImporterException {
+    public void testImportVersionedGSCNVFile() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         File folder = new File("test/data/other");
         Importer importer = new GSCNVImporter(folder, new String[] { "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt" },
-                dataset, dbServer, sqlDataTypes);
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
+                dataset, localDbServer, sqlDataTypes);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
         importerv.run();
 
         assertEquals(1231, countRecords(dbServer, "GSCNV"));
     }
 
     public void testExportVersionedGSCNVFile() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         File folder = new File("test/data/other");
         Importer importer = new GSCNVImporter(folder, new String[] { "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt" },
-                dataset, dbServer, sqlDataTypes);
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
+                dataset, localDbServer, sqlDataTypes);
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
         importerv.run();
 
         assertEquals(1231, countRecords(dbServer, "GSCNV"));

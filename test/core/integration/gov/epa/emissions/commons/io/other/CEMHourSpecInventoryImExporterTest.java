@@ -68,12 +68,13 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
     }
     
     public void testImportVersionedCEMpthourData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = version();
         
         File folder = new File("test/data/other");
         CEMHourSpecInventoryImporter importer = new CEMHourSpecInventoryImporter(folder, new String[]{"CEMpthour.txt"}, 
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"CEMpthour.txt"));
+                dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"CEMpthour.txt"));
         importerv.run();
 
         File exportfile = File.createTempFile("CEMpthourExported", ".txt");

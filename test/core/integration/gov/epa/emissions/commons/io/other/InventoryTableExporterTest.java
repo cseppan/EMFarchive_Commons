@@ -70,14 +70,15 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
     }
 
     public void testExportVersionedChemicalSpeciationData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/other");
         InventoryTableImporter importer = new InventoryTableImporter(folder,
-                new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes,
+                new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, localDbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 "CAPandHAP_INVTABLE31aug2006.txt"));
         importerv.run();
 

@@ -55,13 +55,14 @@ public class LineImporterTest extends HibernateTestCase {
     }
 
     public void testShouldImportASmallVersionedLineFile() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/orl/nc");
-        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
+        LineImporter importer = new LineImporter(folder, new String[] { "small-point.txt" }, dataset, localDbServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importer2 = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"small-point.txt"));
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"small-point.txt"));
         importer2.run();
 
         int rows = countRecords();

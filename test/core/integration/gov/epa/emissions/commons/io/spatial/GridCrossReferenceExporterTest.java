@@ -62,13 +62,14 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
     }
     
     public void testExportVersionedGridCrossRefData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/spatial");
         GridCrossReferenceImporter importer = new GridCrossReferenceImporter(folder, new String[]{"amgref.txt"},
-                dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,"amgref.txt"));
+                dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"amgref.txt"));
         importerv.run();
         
         GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, dbServer, sqlDataTypes,

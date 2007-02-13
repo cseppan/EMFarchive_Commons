@@ -51,14 +51,15 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     }
 
     public void testImportVersionedSpeciationCrossRefData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[] { "gsref-point.txt" }, dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+                new String[] { "gsref-point.txt" }, dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(
                         version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 "gsref-point.txt"));
         importerv.run();
 
@@ -66,14 +67,15 @@ public class SpeciationCrossReferenceImporterTest extends PersistenceTestCase {
     }
 
     public void testImportSpeciationCrossRefData_WithLongInlineComments() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
         Version version = new Version();
         version.setVersion(0);
 
         File folder = new File("test/data/speciation");
         SpeciationCrossReferenceImporter importer = new SpeciationCrossReferenceImporter(folder,
-                new String[] { "gsrefsample_withLongInlineComments.txt" }, dataset, dbServer, sqlDataTypes,
+                new String[] { "gsrefsample_withLongInlineComments.txt" }, dataset, localDbServer, sqlDataTypes,
                 new VersionedDataFormatFactory(version, dataset));
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, dbServer, lastModifiedDate(folder,
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
                 "gsrefsample_withLongInlineComments.txt"));
         importerv.run();
 
