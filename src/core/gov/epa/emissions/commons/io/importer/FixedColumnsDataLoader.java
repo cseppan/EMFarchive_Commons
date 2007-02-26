@@ -29,7 +29,7 @@ public class FixedColumnsDataLoader implements DataLoader {
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             dropData(table, dataset, dataModifier);
-            int lineNum = reader.lineNumber()-1;
+            int lineNum = reader.lineNumber();
             throw new ImporterException("Line number " + lineNum + ": " + e.getMessage()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         } finally {

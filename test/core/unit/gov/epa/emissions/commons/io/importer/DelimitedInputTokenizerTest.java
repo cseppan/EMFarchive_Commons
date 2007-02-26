@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 public class DelimitedInputTokenizerTest extends TestCase {
 
-    public void testTokenizeStringWithSingleQuotedTextContainingSpacesSpaceDelimited() {
+    public void testTokenizeStringWithSingleQuotedTextContainingSpacesSpaceDelimited() throws ImporterException {
         String input = "37119 0001  'REXAMINC.; CUSTOM   DIVISION'   40201301   hi$ya -wE&9 -9 -9 -9 -9";
 
         WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
@@ -20,7 +20,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-9", tokens[9]);
     }
 
-    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesSpaceDelimited() {
+    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesSpaceDelimited() throws ImporterException {
         String input = "37119 0001  \"REXAMINC.; CUSTOM   DIVISION\"   40201301   hi$ya -wE&9 -9 -9 -9 -9";
 
         WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
@@ -36,7 +36,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-9", tokens[9]);
     }
 
-    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSpaceDelimited() {
+    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesSpaceDelimited() throws ImporterException {
         String input = "37119 0001  \"REXAMINC.; CUSTOM'S   DIVISION\"   40201301   hi$ya -wE&9 -9 -9 -9 -9";
 
         WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
@@ -52,7 +52,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-9", tokens[9]);
     }
 
-    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesTabDelimited() {
+    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesTabDelimited() throws ImporterException {
         String input = "37119   0001  \"REXAMINC.; CUSTOM'S     DIVISION\"      40201301    hi$ya   -wE&9   -9  -9  -9  -9";
 
         WhitespaceDelimitedTokenizer tokenizer = new WhitespaceDelimitedTokenizer();
@@ -68,7 +68,7 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("-9", tokens[9]);
     }
 
-    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesCommaDelimited() {
+    public void testTokenizeStringWithDoubleQuotedTextContainingSpacesAndSingleQuotesCommaDelimited() throws ImporterException {
         String input = "37119, 0001, \"REXAMINC.; CUSTOM'S   DIVISION, IMMIGRATION\" , 40201301 ,hi$ya,-wE&9,-9,-9,-9,-9";
 
         CommaDelimitedTokenizer tokenizer = new CommaDelimitedTokenizer();

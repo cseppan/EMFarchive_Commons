@@ -3,14 +3,30 @@ package gov.epa.emissions.commons.io.importer;
 public class SemiColonDelimitedTokenizer implements Tokenizer {
 
     private DelimitedTokenizer delegate;
+    
+    private int numOfDelimiter;
+    
+    private boolean initialized = false;
 
     public SemiColonDelimitedTokenizer() {
         String pattern =  "[^;]+";
         delegate = new DelimitedTokenizer(pattern);
     }
 
-    public String[] tokens(String input) {
-        return delegate.doTokenize(padding(input));
+    public String[] tokens(String input) throws ImporterException {
+        String[] tokens = delegate.doTokenize(padding(input));
+        
+        if (!initialized) {
+            numOfDelimiter = tokens.length;
+            initialized = true;
+            return tokens;
+        }
+            
+        if (initialized && tokens.length != numOfDelimiter) {
+            throw new ImporterException("Could not find " + --numOfDelimiter + " of \';\' delimiters on the line.");
+        }
+        
+        return tokens;
     }
 
     private String padding(String input) {

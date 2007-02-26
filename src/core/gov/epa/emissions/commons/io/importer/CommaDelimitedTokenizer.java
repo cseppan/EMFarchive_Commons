@@ -5,6 +5,10 @@ public class CommaDelimitedTokenizer implements Tokenizer {
     private DelimitedTokenizer delegate;
 
     private String pattern;
+    
+    private int numOfDelimiter;
+    
+    private boolean initialized = false;
 
     public CommaDelimitedTokenizer() {
         pattern = "[^,]+";
@@ -12,9 +16,21 @@ public class CommaDelimitedTokenizer implements Tokenizer {
         
     }
 
-    public String[] tokens(String input) {
+    public String[] tokens(String input) throws ImporterException {
         input = padding(input);
-        return delegate.doTokenize(input);
+        String[] tokens = delegate.doTokenize(input);
+        
+        if (!initialized) {
+            numOfDelimiter = tokens.length;
+            initialized = true;
+            return tokens;
+        }
+            
+        if (initialized && tokens.length != numOfDelimiter) {
+            throw new ImporterException("Could not find " + --numOfDelimiter + " of \',\' delimiters on the line.");
+        }
+        
+        return tokens;
     }
 
     private String padding(String input) {

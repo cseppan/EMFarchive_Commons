@@ -3,23 +3,31 @@ package gov.epa.emissions.commons.io.importer;
 public class DelimiterIdentifyingTokenizer implements Tokenizer {
 
     private int minTokens;
+    
+    private int numOfDelimiters;
+    
+    private String delimiter;
 
     private Tokenizer tokenizer;
 
-    private boolean initialize = false;
+    private boolean initialized = false;
 
     public DelimiterIdentifyingTokenizer(int minTokens) {
         this.minTokens = minTokens;
     }
 
     public String[] tokens(String input) throws ImporterException {
-        if (!initialize)
+        if (!initialized)
             identifyTokenizer(input);
+        
+        if (initialized)
+            checkDelimiters(input);
+            
         return tokenizer.tokens(input);
     }
-
+    
     private void identifyTokenizer(String input) throws ImporterException {
-        initialize = true;
+        initialized = true;
 
         Tokenizer commaTokenizer = commaTokenizer(input);
         if (commaTokenizer != null) {
@@ -48,6 +56,8 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
         try {
             String[] tokens = commaTokenizer.tokens(input);
             if (tokens.length >= minTokens) {
+                delimiter = ",";
+                numOfDelimiters = tokens.length;
                 return commaTokenizer;
             }
             return null;
@@ -61,6 +71,8 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
         try {
             String[] tokens = semiColonTokenizer.tokens(input);
             if (tokens.length >= minTokens) {
+                delimiter = ";";
+                numOfDelimiters = tokens.length;
                 return semiColonTokenizer;
             }
             return null;
@@ -74,11 +86,21 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
         try {
             String[] tokens = whiteSpaceTokenizer.tokens(input);
             if (tokens.length >= minTokens) {
+                delimiter = " ";
+                numOfDelimiters = tokens.length;
                 return whiteSpaceTokenizer;
             }
             return null;
         } catch (IllegalStateException e) {
             return null;
         }
+    }
+    
+    private void checkDelimiters(String input) throws ImporterException {
+        String[] tokens = tokenizer.tokens(input);
+        
+        if (tokens.length != numOfDelimiters)
+            throw new ImporterException("Could not find " + --numOfDelimiters + " of  \'"
+                    + delimiter + "\' delimiters on the line.");
     }
 }
