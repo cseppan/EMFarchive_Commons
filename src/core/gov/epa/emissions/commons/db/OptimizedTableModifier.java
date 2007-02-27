@@ -15,7 +15,7 @@ public class OptimizedTableModifier extends TableModifier {
 
     public void start() throws SQLException {
         connection.setAutoCommit(false);
-        System.out.println("Batch size = "+BATCH_SIZE);
+        //System.out.println("Batch size = "+BATCH_SIZE);
     }
 
     public void insert(String[] data) throws Exception {
