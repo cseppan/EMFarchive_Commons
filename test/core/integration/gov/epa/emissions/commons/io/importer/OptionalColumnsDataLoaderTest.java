@@ -58,7 +58,7 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
         dataset.setName("test");
 
         File file = new File("test/data/variable-cols.txt");
-        Reader reader = new DelimitedFileReader(file,new DelimiterIdentifyingTokenizer(2));
+        Reader reader = new DelimitedFileReader(file, new DelimiterIdentifyingTokenizer(2));
         loader.load(reader, dataset, table);
 
         // assert
@@ -66,6 +66,22 @@ public class OptionalColumnsDataLoaderTest extends PersistenceTestCase {
 
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
         assertEquals(6, tableReader.count(datasource.getName(), table));
+    }
+
+    public void testShouldThrowExceptionFromFileWithVariableColsIntoUnversionedTable() throws Exception {
+        FileFormatWithOptionalCols fileFormat = setupUnversionedTable();
+        OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, "Dataset_Id");
+
+        Dataset dataset = new SimpleDataset();
+        dataset.setName("test");
+
+        File file = new File("test/data/variable-cols-with-different-delimiters.txt");
+        Reader reader = new DelimitedFileReader(file, new DelimiterIdentifyingTokenizer(2));
+        try {
+            loader.load(reader, dataset, table);
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Could not find 5 of ' ' delimiters on the line."));
+        } 
     }
 
     private TableFormat setupVersionedTable(FileFormatWithOptionalCols fileFormat) throws SQLException {

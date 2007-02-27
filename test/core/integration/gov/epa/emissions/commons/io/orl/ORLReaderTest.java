@@ -35,6 +35,30 @@ public class ORLReaderTest extends PersistenceTestCase {
         assertEquals(6, reader.comments().size());
     }
 
+    public void testShouldThrowExceptionOnSmallPointFileWithDiffrentDelimiter() throws Exception {
+        File file = new File(dataFolder, "small-point-with-different-delimiters.txt");
+        reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
+        
+        reader.read();
+        try {
+            reader.read();
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Could not find 27 of ' ' delimiters on the line."));
+        }
+    }
+
+    public void testShouldThrowExceptionOnSmallPointFileWithDiffrentDelimiterOnFirstLine() throws Exception {
+        File file = new File(dataFolder, "small-point-with-different-delimiters-on-first-line.txt");
+        reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
+        
+        reader.read();
+        try {
+            reader.read();
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Could not find 27 of ',' delimiters on the line."));
+        }
+    }
+
     public void testShouldCollectAllTenCommentsOfSmallPointFile() throws Exception {
         File file = new File(dataFolder, "small-point.txt");
         reader = new DelimiterIdentifyingFileReader(file, new ORLPointFileFormat(sqlDataTypes).minCols().length);
