@@ -147,8 +147,9 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("5", tokens[2]);
         assertEquals("15", tokens[3]);
         
+        Tokenizer tokenizer1 = new CommaDelimitedTokenizer();
         input = "37001, ,,5, 15";
-        tokens = tokenizer.tokens(input);
+        tokens = tokenizer1.tokens(input);
         assertEquals(5, tokens.length);
         assertEquals("37001", tokens[0]);
         assertEquals("", tokens[1]);
@@ -156,8 +157,9 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("5", tokens[3]);
         assertEquals("15", tokens[4]);
         
+        Tokenizer tokenizer2 = new CommaDelimitedTokenizer();
         input = "37001, ,,5, 15,";
-        tokens = tokenizer.tokens(input);
+        tokens = tokenizer2.tokens(input);
         
         assertEquals(6, tokens.length);
         assertEquals("37001", tokens[0]);
@@ -167,8 +169,9 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("15", tokens[4]);
         assertEquals("", tokens[5]);
         
+        Tokenizer tokenizer3 = new CommaDelimitedTokenizer();
         input = ",,37001, , ,5, 15,,,,,";
-        tokens = tokenizer.tokens(input);
+        tokens = tokenizer3.tokens(input);
         assertEquals(12, tokens.length);
         assertEquals("", tokens[0]);
         assertEquals("", tokens[1]);
@@ -178,7 +181,53 @@ public class DelimitedInputTokenizerTest extends TestCase {
         assertEquals("5", tokens[5]);
         assertEquals("15", tokens[6]);
         assertEquals("", tokens[7]);
+    }
 
+    public void testTokenizePipeDelimiterWithEmptyTokens() throws ImporterException {
+        Tokenizer tokenizer = new PipeDelimitedTokenizer();
+        
+        String input = "37001||5| 15";
+        String[] tokens = tokenizer.tokens(input);
+        assertEquals(4, tokens.length);
+        assertEquals("37001", tokens[0]);
+        assertEquals("", tokens[1]);
+        assertEquals("5", tokens[2]);
+        assertEquals("15", tokens[3]);
+        
+        Tokenizer tokenizer1 = new PipeDelimitedTokenizer();
+        input = "37001| ||5| 15";
+        tokens = tokenizer1.tokens(input);
+        assertEquals(5, tokens.length);
+        assertEquals("37001", tokens[0]);
+        assertEquals("", tokens[1]);
+        assertEquals("", tokens[2]);
+        assertEquals("5", tokens[3]);
+        assertEquals("15", tokens[4]);
+        
+        Tokenizer tokenizer2 = new PipeDelimitedTokenizer();
+        input = "37001| ||5| 15|";
+        tokens = tokenizer2.tokens(input);
+        
+        assertEquals(6, tokens.length);
+        assertEquals("37001", tokens[0]);
+        assertEquals("", tokens[1]);
+        assertEquals("", tokens[2]);
+        assertEquals("5", tokens[3]);
+        assertEquals("15", tokens[4]);
+        assertEquals("", tokens[5]);
+        
+        Tokenizer tokenizer3 = new PipeDelimitedTokenizer();
+        input = "||37001| | |5| 15|||||";
+        tokens = tokenizer3.tokens(input);
+        assertEquals(12, tokens.length);
+        assertEquals("", tokens[0]);
+        assertEquals("", tokens[1]);
+        assertEquals("37001", tokens[2]);
+        assertEquals("", tokens[3]);
+        assertEquals("", tokens[4]);
+        assertEquals("5", tokens[5]);
+        assertEquals("15", tokens[6]);
+        assertEquals("", tokens[7]);
     }
     
     public void testLineStartsWithTheDoubleQuoteForDelimitedIdenitifyingTokenizer() throws ImporterException {

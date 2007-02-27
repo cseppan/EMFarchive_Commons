@@ -83,8 +83,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         DbServer localDBServer = dbSetup.getNewPostgresDbServerInstance();
 
         File folder = new File("test/data/reference");
-        Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, localDBServer, sqlDataTypes,
-                new VersionedDataFormatFactory(version, dataset));
+        Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, localDBServer,
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDBServer, lastModifiedDate(folder,
                 "pollutants.txt"));
         importerv.run();
@@ -122,20 +122,20 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
     public void testShouldExImportSimplePipeDelimitedCSVFile() throws Exception {
         File folder = new File("test/data/csv");
-        Importer importer = new CSVImporter(folder, new String[] { "generation_file_with_pipe.csv" }, dataset, dbServer,
-                sqlDataTypes);
+        Importer importer = new CSVImporter(folder, new String[] { "generation_file_with_pipe.csv" }, dataset,
+                dbServer, sqlDataTypes);
         importer.run();
-        
+
         int rows = countRecords();
         assertEquals(14, rows);
-        
+
         File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(file);
-        
+
         List data = readData(file);
         assertEquals(data.get(1), "\"USA\",\"Population\",\"100\",\"NO\",\"YES\"");
-        assertEquals(data.get(7), "\"USA\",\"3/4 Total Roadway Miles plus 1/4 Population\",\"255\",\"YES\",");
+        assertEquals(data.get(7), "\"USA\",\"3/4 Total Roadway Miles plus 1/4 Population\",\"255\",\"YES\",\"\"");
     }
 
     public void testShouldExImportSurrogateSpecFile() throws Exception {
@@ -185,6 +185,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         DbServer localDBServer = dbSetup.getNewPostgresDbServerInstance();
 
         File folder = new File("test/data/csv");
+
         Importer importer = new CSVImporter(folder, new String[] { "shapefile_catalog.csv" }, dataset, localDBServer,
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDBServer, lastModifiedDate(folder,

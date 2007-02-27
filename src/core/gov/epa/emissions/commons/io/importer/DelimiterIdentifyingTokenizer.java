@@ -99,7 +99,7 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
     private void checkDelimiters(String input) throws ImporterException {
         String[] tokens = tokenizer.tokens(input);
         
-        if (tokens.length != numOfDelimiters)
+        if (tokens.length != numOfDelimiters && tokens.length < minTokens)
             throw new ImporterException("Could not find " + --numOfDelimiters + " of  \'"
                     + delimiter + "\' delimiters on the line.");
     }

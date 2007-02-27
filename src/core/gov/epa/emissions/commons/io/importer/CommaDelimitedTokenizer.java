@@ -26,7 +26,7 @@ public class CommaDelimitedTokenizer implements Tokenizer {
             return tokens;
         }
             
-        if (initialized && tokens.length != numOfDelimiter) {
+        if (initialized && tokens.length != numOfDelimiter && tokens.length < 2) {
             throw new ImporterException("Could not find " + --numOfDelimiter + " of \',\' delimiters on the line.");
         }
         

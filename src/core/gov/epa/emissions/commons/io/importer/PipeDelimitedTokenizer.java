@@ -1,7 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
 public class PipeDelimitedTokenizer implements Tokenizer {
-    private static final String ANY_CHAR_EXCEPT_BAR = "[^|]+";
 
     private DelimitedTokenizer delegate;
     
@@ -12,12 +11,12 @@ public class PipeDelimitedTokenizer implements Tokenizer {
     private boolean initialized = false;
 
     public PipeDelimitedTokenizer() {
-        pattern = DOUBLE_QUOTED_TEXT + "|" +  SINGLE_QUOTED_TEXT + "|" + INLINE_COMMENTS +"|"+ ANY_CHAR_EXCEPT_BAR;
+        pattern = "[^|]+";
         delegate = new DelimitedTokenizer(pattern);
     }
 
     public String[] tokens(String input) throws ImporterException {
-        String[] tokens = delegate.doTokenize(input);
+        String[] tokens = delegate.doTokenize(padding(input));
         
         if (!initialized) {
             numOfDelimiter = tokens.length;
@@ -25,11 +24,22 @@ public class PipeDelimitedTokenizer implements Tokenizer {
             return tokens;
         }
             
-        if (initialized && tokens.length != numOfDelimiter) {
+        if (initialized && tokens.length != numOfDelimiter && tokens.length < 2) {
             throw new ImporterException("Could not find " + --numOfDelimiter + " of \'|\' delimiters on the line.");
         }
         
         return tokens;
+    }
+    
+    private String padding(String input) {
+        input = input.trim();
+        if (input.startsWith("|"))
+            input = "|" + input;
+        if (input.endsWith("|"))
+            input = input + "|";
+        input = input.replaceAll("[|][|]", "| |").replaceAll("[|][|]", "| |");
+
+        return input;
     }
 
 }
