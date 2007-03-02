@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.importer.FillDefaultValues;
 
 public interface DataFormatFactory {
@@ -12,5 +13,7 @@ public interface DataFormatFactory {
     FillDefaultValues defaultValuesFiller();
 
     ExportStatement exportStatement();
+    
+    Version getVersion();
 
 }

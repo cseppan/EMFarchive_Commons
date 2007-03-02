@@ -37,4 +37,9 @@ public class VersionedDataFormatFactory implements DataFormatFactory {
         return new VersionedExportStatement(version, dataset);
     }
 
+    public Version getVersion() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

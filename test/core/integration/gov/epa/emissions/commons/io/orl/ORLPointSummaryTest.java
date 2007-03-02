@@ -55,7 +55,7 @@ public class ORLPointSummaryTest extends PersistenceTestCase {
         summary.createSummary();
 
         assertEquals(10, countRecords("test"));
-        assertEquals(4, countRecords("test_summary"));
+        assertEquals(2, countRecords("test_summary"));
     }
 
     private int countRecords(String tableName) {

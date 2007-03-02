@@ -141,7 +141,12 @@ public class ORLExportersTest extends PersistenceTestCase {
         File folder = new File("test/data/orl/nc");
         Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
                 sqlDataTypes);
-        importer.run();
+        try {
+            importer.run();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         Exporter exporter = new ORLPointExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File file = doExport(exporter);
@@ -152,7 +157,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert records
         List records = readData(file);
         assertEquals(10, records.size());
-        String expectedPattern = "37119,\"0001\",\"0001\",\"1\",\"1\",\"REX!MINC.;CUST!OMDIVISION\",40201301,02,01,60," +
+        String expectedPattern = "37119,\"0001\",\"0001\",\"1\",\"1\",\"REXMINC.;CUSTOMDIVISION\",40201301,02,01,60," +
                 "7.5,375,2083.463,47.16,3083,0714,0,L,-80.7081,35.12,17,\"108883\",9.704141,,,,,,,,,,,,,,,,,,," +
                 ",,,,,,,,,,,,,,,,,,,,,!inline conmments  wihout delimitter separating";
         String actual = (String) records.get(0);

@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DelimitedFileReader implements Reader {
@@ -95,28 +94,39 @@ public class DelimitedFileReader implements Reader {
     }
 
     private int getInlineCommentPosition(char commentChar, String line) {
-        int first = line.indexOf(commentChar);
-
-        //to search pattern "xxx!xxx" or 'xxx!xxx'
-        Pattern p = Pattern.compile("(\"(.)*[!](.)*\")|('(.)*[!](.)*')");
-        Matcher m = p.matcher(line);
-
-        if (!m.find()) {
-            return first;
-        }
-
-        int end = m.end();
+        int position = 0, index = 0, theEnd = line.length();
+        String temp = line;
         
-        while (m.find()) {
-            end = m.end();
+        while ((index = temp.indexOf(commentChar)) != -1) {
+            position += index;
+            
+            if (!hasEvenNumOfQuotes(line.substring(0, position))) {
+                temp = temp.substring(++index);
+                position++;
+            } else
+                return position;
         }
+        
+        return theEnd;
+    }
 
-        int index = line.substring(end).indexOf(commentChar);
+    private boolean hasEvenNumOfQuotes(String token) {
+        int doubleQuotesCount = getQuotesCount("\"", token);
 
-        if (index < 0)
-            return line.length();
-
-        return end + index;
+        return (doubleQuotesCount % 2 == 0); //&& (singleQuotesCount % 2 == 0);
+    }
+    
+    private int getQuotesCount(String quote, String token) {
+        int index;
+        int count = 0;
+        String temp = token;
+        
+        while ((index = temp.indexOf(quote)) != -1) {
+            ++ count;
+            temp = temp.substring(++index);
+        }
+        
+        return count;
     }
 
     private String trimInlineComment(String comment) {

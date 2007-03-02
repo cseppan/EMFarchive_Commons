@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.FileFormat;
@@ -24,6 +25,11 @@ public class NonVersionedDataFormatFactory implements DataFormatFactory {
 
     public ExportStatement exportStatement() {
         return new SimpleExportStatement();
+    }
+
+    public Version getVersion() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -71,4 +71,19 @@ public class DelimitedFileReaderTest extends TestCase {
         assertTrue("Should be the Packet Terminator", end.isEnd());
 
     }
+
+    public void testShouldCorrectlyTokenizeFileWithQuotesAfterInlineCommentChar() throws Exception {
+        File file = new File("test/data/orl/SimpleDelimitedWithDiffrentDelimiters.txt");
+        reader = new DelimitedFileReader(file, new SemiColonDelimitedTokenizer());
+
+        for (int i = 0; i < 10; i++) {
+            assertNotNull(reader.read());
+        }
+
+        Record semiColDelmtd = reader.read();
+        assertEquals(11, semiColDelmtd.size());
+        assertEquals(
+                semiColDelmtd.token(10),
+                "! Profile name: Surface Coating Operations - Adhesive Application; Assignment basis: Legacy (note, this profile is a \"controlle");
+    }
 }
