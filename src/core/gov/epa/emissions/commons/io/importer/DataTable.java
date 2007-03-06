@@ -34,6 +34,20 @@ public class DataTable {
         return result.trim().replaceAll(" ", "_");
     }
 
+    public static String encodeTableName(String tableName) {
+        for (int i = 0; i < tableName.length(); i++) {
+            if (!Character.isLetterOrDigit(tableName.charAt(i))) {
+                tableName = tableName.replace(tableName.charAt(i), '_');
+            }
+        }
+
+        if (Character.isDigit(tableName.charAt(0))) {
+            tableName = tableName.replace(tableName.charAt(0), '_');
+            tableName = "DS" + tableName;
+        }
+        return tableName.trim().replaceAll(" ", "_");
+    }
+
     public void create(String table, TableFormat tableFormat) throws ImporterException {
         try {
             delegate.create(table, tableFormat);
