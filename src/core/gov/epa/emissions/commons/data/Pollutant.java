@@ -23,6 +23,12 @@ public class Pollutant implements Serializable, Lockable, Comparable {
         this.name = name.toUpperCase();
     }
 
+    public Pollutant(int id, String name) {
+        this();
+        this.id = id;
+        this.name = name.toUpperCase();
+    }
+
     public String getDescription() {
         return description;
     }
