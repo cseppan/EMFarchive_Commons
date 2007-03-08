@@ -49,6 +49,8 @@ public class PacketReaderImpl implements PacketReader {
     public Record read() throws IOException {
         for (String line = fileReader.readLine(); !isEnd(line); line = fileReader.readLine()) {
             this.line = line;
+            if (isExportInfo(line))
+                continue;          // rip off the export info lines
             if (isData(line))
                 return parser.parse(line);
             if (isComment(line))
@@ -67,11 +69,15 @@ public class PacketReaderImpl implements PacketReader {
     }
 
     private boolean isComment(String line) {
-        return line.trim().startsWith("#");
+        return line == null ? false : line.trim().startsWith("#");
     }
 
     public List comments() {
         return comments;
+    }
+    
+    private boolean isExportInfo(String line) {
+        return line.trim().startsWith("#EXPORT_");
     }
 
     public void close() {

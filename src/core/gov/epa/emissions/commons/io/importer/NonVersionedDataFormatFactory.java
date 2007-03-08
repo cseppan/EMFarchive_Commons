@@ -28,7 +28,6 @@ public class NonVersionedDataFormatFactory implements DataFormatFactory {
     }
 
     public Version getVersion() {
-        // TODO Auto-generated method stub
         return null;
     }
 

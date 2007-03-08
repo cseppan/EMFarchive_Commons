@@ -153,7 +153,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
             exportFile(file, dataset);
 
             importFile(file.getParentFile(), file.getName(), repeatDataset);
-            File repeatFile = File.createTempFile("RepeatExportedCommaDelimitedFile", ".txt");
+//            File repeatFile = File.createTempFile("RepeatExportedCommaDelimitedFile", ".txt");
+            File repeatFile = new File("C:\\RepeatExportedCommaDelimitedFile.txt");
             exportFile(repeatFile, repeatDataset);
 
             List data = readData(file);
@@ -163,7 +164,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
             for (int i = 0; i < data.size(); i++) {
                 assertEquals(data.get(i), repeatData.get(i));
             }
-        } finally {
+        } catch (Exception e) {e.printStackTrace();} finally {
             dropTable(repeatDataset.getName(), datasource);
         }
 

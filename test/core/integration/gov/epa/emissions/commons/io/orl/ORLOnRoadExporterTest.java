@@ -70,7 +70,7 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
 
         // assert headers
         List lines = readComments(file);
-        assertEquals(headers(dataset.getDescription()).size(), lines.size());
+        assertEquals(headers(dataset.getDescription()).size() + 3, lines.size());
     }
 
     public void testShouldExportTableRowsAsRecords() throws Exception {

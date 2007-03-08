@@ -47,6 +47,10 @@ public class FixedWidthFileReader implements Reader {
         while (line != null) {
             lineNumber++;
             this.line = line;
+            if (isExportInfo(line)) {
+                line = fileReader.readLine();
+                continue;
+            }
             if (isData(line))
                 return fixedWidthParser.parse(line);
             if (isComment(line))
@@ -59,6 +63,10 @@ public class FixedWidthFileReader implements Reader {
 
     private boolean isData(String line) {
         return !(line.trim().length() == 0) && (!isComment(line));
+    }
+    
+    private boolean isExportInfo(String line) {
+        return line == null ? false : line.trim().startsWith("#EXPORT_");
     }
 
     private boolean isComment(String line) {

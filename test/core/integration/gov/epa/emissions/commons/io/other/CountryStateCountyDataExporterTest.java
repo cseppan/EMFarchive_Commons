@@ -118,7 +118,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
 
     private void assertComments(File file) throws IOException {
         List comments = readComments(file);
-        assertEquals(headers(dataset.getDescription()).size(), comments.size());
+        assertEquals(headers(dataset.getDescription()).size() + 3, comments.size());
     }
 
     private List headers(String description) {

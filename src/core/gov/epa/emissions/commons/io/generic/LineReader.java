@@ -41,6 +41,11 @@ public class LineReader implements Reader {
     public Record read() throws IOException {
         String line = fileReader.readLine();
 
+        while (isExportInfo(line)) {
+            line = fileReader.readLine(); // rip off the export info lines
+            lineNumber++;
+        }
+        
         if (line != null) {
             this.line = line;
             Record record = new Record();
@@ -56,6 +61,10 @@ public class LineReader implements Reader {
         return comments;
     }
 
+    private boolean isExportInfo(String line) {
+        return line == null ? false : line.trim().startsWith("#EXPORT_");
+    }
+    
     public int lineNumber() {
         return lineNumber;
     }

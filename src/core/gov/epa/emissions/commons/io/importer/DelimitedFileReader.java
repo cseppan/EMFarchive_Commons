@@ -58,6 +58,10 @@ public class DelimitedFileReader implements Reader {
         while (line != null) {
             lineNumber++;
             this.line = line;
+            if (isExportInfo(line)) {
+                line = fileReader.readLine();
+                continue;
+            }
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
@@ -71,6 +75,10 @@ public class DelimitedFileReader implements Reader {
 
     private boolean isData(String line) {
         return !(line.trim().length() == 0) && (!isComment(line));
+    }
+    
+    private boolean isExportInfo(String line) {
+        return line == null ? false : line.trim().startsWith("#EXPORT_");
     }
 
     private Record doRead(String line) throws ImporterException {

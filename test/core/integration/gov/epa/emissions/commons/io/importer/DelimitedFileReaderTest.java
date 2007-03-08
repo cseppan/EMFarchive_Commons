@@ -86,4 +86,16 @@ public class DelimitedFileReaderTest extends TestCase {
                 semiColDelmtd.token(10),
                 "! Profile name: Surface Coating Operations - Adhesive Application; Assignment basis: Legacy (note, this profile is a \"controlle");
     }
+
+    public void testShouldCorrectlyTokenizeFileWithExportInfo() throws Exception {
+        File file = new File("test/data/orl/SimpleDelimited-with-export-info.txt");
+        reader = new DelimitedFileReader(file, new WhitespaceDelimitedTokenizer());
+        
+        Record semiColDelmtd = reader.read();
+        assertEquals(8, semiColDelmtd.size());
+        assertEquals("! EPA-derived", semiColDelmtd.token(7));
+        semiColDelmtd = reader.read();
+        assertEquals(7, semiColDelmtd.size());
+        assertEquals("02", semiColDelmtd.token(6));
+    }
 }

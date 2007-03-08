@@ -50,6 +50,8 @@ public class CountryStateCountyFileReader implements PacketReader {
     public Record read() throws IOException {
         for (String line = fileReader.readLine(); !isEnd(line, fileReader); line = fileReader.readLine()) {
             this.line = line;
+            if (isExportInfo(line))
+                continue;
             if (isData(line)) {
                 // Country State County data file has less than 255 characters
                 // in a line
@@ -79,6 +81,10 @@ public class CountryStateCountyFileReader implements PacketReader {
 
     private boolean isData(String line) {
         return !(line.trim().length() == 0) && (!isComment(line));
+    }
+    
+    private boolean isExportInfo(String line) {
+        return line == null ? false : line.trim().startsWith("#EXPORT_");
     }
 
     private boolean isComment(String line) {

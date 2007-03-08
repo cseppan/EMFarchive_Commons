@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -22,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -115,6 +117,15 @@ public class GenericExporter implements Exporter {
             if (lasttoken.indexOf(cr) < 0)
                 writer.print(cr);
         }
+        
+        printExportInfo(writer);
+    }
+
+    private void printExportInfo(PrintWriter writer) {
+        Version version = dataFormatFactory.getVersion();
+        writer.println("#EXPORT_DATE=" + new Date().toString());
+        writer.println("#EXPORT_VERSION_NAME=" + (version == null ? "None" : version.getName()));
+        writer.println("#EXPORT_VERSION_NUMBER=" + (version == null ? "None" : version.getVersion()));
     }
 
     final protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)

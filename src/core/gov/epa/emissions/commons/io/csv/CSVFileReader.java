@@ -31,7 +31,7 @@ public class CSVFileReader implements Reader {
 
     private BufferedReader fileReader;
 
-    private List comments;
+    private List<String> comments;
 
     private Tokenizer tokenizer;
 
@@ -41,7 +41,7 @@ public class CSVFileReader implements Reader {
 
     private String[] cols;
 
-    private List header;
+    private List<String> header;
 
     private File file;
 
@@ -49,9 +49,9 @@ public class CSVFileReader implements Reader {
 
     public CSVFileReader(File file) throws ImporterException {
         try {
-//            fileReader = new BufferedReader(new FileReader(file));
             fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
-            comments = new ArrayList();
+            comments = new ArrayList<String>();
+            header = new ArrayList<String>();
             this.file = file;
             this.lineNumber = 0;
             detectDelimiter();
@@ -75,8 +75,15 @@ public class CSVFileReader implements Reader {
             while (line != null) {
                 lineNumber++;
                 this.line = line;
+                
+                if (isExportInfo(line)) {
+                    line = fileReader.readLine();
+                    continue;             // rip off the export info lines
+                }
+                
                 if (isData(line))
                     return doRead(line);
+                
                 if (isComment(line))
                     comments.add(line);
 
@@ -92,6 +99,10 @@ public class CSVFileReader implements Reader {
 
     private boolean isData(String line) {
         return !(line.trim().length() == 0) && (!isComment(line));
+    }
+    
+    private boolean isExportInfo(String line) {
+        return line == null ? false : line.trim().startsWith("#EXPORT_");
     }
 
     private Record doRead(String line) throws ImporterException {
@@ -145,7 +156,7 @@ public class CSVFileReader implements Reader {
             fileReader.reset();
             tokenizer = new WhitespaceDelimitedTokenizer();
             line = fileReader.readLine();
-            while (isComment(line))
+            while (isComment(line) || isExportInfo(line))
                 line = fileReader.readLine();
             cols = underScoreTheSpace(tokenizer.tokens(line));
         } catch (IOException e) {
@@ -158,14 +169,16 @@ public class CSVFileReader implements Reader {
         Pattern bar = Pattern.compile("[|]");
         try {
             for (; line != null; line = fileReader.readLine()) {
-                if (!isComment(line) && line.split(",").length >= 2)
-                    tokenizer = new CommaDelimitedTokenizer();
-                else if (!isComment(line) && line.split(";").length >= 2)
-                    tokenizer = new SemiColonDelimitedTokenizer();
-                else if (!isComment(line) && bar.split(line).length >= 2)
-                    tokenizer = new PipeDelimitedTokenizer();
-                else
+                if (isExportInfo(line))
+                    continue;
+                else if (isComment(line))
                     header.add(line);
+                else if (line.split(",").length >= 2)
+                    tokenizer = new CommaDelimitedTokenizer();
+                else if (line.split(";").length >= 2)
+                    tokenizer = new SemiColonDelimitedTokenizer();
+                else if (bar.split(line).length >= 2)
+                    tokenizer = new PipeDelimitedTokenizer();
 
                 if (tokenizer != null) {
                     cols = underScoreTheSpace(tokenizer.tokens(line));

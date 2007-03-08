@@ -38,8 +38,7 @@ public class VersionedDataFormatFactory implements DataFormatFactory {
     }
 
     public Version getVersion() {
-        // TODO Auto-generated method stub
-        return null;
+        return version;
     }
 
 }

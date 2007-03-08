@@ -30,6 +30,9 @@ public class DataReader implements Reader {
         for (String line = fileReader.readLine(); !isEnd(line); line = fileReader.readLine()) {
             this.line = line;
             this.lineNumber++;
+            
+            if (isExportInfo(line)) 
+                continue;
             if (isData(line))
                 return parser.parse(line);
             if (isComment(line))
@@ -39,6 +42,10 @@ public class DataReader implements Reader {
         return new TerminatorRecord();
     }
 
+    private boolean isExportInfo(String line) {
+        return line == null ? false : line.trim().startsWith("#EXPORT_");
+    }
+    
     private boolean isEnd(String line) {
         return line == null;
     }
@@ -54,8 +61,6 @@ public class DataReader implements Reader {
     public List comments() {
         return comments;
     }
-
-    
 
     public void close() throws IOException {
        fileReader.close();
