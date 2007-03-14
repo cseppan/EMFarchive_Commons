@@ -57,6 +57,11 @@ public class User implements Serializable, Lockable {
         this.isAccountDisabled = disabled;
     }
 
+    public User(String name) throws UserException {
+        this();
+        this.name = name;
+    }
+
     public boolean equals(Object other) {
         if (!(other instanceof User))
             return false;

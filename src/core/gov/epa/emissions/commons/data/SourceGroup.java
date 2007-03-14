@@ -26,6 +26,11 @@ public class SourceGroup implements Serializable, Lockable {
         this.name = name;
     }
 
+    public SourceGroup(String name) {
+        this();
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
