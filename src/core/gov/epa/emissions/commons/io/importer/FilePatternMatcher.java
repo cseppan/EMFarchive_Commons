@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class FilePatternMatcher {
 
-    private Pattern pattern;
+    protected Pattern pattern;
 
     public FilePatternMatcher(File folder, String filePattern) throws ImporterException {
         this.pattern = Pattern.compile(pattern(folder, filePattern));
