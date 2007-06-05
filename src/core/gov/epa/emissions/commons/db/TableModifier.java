@@ -55,12 +55,12 @@ public class TableModifier {
         return schema + "." + table;
     }
 
-    private void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
+    private void insertRow(String table, String[] data, Column[] cols) throws SQLException {
         StringBuffer insert = createInsertStatement(table, data, cols);
         execute(insert.toString());
     }
 
-    protected StringBuffer createInsertStatement(String table, String[] data, DbColumn[] cols) throws SQLException {
+    protected StringBuffer createInsertStatement(String table, String[] data, Column[] cols) throws SQLException {
         if (data.length > cols.length)
             throw new SQLException("Invalid number of data tokens - " + data.length + ". Max: " + cols.length);
 
@@ -79,6 +79,12 @@ public class TableModifier {
                     // add a leading zero if it is missing
                     if (data[i].trim().length() == 4)
                         data[i] = "0" + data[i];
+                }
+                //make sure the value is not to big....
+                if (cols[i].sqlType().toUpperCase().startsWith("VARCHAR")) {
+                    if (data[i].length() > cols[i].width() && cols[i].width() > 0) {
+                        data[i] = data[i].substring(0, cols[i].width());
+                    }
                 }
                 data[i] = escapeString(data[i]);
             } else {

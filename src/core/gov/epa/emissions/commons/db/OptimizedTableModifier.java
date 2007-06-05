@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db;
 
+import gov.epa.emissions.commons.io.Column;
+
 import java.sql.SQLException;
 
 public class OptimizedTableModifier extends TableModifier {
@@ -35,7 +37,7 @@ public class OptimizedTableModifier extends TableModifier {
         }
     }
 
-    private void insertRow(String table, String[] data, DbColumn[] cols) throws SQLException {
+    private void insertRow(String table, String[] data, Column[] cols) throws SQLException {
         StringBuffer insert = createInsertStatement(table, data, cols);
         try {
             execute(insert.toString());

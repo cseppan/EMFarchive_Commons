@@ -29,6 +29,10 @@ public class Column implements DbColumn {
         this(name, sqlType, width, formatter, null);
     }
 
+    public Column(String name, String sqlType, int width) {
+        this(name, sqlType, width, new NullFormatter());
+    }
+
     public Column(String name, String sqlType, ColumnFormatter formatter) {
         this(name, sqlType, -1, formatter);
     }

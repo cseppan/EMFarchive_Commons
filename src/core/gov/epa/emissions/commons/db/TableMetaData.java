@@ -33,8 +33,9 @@ public class TableMetaData {
             while (rs.next()) {
                 String name = rs.getString("COLUMN_NAME");
                 int jdbcType = rs.getInt("DATA_TYPE");
+                int size = rs.getInt("COLUMN_SIZE");
                 String type = typeMaps.get(jdbcType);
-                cols.add(new Column(name, type));
+                cols.add(new Column(name, type, size));
             }
         } finally {
             rs.close();
