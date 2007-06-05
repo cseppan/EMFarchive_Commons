@@ -299,7 +299,7 @@
         <copy todir="${build.classes.dir}">
             <fileset dir="${core.src.dir}" includes="**/*" />
         </copy>
-        <jar jarfile="${build.home}/${app.name}-${app.version}.jar"
+        <jar jarfile="${build.home}/${app.name}.jar"
              basedir="${build.classes.dir}"
         />
     </target>
