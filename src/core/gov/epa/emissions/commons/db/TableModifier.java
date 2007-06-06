@@ -82,8 +82,8 @@ public class TableModifier {
                 }
                 //make sure the value is not to big....
                 if (cols[i].sqlType().toUpperCase().startsWith("VARCHAR")) {
-                    if (data[i].length() > cols[i].width() && cols[i].width() > 0) {
-                        data[i] = data[i].substring(0, cols[i].width());
+                    if (data[i].trim().length() > cols[i].width() && cols[i].width() > 0) {
+                        data[i] = data[i].trim().substring(0, cols[i].width());
                     }
                 }
                 data[i] = escapeString(data[i]);
