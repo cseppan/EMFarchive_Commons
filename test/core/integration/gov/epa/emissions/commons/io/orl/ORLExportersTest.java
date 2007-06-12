@@ -67,8 +67,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001,2201001150,\"100414\",1.06262,,,,,,,,! EPA-derived", (String) data.get(0));
-        assertEquals("37001,2201001150,\"100425\",0.20263,,,,,,,,! EPA-derived", (String) data.get(1));
+        assertEquals("37001,2201001150,\"100414\",1.06262,,\"\",\"\",\"\",\"\",,,", (String) data.get(0));
+        assertEquals("37001,2201001150,\"100425\",0.20263,,\"\",\"\",\"\",\"\",,,", (String) data.get(1));
         assertEquals(18, exporter.getExportedLinesCount());
     }
 
@@ -92,8 +92,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(18, data.size());
-        assertEquals("37001,2201001150,\"100414\",1.06262,,,,,,,,! EPA-derived", (String) data.get(0));
-        assertEquals("37001,2201001150,\"100425\",0.20263,,,,,,,,! EPA-derived", (String) data.get(1));
+        assertEquals("37001,2201001150,\"100414\",1.06262,,\"\",\"\",\"\",\"\",,,", (String) data.get(0));
+        assertEquals("37001,2201001150,\"100425\",0.20263,,\"\",\"\",\"\",\"\",,,", (String) data.get(1));
     }
 
     public void testShouldExportNonRoad() throws Exception {
@@ -111,8 +111,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         // assert data
         List data = readData(file);
         assertEquals(16, data.size());
-        assertEquals("37001,2260001010,\"100414\",0.56,,,,,,,,,,,,,,,,,,,,,,", (String) data.get(0));
-        assertEquals("37001,2260001010,\"100425\",0.03,,,,,,,,,,,,,,,,,,,,,,", (String) data.get(1));
+        assertEquals("37001,2260001010,\"100414\",0.56,,,,,\"\",\"\",\"\",\"\",\"\",\"\",,,,,,,,,,,,", (String) data.get(0));
+        assertEquals("37001,2260001010,\"100425\",0.03,,,,,\"\",\"\",\"\",\"\",\"\",\"\",,,,,,,,,,,,", (String) data.get(1));
         assertEquals(16, exporter.getExportedLinesCount());
     }
 
@@ -132,8 +132,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         List data = readData(file);
         assertEquals(6, data.size());
         // regex is used because of precision diff between mysql and postgres
-        assertEquals("37001,10201302,0,0107,2,0,\"246\",0.0003872963052,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(0)));
-        assertEquals("37001,10201302,0,0107,2,0,\"253\",0.0006910581132,,,,,,,,,,,,,,,,,,,,,,,,,", ((String) data.get(1)));
+        assertEquals("37001,10201302,0,0107,2,0,\"246\",0.0003872963052,,,,,\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",,,,,,,,,,,,", ((String) data.get(0)));
+        assertEquals("37001,10201302,0,0107,2,0,\"253\",0.0006910581132,,,,,\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",,,,,,,,,,,,", ((String) data.get(1)));
         assertEquals(6, exporter.getExportedLinesCount());
     }
 
@@ -158,8 +158,8 @@ public class ORLExportersTest extends PersistenceTestCase {
         List records = readData(file);
         assertEquals(10, records.size());
         String expectedPattern = "37119,\"0001\",\"0001\",\"1\",\"1\",\"REXMINC.;CUSTOMDIVISION\",40201301,02,01,60," +
-                "7.5,375,2083.463,47.16,3083,0714,0,L,-80.7081,35.12,17,\"108883\",9.704141,,,,,,,,,,,,,,,,,,," +
-                ",,,,,,,,,,,,,,,,,,,,,!inline conmments  wihout delimitter separating";
+                "7.5,375,2083.463,47.16,3083,0714,0,L,-80.7081,35.12,17,\"108883\",9.704141,,,,,,\"\",\"\",\"\",\"\"," +
+                "\"\",\"\",\"\",\"\",\"\",,,\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",,,,,,,,,,,,";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
         assertEquals(10, exporter.getExportedLinesCount());
@@ -181,7 +181,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         List records = readData(file);
         assertEquals(180, records.size());
         
-        String expectedPattern = "37001,\"35273\",,28100010F0,\"0\",35.91,-79.31,P,936,8000";
+        String expectedPattern = "37001,\"35273\",\"\",28100010F0,\"0\",35.91,-79.31,P,936,8000";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
         assertEquals(180, exporter.getExportedLinesCount());
@@ -203,7 +203,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         List records = readData(file);
         assertEquals(783, records.size());
         
-        String expectedPattern = "37001,\"35273\",,28100010F0,\"106990\",02/04/02,0.000172125,0,23";
+        String expectedPattern = "37001,\"35273\",\"\",28100010F0,\"106990\",02/04/02,0.000172125,0,23";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
         assertEquals(783, exporter.getExportedLinesCount());
@@ -216,7 +216,7 @@ public class ORLExportersTest extends PersistenceTestCase {
 
     private File doExport(Exporter exporter) throws Exception {
         File file = File.createTempFile("exported", ".orl");
-        file.deleteOnExit();
+        //file.deleteOnExit();
 
         exporter.export(file);
 

@@ -39,13 +39,13 @@ public class GenericExporter implements Exporter {
 
     protected FileFormat fileFormat;
 
-    private String inlineCommentChar;
+    protected String inlineCommentChar;
 
     private int batchSize;
 
     protected int startColNumber = 2; // shifted by "obj_id","record_id" when write data
 
-    private long exportedLinesCount = 0;
+    protected long exportedLinesCount = 0;
 
     public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
         this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize);
@@ -65,7 +65,6 @@ public class GenericExporter implements Exporter {
 
     public void export(File file) throws ExporterException {
         try {
-//            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             PrintWriter writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
             write(file, writer);
         } catch (IOException e) {
