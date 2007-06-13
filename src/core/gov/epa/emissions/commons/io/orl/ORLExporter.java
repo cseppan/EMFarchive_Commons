@@ -26,6 +26,8 @@ import org.apache.commons.logging.LogFactory;
 
 public class ORLExporter extends GenericExporter {
 
+    Log log = LogFactory.getLog(ORLExporter.class);
+    
     private Dataset dataset;
 
     private Datasource datasource;
@@ -55,6 +57,7 @@ public class ORLExporter extends GenericExporter {
             String originalQuery = getQueryString(dataset, datasource);
             String query = getColsSpecdQueryString(dataset, originalQuery);
             String writeQuery = getWriteQueryString(dataFile, query);
+            log.warn(writeQuery);
 
             connection = datasource.getConnection();
 
@@ -175,8 +178,7 @@ public class ORLExporter extends GenericExporter {
         return (colNames.length() > 0) ? colNames.substring(0, colNames.length() - 1) : colNames;
     }
 
-    private void setExportedLines(String originalQuery, Connection connection) throws SQLException {
-        Log log = LogFactory.getLog(ORLExporter.class);
+    public void setExportedLines(String originalQuery, Connection connection) throws SQLException {
         Date start = new Date();
         
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
