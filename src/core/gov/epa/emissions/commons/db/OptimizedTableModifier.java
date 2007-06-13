@@ -3,6 +3,8 @@ package gov.epa.emissions.commons.db;
 import gov.epa.emissions.commons.io.Column;
 
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 public class OptimizedTableModifier extends TableModifier {
 
@@ -37,17 +39,20 @@ public class OptimizedTableModifier extends TableModifier {
         } catch (Exception e) {
             String msg = e.getMessage();
             String searchString = "Batch entry";
+            int line = 0;
             
             if (msg != null && msg.contains(searchString)) {
                 msg = msg.substring(searchString.length()).trim(); //msg should start with a number now
                 msg = msg.substring(0, msg.indexOf(' ')); //msg should now only has a number
-                if (msg.isEmpty())
-                    msg = "0";
-            } else {
-                msg = "0";
+            } 
+            
+            try {
+                line = NumberFormat.getInstance().parse(msg).intValue();
+            } catch (ParseException e1) {
+                line = 0;
             }
             
-            throw new SQLException("Data line (" + (batchCount * BATCH_SIZE + Integer.parseInt(msg) + 1) + ") has errors: " + e.getMessage());
+            throw new SQLException("Data line (" + (batchCount * BATCH_SIZE + line + 1) + ") has errors: " + e.getMessage());
         } finally {
             connection.commit();
             connection.setAutoCommit(true);
