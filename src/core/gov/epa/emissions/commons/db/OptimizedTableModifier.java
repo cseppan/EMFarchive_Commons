@@ -9,10 +9,13 @@ public class OptimizedTableModifier extends TableModifier {
     private static final int BATCH_SIZE = 20000;
 
     private int counter;
+    
+    private int batchCount;
 
     public OptimizedTableModifier(Datasource datasource, String tableName) throws SQLException {
         super(datasource, tableName);
         counter = 0;
+        batchCount = 0;
     }
 
     public void start() throws SQLException {
@@ -31,6 +34,20 @@ public class OptimizedTableModifier extends TableModifier {
     public void finish() throws SQLException {
         try {
             statement.executeBatch();// executing the last batch
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            String searchString = "Batch entry";
+            
+            if (msg != null && msg.contains(searchString)) {
+                msg = msg.substring(searchString.length()).trim(); //msg should start with a number now
+                msg = msg.substring(0, msg.indexOf(' ')); //msg should now only has a number
+                if (msg.isEmpty())
+                    msg = "0";
+            } else {
+                msg = "0";
+            }
+            
+            throw new SQLException("Data line (" + (batchCount * BATCH_SIZE + Integer.parseInt(msg) + 1) + ") has errors: " + e.getMessage());
         } finally {
             connection.commit();
             connection.setAutoCommit(true);
@@ -56,6 +73,7 @@ public class OptimizedTableModifier extends TableModifier {
             statement.addBatch(query);
             statement.executeBatch();
             counter = 0;
+            batchCount++;
         }
     }
 }

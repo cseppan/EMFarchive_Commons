@@ -30,11 +30,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
             dataModifier = dataModifier(datasource, table);
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
-            //e.printStackTrace();
             dropData(table, dataset, dataModifier);
-            int lineNum = reader.lineNumber();
-            throw new ImporterException("Line number " + lineNum + ": " + e.getMessage() + "\nLine: "
-                    + reader.line() + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
+            throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         } finally {
             close(dataModifier);
         }

@@ -71,7 +71,7 @@ public class IDADataLoader implements DataLoader {
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             dropData(table, dataset, dataModifier);
-            throw new ImporterException("Line number " + reader.lineNumber() + ": " + e.getMessage()
+            throw new ImporterException(e.getMessage()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         } finally {
             close(dataModifier);
