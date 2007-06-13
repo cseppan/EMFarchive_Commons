@@ -19,6 +19,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ORLExporter extends GenericExporter {
 
@@ -172,6 +176,9 @@ public class ORLExporter extends GenericExporter {
     }
 
     private void setExportedLines(String originalQuery, Connection connection) throws SQLException {
+        Log log = LogFactory.getLog(ORLExporter.class);
+        Date start = new Date();
+        
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         int fromIndex = originalQuery.indexOf("FROM");
         String queryCount = "SELECT COUNT(\"dataset_id\") " + originalQuery.substring(fromIndex);
@@ -179,6 +186,9 @@ public class ORLExporter extends GenericExporter {
         rs.next();
         this.exportedLinesCount = rs.getLong(1);
         statement.close();
+        
+        Date ended = new Date();
+        log.warn("Time used to count exported data lines(second): " + (ended.getTime() - start.getTime())/1000.00 );
     }
 
 }
