@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class DelimitedFileReader implements Reader {
 
-    private BufferedReader fileReader;
+    protected BufferedReader fileReader;
 
     private List comments;
 
@@ -50,6 +50,10 @@ public class DelimitedFileReader implements Reader {
 
     public void close() throws IOException {
         fileReader.close();
+    }
+    
+    public Record readOneLine() throws Exception {
+        return doRead(fileReader.readLine());
     }
 
     public Record read() throws IOException, ImporterException {

@@ -10,6 +10,8 @@ public interface TableDefinition {
     List getTableNames() throws SQLException;
 
     void createTable(String table, DbColumn[] cols) throws SQLException;
+    
+    void createTable(String table, DbColumn[] columns, int datasetId) throws SQLException;
 
     void renameTable(String table, String newName) throws SQLException;
 
@@ -39,5 +41,6 @@ public interface TableDefinition {
      *            the column name to add the new column after. Use null for default function (add to end)
      */
     void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception;
+
 
 }

@@ -15,6 +15,10 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
     public DelimiterIdentifyingTokenizer(int minTokens) {
         this.minTokens = minTokens;
     }
+    
+    public String delimiter() {
+        return this.delimiter;
+    }
 
     public String[] tokens(String input) throws ImporterException {
         if (!initialized)

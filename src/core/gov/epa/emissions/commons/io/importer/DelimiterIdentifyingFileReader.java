@@ -10,14 +10,20 @@ import java.util.List;
 public class DelimiterIdentifyingFileReader implements Reader {
 
     private DelimitedFileReader reader;
+    
+    private String delimiter;
 
     public DelimiterIdentifyingFileReader(File file, int minTokens) throws FileNotFoundException {
-        reader = new DelimitedFileReader(file, new DelimiterIdentifyingTokenizer(minTokens));
+        DelimiterIdentifyingTokenizer tokenizer = new DelimiterIdentifyingTokenizer(minTokens);
+        reader = new DelimitedFileReader(file, tokenizer);
+        delimiter = tokenizer.delimiter();
     }
 
     public DelimiterIdentifyingFileReader(File file, String[] inlineComments, int minTokens)
             throws FileNotFoundException {
+        DelimiterIdentifyingTokenizer tokenizer = new DelimiterIdentifyingTokenizer(minTokens);
         reader = new DelimitedFileReader(file, inlineComments, new DelimiterIdentifyingTokenizer(minTokens));
+        delimiter = tokenizer.delimiter();
     }
 
     public void close() throws IOException {
@@ -38,6 +44,10 @@ public class DelimiterIdentifyingFileReader implements Reader {
 
     public String line() {
         return reader.line();
+    }
+    
+    public String delimiter() {
+        return delimiter;
     }
 
 }

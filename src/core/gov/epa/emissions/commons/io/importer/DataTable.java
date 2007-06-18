@@ -55,6 +55,15 @@ public class DataTable {
             throw new ImporterException(e.getMessage());
         }
     }
+    
+    public void create(TableFormat tableFormat, int datasetId) throws ImporterException {
+        try {
+            delegate.create(name(), tableFormat, datasetId);
+        } catch (Exception e) {
+            throw new ImporterException(e.getMessage());
+        }
+    }
+
 
     public void create(TableFormat tableFormat) throws ImporterException {
         create(name(), tableFormat);

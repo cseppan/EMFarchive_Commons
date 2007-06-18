@@ -5,7 +5,6 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
@@ -50,16 +49,16 @@ public class ORLImporterTest extends HibernateTestCase {
     }
 
     protected void doTearDown() throws Exception {
-        Datasource datasource = dbServer.getEmissionsDatasource();
-        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
-
-        dbUpdate.deleteAll(datasource.getName(), "versions");
+//        Datasource datasource = dbServer.getEmissionsDatasource();
+//        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
+//        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+//
+//        dbUpdate.deleteAll(datasource.getName(), "versions");
     }
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        ORLPointImporter importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset, dbServer,
+        ORLPointImporter importer = new ORLPointImporter(folder, new String[] { "small-point-comma.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -72,7 +71,7 @@ public class ORLImporterTest extends HibernateTestCase {
         Version version = new Version();
         version.setVersion(0);
 
-        File file = new File("test/data/orl/nc", "small-point.txt");
+        File file = new File("test/data/orl/nc", "small-point-comma.txt");
         ORLPointImporter orlImporter = new ORLPointImporter(file.getParentFile(), new String[] { file.getName() },
                 dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, localDbServer, lastModifiedDate(file.getParentFile(),file.getName()));

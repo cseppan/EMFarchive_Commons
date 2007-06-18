@@ -1,23 +1,30 @@
 package gov.epa.emissions.commons.io.orl;
 
+import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.DatasetTypeUnit;
 import gov.epa.emissions.commons.db.Datasource;
+import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
-import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.OptionalColumnsDataLoader;
 import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -36,6 +43,8 @@ public class ORLImporter {
     private DataTable dataTable;
 
     private DatasetLoader loader;
+    
+    private Record record;
 
     public ORLImporter(File folder, String[] filePatterns, Dataset dataset, DatasetTypeUnit formatUnit,
             Datasource datasource) throws ImporterException {
@@ -52,42 +61,77 @@ public class ORLImporter {
 
     public void run() throws ImporterException {
         importAttributes(file, dataset);
-        dataTable.create(formatUnit.tableFormat());
+        dataTable.create(formatUnit.tableFormat(), dataset.getId());
         try {
-            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat(), formatUnit
-                    .tableFormat());
+            doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat());
         } catch (Exception e) {
-            e.printStackTrace();
             dataTable.drop();
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat,
-            TableFormat tableFormat) throws Exception {
-        Reader reader = null;
-        try {
-            OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
-            reader = new DelimiterIdentifyingFileReader(file, fileFormat.minCols().length);
-            loader.load(reader, dataset, table);
+    private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat) throws Exception {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        File headerFile = new File(tempDir, ".header");
+        File dataFile = new File(tempDir, ".data");
+        
+        splitFile(file, headerFile.getAbsolutePath(), dataFile.getAbsolutePath());
+        loadDataset(getComments(headerFile), dataset);
+        
+        String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat, dataFile) + ") FROM '" + dataFile.getAbsolutePath()
+                + "' WITH CSV QUOTE AS '\"'" ;
 
-            loadDataset(reader.comments(), dataset);
-        } finally {
-            close(reader);
-        }
+        Connection connection = datasource.getConnection();
+        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        statement.execute(copyString);
+        statement.close();
+        
+        headerFile.delete();
+        dataFile.delete();
+    }
+    
+    private void splitFile(File file, String headerFile, String dataFile) throws IOException, InterruptedException {
+        String[] cmd = null;
+
+        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " > " + headerFile;
+        String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > " + dataFile;
+        
+        cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd};
+
+        Process p = Runtime.getRuntime().exec(cmd);
+        p.waitFor();
     }
 
-    private void close(Reader reader) throws ImporterException {
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                throw new ImporterException(e.getMessage());
-            }
+    private List<String> getComments(File file) throws Exception {
+        BufferedReader fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
+        List<String> commentsList = new ArrayList<String>();
+        String line = fileReader.readLine();
+        
+        while (line != null) {
+            commentsList.add(line);
+            line = fileReader.readLine();
         }
+        
+        fileReader.close();
+
+        return commentsList;
+    }
+    
+    private String getFullTableName(String table) {
+        return this.datasource.getName() + "." + table;
     }
 
-    private void loadDataset(List comments, Dataset dataset) {
+    private String getColNames(FileFormatWithOptionalCols fileFormat, File dataFile) {
+        Column[] cols = fileFormat.cols();
+        String colsString = "";
+
+        for (int i = 0; i < record.size(); i++)
+            colsString += cols[i].name() + ",";
+
+        return colsString.substring(0, colsString.length() - 1);
+    }
+
+    private void loadDataset(List<String> comments, Dataset dataset) {
         dataset.setUnits("short tons/year");
         dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
         dataset.setDescription(new Comments(comments).all());
@@ -99,7 +143,7 @@ public class ORLImporter {
             // FIXME: move 'minCols' to FileFormat
             reader = new DelimiterIdentifyingFileReader(file, ((FileFormatWithOptionalCols) formatUnit.fileFormat())
                     .minCols().length);
-            reader.read();
+            record = reader.read();
             reader.close();
         } catch (IOException e) {
             throw new ImporterException(e.getMessage());
@@ -107,14 +151,14 @@ public class ORLImporter {
         addAttributes(reader.comments(), dataset);
     }
 
-    private void addAttributes(List commentsList, Dataset dataset) throws ImporterException {
+    private void addAttributes(List<String> commentsList, Dataset dataset) throws ImporterException {
         Comments comments = new Comments(commentsList);
         if (!comments.have("ORL"))
             throw new ImporterException("The tag - 'ORL' is mandatory.");
 
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        //BUG: Country should not be created, but looked up
+        // BUG: Country should not be created, but looked up
         // String country = comments.content("COUNTRY");
         // dataset.setCountry(new Country(country));
 

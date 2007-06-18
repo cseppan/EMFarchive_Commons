@@ -23,12 +23,12 @@ public class PostgresTableDefinition implements TableDefinition {
     public List getTableNames() throws SQLException {
         return delegate.getTableNames();
     }
- 
+
     public void dropTable(String table) throws Exception {
         try {
             execute("DROP TABLE " + qualified(table));
         } catch (SQLException e) {
-            throw new Exception("Table " + qualified(table) + " could not be dropped"+"\n"+e.getMessage());
+            throw new Exception("Table " + qualified(table) + " could not be dropped" + "\n" + e.getMessage());
         }
     }
 
@@ -67,22 +67,37 @@ public class PostgresTableDefinition implements TableDefinition {
     }
 
     public void createTable(String table, DbColumn[] cols) throws SQLException {
+        createTable(table, cols, -1);
+    }
+
+    public void createTable(String table, DbColumn[] cols, int datasetId) throws SQLException {
         String queryString = "CREATE TABLE " + qualified(table) + " (";
 
-        for (int i = 0; i < cols.length - 1; i++) {
-            queryString += clean(cols[i].name()) + " " + cols[i].sqlType();
-            if (cols[i].hasConstraints())
-                queryString += " " + cols[i].constraints();
-            queryString += ", ";
-        }// for i
+        queryString = addColumnsSpec(cols, queryString, datasetId);
         queryString += clean(cols[cols.length - 1].name()) + " " + cols[cols.length - 1].sqlType();
 
         queryString = queryString + ")";
         execute(queryString);
     }
 
+    private String addColumnsSpec(DbColumn[] cols, String queryString, int datasetId) {
+        for (int i = 0; i < cols.length - 1; i++) {
+            queryString += clean(cols[i].name()) + " " + cols[i].sqlType();
+
+            if (cols[i].hasConstraints()) {
+                if (datasetId != -1 && cols[i].name().equalsIgnoreCase("Dataset_Id"))
+                    queryString += " NOT NULL DEFAULT " + datasetId;
+                else
+                    queryString += " " + cols[i].constraints();
+            } 
+
+            queryString += ", ";
+        }// for i
+        return queryString;
+    }
+
     public TableMetadata getTableMetaData(String tableName) throws SQLException {
-       return delegate.getTableMetaData(qualified(tableName));
+        return delegate.getTableMetaData(qualified(tableName));
     }
 
     public int totalRows(String tableName) throws SQLException {

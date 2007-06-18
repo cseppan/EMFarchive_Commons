@@ -14,14 +14,20 @@ public class TableCreator {
     }
 
     public void create(String table, TableFormat tableFormat) throws Exception {
+        create(table, tableFormat, -1);
+    }
+
+    public void create(String table, TableFormat tableFormat, int datasetId) throws Exception {
         TableDefinition tableDefinition = datasource.tableDefinition();
         checkTableExist(tableDefinition, table);
         try {
-            tableDefinition.createTable(table, tableFormat.cols());
+            if (datasetId != -1)
+                tableDefinition.createTable(table, tableFormat.cols(), datasetId);
+            else
+                tableDefinition.createTable(table, tableFormat.cols());
         } catch (SQLException e) {
             throw new Exception("could not create table - " + table + "\n" + e.getMessage(), e);
         }
-
     }
 
     public void rename(String table, String newName) throws Exception {
@@ -32,7 +38,7 @@ public class TableCreator {
         } catch (SQLException e) {
             throw new Exception("could not rename table - " + table + " to " + newName + "\n" + e.getMessage(), e);
         }
-        
+
     }
 
     private void checkTableExist(TableDefinition tableDefinition, String table) throws Exception {

@@ -105,4 +105,9 @@ public class MySqlTableDefinition implements TableDefinition {
         execute(renameQuery);
     }
 
+    public void createTable(String table, DbColumn[] columns, int datasetId) throws SQLException {
+        // TODO Auto-generated method stub
+        throw new SQLException("EMF method is not implemented.");
+    }
+
 }
