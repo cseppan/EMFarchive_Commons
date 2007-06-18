@@ -139,9 +139,6 @@ public class ORLExporter extends GenericExporter {
     }
 
     private String getColsSpecdQueryString(Dataset dataset, String originalQuery) {
-        // boolean inlinecomments = dataset.getInlineCommentSetting();
-        int fromIndex = originalQuery.indexOf("FROM");
-
         String selectColsString = "SELECT ";
         Column[] cols = fileFormat.cols();
         int numCols = cols.length;
@@ -149,12 +146,9 @@ public class ORLExporter extends GenericExporter {
         for (int i = 0; i < numCols; i++)
             selectColsString += cols[i].name() + ",";
 
-        // if (inlinecomments)
-        // selectColsString += "Comments";
-        // else
         selectColsString = selectColsString.substring(0, selectColsString.length() - 1);
 
-        return selectColsString + " " + originalQuery.substring(fromIndex);
+        return selectColsString + " " + getSubString(originalQuery, "FROM", false);
     }
 
     private String getWriteQueryString(String dataFile, String query) {
@@ -182,8 +176,8 @@ public class ORLExporter extends GenericExporter {
         Date start = new Date();
         
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        int fromIndex = originalQuery.indexOf("FROM");
-        String queryCount = "SELECT COUNT(\"dataset_id\") " + originalQuery.substring(fromIndex);
+        String fromClause = getSubString(originalQuery, "FROM", false);
+        String queryCount = "SELECT COUNT(\"dataset_id\") " + getSubString(fromClause, "ORDER BY", true);
         ResultSet rs = statement.executeQuery(queryCount);
         rs.next();
         this.exportedLinesCount = rs.getLong(1);
@@ -191,6 +185,18 @@ public class ORLExporter extends GenericExporter {
         
         Date ended = new Date();
         log.warn("Time used to count exported data lines(second): " + (ended.getTime() - start.getTime())/1000.00 );
+    }
+    
+    private String getSubString(String origionalString, String mark, boolean beforeMark) {
+        int markIndex = origionalString.indexOf(mark);
+        
+        if (markIndex < 0)
+            return origionalString;
+        
+        if (beforeMark)
+            return origionalString.substring(0, markIndex);
+        
+        return origionalString.substring(markIndex);
     }
 
 }
