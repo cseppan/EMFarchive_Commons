@@ -11,19 +11,15 @@ public class DelimiterIdentifyingFileReader implements Reader {
 
     private DelimitedFileReader reader;
     
-    private String delimiter;
-
     public DelimiterIdentifyingFileReader(File file, int minTokens) throws FileNotFoundException {
         DelimiterIdentifyingTokenizer tokenizer = new DelimiterIdentifyingTokenizer(minTokens);
         reader = new DelimitedFileReader(file, tokenizer);
-        delimiter = tokenizer.delimiter();
     }
 
     public DelimiterIdentifyingFileReader(File file, String[] inlineComments, int minTokens)
             throws FileNotFoundException {
         DelimiterIdentifyingTokenizer tokenizer = new DelimiterIdentifyingTokenizer(minTokens);
-        reader = new DelimitedFileReader(file, inlineComments, new DelimiterIdentifyingTokenizer(minTokens));
-        delimiter = tokenizer.delimiter();
+        reader = new DelimitedFileReader(file, inlineComments, tokenizer);
     }
 
     public void close() throws IOException {
@@ -47,7 +43,7 @@ public class DelimiterIdentifyingFileReader implements Reader {
     }
     
     public String delimiter() {
-        return delimiter;
+        return reader.delimiter();
     }
 
 }

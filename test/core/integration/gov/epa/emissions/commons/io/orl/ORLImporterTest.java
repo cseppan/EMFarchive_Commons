@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.HibernateTestCase;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
@@ -49,11 +50,11 @@ public class ORLImporterTest extends HibernateTestCase {
     }
 
     protected void doTearDown() throws Exception {
-//        Datasource datasource = dbServer.getEmissionsDatasource();
-//        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-//        dbUpdate.dropTable(datasource.getName(), dataset.getName());
-//
-//        dbUpdate.deleteAll(datasource.getName(), "versions");
+        Datasource datasource = dbServer.getEmissionsDatasource();
+        DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
+        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+
+        dbUpdate.deleteAll(datasource.getName(), "versions");
     }
 
     public void testShouldImportASmallAndSimplePointFile() throws Exception {
@@ -87,7 +88,7 @@ public class ORLImporterTest extends HibernateTestCase {
         Version version = new Version();
         version.setVersion(0);
         
-        File file = new File("test/data/orl/nc", "point-with-variations.txt");
+        File file = new File("test/data/orl/nc", "point-with-variations-comma.txt");
         ORLPointImporter orlImporter = new ORLPointImporter(file.getParentFile(), new String[] { file.getName() },
                 dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, localDbServer, lastModifiedDate(file.getParentFile(),file.getName()));
@@ -114,7 +115,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldImportASmallAndSimpleNonPointFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint-comma.txt" }, dataset,
                 dbServer, sqlDataTypes);
         importer.run();
 
@@ -137,7 +138,7 @@ public class ORLImporterTest extends HibernateTestCase {
         version.setVersion(0);
         File folder = new File("test/data/orl/nc");
 
-        ORLNonPointImporter orlImporter = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" },
+        ORLNonPointImporter orlImporter = new ORLNonPointImporter(folder, new String[] { "small-nonpoint-comma.txt" },
                 dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, localDbServer, lastModifiedDate(folder,"small-nonpoint.txt"));
         importer.run();
@@ -195,7 +196,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldImportNonPointFileWithVaryingCols() throws Exception {
         File folder = new File("test/data/orl/nc");
-        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "varying-cols-nonpoint.txt" },
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "varying-cols-nonpoint-comma.txt" },
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
@@ -220,7 +221,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldLoadInternalSourceIntoDatasetOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint-comma.txt" }, dataset,
                 dbServer, sqlDataTypes);
         importer.run();
 
@@ -238,7 +239,7 @@ public class ORLImporterTest extends HibernateTestCase {
             assertEquals(expectedCols[i], actualCols[i]);
         }
 
-        File file = new File(folder, "small-nonpoint.txt");
+        File file = new File(folder, "small-nonpoint-comma.txt");
         assertEquals(file.getAbsolutePath(), source.getSource());
         assertEquals(file.length(), source.getSourceSize());
     }
@@ -248,7 +249,7 @@ public class ORLImporterTest extends HibernateTestCase {
         Version version = new Version();
         version.setVersion(0);
 
-        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "NonPoint_WithComments.txt" },
+        ORLNonPointImporter importer = new ORLNonPointImporter(folder, new String[] { "NonPoint_WithComments-comma.txt" },
                 dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
 
         importer.run();
@@ -267,7 +268,7 @@ public class ORLImporterTest extends HibernateTestCase {
             assertEquals(expectedCols[i], actualCols[i]);
         }
 
-        File file = new File(folder, "NonPoint_WithComments.txt");
+        File file = new File(folder, "NonPoint_WithComments-comma.txt");
         assertEquals(file.getAbsolutePath(), source.getSource());
         assertEquals(file.length(), source.getSourceSize());
     }
@@ -282,7 +283,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldImportASmallAndSimpleNonRoadFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        ORLNonRoadImporter importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad.txt" }, dataset,
+        ORLNonRoadImporter importer = new ORLNonRoadImporter(folder, new String[] { "small-nonroad-comma.txt" }, dataset,
                 dbServer, sqlDataTypes);
         importer.run();
 
@@ -295,7 +296,7 @@ public class ORLImporterTest extends HibernateTestCase {
         Version version = new Version();
         version.setVersion(0);
 
-        File file = new File("test/data/orl/nc", "small-nonroad.txt");
+        File file = new File("test/data/orl/nc", "small-nonroad-comma.txt");
         ORLNonRoadImporter orlImporter = new ORLNonRoadImporter(file.getParentFile(), new String[] { file.getName() },
                 dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, localDbServer, lastModifiedDate(file.getParentFile(),"small-nonroad.txt"));
@@ -317,7 +318,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldImportASmallAndSimpleOnRoadFile() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad-comma.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -330,7 +331,7 @@ public class ORLImporterTest extends HibernateTestCase {
         Version version = new Version();
         version.setVersion(0);
 
-        File file = new File("test/data/orl/nc", "small-onroad.txt");
+        File file = new File("test/data/orl/nc", "small-onroad-comma.txt");
         Importer orlImporter = new ORLOnRoadImporter(file.getParentFile(), new String[] { file.getName() }, dataset,
                 localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importer = new VersionedImporter(orlImporter, dataset, localDbServer, lastModifiedDate(file.getParentFile(),file.getName()));
@@ -344,7 +345,7 @@ public class ORLImporterTest extends HibernateTestCase {
     // BUG: Fix the Country lookup bug
     public void FIXME_testShouldLoadCountryRegionYearIntoDatasetOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad-comma.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -355,7 +356,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldLoadStartStopDateTimeIntoDatasetOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad-comma.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -372,7 +373,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldImportORLOnRoad() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad-comma.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 
@@ -383,7 +384,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
     public void testShouldSetFullLineCommentsAndDescCommentsAsDatasetDescriptionOnImport() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad.txt" }, dataset, dbServer,
+        Importer importer = new ORLOnRoadImporter(folder, new String[] { "small-onroad-comma.txt" }, dataset, dbServer,
                 sqlDataTypes);
         importer.run();
 

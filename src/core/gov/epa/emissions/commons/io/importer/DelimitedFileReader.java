@@ -168,6 +168,10 @@ public class DelimitedFileReader implements Reader {
     public String line() {
         return line;
     }
+    
+    public String delimiter() {
+        return tokenizer.delimiter();
+    }
 
     // Added to remove header lines
     public String[] readHeader(int numLines) throws IOException {

@@ -42,4 +42,8 @@ public class PipeDelimitedTokenizer implements Tokenizer {
         return input;
     }
 
+    public String delimiter() {
+        return "|";
+    }
+
 }

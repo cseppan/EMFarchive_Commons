@@ -44,4 +44,8 @@ public class CommaDelimitedTokenizer implements Tokenizer {
         return input;
     }
 
+    public String delimiter() {
+        return ",";
+    }
+
 }

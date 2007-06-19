@@ -9,5 +9,7 @@ public interface Tokenizer {
     static final String INLINE_COMMENTS = "!(.)*";
 
     String[] tokens(String input) throws ImporterException;
+    
+    String delimiter();
 
 }

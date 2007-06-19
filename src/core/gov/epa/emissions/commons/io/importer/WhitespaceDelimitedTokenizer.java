@@ -33,4 +33,8 @@ public class WhitespaceDelimitedTokenizer implements Tokenizer {
         return tokens;
     }
 
+    public String delimiter() {
+        return " ";
+    }
+
 }

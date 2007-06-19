@@ -14,7 +14,6 @@ import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.Reader;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.BufferedReader;
@@ -138,12 +137,16 @@ public class ORLImporter {
     }
 
     private void importAttributes(File file, Dataset dataset) throws ImporterException {
-        Reader reader = null;
+        DelimiterIdentifyingFileReader reader = null;
         try {
             // FIXME: move 'minCols' to FileFormat
             reader = new DelimiterIdentifyingFileReader(file, ((FileFormatWithOptionalCols) formatUnit.fileFormat())
                     .minCols().length);
             record = reader.read();
+            
+            if (!reader.delimiter().equals(","))
+                throw new ImporterException("Data file is not delimited by comma.");
+            
             reader.close();
         } catch (IOException e) {
             throw new ImporterException(e.getMessage());
