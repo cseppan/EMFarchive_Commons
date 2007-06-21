@@ -52,7 +52,8 @@ public class GSCNVImporter implements Importer {
 
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
-        String table = "GSCNV";
+        //String table = "GSCNV";
+        String table = dataTable.name();
 
         try {
             if (!dataTable.exists(table))
