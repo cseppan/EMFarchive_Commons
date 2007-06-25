@@ -52,7 +52,7 @@ public class ORLImporterTest extends HibernateTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
 
         dbUpdate.deleteAll(datasource.getName(), "versions");
     }
@@ -80,7 +80,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
         int rows = countRecords();
         assertEquals(10, rows);
-        assertVersionInfo(dataset.getName(), rows);
+        assertVersionInfo(dataset.getInternalSources()[0].getTable(), rows);
     }
 
     public void testShouldImportASmallAndSimpleVersionedPointFileWithExclamationInDoubleQuotes() throws Exception {
@@ -96,7 +96,7 @@ public class ORLImporterTest extends HibernateTestCase {
         
         int rows = countRecords();
         assertEquals(4, rows);
-        assertVersionInfo(dataset.getName(), rows);
+        assertVersionInfo(dataset.getInternalSources()[0].getTable(), rows);
     }
 
     private void assertVersionInfo(String name, int rows) throws Exception {
@@ -125,7 +125,7 @@ public class ORLImporterTest extends HibernateTestCase {
         // assert
         TableReader tableReader = tableReader(datasource);
 
-        String table = dataset.getName();
+        String table = dataset.getInternalSources()[0].getTable();
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
 
         int rows = tableReader.count(datasource.getName(), table);
@@ -149,7 +149,7 @@ public class ORLImporterTest extends HibernateTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
 
-        String table = dataset.getName();
+        String table = dataset.getInternalSources()[0].getTable();
         assertTrue("Table '" + table + "' should have been created", tableReader.exists(datasource.getName(), table));
 
         int rows = tableReader.count(datasource.getName(), table);
@@ -203,9 +203,9 @@ public class ORLImporterTest extends HibernateTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
 
-        int rows = tableReader.count(datasource.getName(), dataset.getName());
+        int rows = tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
         assertEquals(6, rows);
-        ITable table = tableReader.table(datasource.getName(), dataset.getName());
+        ITable table = tableReader.table(datasource.getName(), dataset.getInternalSources()[0].getTable());
         assertNull(table.getValue(0, "CEFF"));
         assertNull(table.getValue(0, "REFF"));
         assertNull(table.getValue(0, "RPEN"));
@@ -228,7 +228,7 @@ public class ORLImporterTest extends HibernateTestCase {
         InternalSource[] sources = dataset.getInternalSources();
         assertEquals(1, sources.length);
         InternalSource source = sources[0];
-        assertEquals(dataset.getName(), source.getTable());
+        assertEquals(dataset.getInternalSources()[0].getTable(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
         TableFormat tableFormat = new NonVersionedTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
@@ -257,7 +257,7 @@ public class ORLImporterTest extends HibernateTestCase {
         InternalSource[] sources = dataset.getInternalSources();
         assertEquals(1, sources.length);
         InternalSource source = sources[0];
-        assertEquals(dataset.getName(), source.getTable());
+        assertEquals(dataset.getInternalSources()[0].getTable(), source.getTable());
         assertEquals("ORL NonPoint", source.getType());
 
         TableFormat tableFormat = new VersionedTableFormat(new ORLNonPointFileFormat(sqlDataTypes), sqlDataTypes);
@@ -304,7 +304,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
         int rows = countRecords();
         assertEquals(16, rows);
-        assertVersionInfo(dataset.getName(), rows);
+        assertVersionInfo(dataset.getInternalSources()[0].getTable(), rows);
     }
 
     public void testShouldImportASmallAndSimpleExtendedNonRoadFile() throws Exception {
@@ -339,7 +339,7 @@ public class ORLImporterTest extends HibernateTestCase {
 
         int rows = countRecords();
         assertEquals(18, rows);
-        assertVersionInfo(dataset.getName(), rows);
+        assertVersionInfo(dataset.getInternalSources()[0].getTable(), rows);
     }
 
     // BUG: Fix the Country lookup bug
@@ -413,7 +413,7 @@ public class ORLImporterTest extends HibernateTestCase {
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
     
     private Date lastModifiedDate(File folder, String fileName) {

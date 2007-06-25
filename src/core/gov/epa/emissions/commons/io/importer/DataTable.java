@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
+import java.util.Random;
+
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableCreator;
@@ -20,19 +22,26 @@ public class DataTable {
         return name;
     }
 
-    public String createName(String result) {
-        for (int i = 0; i < result.length(); i++) {
-            if (!Character.isLetterOrDigit(result.charAt(i))) {
-                result = result.replace(result.charAt(i), '_');
+    public String createName(String name) {
+        name = name.trim();
+        String prefix = "DS_";
+        String sufix = "_" + Math.abs(new Random().nextInt()); //to make name unique
+        String table = prefix + name + sufix;
+        
+        if (table.length() > 64) {            //postgresql table name max length is 64
+            int space = table.length() - 64;
+            table = prefix + name.substring(space + 1) + sufix;
+        }
+
+        for (int i = 0; i < table.length(); i++) {
+            if (!Character.isLetterOrDigit(table.charAt(i))) {
+                table = table.replace(table.charAt(i), '_');
             }
         }
 
-        if (Character.isDigit(result.charAt(0))) {
-            result = result.replace(result.charAt(0), '_');
-            result = "DS" + result;
-        }
-        return result.trim().replaceAll(" ", "_");
+        return table;
     }
+
 
     public static String encodeTableName(String tableName) {
         for (int i = 0; i < tableName.length(); i++) {
