@@ -40,14 +40,6 @@ public class ReferenceDatasourceTablesCreator {
         importRefFile("NAICSCodes.csv", "NAICS_Codes");
         importRefFile("MultipleMACTCodes.csv", "Multiple_MACT_Codes");
 
-        System.out.println("finish invtable.csv.");
-       System.out.println("start invtable.csv.");
-//        try {
-//            importRefFile("invtable.csv", "invtable");
-//        } catch(Exception ex) {
-//            System.out.println(ex.getMessage());
-//        }
-        System.out.println("finish invtable.csv.");
         importRefFile("pollutants.txt", "pollutants");
         importRefFile("counties.txt", "fips");
         importRefFile("countries.txt", "countries");
@@ -55,6 +47,7 @@ public class ReferenceDatasourceTablesCreator {
         importRefFile("sectors.txt", "sectors");
         importRefFile("states.txt", "states");
         importRefFile("gdplev.txt", "gdplev");
+        importRefFile("invtable.csv", "invtable");
 
         System.out.println("Reference Datasource setup completed.");
     }
