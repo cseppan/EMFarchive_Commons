@@ -47,9 +47,7 @@ public class ReferenceDatasourceTablesCreator {
         importRefFile("sectors.txt", "sectors");
         importRefFile("states.txt", "states");
         importRefFile("gdplev.txt", "gdplev");
-        System.out.println("start invtable.csv.");
         importRefFile("invtable.csv", "invtable");
-        System.out.println("finish invtable.csv.");
 
         System.out.println("Reference Datasource setup completed.");
     }
