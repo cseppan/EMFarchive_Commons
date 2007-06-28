@@ -27,10 +27,12 @@ import org.apache.commons.logging.LogFactory;
 public class ORLExporter extends GenericExporter {
 
     Log log = LogFactory.getLog(ORLExporter.class);
-    
+
     private Dataset dataset;
 
     private Datasource datasource;
+
+    private boolean windowsOS = false;
 
     public ORLExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
@@ -38,6 +40,8 @@ public class ORLExporter extends GenericExporter {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
 
+        if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+            windowsOS = true;
         setDelimiter(",");
     }
 
@@ -72,7 +76,7 @@ public class ORLExporter extends GenericExporter {
     private void createNewFile(File file) throws Exception {
         try {
             file.createNewFile();
-            if (System.getProperty("os.name").toUpperCase().startsWith("WINDOW"))
+            if (windowsOS)
                 Runtime.getRuntime().exec("CACLS " + file.getAbsolutePath() + " /E /G \"Users\":W");
             else
                 file.setWritable(true, false);
@@ -83,7 +87,10 @@ public class ORLExporter extends GenericExporter {
     }
 
     private String putEscape(String path) {
-        return path.replaceAll("\\\\", "\\\\\\\\");
+        if (windowsOS)
+            return path.replaceAll("\\\\", "\\\\\\\\");
+        
+        return path;
     }
 
     protected void writeHeader(File file) throws Exception {
@@ -108,7 +115,7 @@ public class ORLExporter extends GenericExporter {
     private void concatFiles(File file, String headerFile, String dataFile) throws Exception {
         String[] cmd = null;
 
-        if (System.getProperty("os.name").toUpperCase().startsWith("WINDOW")) {
+        if (windowsOS) {
             cmd = getCommands("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
         } else {
             String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
@@ -174,7 +181,7 @@ public class ORLExporter extends GenericExporter {
 
     public void setExportedLines(String originalQuery, Connection connection) throws SQLException {
         Date start = new Date();
-        
+
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         String fromClause = getSubString(originalQuery, "FROM", false);
         String queryCount = "SELECT COUNT(\"dataset_id\") " + getSubString(fromClause, "ORDER BY", true);
@@ -182,20 +189,20 @@ public class ORLExporter extends GenericExporter {
         rs.next();
         this.exportedLinesCount = rs.getLong(1);
         statement.close();
-        
+
         Date ended = new Date();
-        log.warn("Time used to count exported data lines(second): " + (ended.getTime() - start.getTime())/1000.00 );
+        log.warn("Time used to count exported data lines(second): " + (ended.getTime() - start.getTime()) / 1000.00);
     }
-    
+
     private String getSubString(String origionalString, String mark, boolean beforeMark) {
         int markIndex = origionalString.indexOf(mark);
-        
+
         if (markIndex < 0)
             return origionalString;
-        
+
         if (beforeMark)
             return origionalString.substring(0, markIndex);
-        
+
         return origionalString.substring(markIndex);
     }
 

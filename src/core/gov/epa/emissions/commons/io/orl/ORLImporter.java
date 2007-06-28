@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.data.DatasetTypeUnit;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
+import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.FormatUnit;
 import gov.epa.emissions.commons.io.importer.Comments;
@@ -19,7 +20,11 @@ import gov.epa.emissions.commons.io.importer.TemporalResolution;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -42,17 +47,21 @@ public class ORLImporter {
     private DataTable dataTable;
 
     private DatasetLoader loader;
-    
+
     private Record record;
+
+    private boolean windowsOS = false;
 
     public ORLImporter(File folder, String[] filePatterns, Dataset dataset, DatasetTypeUnit formatUnit,
             Datasource datasource) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filePatterns);
         this.file = new File(folder, filePatterns[0]);
-
         this.dataset = dataset;
         this.formatUnit = formatUnit;
         this.datasource = datasource;
+        if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+            windowsOS = true;
+
         dataTable = new DataTable(dataset, datasource);
         loader = new DatasetLoader(dataset);
         loader.internalSource(file, dataTable.name(), formatUnit.tableFormat());
@@ -69,53 +78,92 @@ public class ORLImporter {
         }
     }
 
-    private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat) throws Exception {
+    private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat)
+            throws Exception {
         String tempDir = System.getProperty("java.io.tmpdir");
         File headerFile = new File(tempDir, ".header");
         File dataFile = new File(tempDir, ".data");
-        
-        splitFile(file, headerFile.getAbsolutePath(), dataFile.getAbsolutePath());
+
+        splitFile(file, headerFile, dataFile);
         loadDataset(getComments(headerFile), dataset);
-        
-        String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat, dataFile) + ") FROM '" + dataFile.getAbsolutePath()
-                + "' WITH CSV QUOTE AS '\"'" ;
+
+        String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat, dataFile) + ") FROM '"
+                + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
 
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         statement.execute(copyString);
         statement.close();
-        
+
         headerFile.delete();
         dataFile.delete();
     }
-    
-    private void splitFile(File file, String headerFile, String dataFile) throws IOException, InterruptedException {
-        String[] cmd = null;
 
-        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " > " + headerFile;
-        String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > " + dataFile;
-        
-        cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd};
+    private void splitFile(File file, File headerFile, File dataFile) throws IOException, InterruptedException {
+        if (windowsOS) {
+            splitOnWindows(file, headerFile, dataFile);
+            return;
+        }
+
+        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " > " + headerFile.getAbsolutePath();
+        String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > "
+                + dataFile.getAbsolutePath();
+        String[] cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd };
 
         Process p = Runtime.getRuntime().exec(cmd);
         p.waitFor();
     }
 
+    private void splitOnWindows(File file, File headerFile, File dataFile) throws IOException {
+        BufferedReader fileReader = null;
+        PrintWriter headWriter = null;
+        PrintWriter dataWriter = null;
+        String line = null;
+        boolean firstHeadLine = true;
+        boolean firstDataLine = true;
+        headerFile.createNewFile();
+        dataFile.createNewFile();
+
+        try {
+            fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
+            headWriter = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(headerFile)));
+            dataWriter = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(dataFile)));
+        } catch (UnsupportedEncodingException e) {
+            throw new FileNotFoundException("Encoding char set not supported.");
+        }
+
+        while ((line = fileReader.readLine()) != null) {
+            if (line.trim().startsWith("#")) {
+                if (!firstHeadLine)
+                    headWriter.println();
+                headWriter.write(line);
+                firstHeadLine = false;
+            } else if (!line.trim().isEmpty()) {
+                if (!firstDataLine)
+                    dataWriter.println();
+                dataWriter.write(line);
+                firstDataLine = false;
+            }
+        }
+
+        fileReader.close();
+        headWriter.close();
+        dataWriter.close();
+    }
+
     private List<String> getComments(File file) throws Exception {
         BufferedReader fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
         List<String> commentsList = new ArrayList<String>();
-        String line = fileReader.readLine();
-        
-        while (line != null) {
+        String line = null;
+
+        while ((line = fileReader.readLine()) != null)
             commentsList.add(line);
-            line = fileReader.readLine();
-        }
-        
+
         fileReader.close();
 
         return commentsList;
     }
-    
+
     private String getFullTableName(String table) {
         return this.datasource.getName() + "." + table;
     }
@@ -143,10 +191,10 @@ public class ORLImporter {
             reader = new DelimiterIdentifyingFileReader(file, ((FileFormatWithOptionalCols) formatUnit.fileFormat())
                     .minCols().length);
             record = reader.read();
-            
+
             if (!reader.delimiter().equals(","))
                 throw new ImporterException("Data file is not delimited by comma.");
-            
+
             reader.close();
         } catch (IOException e) {
             throw new ImporterException(e.getMessage());
@@ -179,6 +227,13 @@ public class ORLImporter {
         Calendar endCal = new GregorianCalendar(year, Calendar.DECEMBER, 31, 23, 59, 59);
         endCal.set(Calendar.MILLISECOND, 999);
         dataset.setStopDateTime(endCal.getTime());
+    }
+
+    private String putEscape(String path) {
+        if (windowsOS)
+            return path.replaceAll("\\\\", "\\\\\\\\");
+
+        return path;
     }
 
 }
