@@ -130,7 +130,7 @@ public abstract class PersistenceTestCase extends TestCase {
     }
 
     protected boolean isNotEmpty(String line) {
-        return line.length() != 0;
+        return !line.trim().isEmpty();
     }
 
     protected boolean isComment(String line) {

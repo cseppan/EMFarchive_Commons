@@ -213,7 +213,7 @@ public class ORLExportersTest extends PersistenceTestCase {
 
     private File doExport(Exporter exporter) throws Exception {
         File file = File.createTempFile("exported", ".orl");
-        // file.deleteOnExit();
+        file.deleteOnExit();
 
         exporter.export(file);
 
@@ -230,13 +230,16 @@ public class ORLExportersTest extends PersistenceTestCase {
     }
 
     private List readComments(File file) throws IOException {
-        List lines = new ArrayList();
+        List<String> lines = new ArrayList<String>();
 
         BufferedReader r = new BufferedReader(new FileReader(file));
         for (String line = r.readLine(); line != null; line = r.readLine()) {
             if (isNotEmpty(line) && isComment(line))
                 lines.add(line);
         }
+        
+        if (r != null)
+            r.close();
 
         return lines;
     }
