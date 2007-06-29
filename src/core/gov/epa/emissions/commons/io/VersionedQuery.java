@@ -30,11 +30,14 @@ public class VersionedQuery {
         // e.g.: delete_version NOT SIMILAR TO '(6|6,%|%,6,%|%,6)'
         while (tokenizer.hasMoreTokens()) {
             String version = tokenizer.nextToken();
-            String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
-            buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
-
-            if (tokenizer.hasMoreTokens())
-                buffer.append(" AND ");
+            if (!version.equals("0"))  // don't need to check to see if items are deleted from version 0
+            {
+                String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
+                buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
+    
+                if (tokenizer.hasMoreTokens())
+                    buffer.append(" AND ");
+            }
         }
 
         return buffer.toString();
