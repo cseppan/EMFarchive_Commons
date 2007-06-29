@@ -35,8 +35,9 @@ public abstract class ScrollableVersionedRecordsPerformanceTest extends Performa
     private void doSetup(String dataTable, int datasetId) throws Exception {
         datasource = emissions();
 
-        whereClause = " WHERE dataset_id = " + datasetId + " AND version IN (0) AND  "
-                + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)'";
+        whereClause = " WHERE dataset_id = " + datasetId + " AND version IN (0)";
+//        whereClause = " WHERE dataset_id = " + datasetId + " AND version IN (0) AND  "
+//                + "delete_versions NOT SIMILAR TO '(0|0,%|%,0,%|%,0)'";
         query = "SELECT * FROM " + dataTable + whereClause + " ORDER BY record_id";
     }
 

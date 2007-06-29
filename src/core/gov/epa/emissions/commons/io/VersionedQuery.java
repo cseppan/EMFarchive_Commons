@@ -16,7 +16,8 @@ public class VersionedQuery {
         String versionsPath = version.createCompletePath();
         String deleteClause = createDeleteClause(versionsPath);
 
-        return "version IN (" + versionsPath + ") AND " + deleteClause + " AND "+datasetIdClause();
+        // TBD: If dataset type does not have multiple datasets in a table, don't need datasetIdClause
+        return "version IN (" + versionsPath + ")" + deleteClause + " AND "+datasetIdClause();
     }
     
     private String datasetIdClause() {
@@ -33,6 +34,10 @@ public class VersionedQuery {
             if (!version.equals("0"))  // don't need to check to see if items are deleted from version 0
             {
                 String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
+                if (buffer.length() == 0)
+                {
+                    buffer.append(" AND ");
+                }
                 buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
     
                 if (tokenizer.hasMoreTokens())

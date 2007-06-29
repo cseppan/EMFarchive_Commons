@@ -100,7 +100,7 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
         String deleteClause = createDeleteClause(versions);
 
         String defaultRowFilterClause = " WHERE dataset_id = " + version.getDatasetId() + " AND version IN ("
-                + versions + ") AND " + deleteClause;
+                + versions + ")" + deleteClause;
         String rowFilterClause = defaultRowFilterClause;
         if ((rowFilter != null) && (rowFilter.length() > 0)) {
             rowFilterClause = defaultRowFilterClause + " AND (" + rowFilter + ")";
@@ -117,13 +117,16 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
             String version = tokenizer.nextToken().trim();
             if (!version.equals("0")) {
                 String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
+                if (buffer.length()==0)
+                {
+                    buffer.append(" AND ");
+                }
                 buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
 
                 if (tokenizer.hasMoreTokens())
                     buffer.append(" AND ");
             }
         }
-
         return buffer.toString();
     }
 
