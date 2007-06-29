@@ -26,8 +26,8 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
         return optimizedFetch(version, table, batchSize, null, null, null, session);
     }
 
-    public ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize,
-            String columnFilter, String rowFilter, String sortOrder, Session session) throws SQLException {
+    public ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, String columnFilter,
+            String rowFilter, String sortOrder, Session session) throws SQLException {
         String query = createQuery(version, table, columnFilter, rowFilter, sortOrder, session);
         String versions = versionsList(version, session);
         String fullyQualifiedTable = fullyQualifiedTable(table);
@@ -103,7 +103,7 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
                 + versions + ") AND " + deleteClause;
         String rowFilterClause = defaultRowFilterClause;
         if ((rowFilter != null) && (rowFilter.length() > 0)) {
-            rowFilterClause = defaultRowFilterClause + " AND " + rowFilter;
+            rowFilterClause = defaultRowFilterClause + " AND (" + rowFilter + ")";
         }
         return rowFilterClause;
     }
@@ -114,12 +114,14 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
         StringTokenizer tokenizer = new StringTokenizer(versions, ",");
         // e.g.: delete_version NOT SIMILAR TO '(6|6,%|%,6,%|%,6)'
         while (tokenizer.hasMoreTokens()) {
-            String version = tokenizer.nextToken();
-            String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
-            buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
+            String version = tokenizer.nextToken().trim();
+            if (!version.equals("0")) {
+                String regex = "(" + version + "|" + version + ",%|%," + version + ",%|%," + version + ")";
+                buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
 
-            if (tokenizer.hasMoreTokens())
-                buffer.append(" AND ");
+                if (tokenizer.hasMoreTokens())
+                    buffer.append(" AND ");
+            }
         }
 
         return buffer.toString();
