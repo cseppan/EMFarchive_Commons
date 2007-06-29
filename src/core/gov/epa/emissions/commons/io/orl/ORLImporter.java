@@ -87,7 +87,7 @@ public class ORLImporter {
         splitFile(file, headerFile, dataFile);
         loadDataset(getComments(headerFile), dataset);
 
-        String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat, dataFile) + ") FROM '"
+        String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat) + ") FROM '"
                 + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
 
         Connection connection = datasource.getConnection();
@@ -105,7 +105,7 @@ public class ORLImporter {
             return;
         }
 
-        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " > " + headerFile.getAbsolutePath();
+        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " | grep -v \"^#EXPORT_\" > " + headerFile.getAbsolutePath();
         String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > "
                 + dataFile.getAbsolutePath();
         String[] cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd };
@@ -133,12 +133,13 @@ public class ORLImporter {
         }
 
         while ((line = fileReader.readLine()) != null) {
-            if (line.trim().startsWith("#")) {
+            line = line.trim();
+            if (line.startsWith("#") && !line.startsWith("#EXPORT_")) {
                 if (!firstHeadLine)
                     headWriter.println();
                 headWriter.write(line);
                 firstHeadLine = false;
-            } else if (!line.trim().isEmpty()) {
+            } else if (!line.startsWith("#") && !line.isEmpty()) {
                 if (!firstDataLine)
                     dataWriter.println();
                 dataWriter.write(line);
@@ -168,12 +169,17 @@ public class ORLImporter {
         return this.datasource.getName() + "." + table;
     }
 
-    private String getColNames(FileFormatWithOptionalCols fileFormat, File dataFile) {
+    private String getColNames(FileFormatWithOptionalCols fileFormat) throws ImporterException {
         Column[] cols = fileFormat.cols();
         String colsString = "";
 
-        for (int i = 0; i < record.size(); i++)
-            colsString += cols[i].name() + ",";
+        try {
+            for (int i = 0; i < record.size(); i++)
+                colsString += cols[i].name() + ",";
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ImporterException("Data doesn't match file format on number of columns " +
+                    "(expected:" + cols.length + " but was:" + record.size() + ").");
+        }
 
         return colsString.substring(0, colsString.length() - 1);
     }
