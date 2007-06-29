@@ -81,8 +81,8 @@ public class ORLImporter {
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat)
             throws Exception {
         String tempDir = System.getProperty("java.io.tmpdir");
-        File headerFile = new File(tempDir, ".header");
-        File dataFile = new File(tempDir, ".data");
+        File headerFile = new File(tempDir, dataset.getName() + ".header");
+        File dataFile = new File(tempDir, dataset.getName() + ".data");
 
         splitFile(file, headerFile, dataFile);
         loadDataset(getComments(headerFile), dataset);
