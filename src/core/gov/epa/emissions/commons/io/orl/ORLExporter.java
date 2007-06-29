@@ -75,12 +75,15 @@ public class ORLExporter extends GenericExporter {
 
     private void createNewFile(File file) throws Exception {
         try {
-            file.createNewFile();
             if (windowsOS)
+            {
+                // AME: Updates for EPA's system
+                file.createNewFile();
                 Runtime.getRuntime().exec("CACLS " + file.getAbsolutePath() + " /E /G \"Users\":W");
-            else
                 file.setWritable(true, false);
-            Thread.sleep(1000); // for the system to refresh the file access permission
+                Thread.sleep(1000); // for the system to refresh the file access permissions
+            }
+            //  for now, do nothing from Linux
         } catch (IOException e) {
             throw new ExporterException("Could not create export file: " + file.getAbsolutePath());
         }
