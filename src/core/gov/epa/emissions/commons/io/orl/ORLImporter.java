@@ -125,20 +125,20 @@ public class ORLImporter {
         }
         catch (Exception exc)
         {
+            try
+            {
+               if ((connection != null) && !connection.isClosed()) connection.close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             throw exc;
         }
         finally
         {
             if ((headerFile != null) && headerFile.exists()) headerFile.delete();
             if ((headerFile != null) && headerFile.exists()) dataFile.delete();
-            try
-            {
-               if (connection != null) connection.close();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
     }
 

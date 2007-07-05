@@ -74,20 +74,19 @@ public class ORLExporter extends GenericExporter {
             setExportedLines(originalQuery, connection);
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                if ((connection != null) && !connection.isClosed()) connection.close();                
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+                throw new ExporterException(ex.getMessage());               
+            }
             throw new ExporterException(e.getMessage());
         }
         finally
         {
             if (dataFile.exists()) dataFile.delete();
             if (headerFile.exists()) headerFile.delete();
-            try {
-                connection.close();                
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                throw new ExporterException(ex.getMessage());               
-            }
-            
         }
     }
 
