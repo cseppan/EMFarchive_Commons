@@ -75,36 +75,71 @@ public class ORLImporter {
             doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat());
         } catch (Exception e) {
             dataTable.drop();
-            throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
+            e.printStackTrace();
+            throw new ImporterException("Filename: " + file.getAbsolutePath() + "; Exception: " + e.getMessage());
         }
     }
 
+    /*
+     * @return String a name that is save to use as a file name
+     */
+    public String getNameForFile(String name) {
+        String fileName = new String(name);
+        for (int i = 0; i < fileName.length(); i++) {
+            if (!Character.isLetterOrDigit(fileName.charAt(i))) {
+                fileName = fileName.replace(fileName.charAt(i), '_');
+            }
+        }
+        return fileName;
+    }
+
+
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat)
             throws Exception {
-        String tempDir = System.getProperty("IMPORT_EXPORT_TEMP_DIR");
-        
-        if (tempDir == null || tempDir.isEmpty())
-            tempDir = System.getProperty("java.io.tmpdir");
-        
-        Random rando = new Random();
-        long id = Math.abs(rando.nextInt());
-        
-        File headerFile = new File(tempDir, dataset.getName() + id + ".header");
-        File dataFile = new File(tempDir, dataset.getName() + id + ".data");
-
-        splitFile(file, headerFile, dataFile);
-        loadDataset(getComments(headerFile), dataset);
-
-        String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat) + ") FROM '"
-                + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
-
-        Connection connection = datasource.getConnection();
-        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        statement.execute(copyString);
-        statement.close();
-
-        headerFile.delete();
-        dataFile.delete();
+        File headerFile = null;
+        File dataFile = null;
+        Connection connection = null;
+        try
+        {
+            String tempDir = System.getProperty("IMPORT_EXPORT_TEMP_DIR");
+            
+            if (tempDir == null || tempDir.isEmpty())
+                tempDir = System.getProperty("java.io.tmpdir");
+            
+            Random rando = new Random();
+            long id = Math.abs(rando.nextInt());
+            
+            headerFile = new File(tempDir, getNameForFile(dataset.getName()) + id + ".header");
+            dataFile = new File(tempDir, getNameForFile(dataset.getName())  + id + ".data");
+    
+            splitFile(file, headerFile, dataFile);
+            loadDataset(getComments(headerFile), dataset);
+    
+            String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat) + ") FROM '"
+                    + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
+    
+            connection = datasource.getConnection();
+            Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            statement.execute(copyString);
+            statement.close();
+        }
+        catch (Exception exc)
+        {
+            throw exc;
+        }
+        finally
+        {
+            if ((headerFile != null) && headerFile.exists()) headerFile.delete();
+            if ((headerFile != null) && headerFile.exists()) dataFile.delete();
+            try
+            {
+               if (connection != null) connection.close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
     private void splitFile(File file, File headerFile, File dataFile) throws IOException, InterruptedException {
