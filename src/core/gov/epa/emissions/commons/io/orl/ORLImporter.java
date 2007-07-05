@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 public class ORLImporter {
 
@@ -80,9 +81,16 @@ public class ORLImporter {
 
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat)
             throws Exception {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        File headerFile = new File(tempDir, dataset.getName() + ".header");
-        File dataFile = new File(tempDir, dataset.getName() + ".data");
+        String tempDir = System.getProperty("IMPORT_EXPORT_TEMP_DIR");
+        
+        if (tempDir == null || tempDir.isEmpty())
+            tempDir = System.getProperty("java.io.tmpdir");
+        
+        Random rando = new Random();
+        long id = Math.abs(rando.nextInt());
+        
+        File headerFile = new File(tempDir, dataset.getName() + id + ".header");
+        File dataFile = new File(tempDir, dataset.getName() + id + ".data");
 
         splitFile(file, headerFile, dataFile);
         loadDataset(getComments(headerFile), dataset);
