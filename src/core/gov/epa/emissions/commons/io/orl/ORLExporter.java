@@ -50,26 +50,44 @@ public class ORLExporter extends GenericExporter {
     }
 
     public void export(File file) throws ExporterException {
-        String dataFile = file.getAbsolutePath() + ".dat";
-        String headerFile = file.getAbsolutePath() + ".hed";
+        // TBD: make this use the new temp dir
+        String dataFileName = file.getAbsolutePath() + ".dat";
+        String headerFileName = file.getAbsolutePath() + ".hed";
+        File dataFile = new File(dataFileName);
+        File headerFile = new File(headerFileName);        
         Connection connection = null;
+       
 
         try {
-            createNewFile(new File(dataFile));
-            writeHeader(new File(headerFile));
+            createNewFile(dataFile);
+            writeHeader(headerFile);
 
             String originalQuery = getQueryString(dataset, datasource);
             String query = getColsSpecdQueryString(dataset, originalQuery);
-            String writeQuery = getWriteQueryString(dataFile, query);
+            String writeQuery = getWriteQueryString(dataFileName, query);
             log.warn(writeQuery);
 
             connection = datasource.getConnection();
 
             executeQuery(connection, writeQuery);
-            concatFiles(file, headerFile, dataFile);
+            concatFiles(file, headerFileName, dataFileName);
             setExportedLines(originalQuery, connection);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExporterException(e.getMessage());
+        }
+        finally
+        {
+            if (dataFile.exists()) dataFile.delete();
+            if (headerFile.exists()) headerFile.delete();
+            try {
+                connection.close();                
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+                throw new ExporterException(ex.getMessage());               
+            }
+            
         }
     }
 
