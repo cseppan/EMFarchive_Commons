@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,12 +52,20 @@ public class ORLExporter extends GenericExporter {
 
     public void export(File file) throws ExporterException {
         // TBD: make this use the new temp dir
-        String dataFileName = file.getAbsolutePath() + ".dat";
-        String headerFileName = file.getAbsolutePath() + ".hed";
+        String tempDir = System.getProperty("IMPORT_EXPORT_TEMP_DIR");
+
+        if (tempDir == null || tempDir.isEmpty())
+            tempDir = System.getProperty("java.io.tmpdir");
+
+        Random rando = new Random();
+        long id = Math.abs(rando.nextInt());
+
+        String separator = System.getProperty("file.separator");
+        String dataFileName = tempDir + separator + file.getName() + id + ".dat";
+        String headerFileName = tempDir + separator + file.getName() + id + ".hed";
         File dataFile = new File(dataFileName);
-        File headerFile = new File(headerFileName);        
+        File headerFile = new File(headerFileName);
         Connection connection = null;
-       
 
         try {
             createNewFile(dataFile);
@@ -75,32 +84,29 @@ public class ORLExporter extends GenericExporter {
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                if ((connection != null) && !connection.isClosed()) connection.close();                
-            }
-            catch (Exception ex) {
+                if ((connection != null) && !connection.isClosed())
+                    connection.close();
+            } catch (Exception ex) {
                 ex.printStackTrace();
-                throw new ExporterException(ex.getMessage());               
+                throw new ExporterException(ex.getMessage());
             }
             throw new ExporterException(e.getMessage());
-        }
-        finally
-        {
-            if (dataFile.exists()) dataFile.delete();
-            if (headerFile.exists()) headerFile.delete();
+        } finally {
+             if (dataFile.exists()) dataFile.delete();
+             if (headerFile.exists()) headerFile.delete();
         }
     }
 
     private void createNewFile(File file) throws Exception {
         try {
-            if (windowsOS)
-            {
+            if (windowsOS) {
                 // AME: Updates for EPA's system
                 file.createNewFile();
                 Runtime.getRuntime().exec("CACLS " + file.getAbsolutePath() + " /E /G \"Users\":W");
                 file.setWritable(true, false);
                 Thread.sleep(1000); // for the system to refresh the file access permissions
             }
-            //  for now, do nothing from Linux
+            // for now, do nothing from Linux
         } catch (IOException e) {
             throw new ExporterException("Could not create export file: " + file.getAbsolutePath());
         }
@@ -109,7 +115,7 @@ public class ORLExporter extends GenericExporter {
     private String putEscape(String path) {
         if (windowsOS)
             return path.replaceAll("\\\\", "\\\\\\\\");
-        
+
         return path;
     }
 
@@ -145,8 +151,6 @@ public class ORLExporter extends GenericExporter {
         Process p = Runtime.getRuntime().exec(cmd);
         p.waitFor();
 
-        new File(headerFile).delete();
-        new File(dataFile).delete();
     }
 
     private String[] getCommands(String command) {
