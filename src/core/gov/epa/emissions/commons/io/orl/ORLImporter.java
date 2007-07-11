@@ -106,6 +106,11 @@ public class ORLImporter {
             if (tempDir == null || tempDir.isEmpty())
                 tempDir = System.getProperty("java.io.tmpdir");
             
+            File tempDirFile = new File(tempDir);
+            
+            if (!(tempDirFile.exists() && tempDirFile.isDirectory() && tempDirFile.canWrite() && tempDirFile.canRead()))
+                throw new Exception("Temporary folder with write permissions for ORL importers not set properly: " + tempDir + ".");
+            
             Random rando = new Random();
             long id = Math.abs(rando.nextInt());
             
@@ -138,7 +143,7 @@ public class ORLImporter {
         finally
         {
             if ((headerFile != null) && headerFile.exists()) headerFile.delete();
-            if ((headerFile != null) && headerFile.exists()) dataFile.delete();
+            if ((dataFile != null) && dataFile.exists()) dataFile.delete();
         }
     }
 
