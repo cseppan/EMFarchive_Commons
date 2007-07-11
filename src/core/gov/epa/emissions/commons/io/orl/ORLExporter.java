@@ -60,7 +60,7 @@ public class ORLExporter extends GenericExporter {
         File tempDirFile = new File(tempDir);
         
         if (!(tempDirFile.exists() && tempDirFile.isDirectory() && tempDirFile.canWrite() && tempDirFile.canRead()))
-            throw new ExporterException("Temporary folder with write permissions for ORL exporters not set properly: " + tempDir + ".");
+            throw new ExporterException(""Import-export temporary folder does not exist or lacks write permissions: " + tempDir + "");
         
         Random rando = new Random();
         long id = Math.abs(rando.nextInt());

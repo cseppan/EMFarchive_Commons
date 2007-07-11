@@ -109,7 +109,7 @@ public class ORLImporter {
             File tempDirFile = new File(tempDir);
             
             if (!(tempDirFile.exists() && tempDirFile.isDirectory() && tempDirFile.canWrite() && tempDirFile.canRead()))
-                throw new Exception("Temporary folder with write permissions for ORL importers not set properly: " + tempDir + ".");
+                throw new Exception("Import-export temporary folder does not exist or lacks write permissions: " + tempDir);
             
             Random rando = new Random();
             long id = Math.abs(rando.nextInt());
