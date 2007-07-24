@@ -35,7 +35,7 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
             String sectionName = sources[i].getTable().replace('_', ' ');
             writer.println("/" + sectionName + "/");
             this.fileFormat = getFileFormat(sectionName);
-            writeResultSet(writer, sources[i], datasource, comments);
+            writeResultSet(writer, sources[i], datasource, comments, sectionName);
             writer.println("/END/");
         }
     }

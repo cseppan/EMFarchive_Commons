@@ -147,17 +147,27 @@ public class CountryStateCountyDataExporter implements Exporter {
         InternalSource[] sources = dataset.getInternalSources();
 
         for (int i = 0; i < sources.length; i++) {
-            writer.println("/" + sources[i].getTable() + "/");
+            String section = sources[i].getTable();
+            writer.println("/" + section + "/");
             this.fileFormat = getFileFormat(sources[i].getTable());
 
-            writeResultSet(writer, sources[i], datasource, comments);
+            writeResultSet(writer, sources[i], datasource, comments, section);
         }
     }
 
-    protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments)
+    protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments, String section)
             throws SQLException {
         String query = getQueryString(source, datasource);
-        OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
+        String orderby = "";
+        
+        if (section.toUpperCase().equals("COUNTRY"))
+            orderby = " ORDER BY code";
+        else if (section.toUpperCase().equals("STATE"))
+            orderby = " ORDER BY countrycode, statecode";
+        else if (section.toUpperCase().equals("COUNTY"))
+            orderby = " ORDER BY countrycode, statecode, countycode";
+            
+        OptimizedQuery runner = datasource.optimizedQuery(query + orderby, batchSize);
         boolean firstbatch = true;
         String[] cols = null;
 
