@@ -69,14 +69,15 @@ public class SMKReportExporter implements Exporter {
         try {
             //writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
+            write(file, writer);
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
+        } catch (Exception e2) {
+            throw new ExporterException(e2.getMessage());
         }
-
-        write(file, writer);
     }
 
-    protected void write(File file, PrintWriter writer) throws ExporterException {
+    protected void write(File file, PrintWriter writer) throws Exception {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
@@ -108,7 +109,7 @@ public class SMKReportExporter implements Exporter {
     protected void writeWithInlineComments(File file, PrintWriter writer) throws ExporterException {
         try {
             writeDataWithComments(writer, dataset, datasource);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ExporterException("could not export file - " + file, e);
         } finally {
             writer.close();
@@ -139,17 +140,17 @@ public class SMKReportExporter implements Exporter {
     }
 
     protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws SQLException {
+            throws Exception {
         writeData(writer, dataset, datasource, true);
     }
 
     protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws SQLException {
+            throws Exception {
         writeData(writer, dataset, datasource, false);
     }
 
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
-            throws SQLException {
+            throws Exception {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
         boolean firstbatch = true;
@@ -225,7 +226,7 @@ public class SMKReportExporter implements Exporter {
         }
     }
 
-    private String getQueryString(Dataset dataset, Datasource datasource) {
+    private String getQueryString(Dataset dataset, Datasource datasource) throws ExporterException {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();

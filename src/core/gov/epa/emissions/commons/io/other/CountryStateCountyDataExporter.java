@@ -73,16 +73,16 @@ public class CountryStateCountyDataExporter implements Exporter {
     public void export(File file) throws ExporterException {
         PrintWriter writer = null;
         try {
-            //writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
+            write(file, writer);
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
+        } catch (Exception e2) {
+            throw new ExporterException(e2.getMessage());
         }
-
-        write(file, writer);
     }
 
-    private void write(File file, PrintWriter writer) throws ExporterException {
+    private void write(File file, PrintWriter writer) throws Exception {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
@@ -133,17 +133,17 @@ public class CountryStateCountyDataExporter implements Exporter {
 
 
     protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws SQLException {
+            throws Exception {
         writeData(writer, dataset, datasource, true);
     }
 
     protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws SQLException {
+            throws Exception {
         writeData(writer, dataset, datasource, false);
     }
 
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
-            throws SQLException {
+            throws Exception {
         InternalSource[] sources = dataset.getInternalSources();
 
         for (int i = 0; i < sources.length; i++) {
@@ -156,7 +156,7 @@ public class CountryStateCountyDataExporter implements Exporter {
     }
 
     protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments, String section)
-            throws SQLException {
+            throws Exception {
         String query = getQueryString(source, datasource);
         String orderby = "";
         
@@ -274,7 +274,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         return factory.get(fileFormatName);
     }
 
-    private String getQueryString(InternalSource source, Datasource datasource) {
+    private String getQueryString(InternalSource source, Datasource datasource) throws ExporterException {
         String table = source.getTable();
         String qualifiedTable = datasource.getName() + "." + table;
         ExportStatement export = dataFormatFactory.exportStatement();

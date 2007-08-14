@@ -11,7 +11,6 @@ import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.other.CountryStateCountyDataExporter;
 
 import java.io.PrintWriter;
-import java.sql.SQLException;
 
 public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     
@@ -28,7 +27,7 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
         this.sqlDataTypes = sqlDataTypes;
     }
     
-    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws SQLException {
+    protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws Exception {
         InternalSource[] sources = dataset.getInternalSources();
 
         for(int i = 0; i < sources.length; i++){

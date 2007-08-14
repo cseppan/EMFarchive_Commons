@@ -393,7 +393,7 @@ public class ORLImporterTest extends HibernateTestCase {
                 + "#COUNTRY PERU\n#YEAR    1995\n#DESC Created from file 99OR-MOD.TXT provided by M. Strum in "
                 + "November 2002.\n"
                 + "#DESC North Carolina data extracted from original file using UNIX grep command.\n"
-                + "#DESC    paste commands.\n" + "#comment 1\n#comment 2\n#comment 3\n#comment 4\n";
+                + "#DESC    paste commands. \n" + "#comment 1\n#comment 2\n#comment 3\n#comment 4\n";
         assertEquals(expected, dataset.getDescription());
     }
 

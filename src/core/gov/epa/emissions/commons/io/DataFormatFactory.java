@@ -12,7 +12,7 @@ public interface DataFormatFactory {
     
     FillDefaultValues defaultValuesFiller();
 
-    ExportStatement exportStatement();
+    ExportStatement exportStatement() throws ExporterException;
     
     Version getVersion();
 

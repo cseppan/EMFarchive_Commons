@@ -69,10 +69,12 @@ public class GenericExporter implements Exporter {
             write(file, writer);
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
+        } catch (Exception e2) {
+            throw new ExporterException(e2.getMessage());
         }
     }
 
-    final protected void write(File file, PrintWriter writer) throws ExporterException {
+    final protected void write(File file, PrintWriter writer) throws Exception {
         try {
             boolean headercomments = dataset.getHeaderCommentsSetting();
             boolean inlinecomments = dataset.getInlineCommentSetting();
@@ -128,17 +130,17 @@ public class GenericExporter implements Exporter {
     }
 
     final protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws SQLException {
+            throws Exception {
         writeData(writer, dataset, datasource, true);
     }
 
     final protected void writeDataWithoutComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws SQLException {
+            throws Exception {
         writeData(writer, dataset, datasource, false);
     }
 
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
-            throws SQLException {
+            throws Exception {
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
         boolean firstbatch = true;
@@ -165,7 +167,7 @@ public class GenericExporter implements Exporter {
         runner.close();
     }
 
-    protected String getQueryString(Dataset dataset, Datasource datasource) {
+    protected String getQueryString(Dataset dataset, Datasource datasource) throws ExporterException {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
