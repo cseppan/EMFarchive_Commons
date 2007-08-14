@@ -15,7 +15,7 @@ public class CountryFileFormat implements FileFormat, FixedWidthFileFormat {
     }
 
     public String identify() {
-        return "Country, state, and county names and data";
+        return "Country";
     }
 
     public Column[] cols() {

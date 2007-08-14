@@ -6,7 +6,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 
 public class FixedWidthParser implements Parser {
 
-    private FileFormat fileFormat;
+    protected FileFormat fileFormat;
 
     public FixedWidthParser(FileFormat fileFormat) {
         this.fileFormat = fileFormat;

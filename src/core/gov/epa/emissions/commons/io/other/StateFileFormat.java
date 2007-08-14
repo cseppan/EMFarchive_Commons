@@ -15,7 +15,7 @@ public class StateFileFormat implements FileFormat, FixedWidthFileFormat {
     }
 
     public String identify() {
-        return "Country, state, and county names and data";
+        return "State";
     }
 
     //FIXME: The sample input data has shifted from the SMOKE description. Columns

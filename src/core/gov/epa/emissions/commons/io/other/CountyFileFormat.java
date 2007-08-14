@@ -16,7 +16,7 @@ public class CountyFileFormat implements FileFormat, FixedWidthFileFormat {
     }
 
     public String identify() {
-        return "Country, state, and county names and data";
+        return "County";
     }
 
     //FIXME: The sample input data has shifted from the SMOKE description. Columns
