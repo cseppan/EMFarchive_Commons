@@ -88,6 +88,7 @@ public class ORLExporter extends GenericExporter {
             setExportedLines(originalQuery, connection);
         } catch (Exception e) {
             e.printStackTrace();
+            //NOTE: this closes the db server for other exporters
             try {
                 if ((connection != null) && !connection.isClosed())
                     connection.close();
