@@ -131,15 +131,16 @@ public class ORLImporter {
         catch (Exception exc)
         {
             //NOTE: this closes the db server for other importers
-            try
-            {
-               if ((connection != null) && !connection.isClosed()) connection.close();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            throw exc;
+//            try
+//            {
+//               if ((connection != null) && !connection.isClosed()) connection.close();
+//            }
+//            catch (Exception ex)
+//            {
+//                throw ex;
+//            }
+//            throw exc;
+            throw new Exception(exc.getMessage());
         }
         finally
         {

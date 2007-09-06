@@ -89,13 +89,13 @@ public class ORLExporter extends GenericExporter {
         } catch (Exception e) {
             e.printStackTrace();
             //NOTE: this closes the db server for other exporters
-            try {
-                if ((connection != null) && !connection.isClosed())
-                    connection.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                throw new ExporterException(ex.getMessage());
-            }
+//            try {
+//                if ((connection != null) && !connection.isClosed())
+//                    connection.close();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                throw new ExporterException(ex.getMessage());
+//            }
             throw new ExporterException(e.getMessage());
         } finally {
              if (dataFile.exists()) dataFile.delete();
