@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ORLPointFileFormat implements FileFormatWithOptionalCols, DelimitedFileFormat {
 
-    private SqlDataTypes types;
+    protected SqlDataTypes types;
 
     private FillDefaultValues filler;
 
@@ -122,7 +122,11 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
         cols.add(new Column("PERIOD_WEEKS_PER_PERIOD", types.realType(), new RealFormatter()));
         cols.add(new Column("PERIOD_HOURS_PER_DAY", types.realType(), new RealFormatter()));
         cols.add(new Column("PERIOD_HOURS_PER_PERIOD", types.realType(), new RealFormatter()));
-        
+
+//        //new columns used for control strategy runs...
+//        cols.add(new Column("DESIGN_CAPACITY", types.realType(), new RealFormatter()));
+//        cols.add(new Column("CONTROL_MEASURES", types.text(), new NullFormatter(), "DEFAULT ''::text"));
+
         return (Column[]) cols.toArray(new Column[0]);
     }
 
