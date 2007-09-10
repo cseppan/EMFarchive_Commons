@@ -9,11 +9,14 @@ import gov.epa.emissions.commons.db.DbUpdate;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.TableReader;
 import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.importer.PersistenceTestCase;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
 import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -43,7 +46,7 @@ public class LineExporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testExportSmallLineFile() throws Exception {
@@ -65,7 +68,7 @@ public class LineExporterTest extends PersistenceTestCase {
             String expectedPattern2 = "#EXPORT_VERSION_NAME=";
             String expectedPattern3 = "#EXPORT_VERSION_NUMBER=";
             String expectedPattern4 = "#ORL";
-            String expectedPattern5 = "37119 0001 0001 1 1 'REXMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L -80.7081 35.12 17 108883 9.704141 -9 -9 -9 -9 -9!inline conmments  wihout delimitter separating";
+            String expectedPattern5 = "37119 0001 0001 1 1 'REXMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L -80.7081 35.12 17 108883 9.704141 -9 -9 -9 -9 -9";
             String expectedPattern6 = "#Cutomized Division - 1998";
             String expectedPattern7 = "#End Comment";
 
@@ -103,7 +106,7 @@ public class LineExporterTest extends PersistenceTestCase {
         List records = readData(file);
 
         String expectedPattern1 = "#ORL";
-        String expectedPattern2 = "37119 0001 0001 1 1 'REXMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L -80.7081 35.12 17 108883 9.704141 -9 -9 -9 -9 -9!inline conmments  wihout delimitter separating";
+        String expectedPattern2 = "37119 0001 0001 1 1 'REXMINC.;CUSTOMDIVISION' 40201301 02 01 60 7.5 375 2083.463 47.16 3083 0714 0 L -80.7081 35.12 17 108883 9.704141 -9 -9 -9 -9 -9";
         String expectedPattern3 = "#Cutomized Division - 1998";
         String expectedPattern4 = "#End Comment";
 
@@ -139,6 +142,60 @@ public class LineExporterTest extends PersistenceTestCase {
         assertTrue(records.get(15).toString().indexOf(expectedPattern2) > 0);
     }
 
+    public void testGenericExporterToStringOnVersionedData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
+        Version version = version();
+        File folder = new File("test/data/ida");
+        String fileName = "short_2000negu_canada_province_truncated_ida.txt";
+        LineImporter importer = new LineImporter(folder, new String[] { fileName }, dataset, localDbServer,
+                sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
+        VersionedImporter importer2 = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
+        "small-point.txt"));
+        importer2.run();
+        
+        GenericExporterToString exporter = new GenericExporterToString(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+                version, dataset), optimizedBatchSize);
+        exporter.export(null);
+        String exportedLines = exporter.getOutputString();
+        
+        BufferedReader fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(new File(folder, fileName))));
+        StringBuffer buffer = new StringBuffer();
+        
+        String line;
+        
+        while((line = fileReader.readLine()) != null) {
+            buffer.append(line + System.getProperty("line.separator"));
+        }
+        
+        assertEquals(buffer.toString(), exportedLines);
+        assertEquals(29, countRecords());
+    }
+
+    public void testGenericExporterToStringOnNonVersionedData() throws Exception {
+        DbServer localDbServer = dbSetup.getNewPostgresDbServerInstance();
+        File folder = new File("test/data/ida");
+        String fileName = "short_2000negu_canada_province_truncated_ida.txt";
+        LineImporter importer = new LineImporter(folder, new String[] { fileName }, dataset, localDbServer,
+                sqlDataTypes);
+        importer.run();
+        
+        GenericExporterToString exporter = new GenericExporterToString(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        exporter.export(null);
+        String exportedLines = exporter.getOutputString();
+        
+        BufferedReader fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(new File(folder, fileName))));
+        StringBuffer buffer = new StringBuffer();
+        
+        String line;
+        
+        while((line = fileReader.readLine()) != null) {
+            buffer.append(line + System.getProperty("line.separator"));
+        }
+        
+        assertEquals(buffer.toString(), exportedLines);
+        assertEquals(29, countRecords());
+    }
+    
     private Date lastModifiedDate(File folder, String fileName) {
         return new Date(new File(folder, fileName).lastModified());
     }
@@ -153,7 +210,7 @@ public class LineExporterTest extends PersistenceTestCase {
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     protected boolean isComment(String line) {
