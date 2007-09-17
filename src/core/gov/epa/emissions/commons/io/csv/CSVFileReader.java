@@ -45,7 +45,7 @@ public class CSVFileReader implements Reader {
 
     private File file;
 
-    private String[] existedCols = { "Record_Id", "Dataset_Id", "Version", "Delete_Versions", "Comments" };
+    private String[] existedCols = { "Record_Id", "Dataset_Id", "Version", "Delete_Versions", "Comments", "DESC" };
 
     public CSVFileReader(File file) throws ImporterException {
         try {
@@ -109,9 +109,9 @@ public class CSVFileReader implements Reader {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
         for (int i = 0; i < tokens.length; i++) {
-            if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
+            //if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
                 tokens[i] = checkBackSlash(tokens[i]);
-            }
+            //}
         }
         record.add(Arrays.asList(tokens));
 

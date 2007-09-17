@@ -56,7 +56,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), tableName);
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
@@ -165,7 +165,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
                 assertEquals(data.get(i), repeatData.get(i));
             }
         } catch (Exception e) {e.printStackTrace();} finally {
-            dropTable(repeatDataset.getName(), datasource);
+            dropTable(repeatDataset.getInternalSources()[0].getTable(), datasource);
         }
 
     }
@@ -212,7 +212,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
     private int countRecords() {
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), tableName);
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     private Date lastModifiedDate(File folder, String fileName) {
