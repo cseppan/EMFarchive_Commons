@@ -53,7 +53,7 @@ public class QAProgram implements Serializable, Comparable {
     }
 
     public int compareTo(Object other) {
-        return name.compareTo(((QAProgram) other).getName());
+        return name.compareToIgnoreCase(((QAProgram) other).getName());
     }
 
     public String getRunClassName() {

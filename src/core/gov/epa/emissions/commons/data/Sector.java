@@ -115,6 +115,6 @@ public class Sector implements Serializable, Lockable, Comparable {
     }
 
     public int compareTo(Object other) {
-        return name.compareTo(((Sector) other).getName());
+        return name.compareToIgnoreCase(((Sector) other).getName());
     }
 }

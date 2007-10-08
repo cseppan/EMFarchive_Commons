@@ -59,6 +59,6 @@ public class Region implements Serializable, Comparable{
     }
 
     public int compareTo(Object o) {
-        return name.compareTo(((Region) o).getName());
+        return name.compareToIgnoreCase(((Region) o).getName());
     }
 }

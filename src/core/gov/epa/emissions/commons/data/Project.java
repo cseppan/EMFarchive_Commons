@@ -51,6 +51,6 @@ public class Project implements Serializable, Comparable {
     }
 
     public int compareTo(Object other) {
-        return name.compareTo(((Project) other).getName());
+        return name.compareToIgnoreCase(((Project) other).getName());
     }
 }
