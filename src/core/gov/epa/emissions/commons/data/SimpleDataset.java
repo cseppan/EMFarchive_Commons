@@ -45,6 +45,8 @@ public class SimpleDataset implements Dataset {
     private Country country;
 
     private boolean inlineComments;
+    
+    private boolean csvHeaderLineOn;
 
     /**
      * No argument constructor needed for hibernate bean mapping
@@ -53,6 +55,7 @@ public class SimpleDataset implements Dataset {
         internalSources = new ArrayList();
         externalSources = new ArrayList();
         inlineComments = true;
+        csvHeaderLineOn = true;
     }
 
     public String getDatasetTypeName() {
@@ -239,6 +242,14 @@ public class SimpleDataset implements Dataset {
     
     public void setInlineCommentSetting(boolean inlineComments) {
         this.inlineComments = inlineComments;
+    }
+
+    public boolean getCSVHeaderLineSetting() {
+        return this.csvHeaderLineOn;
+    }
+
+    public void setCSVHeaderLineSetting(boolean headerLineOn) {
+        this.csvHeaderLineOn = headerLineOn;
     }
 
 }

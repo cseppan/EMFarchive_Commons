@@ -151,6 +151,7 @@ public class SMKReportExporter implements Exporter {
 
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws Exception {
+        boolean csvHeaderLine = dataset.getCSVHeaderLineSetting();
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
         boolean firstbatch = true;
@@ -158,8 +159,11 @@ public class SMKReportExporter implements Exporter {
 
         int pad = 0;
         if (!comments) {
-            pad = 1;
+            pad = 1;     // Add a comment column to header line
         }
+        
+        if (!csvHeaderLine)
+            pad = 2;    // Turn off head line
 
         while (runner.execute()) {
             ResultSet rs = runner.getResultSet();

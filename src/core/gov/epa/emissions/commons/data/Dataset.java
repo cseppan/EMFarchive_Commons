@@ -13,6 +13,8 @@ public interface Dataset extends Serializable {
     
     public static final String header_comment_char = "HEADER_COMMENT_CHAR";
     
+    public static final String csv_header_line = "EXPORT_COLUMN_LABEL";
+    
     public int getId();
 
     public void setId(int id);
@@ -94,6 +96,8 @@ public interface Dataset extends Serializable {
     boolean getInlineCommentSetting();
     
     boolean getHeaderCommentsSetting();
+
+    boolean getCSVHeaderLineSetting();
     
     String getInlineCommentChar();
     
