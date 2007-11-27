@@ -40,8 +40,12 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
 
     private void resetSelections() {
         this.selects = new Boolean[getRowCount()];
-        for (int i = 0; i < getRowCount(); i++) {
-            selects[i] = Boolean.FALSE;
+        if (getRowCount() == 1) {
+            selects[0] = Boolean.TRUE;
+        }else {
+            for (int i = 0; i < getRowCount(); i++) {
+                selects[i] = Boolean.FALSE;
+            }
         }
     }
 
