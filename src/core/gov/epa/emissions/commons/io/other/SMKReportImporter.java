@@ -41,12 +41,13 @@ public class SMKReportImporter implements Importer {
     private String delimiter;
 
     public SMKReportImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes) throws ImporterException,IOException,Exception {
+            SqlDataTypes sqlDataTypes) throws ImporterException, IOException, Exception {
         this(folder, filenames, dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory());
     }
-    
+
     public SMKReportImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
-            SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory) throws ImporterException,IOException,Exception {
+            SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory) throws ImporterException, IOException,
+            Exception {
         new FileVerifier().shouldHaveOneFile(filenames);
         this.file = new File(folder, filenames[0]);
         this.dataset = dataset;
@@ -58,19 +59,27 @@ public class SMKReportImporter implements Importer {
         TableFormat tableFormat = dataFormatFactory.tableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
     }
-    
+
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
         String table = dataTable.name();
 
         try {
-            if(!dataTable.exists(table))
+            if (!dataTable.exists(table))
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
-            dataTable.drop();
+            e.printStackTrace();
+            
+            try {
+                if (dataTable.exists(table))
+                    dataTable.drop();
+            } catch (Exception e1) {
+                throw new ImporterException("could not drop table " + table + ".");
+            }
+            
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + "; Details: "
-                    +e.getMessage());
+                    + e.getMessage());
         }
     }
 
@@ -83,11 +92,13 @@ public class SMKReportImporter implements Importer {
             List comments = getComments(reader);
             loader.load(reader, dataset, table);
             loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
-        }finally{
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             close(reader);
         }
     }
-    
+
     private void close(Reader reader) throws ImporterException {
         if (reader != null) {
             try {
