@@ -28,8 +28,8 @@ public class DataTable {
         String sufix = "_" + Math.abs(new Random().nextInt()); //to make name unique
         String table = prefix + name + sufix;
         
-        if (table.length() > 64) {            //postgresql table name max length is 64
-            int space = table.length() - 64;
+        if (table.length() > 63) {            //postgresql table name max length is 64
+            int space = table.length() - 63;
             table = prefix + name.substring(space + 1) + sufix;
         }
 
