@@ -32,13 +32,13 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     private Mutex lock;
 
-    private List keyValsList;
+    private KeyVal[] keyValsList = new KeyVal[]{};
 
-    private List qaStepTemplates;
+    private QAStepTemplate[] qaStepTemplates = new QAStepTemplate[]{};
 
     public DatasetType() {
-        keyValsList = new ArrayList();
-        qaStepTemplates = new ArrayList();
+//        keyValsList = new ArrayList();
+//        qaStepTemplates = new ArrayList();
         lock = new Mutex();
     }
 
@@ -164,29 +164,35 @@ public class DatasetType implements Serializable, Lockable, Comparable {
     }
 
     public KeyVal[] getKeyVals() {
-        return (KeyVal[]) keyValsList.toArray(new KeyVal[0]);
+        return this.keyValsList;
     }
 
     public void setKeyVals(KeyVal[] keyvals) {
-        keyValsList.clear();
-        keyValsList.addAll(Arrays.asList(keyvals));
+        this.keyValsList = keyvals;
     }
 
     public void addKeyVal(KeyVal val) {
-        keyValsList.add(val);
+        List<KeyVal> keyVals = new ArrayList<KeyVal>();
+        keyVals.addAll(Arrays.asList(this.keyValsList));
+        keyVals.add(val);
+        
+        this.keyValsList = keyVals.toArray(new KeyVal[0]);
     }
 
     public void setQaStepTemplates(QAStepTemplate[] templates) {
-        qaStepTemplates.clear();
-        qaStepTemplates.addAll(Arrays.asList(templates));
+        this.qaStepTemplates = templates;
     }
 
-    public void addQaStepTemplate(QAStepTemplate val) {
-        qaStepTemplates.add(val);
+    public void addQaStepTemplate(QAStepTemplate template) {
+        List<QAStepTemplate> templates = new ArrayList<QAStepTemplate>();
+        templates.addAll(Arrays.asList(this.qaStepTemplates));
+        templates.add(template);
+        
+        this.qaStepTemplates = templates.toArray(new QAStepTemplate[0]);
     }
 
     public QAStepTemplate[] getQaStepTemplates() {
-        return (QAStepTemplate[]) qaStepTemplates.toArray(new QAStepTemplate[0]);
+        return this.qaStepTemplates;
     }
 
     public int getTablePerDataset() {
