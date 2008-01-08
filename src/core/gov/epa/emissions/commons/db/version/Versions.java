@@ -168,8 +168,23 @@ public class Versions {
         }
     }
 
+    public Version[] getLaterVersions(int datasetId, Version version, Session session) throws Exception{
+        List<Version> laterVers=new ArrayList<Version>();
+        try{
+            int last=getLastFinalVersion(datasetId, session); 
+            for (int i=version.getVersion(); i<=last; i++){
+                Version ver=get(datasetId, i, session);
+                laterVers.add(ver);
+            }
+            return laterVers.toArray(new Version[0]);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Could not get later versions for dataset version: " + version.getName() + ".\n");
+        }
+    }
+    
+    
     public Version current(Version version, Session session) {
         return get(version.getDatasetId(), version.getVersion(), session);
     }
-
 }
