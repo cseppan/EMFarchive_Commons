@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.Column;
@@ -17,9 +18,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
@@ -103,6 +107,30 @@ public class ORLExporter extends GenericExporter {
         }
     }
 
+    private Map<String, String> getTableCols(Dataset dataset) {
+        ResultSet rs = null;
+        Map<String, String> cols = new HashMap<String, String>();
+        InternalSource source = dataset.getInternalSources()[0];
+        String qualifiedTable = datasource.getName() + "." + source.getTable();
+        try {
+            rs = datasource.query().executeQuery("select * from " + qualifiedTable + " where 1 = 0");
+            ResultSetMetaData md = rs.getMetaData();
+            for (int i = 1; i <= md.getColumnCount(); i++)
+                cols.put(md.getColumnName(i).toLowerCase(), md.getColumnName(i).toLowerCase());
+        } catch (SQLException e) {
+            //
+        } finally {
+            if (rs != null)
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    //
+                }
+        }
+
+        return cols;
+    }
+
     private void createNewFile(File file) throws Exception {
         try {
             if (windowsOS) {
@@ -148,6 +176,7 @@ public class ORLExporter extends GenericExporter {
         String[] cmd = null;
 
         if (windowsOS) {
+//System.out.println("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
             cmd = getCommands("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
         } else {
             String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
@@ -178,10 +207,13 @@ public class ORLExporter extends GenericExporter {
     private String getColsSpecdQueryString(Dataset dataset, String originalQuery) {
         String selectColsString = "SELECT ";
         Column[] cols = fileFormat.cols();
+        Map<String, String> tableColsMap = getTableCols(dataset);
         int numCols = cols.length;
 
-        for (int i = 0; i < numCols; i++)
-            selectColsString += cols[i].name() + ",";
+        for (int i = 0; i < numCols; i++) {
+            String colName = cols[i].name().toLowerCase();
+            selectColsString += (tableColsMap.containsKey(colName) ? colName : "null as " + colName) + ",";
+        }
 
         selectColsString = selectColsString.substring(0, selectColsString.length() - 1);
 
@@ -202,7 +234,7 @@ public class ORLExporter extends GenericExporter {
         for (int i = 0; i < numCols; i++) {
             String colType = cols[i].sqlType().toUpperCase();
 
-            if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && cols[i].width() > 10)
+            if (colType.startsWith("VARCHAR") || colType.startsWith("TEXT"))
                 colNames += cols[i].name() + ",";
         }
 

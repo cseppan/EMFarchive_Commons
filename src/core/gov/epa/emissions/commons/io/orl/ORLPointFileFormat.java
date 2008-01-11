@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.NullFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.SmallIntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
@@ -123,9 +124,14 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
         cols.add(new Column("PERIOD_HOURS_PER_DAY", types.realType(), new RealFormatter()));
         cols.add(new Column("PERIOD_HOURS_PER_PERIOD", types.realType(), new RealFormatter()));
 
-//        //new columns used for control strategy runs...
-//        cols.add(new Column("DESIGN_CAPACITY", types.realType(), new RealFormatter()));
-//        cols.add(new Column("CONTROL_MEASURES", types.text(), new NullFormatter(), "DEFAULT ''::text"));
+        //new columns used for control strategy runs...
+        cols.add(new Column("DESIGN_CAPACITY", types.realType(), new RealFormatter()));
+        cols.add(new Column("DESIGN_CAPACITY_UNIT_NUMERATOR", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("DESIGN_CAPACITY_UNIT_DENOMINATOR", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("CONTROL_MEASURES", types.text(), new NullFormatter()));
+        cols.add(new Column("PCT_REDUCTION", types.text(), new NullFormatter()));
+        cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
+        cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
     }

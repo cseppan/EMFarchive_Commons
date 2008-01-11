@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
+import gov.epa.emissions.commons.io.NullFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FillDefaultValues;
@@ -104,8 +105,13 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
         cols.add(new Column("PERIOD_HOURS_PER_DAY", types.realType(), new RealFormatter()));
         cols.add(new Column("PERIOD_HOURS_PER_PERIOD", types.realType(), new RealFormatter()));
 
-        return (Column[]) cols.toArray(new Column[0]);
+        //new columns used for control strategy runs...
+        cols.add(new Column("CONTROL_MEASURES", types.text(), new NullFormatter()));
+        cols.add(new Column("PCT_REDUCTION", types.text(), new NullFormatter()));
+        cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
+        cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
 
+        return (Column[]) cols.toArray(new Column[0]);
     }
 
     public void fillDefaults(List data, long datasetId) {
