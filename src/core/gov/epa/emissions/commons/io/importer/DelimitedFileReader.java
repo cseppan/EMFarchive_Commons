@@ -51,7 +51,7 @@ public class DelimitedFileReader implements Reader {
     public void close() throws IOException {
         fileReader.close();
     }
-    
+
     public Record readOneLine() throws Exception {
         return doRead(fileReader.readLine());
     }
@@ -80,7 +80,7 @@ public class DelimitedFileReader implements Reader {
     private boolean isData(String line) {
         return !(line.trim().length() == 0) && (!isComment(line));
     }
-    
+
     private boolean isExportInfo(String line) {
         return line == null ? false : line.trim().startsWith("#EXPORT_");
     }
@@ -108,36 +108,36 @@ public class DelimitedFileReader implements Reader {
     private int getInlineCommentPosition(char commentChar, String line) {
         int position = 0, index = 0, theEnd = line.length();
         String temp = line;
-        
+
         while ((index = temp.indexOf(commentChar)) != -1) {
             position += index;
-            
+
             if (!hasEvenNumOfQuotes(line.substring(0, position))) {
                 temp = temp.substring(++index);
                 position++;
             } else
                 return position;
         }
-        
+
         return theEnd;
     }
 
     private boolean hasEvenNumOfQuotes(String token) {
         int doubleQuotesCount = getQuotesCount("\"", token);
 
-        return (doubleQuotesCount % 2 == 0); //&& (singleQuotesCount % 2 == 0);
+        return (doubleQuotesCount % 2 == 0); // && (singleQuotesCount % 2 == 0);
     }
-    
+
     private int getQuotesCount(String quote, String token) {
         int index;
         int count = 0;
         String temp = token;
-        
+
         while ((index = temp.indexOf(quote)) != -1) {
-            ++ count;
+            ++count;
             temp = temp.substring(++index);
         }
-        
+
         return count;
     }
 
@@ -168,7 +168,7 @@ public class DelimitedFileReader implements Reader {
     public String line() {
         return line;
     }
-    
+
     public String delimiter() {
         return tokenizer.delimiter();
     }
@@ -183,22 +183,37 @@ public class DelimitedFileReader implements Reader {
         return (String[]) header.toArray(new String[0]);
     }
 
-    // Added to remove header lines
+    // Added to remove header lines, especially for smk report files
     public String[] readHeader(String regex) throws IOException {
-        List header = new ArrayList();
+        List<String> header = new ArrayList<String>();
         String line = fileReader.readLine();
-
         Pattern pattern = Pattern.compile(regex);
+
+        line = readHeaderLines(header, line, pattern);
+        header.add(line); // Table header - Column Names or units
+        header.add(fileReader.readLine()); // column names or units
+
+        if (line.startsWith("#"))
+            return header.toArray(new String[0]);
+
+        line = fileReader.readLine();
+
+        if (line.startsWith("-----")) {
+            header.add(line); // one more line of table border
+        } else {
+            fileReader.mark(1); 
+            fileReader.reset(); // file reader goes back 1 line
+        }
+
+        return header.toArray(new String[0]);
+    }
+
+    private String readHeaderLines(List<String> header, String line, Pattern pattern) throws IOException {
         while (pattern.split(line).length < 3) {
             header.add(line);
             line = fileReader.readLine();
         }
-
-        header.add(line); // Table header - Column Names
-        header.add(fileReader.readLine()); // Table header - Units
-        header.add(fileReader.readLine()); // FIXME: Assume one more line of table border
-
-        return (String[]) header.toArray(new String[0]);
+        return line;
     }
 
 }

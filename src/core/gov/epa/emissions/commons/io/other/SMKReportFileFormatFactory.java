@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
 public class SMKReportFileFormatFactory {
 
     private BufferedReader reader;
-    
+
     private SqlDataTypes types;
-    
+
     private String[] cols;
-    
+
     private String delimiter;
-    
+
     public SMKReportFileFormatFactory(File file, SqlDataTypes types) throws IOException {
         this.reader = new BufferedReader(new FileReader(file));
         this.types = types;
@@ -28,40 +28,65 @@ public class SMKReportFileFormatFactory {
     public FileFormat getFormat() throws Exception {
         return new SMKReportFileFormat(cols, types);
     }
-    
-    public String getDelimiter(){
+
+    public String getDelimiter() {
         return delimiter;
     }
-    
+
     private String readHeader() throws IOException {
         String comma = ",";
         String semicolon = ";";
         String pipe = "|";
         Pattern bar = Pattern.compile("[|]");
-        String delimiter = null;
-        
-        for(String line = reader.readLine(); line != null; line = reader.readLine()) {
-            if(line.split(comma).length >= 3) {
-                delimiter = comma;
-                cols = line.split(delimiter);
-            }
-            else if(line.split(semicolon).length >= 3) {
-                delimiter = semicolon;
-                cols = line.split(delimiter);
-            }
-            else if (bar.split(line).length >= 3) {
-                delimiter = pipe;
-                cols = bar.split(line);
+        String localDelimiter = null;
+
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            if (line.split(comma).length >= 3) {
+                localDelimiter = comma;
+            } else if (line.split(semicolon).length >= 3) {
+                localDelimiter = semicolon;
+            } else if (bar.split(line).length >= 3) {
+                localDelimiter = pipe;
             }
             
-            if(delimiter != null) {
+            if (line.trim().startsWith("#") && localDelimiter != null) {
+                line = reader.readLine();
+                
+                if (line != null) {
+                    line = line.trim().substring(1); // get rid of leading # sign
+                    fillColNames(localDelimiter, line);
+                    reader.close();
+                    
+                    return localDelimiter;
+                }
+            }
+
+            if (localDelimiter != null) {
+                fillColNames(localDelimiter, line);
                 reader.close();
-                return delimiter;
+                return localDelimiter;
             }
         }
-            
+
         reader.close();
-        return delimiter;
+        return localDelimiter;
+    }
+    
+    private void fillColNames(String delimiter, String line) {
+        if (delimiter.equals("|")) {
+            Pattern bar = Pattern.compile("[|]");
+            cols = fillSpacesInColNames(bar.split(line));
+            return;
+        }
+        
+        cols = fillSpacesInColNames(line.split(delimiter));
+    }
+    
+    private String[] fillSpacesInColNames(String[] cols) {
+        for (int i = 0; i < cols.length; i++)
+            cols[i] = cols[i].replace(' ', '_');
+        
+        return cols;
     }
 
 }

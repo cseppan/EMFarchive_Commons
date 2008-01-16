@@ -41,7 +41,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testImportSMKreportDataSemicolon() throws Exception {
@@ -135,7 +135,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     protected TableReader tableReader(Datasource datasource) {

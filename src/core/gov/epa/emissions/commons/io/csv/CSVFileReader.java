@@ -1,15 +1,13 @@
 package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.db.PostgreSQLKeyWords;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
-import gov.epa.emissions.commons.io.importer.PipeDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.Reader;
-import gov.epa.emissions.commons.io.importer.SemiColonDelimitedTokenizer;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
 import gov.epa.emissions.commons.io.importer.Tokenizer;
-import gov.epa.emissions.commons.io.importer.WhitespaceDelimitedTokenizer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -75,15 +72,15 @@ public class CSVFileReader implements Reader {
             while (line != null) {
                 lineNumber++;
                 this.line = line;
-                
+
                 if (isExportInfo(line)) {
                     line = fileReader.readLine();
-                    continue;             // rip off the export info lines
+                    continue; // rip off the export info lines
                 }
-                
+
                 if (isData(line))
                     return doRead(line);
-                
+
                 if (isComment(line))
                     comments.add(line);
 
@@ -100,7 +97,7 @@ public class CSVFileReader implements Reader {
     private boolean isData(String line) {
         return !(line.trim().length() == 0) && (!isComment(line));
     }
-    
+
     private boolean isExportInfo(String line) {
         return line == null ? false : line.trim().startsWith("#EXPORT_");
     }
@@ -109,9 +106,9 @@ public class CSVFileReader implements Reader {
         Record record = new Record();
         String[] tokens = tokenizer.tokens(line);
         for (int i = 0; i < tokens.length; i++) {
-            //if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
-                tokens[i] = checkBackSlash(tokens[i]);
-            //}
+            // if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
+            tokens[i] = checkBackSlash(tokens[i]);
+            // }
         }
         record.add(Arrays.asList(tokens));
 
@@ -143,45 +140,27 @@ public class CSVFileReader implements Reader {
     }
 
     private void detectDelimiter() throws ImporterException {
-        if(file.length() == 0)
+        if (file.length() == 0)
             throw new ImporterException("File: " + file.getAbsolutePath() + " is empty.");
 
-        try {
-            String line = fileReader.readLine();
-            fileReader.mark((int) file.length()); // FIXME: what if file gets too big?
-
-            if (getTokenizer(line))
-                return;
-
-            fileReader.reset();
-            tokenizer = new WhitespaceDelimitedTokenizer();
-            line = fileReader.readLine();
-            while (isComment(line) || isExportInfo(line))
-                line = fileReader.readLine();
-            cols = underScoreTheSpace(tokenizer.tokens(line));
-        } catch (IOException e) {
-            log.error("Importer failure: Error reading file" + "\n" + e);
-            throw new ImporterException("Importer failure: Error reading file");
-        }
+        if (getTokenizer())
+            return;
     }
 
-    private boolean getTokenizer(String line) throws ImporterException {
-        Pattern bar = Pattern.compile("[|]");
+    private boolean getTokenizer() throws ImporterException {
         try {
-            for (; line != null; line = fileReader.readLine()) {
-                if (isExportInfo(line))
+            String lineRead = fileReader.readLine();
+            
+            for (; lineRead != null; lineRead = fileReader.readLine()) {
+                if (isExportInfo(lineRead))
                     continue;
-                else if (isComment(line))
-                    header.add(line);
-                else if (line.split(",").length >= 2)
+                else if (isComment(lineRead))
+                    header.add(lineRead);
+                else if (lineRead.split(",").length >= 2)
                     tokenizer = new CommaDelimitedTokenizer();
-                else if (line.split(";").length >= 2)
-                    tokenizer = new SemiColonDelimitedTokenizer();
-                else if (bar.split(line).length >= 2)
-                    tokenizer = new PipeDelimitedTokenizer();
 
                 if (tokenizer != null) {
-                    cols = underScoreTheSpace(tokenizer.tokens(line));
+                    cols = underScoreTheSpace(tokenizer.tokens(lineRead));
                     return true;
                 }
             }
@@ -195,8 +174,9 @@ public class CSVFileReader implements Reader {
 
     private String[] underScoreTheSpace(String[] cols) {
         for (int i = 0; i < cols.length; i++) {
-            cols[i] = cols[i].replace(' ', '_');
-            cols[i] = checkExistCols(cols[i]);
+            String temp = cols[i].replace(' ', '_');
+            temp = (PostgreSQLKeyWords.reserved(temp.toUpperCase())) ? temp + "2" : temp;
+            cols[i] = checkExistCols(temp);
         }
 
         return cols;

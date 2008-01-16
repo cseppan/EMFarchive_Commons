@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.io.csv;
 
+import java.sql.Types;
+
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -23,7 +25,31 @@ public class CSVExporter extends SMKReportExporter {
         super.setDelimiter(",");
     }
 
-    protected String formatValue(String[] cols, int index, String value) {
+    protected String formatValue(String[] cols, int colType, int index, String value) {
+        if (colType == Types.BIGINT)
+            return value;
+        
+        if (colType == Types.DECIMAL)
+            return value;
+        
+        if (colType == Types.DOUBLE)
+            return value;
+        
+        if (colType == Types.FLOAT)
+            return value;
+        
+        if (colType == Types.INTEGER)
+            return value;
+        
+        if (colType == Types.NUMERIC)
+            return value;
+        
+        if (colType == Types.REAL)
+            return value;
+        
+        if (colType == Types.SMALLINT)
+            return value;
+        
         return "\"" + value + "\"";
     }
 

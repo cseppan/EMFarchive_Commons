@@ -46,6 +46,8 @@ public class SMKReportFileFormat implements FileFormat, DelimitedFileFormat {
         map.put("X CELL", new Column("X_CELL", types.stringType(128), 128, new StringFormatter(128)));
         map.put("Y CELL", new Column("Y_CELL", types.stringType(128), 128, new StringFormatter(128)));
         map.put("SOURCE ID", new Column("SOURCE_ID", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("PLANT ID", new Column("PLANT_ID", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("ORIS DESCRIPTION", new Column("ORIS_DESCRIPTION", types.stringType(256), 256, new StringFormatter(256)));
         map.put("COUNTRY", new Column("COUNTRY", types.stringType(128), 128, new StringFormatter(128)));
         map.put("SCC TIER 1", new Column("SCC_TIER_1", types.stringType(32), 32, new StringFormatter(32)));
         map.put("SCC TIER 2", new Column("SCC_TIER_2", types.stringType(32), 32, new StringFormatter(32)));

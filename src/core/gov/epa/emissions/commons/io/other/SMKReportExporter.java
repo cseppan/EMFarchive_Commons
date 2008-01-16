@@ -44,6 +44,10 @@ public class SMKReportExporter implements Exporter {
     private String inlineCommentChar;
 
     protected int startColNumber;
+    
+    protected List<Integer> colTypes = new ArrayList<Integer>();
+    
+    protected List<String> colNames = new ArrayList<String>();
 
     public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
         setup(dataset, dbServer, types, new NonVersionedDataFormatFactory(), optimizedBatchSize);
@@ -73,6 +77,7 @@ public class SMKReportExporter implements Exporter {
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         } catch (Exception e2) {
+            e2.printStackTrace();
             throw new ExporterException(e2.getMessage());
         }
     }
@@ -169,7 +174,8 @@ public class SMKReportExporter implements Exporter {
             ResultSet rs = runner.getResultSet();
 
             if (firstbatch) {
-                cols = getCols(rs);
+                getCols(rs);
+                cols = this.colNames.toArray(new String[0]);
                 this.startColNumber = startCol(cols);
                 firstbatch = false;
             }
@@ -222,8 +228,9 @@ public class SMKReportExporter implements Exporter {
     protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = startColNumber; i < cols.length; i++) {
             String value = data.getString(i);
+            
             if (value != null)
-                writer.write(formatValue(cols, i, value));
+                writer.write(formatValue(cols, colTypes.get(i).intValue(), i, value));
 
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -238,8 +245,8 @@ public class SMKReportExporter implements Exporter {
         return export.generate(qualifiedTable);
     }
 
-    protected String formatValue(String[] cols, int index, String value) {
-        if (cols[index - 1].equalsIgnoreCase("SCCDESC"))
+    protected String formatValue(String[] cols, int colType, int index, String value) {
+        if (cols[index - 1].toUpperCase().contains("DESCRIPTION"))
             return "\"" + value + "\"";
 
         if (cols[index - 1].equalsIgnoreCase("STATE"))
@@ -265,13 +272,15 @@ public class SMKReportExporter implements Exporter {
         return " " + value;
     }
 
-    private String[] getCols(ResultSet data) throws SQLException {
-        List cols = new ArrayList();
+    private void getCols(ResultSet data) throws SQLException {
         ResultSetMetaData md = data.getMetaData();
-        for (int i = 1; i <= md.getColumnCount(); i++)
-            cols.add(md.getColumnName(i));
-
-        return (String[]) cols.toArray(new String[0]);
+        colNames.clear();
+        colTypes.clear();
+        
+        for (int i = 1; i <= md.getColumnCount(); i++) {
+            colNames.add(md.getColumnName(i));
+            colTypes.add(md.getColumnType(i));
+        }
     }
 
     public void setDelimiter(String del) {

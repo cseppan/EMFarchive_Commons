@@ -66,6 +66,7 @@ public class CSVImporter implements Importer {
                 dataTable.create(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
+            e.printStackTrace();
             dataTable.drop();
             throw new ImporterException(e.getMessage());
         } finally {
