@@ -75,18 +75,11 @@ public class SMKReportFileFormatFactory {
     private void fillColNames(String delimiter, String line) {
         if (delimiter.equals("|")) {
             Pattern bar = Pattern.compile("[|]");
-            cols = fillSpacesInColNames(bar.split(line));
+            cols = bar.split(line);
             return;
         }
         
-        cols = fillSpacesInColNames(line.split(delimiter));
+        cols = line.split(delimiter);
     }
     
-    private String[] fillSpacesInColNames(String[] cols) {
-        for (int i = 0; i < cols.length; i++)
-            cols[i] = cols[i].replace(' ', '_');
-        
-        return cols;
-    }
-
 }

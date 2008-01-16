@@ -78,16 +78,21 @@ public class SMKReportFileFormat implements FileFormat, DelimitedFileFormat {
     }
     
     private Column[] createCols(String[] cols, SqlDataTypes types) throws Exception { 
-        List base = new ArrayList();
+        List<Column> base = new ArrayList<Column>();
         
         for(int i = 0; i < cols.length; i++) {
             Column col = (Column)map.get(cols[i].trim().toUpperCase());           
             if(col != null)
                 base.add(i, col);
             else
-                base.add(new Column(cols[i].trim(), types.realType(), new RealFormatter()));    
+                base.add(new Column(fillSpacesInColName(cols[i].trim()), types.realType(), new RealFormatter()));    
         }
         
-        return (Column[]) base.toArray(new Column[0]);
+        return base.toArray(new Column[0]);
     }
+    
+    private String fillSpacesInColName(String col) {
+        return  col.replace(' ', '_');
+    }
+
 }
