@@ -172,7 +172,7 @@ public class Versions {
         List<Version> laterVers=new ArrayList<Version>();
         try{
             int last=getLastFinalVersion(datasetId, session); 
-            for (int i=version.getVersion(); i<=last; i++){
+            for (int i=version.getVersion()+1; i<=last; i++){
                 Version ver=get(datasetId, i, session);
                 laterVers.add(ver);
             }
