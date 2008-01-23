@@ -111,4 +111,10 @@ public class MySqlDbServer implements DbServer {
         return null;
     }
 
+    public boolean isConnected() throws Exception {
+        // TODO Auto-generated method stub
+        // FIX this
+        return false;
+    }
+
 }

@@ -19,4 +19,6 @@ public interface DbServer {
     String asciiToNumber(String asciiColumn, int precision);
 
     void disconnect() throws SQLException;
+    
+    boolean isConnected() throws Exception;
 }
