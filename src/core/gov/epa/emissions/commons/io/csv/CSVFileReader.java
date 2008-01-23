@@ -175,7 +175,7 @@ public class CSVFileReader implements Reader {
     private String[] underScoreTheSpace(String[] cols) {
         for (int i = 0; i < cols.length; i++) {
             String temp = cols[i].replace(' ', '_');
-            temp = (PostgreSQLKeyWords.reserved(temp.toUpperCase())) ? temp + "2" : temp;
+            temp = (PostgreSQLKeyWords.reserved(temp.toUpperCase())) ? temp + "_" : temp;
             cols[i] = checkExistCols(temp);
         }
 
