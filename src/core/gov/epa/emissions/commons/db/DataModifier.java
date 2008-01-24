@@ -31,7 +31,7 @@ public class DataModifier {
         try {
             statement.execute(sql);
         } catch (SQLException e) {
-            throw new SQLException("Error in executing query-" + sql + "\n" + e.getMessage());
+            throw new SQLException("Error executing query-" + sql + "\n" + e.getMessage());
         } finally {
             statement.close();
         }
@@ -197,7 +197,7 @@ public class DataModifier {
         try {
             statement.addBatch(sql.toString());
         } catch (SQLException e) {
-            throw new SQLException("Error in executing query-" + sql + "\n" + e.getMessage());
+            throw new SQLException("Error executing query: " + sql + "\n" + e.getMessage());
         }
     }
 
