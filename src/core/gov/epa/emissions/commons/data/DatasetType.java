@@ -42,6 +42,12 @@ public class DatasetType implements Serializable, Lockable, Comparable {
         lock = new Mutex();
     }
 
+    public DatasetType(int id, String name) {
+        this();
+        this.id = id;
+        this.name = name;
+    }
+
     public DatasetType(String name) {
         this();
         this.name = name;
