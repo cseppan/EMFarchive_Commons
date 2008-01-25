@@ -77,7 +77,7 @@ public class PacketReaderImpl implements PacketReader {
     }
     
     private boolean isExportInfo(String line) {
-        return line.trim().startsWith("#EXPORT_");
+        return (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
     }
 
     public void close() {

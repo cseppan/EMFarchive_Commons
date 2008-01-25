@@ -34,7 +34,7 @@ public class CSVFileReader implements Reader {
 
     private int lineNumber;
 
-    private String line;
+    private String currentLine;
 
     private String[] cols;
 
@@ -67,24 +67,22 @@ public class CSVFileReader implements Reader {
 
     public Record read() throws ImporterException {
         try {
-            String line = fileReader.readLine();
+            String line = null;
 
-            while (line != null) {
+            while ((line = fileReader.readLine()) != null) {
                 lineNumber++;
-                this.line = line;
-
-                if (isExportInfo(line)) {
-                    line = fileReader.readLine();
-                    continue; // rip off the export info lines
+                this.currentLine = line.trim();
+                
+                if (isComment(currentLine)) {
+                    if (isExportInfo(currentLine))
+                        continue; // rip off the export info lines
+                    
+                    comments.add(currentLine);
+                    continue;
                 }
 
-                if (isData(line))
+                if (currentLine.length() != 0)
                     return doRead(line);
-
-                if (isComment(line))
-                    comments.add(line);
-
-                line = fileReader.readLine();
             }
 
         } catch (IOException e) {
@@ -94,12 +92,8 @@ public class CSVFileReader implements Reader {
         return new TerminatorRecord();
     }
 
-    private boolean isData(String line) {
-        return !(line.trim().length() == 0) && (!isComment(line));
-    }
-
     private boolean isExportInfo(String line) {
-        return line == null ? false : line.trim().startsWith("#EXPORT_");
+        return line == null ? false : (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
     }
 
     private Record doRead(String line) throws ImporterException {
@@ -118,7 +112,7 @@ public class CSVFileReader implements Reader {
     private boolean isComment(String line) {
         return line.startsWith("#");
     }
-
+    
     public List comments() {
         return comments;
     }
@@ -128,7 +122,7 @@ public class CSVFileReader implements Reader {
     }
 
     public String line() {
-        return line;
+        return currentLine;
     }
 
     public List getHeader() {

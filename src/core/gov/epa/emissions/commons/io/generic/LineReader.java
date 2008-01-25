@@ -62,7 +62,7 @@ public class LineReader implements Reader {
     }
 
     private boolean isExportInfo(String line) {
-        return line == null ? false : line.trim().startsWith("#EXPORT_");
+        return line == null ? false : (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
     }
     
     public int lineNumber() {

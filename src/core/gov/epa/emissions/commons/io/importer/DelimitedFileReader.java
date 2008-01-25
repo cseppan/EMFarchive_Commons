@@ -82,7 +82,7 @@ public class DelimitedFileReader implements Reader {
     }
 
     private boolean isExportInfo(String line) {
-        return line == null ? false : line.trim().startsWith("#EXPORT_");
+        return line == null ? false : (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
     }
 
     private Record doRead(String line) throws ImporterException {
@@ -201,7 +201,7 @@ public class DelimitedFileReader implements Reader {
         if (line.startsWith("-----")) {
             header.add(line); // one more line of table border
         } else {
-            fileReader.mark(1); 
+            fileReader.mark(1);
             fileReader.reset(); // file reader goes back 1 line
         }
 
@@ -210,7 +210,9 @@ public class DelimitedFileReader implements Reader {
 
     private String readHeaderLines(List<String> header, String line, Pattern pattern) throws IOException {
         while (pattern.split(line).length < 3) {
-            header.add(line);
+            if (!isExportInfo(line))
+                header.add(line);
+            
             line = fileReader.readLine();
         }
         return line;

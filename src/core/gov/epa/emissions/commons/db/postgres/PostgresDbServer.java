@@ -5,7 +5,6 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 //Note: Emissions & Reference are two schemas in a single database i.e. share a connection
 public class PostgresDbServer implements DbServer {
@@ -59,12 +58,13 @@ public class PostgresDbServer implements DbServer {
         return "to_number(" + asciiColumn + ", '" + precisionBuf.toString() + "')";
     }
 
-    public void disconnect() throws SQLException {
-        connection.close();
+    public void disconnect() throws Exception {
+        if (isConnected())
+            connection.close();
     }
 
-    public boolean isConnected() throws Exception{
-        //Check connection
+    public boolean isConnected() throws Exception {
+        // Check connection
         return !connection.isClosed();
     }
 

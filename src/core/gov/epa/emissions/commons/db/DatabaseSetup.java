@@ -72,7 +72,7 @@ public class DatabaseSetup {
         return dbServer;
     }
 
-    public void tearDown() throws SQLException {
+    public void tearDown() throws Exception {
         dbServer.disconnect();
     }
 

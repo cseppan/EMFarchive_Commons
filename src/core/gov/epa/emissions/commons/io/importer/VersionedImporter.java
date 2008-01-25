@@ -1,13 +1,12 @@
 package gov.epa.emissions.commons.io.importer;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.TableModifier;
+
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class VersionedImporter implements Importer {
     private Importer delegate;
@@ -37,7 +36,7 @@ public class VersionedImporter implements Importer {
         } finally {
             try {
                 this.dbServer.disconnect();
-            } catch (SQLException exc) {
+            } catch (Exception exc) {
                 throw new ImporterException("Could not disconnect db server: " + exc.getMessage());
             }
         }

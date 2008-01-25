@@ -1,6 +1,5 @@
 package gov.epa.emissions.commons.db;
 
-import java.sql.SQLException;
 
 public interface DbServer {
 
@@ -18,7 +17,7 @@ public interface DbServer {
      */
     String asciiToNumber(String asciiColumn, int precision);
 
-    void disconnect() throws SQLException;
+    void disconnect() throws Exception;
     
     boolean isConnected() throws Exception;
 }

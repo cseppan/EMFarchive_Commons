@@ -84,7 +84,7 @@ public class CountryStateCountyFileReader implements PacketReader {
     }
     
     private boolean isExportInfo(String line) {
-        return line == null ? false : line.trim().startsWith("#EXPORT_");
+        return line == null ? false : (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
     }
 
     private boolean isComment(String line) {

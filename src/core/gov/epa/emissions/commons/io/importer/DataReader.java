@@ -17,7 +17,7 @@ public class DataReader implements Reader {
     
     private int lineNumber;
 
-    private String line;
+    private String currentLine;
 
     public DataReader(BufferedReader reader, int lineNumber, Parser parser) {
         fileReader = reader;
@@ -28,30 +28,30 @@ public class DataReader implements Reader {
 
     public Record read() throws IOException {
         for (String line = fileReader.readLine(); !isEnd(line); line = fileReader.readLine()) {
-            this.line = line;
+            this.currentLine = line.trim();
             this.lineNumber++;
             
-            if (isExportInfo(line)) 
+            if (isComment(currentLine)) {
+                if (isExportInfo(currentLine))
+                    continue; // rip off the export info lines
+                
+                comments.add(currentLine);
                 continue;
-            if (isData(line))
-                return parser.parse(line);
-            if (isComment(line))
-                comments.add(line);
+            }
+            
+            if (currentLine.length() != 0)
+                return parser.parse(currentLine);
         }
 
         return new TerminatorRecord();
     }
 
     private boolean isExportInfo(String line) {
-        return line == null ? false : line.trim().startsWith("#EXPORT_");
+        return line == null ? false : (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
     }
     
     private boolean isEnd(String line) {
         return line == null;
-    }
-
-    private boolean isData(String line) {
-        return !(line.trim().length() == 0) && (!isComment(line));
     }
 
     private boolean isComment(String line) {
@@ -71,7 +71,7 @@ public class DataReader implements Reader {
     }
 
     public String line() {
-        return line;
+        return currentLine;
     }
 
 }
