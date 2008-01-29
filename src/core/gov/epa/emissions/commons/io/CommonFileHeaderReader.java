@@ -23,6 +23,8 @@ public class CommonFileHeaderReader {
     private static final String emf_region = "EMF_REGION";
 
     private static final String emf_project = "EMF_PROJECT";
+    
+    private static final String emf_country = "EMF_COUNTRY";
 
     private Map<String, String> map;
 
@@ -64,6 +66,10 @@ public class CommonFileHeaderReader {
     public String getTemporalResolution() {
         return map.get(emf_temporal_resolution);
     }
+    
+    public String getCountry() {
+        return map.get(emf_country);
+    }
 
     public void readHeader() throws IOException {
         String line = null;
@@ -96,10 +102,21 @@ public class CommonFileHeaderReader {
 
         if (line.toUpperCase().startsWith("#" + emf_project))
             putValues(emf_project, line);
+
+        if (line.toUpperCase().startsWith("#" + emf_country))
+            putValues(emf_country, line);
     }
 
     private void putValues(String key, String line) {
-        map.put(key, line.substring(line.indexOf("=") + 1).trim());
+        String value = line.substring(line.indexOf("=") + 1);
+        
+        if (value != null && value.contains("\""))
+            value.replace('"', ' ');
+        
+        if (value != null)
+            value.trim();
+        
+        map.put(key, value);
     }
     
     public void close() throws IOException {

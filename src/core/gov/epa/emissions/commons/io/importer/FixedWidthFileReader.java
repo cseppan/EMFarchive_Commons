@@ -66,7 +66,7 @@ public class FixedWidthFileReader implements Reader {
     }
     
     private boolean isExportInfo(String line) {
-        return line == null ? false : (line.trim().startsWith("#EXPORT_") || line.startsWith("#EMF_"));
+        return line == null ? false : (line.trim().startsWith("#EXPORT_"));// || line.startsWith("#EMF_"));
     }
 
     private boolean isComment(String line) {
