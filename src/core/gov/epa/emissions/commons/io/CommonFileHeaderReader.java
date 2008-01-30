@@ -37,10 +37,10 @@ public class CommonFileHeaderReader {
 
     public Date getStartDate() {
         try {
-            return CustomDateFormat.parse_MMddyyyy(map.get(emf_start_date));
+            return CustomDateFormat.parse_MM_DD_YYYY_HH_mm(map.get(emf_start_date));
         } catch (ParseException e) {
             try {
-                return CustomDateFormat.parse_MM_DD_YYYY_HH_mm(map.get(emf_start_date));
+                return CustomDateFormat.parse_MMddyyyy(map.get(emf_start_date));
             } catch (ParseException e1) {
                 return null;
             }
@@ -49,10 +49,10 @@ public class CommonFileHeaderReader {
 
     public Date getEndDate() {
         try {
-            return CustomDateFormat.parse_MMddyyyy(map.get(emf_end_date));
+            return CustomDateFormat.parse_MM_DD_YYYY_HH_mm(map.get(emf_end_date));
         } catch (ParseException e) {
             try {
-                return CustomDateFormat.parse_MM_DD_YYYY_HH_mm(map.get(emf_end_date));
+                return CustomDateFormat.parse_MMddyyyy(map.get(emf_end_date));
             } catch (ParseException e1) {
                 return null;
             }
