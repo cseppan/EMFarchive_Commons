@@ -23,7 +23,7 @@ public class CommonFileHeaderReader {
     private static final String emf_region = "EMF_REGION";
 
     private static final String emf_project = "EMF_PROJECT";
-    
+
     private static final String emf_country = "EMF_COUNTRY";
 
     private Map<String, String> map;
@@ -39,7 +39,11 @@ public class CommonFileHeaderReader {
         try {
             return CustomDateFormat.parse_MMddyyyy(map.get(emf_start_date));
         } catch (ParseException e) {
-            return null;
+            try {
+                return CustomDateFormat.parse_MM_DD_YYYY_HH_mm(map.get(emf_start_date));
+            } catch (ParseException e1) {
+                return null;
+            }
         }
     }
 
@@ -47,7 +51,11 @@ public class CommonFileHeaderReader {
         try {
             return CustomDateFormat.parse_MMddyyyy(map.get(emf_end_date));
         } catch (ParseException e) {
-            return null;
+            try {
+                return CustomDateFormat.parse_MM_DD_YYYY_HH_mm(map.get(emf_end_date));
+            } catch (ParseException e1) {
+                return null;
+            }
         }
     }
 
@@ -66,7 +74,7 @@ public class CommonFileHeaderReader {
     public String getTemporalResolution() {
         return map.get(emf_temporal_resolution);
     }
-    
+
     public String getCountry() {
         return map.get(emf_country);
     }
@@ -80,7 +88,8 @@ public class CommonFileHeaderReader {
             if (!line.startsWith("#"))
                 break;
 
-            extractEmfInfo(line);
+            if (line.startsWith("#EMF_"))
+                extractEmfInfo(line);
         }
     }
 
@@ -88,37 +97,37 @@ public class CommonFileHeaderReader {
         if (line.toUpperCase().startsWith("#" + emf_start_date))
             putValues(emf_start_date, line);
 
-        if (line.toUpperCase().startsWith("#" + emf_end_date))
+        else if (line.toUpperCase().startsWith("#" + emf_end_date))
             putValues(emf_end_date, line);
 
-        if (line.toUpperCase().startsWith("#" + emf_temporal_resolution))
+        else if (line.toUpperCase().startsWith("#" + emf_temporal_resolution))
             putValues(emf_temporal_resolution, line);
 
-        if (line.toUpperCase().startsWith("#" + emf_sector))
+        else if (line.toUpperCase().startsWith("#" + emf_sector))
             putValues(emf_sector, line);
 
-        if (line.toUpperCase().startsWith("#" + emf_region))
+        else if (line.toUpperCase().startsWith("#" + emf_region))
             putValues(emf_region, line);
 
-        if (line.toUpperCase().startsWith("#" + emf_project))
+        else if (line.toUpperCase().startsWith("#" + emf_project))
             putValues(emf_project, line);
 
-        if (line.toUpperCase().startsWith("#" + emf_country))
+        else if (line.toUpperCase().startsWith("#" + emf_country))
             putValues(emf_country, line);
     }
 
     private void putValues(String key, String line) {
         String value = line.substring(line.indexOf("=") + 1);
-        
+
         if (value != null && value.contains("\""))
-            value.replace('"', ' ');
-        
+            value = value.replace('"', ' ');
+
         if (value != null)
-            value.trim();
-        
+            value = value.trim();
+
         map.put(key, value);
     }
-    
+
     public void close() throws IOException {
         fileReader.close();
     }
