@@ -86,7 +86,7 @@ public class Pollutant implements Serializable, Lockable, Comparable {
             return false;
 
         Pollutant pollutant = (Pollutant) other;
-        return (pollutant.id == id || pollutant.getName().equals(name));
+        return (pollutant.id == id || (name != null ? name : "").equalsIgnoreCase((pollutant.getName() != null ? pollutant.getName() : "")));
     }
 
     public int hashCode() {
