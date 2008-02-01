@@ -93,59 +93,56 @@ public class ORLImporter {
         return fileName;
     }
 
-
     private void doImport(File file, Dataset dataset, String table, FileFormatWithOptionalCols fileFormat)
             throws Exception {
         File headerFile = null;
         File dataFile = null;
         Connection connection = null;
-        try
-        {
+        try {
             String tempDir = System.getProperty("IMPORT_EXPORT_TEMP_DIR");
-            
+
             if (tempDir == null || tempDir.isEmpty())
                 tempDir = System.getProperty("java.io.tmpdir");
-            
+
             File tempDirFile = new File(tempDir);
-            
+
             if (!(tempDirFile.exists() && tempDirFile.isDirectory() && tempDirFile.canWrite() && tempDirFile.canRead()))
-                throw new Exception("Import-export temporary folder does not exist or lacks write permissions: " + tempDir);
-            
+                throw new Exception("Import-export temporary folder does not exist or lacks write permissions: "
+                        + tempDir);
+
             Random rando = new Random();
             long id = Math.abs(rando.nextInt());
-            
+
             headerFile = new File(tempDir, getNameForFile(dataset.getName()) + id + ".header");
-            dataFile = new File(tempDir, getNameForFile(dataset.getName())  + id + ".data");
-    
+            dataFile = new File(tempDir, getNameForFile(dataset.getName()) + id + ".data");
+
             splitFile(file, headerFile, dataFile);
             loadDataset(getComments(headerFile), dataset);
-    
+
             String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat) + ") FROM '"
                     + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
-    
+
             connection = datasource.getConnection();
             Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.execute(copyString);
             statement.close();
-        }
-        catch (Exception exc)
-        {
-            //NOTE: this closes the db server for other importers
-//            try
-//            {
-//               if ((connection != null) && !connection.isClosed()) connection.close();
-//            }
-//            catch (Exception ex)
-//            {
-//                throw ex;
-//            }
-//            throw exc;
+        } catch (Exception exc) {
+            // NOTE: this closes the db server for other importers
+            // try
+            // {
+            // if ((connection != null) && !connection.isClosed()) connection.close();
+            // }
+            // catch (Exception ex)
+            // {
+            // throw ex;
+            // }
+            // throw exc;
             throw new Exception(exc.getMessage());
-        }
-        finally
-        {
-            if ((headerFile != null) && headerFile.exists()) headerFile.delete();
-            if ((dataFile != null) && dataFile.exists()) dataFile.delete();
+        } finally {
+            if ((headerFile != null) && headerFile.exists())
+                headerFile.delete();
+            if ((dataFile != null) && dataFile.exists())
+                dataFile.delete();
         }
     }
 
@@ -155,7 +152,8 @@ public class ORLImporter {
             return;
         }
 
-        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " | grep -v \"^#EXPORT_\" > " + headerFile.getAbsolutePath();
+        String headerCmd = "grep \"^#\" " + file.getAbsolutePath() + " | grep -v \"^#EXPORT_\" > "
+                + headerFile.getAbsolutePath();
         String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > "
                 + dataFile.getAbsolutePath();
         String[] cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd };
@@ -227,8 +225,8 @@ public class ORLImporter {
             for (int i = 0; i < record.size(); i++)
                 colsString += cols[i].name() + ",";
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ImporterException("Data doesn't match file format on number of columns " +
-                    "(expected:" + cols.length + " but was:" + record.size() + ").");
+            throw new ImporterException("Data doesn't match file format on number of columns " + "(expected:"
+                    + cols.length + " but was:" + record.size() + ").");
         }
 
         return colsString.substring(0, colsString.length() - 1);
@@ -273,7 +271,9 @@ public class ORLImporter {
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
         String year = comments.content("YEAR");
         dataset.setYear(Integer.parseInt(year));
-        setStartStopDateTimes(dataset, Integer.parseInt(year));
+        
+        if (!comments.hasContent("EMF_START_DATE") && !comments.hasContent("EMF_END_DATE"))
+            setStartStopDateTimes(dataset, Integer.parseInt(year));
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {
