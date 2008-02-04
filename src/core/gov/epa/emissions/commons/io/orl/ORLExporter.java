@@ -212,6 +212,8 @@ public class ORLExporter extends GenericExporter {
 
         for (int i = 0; i < numCols; i++) {
             String colName = cols[i].name().toLowerCase();
+            //make sure you only include columns that exist in the table, new columns could have been
+            //added to the ORL file format...
             selectColsString += (tableColsMap.containsKey(colName) ? colName : "null as " + colName) + ",";
         }
 
