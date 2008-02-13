@@ -62,5 +62,10 @@ public class TableCreator {
     public boolean exists(String table) throws Exception {
         return datasource.tableDefinition().tableExists(table);
     }
+    
+    public void deleteRecords(String table, String columnName, String columnType, String value) throws Exception {
+        TableDefinition def = datasource.tableDefinition();
+        def.deleteRecords(table, columnName, columnType, value);
+    }
 
 }

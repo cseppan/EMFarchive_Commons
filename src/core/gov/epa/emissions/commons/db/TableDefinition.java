@@ -41,6 +41,7 @@ public interface TableDefinition {
      *            the column name to add the new column after. Use null for default function (add to end)
      */
     void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception;
-
+    
+    void deleteRecords(String table, String columnName, String columnType, String value) throws Exception;
 
 }

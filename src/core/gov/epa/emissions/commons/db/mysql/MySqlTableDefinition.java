@@ -110,4 +110,9 @@ public class MySqlTableDefinition implements TableDefinition {
         throw new SQLException("EMF method is not implemented.");
     }
 
+    public void deleteRecords(String table, String columnName, String columnType, String value) throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

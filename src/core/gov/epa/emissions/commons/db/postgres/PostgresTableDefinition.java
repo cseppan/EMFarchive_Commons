@@ -109,4 +109,12 @@ public class PostgresTableDefinition implements TableDefinition {
         execute(renameQuery);
     }
 
+    public void deleteRecords(String table, String columnName, String columnType, String value) throws Exception {
+        if (!columnType.toUpperCase().contains("INT"))
+            value = "'" + value + "'";
+        
+        String deleteQuery = "DELETE FROM " + qualified(table) + " WHERE " + columnName + "=" + value;
+        execute(deleteQuery);
+    }
+
 }
