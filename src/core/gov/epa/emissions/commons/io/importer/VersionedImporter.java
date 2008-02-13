@@ -17,10 +17,7 @@ public class VersionedImporter implements Importer {
 
     private Date lastModifiedDate;
     
-    private DbServer dbServer;
-
     public VersionedImporter(Importer delegate, Dataset dataset, DbServer dbServer, Date lastModifiedDate) {
-        this.dbServer = dbServer;
         this.delegate = delegate;
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
@@ -33,13 +30,15 @@ public class VersionedImporter implements Importer {
             addVersionZeroEntryToVersionsTable(datasource, dataset);
         } catch (Exception e) {
             throw new ImporterException("Could not add Version Zero entry to the Versions Table." + e.getMessage());
-        } finally {
-            try {
-                this.dbServer.disconnect();
-            } catch (Exception exc) {
-                throw new ImporterException("Could not disconnect db server: " + exc.getMessage());
-            }
         }
+//NOTE: should let the calling function to close it explicitly for ease of db management 2/13/2008
+//        } finally {
+//            try {
+//                this.dbServer.disconnect();
+//            } catch (Exception exc) {
+//                throw new ImporterException("Could not disconnect db server: " + exc.getMessage());
+//            }
+//        }
     }
     
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws Exception {
