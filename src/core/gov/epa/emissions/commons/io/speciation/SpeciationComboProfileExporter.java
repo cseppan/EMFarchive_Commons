@@ -4,52 +4,17 @@ import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.other.SMKReportExporter;
+import gov.epa.emissions.commons.io.generic.GenericExporter;
 
-import java.sql.Types;
-
-public class SpeciationComboProfileExporter extends SMKReportExporter {
-    public SpeciationComboProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
-            Integer optimizedBatchSize) {
-        super(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
-        setup();
+public class SpeciationComboProfileExporter extends GenericExporter {
+    
+    public SpeciationComboProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SpeciationComboProfileFileFormat(types), optimizedBatchSize);
     }
-
-    public SpeciationComboProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
-            DataFormatFactory formatFactory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, sqlDataTypes, formatFactory, optimizedBatchSize);
-        setup();
+    
+    public SpeciationComboProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+            DataFormatFactory factory, Integer optimizedBatchSize) {
+        super(dataset, dbServer, new SpeciationComboProfileFileFormat(types), factory, optimizedBatchSize);
     }
-
-    private void setup() {
-        super.setDelimiter(",");
-    }
-
-    protected String formatValue(String[] cols, int colType, int index, String value) {
-        if (colType == Types.BIGINT)
-            return value;
-
-        if (colType == Types.DECIMAL)
-            return value;
-
-        if (colType == Types.DOUBLE)
-            return value;
-
-        if (colType == Types.FLOAT)
-            return value;
-
-        if (colType == Types.INTEGER)
-            return value;
-
-        if (colType == Types.NUMERIC)
-            return value;
-
-        if (colType == Types.REAL)
-            return value;
-
-        if (colType == Types.SMALLINT)
-            return value;
-
-        return "\"" + value + "\"";
-    }
+    
 }
