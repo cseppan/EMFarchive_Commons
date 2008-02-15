@@ -94,6 +94,7 @@ public class SMKReportImporter implements Importer {
             loadDataset(file, table, formatUnit.tableFormat(), dataset, comments);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         } finally {
             close(reader);
         }
