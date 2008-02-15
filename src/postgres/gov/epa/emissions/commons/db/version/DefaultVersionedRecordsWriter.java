@@ -69,7 +69,14 @@ public class DefaultVersionedRecordsWriter implements VersionedRecordsWriter {
 
     private void deleteData(VersionedRecord[] records, Version version) throws SQLException {
         for (int i = 0; i < records.length; i++) {
-            updateStatement.setString(1, version.getVersion() + "");
+            String delVer = records[i].getDeleteVersions();
+            
+            if (delVer == null || delVer.trim().isEmpty())
+                delVer = version.getVersion() + "";
+            else
+                delVer = delVer.trim() + "," + version.getVersion();
+            
+            updateStatement.setString(1, delVer);
             updateStatement.setInt(2, records[i].getRecordId());
             updateStatement.execute();
         }
