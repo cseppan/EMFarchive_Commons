@@ -251,12 +251,12 @@ public class GenericExporter implements Exporter {
     }
 
     private String[] getCols(ResultSet data) throws SQLException {
-        List cols = new ArrayList();
+        List<String> cols = new ArrayList<String>();
         ResultSetMetaData md = data.getMetaData();
         for (int i = 1; i <= md.getColumnCount(); i++)
             cols.add(md.getColumnName(i));
 
-        return (String[]) cols.toArray(new String[0]);
+        return cols.toArray(new String[0]);
     }
 
     protected int startCol(String[] cols) {

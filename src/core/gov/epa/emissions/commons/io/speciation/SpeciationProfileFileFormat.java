@@ -27,7 +27,7 @@ public class SpeciationProfileFileFormat implements FileFormat, DelimitedFileFor
     }
     
     private Column[] createCols(SqlDataTypes types) {
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
 
         columns.add(new Column("CODE", types.stringType(32), 32, new StringFormatter(32)));
         columns.add(new Column("POLLUTANT", types.stringType(32), 32, new StringFormatter(32)));
@@ -36,7 +36,7 @@ public class SpeciationProfileFileFormat implements FileFormat, DelimitedFileFor
         columns.add(new Column("DIVISOR", types.realType(), new RealFormatter()));
         columns.add(new Column("MASSFRAC", types.realType(), new RealFormatter()));
 
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
 
 }
