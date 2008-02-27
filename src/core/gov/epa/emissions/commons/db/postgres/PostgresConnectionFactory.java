@@ -6,16 +6,16 @@ import gov.epa.emissions.commons.db.ConnectionParams;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.postgresql.jdbc3.Jdbc3PoolingDataSource;
+import org.postgresql.ds.PGPoolingDataSource;
 
 public class PostgresConnectionFactory implements ConnectionFactory {
 
     private static PostgresConnectionFactory instance;
 
-    private Jdbc3PoolingDataSource source;
+    private PGPoolingDataSource source;
 
     private PostgresConnectionFactory(ConnectionParams params) {
-        source = new Jdbc3PoolingDataSource();
+        source = new PGPoolingDataSource();
         source.setServerName(params.getHost());
         source.setDatabaseName(params.getDbName());
         source.setUser(params.getUsername());
