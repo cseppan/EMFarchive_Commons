@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -42,11 +43,6 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
-
-        String name = dataset.getName();
-        tableEM = name + "_em";
-        tablePE = name + "_pe";
-        tableTR = name + "_tr";
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
@@ -55,11 +51,28 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
             String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
             NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, dbServer(), sqlDataTypes);
             importer.run();
+            
+            InternalSource[] sources = dataset.getInternalSources();
+            String[] tables = new String[sources.length];
+            
+            for(int i = 0; i < tables.length; i++) {
+                tables[i] = sources[i].getTable();
+                
+                if (tables[i].contains("_em"))
+                tableEM = tables[i];
+                
+                if (tables[i].contains("_pe"))
+                tablePE = tables[i];
+                
+                if (tables[i].contains("_tr"))
+                    tableTR = tables[i];
+            }
+            
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tablePE));
             assertEquals(8, countRecords(tableTR));
-            String tables[] = {tableEM,tablePE,tableTR};
-            Importer tableImporter = new NIFOnRoadTableImporter(tables,dataset,dbServer(),sqlDataTypes);
+            String tables2[] = {tableEM,tablePE,tableTR};
+            Importer tableImporter = new NIFOnRoadTableImporter(tables2,dataset,dbServer(),sqlDataTypes);
             tableImporter.run();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
             assertEquals("19990101 0000", dateFormat.format(dataset.getStartDateTime()));
@@ -75,13 +88,30 @@ public class NIFOnRoadTableImporterTest extends PersistenceTestCase {
         String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
         NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, dbServer(), sqlDataTypes);
         importer.run();
+        
+        InternalSource[] sources = dataset.getInternalSources();
+        String[] tables = new String[sources.length];
+        
+        for(int i = 0; i < tables.length; i++) {
+            tables[i] = sources[i].getTable();
+            
+            if (tables[i].contains("_em"))
+            tableEM = tables[i];
+            
+            if (tables[i].contains("_pe"))
+            tablePE = tables[i];
+            
+            if (tables[i].contains("_tr"))
+                tableTR = tables[i];
+        }
+        
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tablePE));
         assertEquals(8, countRecords(tableTR));
-        String tables[] = {tablePE};
+        String tables2[] = {tablePE};
         
         try {
-            new NIFOnRoadTableImporter(tables,dataset,dbServer(),sqlDataTypes);
+            new NIFOnRoadTableImporter(tables2,dataset,dbServer(),sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF onroad import requires following types"));
             return;

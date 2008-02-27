@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -51,6 +52,23 @@ public class NIFOnRoadImporterTest extends PersistenceTestCase {
             String[] files = {"ct_em.txt", "ct_pe.txt", "ct_tr.txt"};
             NIFOnRoadImporter importer = new NIFOnRoadImporter(folder, files, dataset, dbServer, sqlDataTypes);
             importer.run();
+            
+            InternalSource[] sources = dataset.getInternalSources();
+            String[] tables = new String[sources.length];
+            
+            for(int i = 0; i < tables.length; i++) {
+                tables[i] = sources[i].getTable();
+                
+                if (tables[i].contains("_em"))
+                tableEM = tables[i];
+                
+                if (tables[i].contains("_pe"))
+                tablePE = tables[i];
+                
+                if (tables[i].contains("_tr"))
+                    tableTR = tables[i];
+            }
+            
             assertEquals(10, countRecords(tableEM));
             assertEquals(10, countRecords(tablePE));
             assertEquals(8, countRecords(tableTR));

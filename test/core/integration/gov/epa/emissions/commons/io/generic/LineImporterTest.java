@@ -42,7 +42,7 @@ public class LineImporterTest extends HibernateTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testShouldImportASmallLineFile() throws Exception {
@@ -67,7 +67,7 @@ public class LineImporterTest extends HibernateTestCase {
 
         int rows = countRecords();
         assertEquals(22, rows);
-        assertVersionInfo(dataset.getName(), rows);
+        assertVersionInfo(dataset.getInternalSources()[0].getTable(), rows);
     }
     
     private Date lastModifiedDate(File folder, String fileName) {
@@ -77,7 +77,7 @@ public class LineImporterTest extends HibernateTestCase {
     private int countRecords() {
         Datasource datasource =dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     private void assertVersionInfo(String name, int rows) throws Exception {

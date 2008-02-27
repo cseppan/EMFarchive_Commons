@@ -15,7 +15,6 @@ import gov.epa.emissions.commons.io.importer.VersionedImporter;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Random;
 
 public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
 
@@ -37,14 +36,13 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
 
         dataset = new SimpleDataset();
         dataset.setName("test");
-        dataset.setId(Math.abs(new Random().nextInt()));
         dataset.setDatasetType(new DatasetType("dsType"));
     }
 
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testExportSpetailSurrogatesData() throws Exception {
@@ -82,7 +80,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
     
     private Date lastModifiedDate(File folder, String fileName) {

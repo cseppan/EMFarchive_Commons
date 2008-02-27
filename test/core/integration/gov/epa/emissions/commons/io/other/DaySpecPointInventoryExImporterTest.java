@@ -44,7 +44,7 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testImportCEMpthourData() throws Exception {

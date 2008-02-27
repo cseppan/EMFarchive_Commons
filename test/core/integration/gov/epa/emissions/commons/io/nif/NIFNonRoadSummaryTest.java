@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -42,11 +43,6 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
-
-        String name = dataset.getName();
-        tableEM = name + "_em";
-        tableEP = name + "_ep";
-        tablePE = name + "_pe";
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
@@ -56,10 +52,29 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
         importer.run();
         SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
+        
+        InternalSource[] sources = dataset.getInternalSources();
+        String[] tables = new String[sources.length];
+        
+        for(int i = 0; i < tables.length; i++) {
+            tables[i] = sources[i].getTable();
+            
+            if (tables[i].contains("_em"))
+            tableEM = tables[i];
+            
+            if (tables[i].contains("_ep"))
+            tableEP = tables[i];
+            
+            if (tables[i].contains("_pe"))
+            tablePE = tables[i];
+        }
+        
         assertEquals(10, countRecords(tableEM));
         assertEquals(10, countRecords(tableEP));
         assertEquals(10, countRecords(tablePE));
         assertEquals(0, countRecords("test_summary"));
+        
+        dropTables();
     }
 
     private int countRecords(String tableName) {
@@ -67,11 +82,15 @@ public class NIFNonRoadSummaryTest extends PersistenceTestCase {
         return tableReader.count(emissionDatasource.getName(), tableName);
     }
 
-    protected void doTearDown() throws Exception {
+    protected void dropTables() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEM);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEP);
         dbUpdate.dropTable(emissionDatasource.getName(), tablePE);
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
+    }
+    
+    protected void doTearDown() throws Exception {
+        //
     }
 }

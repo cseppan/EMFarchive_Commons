@@ -19,7 +19,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         super.setUp();
         importNonPoint();
 
-        results = new ScrollableRecords(emissions(), "SELECT * from emissions.test");
+        results = new ScrollableRecords(emissions(), "SELECT * from emissions." + dataset.getInternalSources()[0].getTable());
         results.execute();
     }
 
@@ -44,7 +44,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
     }
 
     private void dropNonPoint() throws Exception {
-        super.dropTable("test", emissions());
+        super.dropTable(dataset.getInternalSources()[0].getTable(), emissions());
     }
 
     public void testRowCount() throws Exception {
@@ -104,7 +104,7 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         DbRecord record = results.next();
         assertEquals(1, record.getId());
 
-        assertEquals(38, record.size());
+        assertEquals(42, record.size());
         assertNotNull("Should be able to fetch first record", record);
 
         assertEquals("1", record.token(0));// record id
@@ -119,11 +119,11 @@ public class ScrollableRecordsTest extends PersistenceTestCase {
         assertEquals("0", record.token(9));
         assertEquals("246", record.token(10));
         assertTrue(record.token(11).startsWith("0.000387296"));// because of precision
-        assertNull(record.token(12));
-        assertNull(record.token(13));
-        assertNull(record.token(14));
-        assertNull(record.token(15));
-        assertEquals("", record.token(16));
+        assertEquals("-9",record.token(12));
+        assertEquals("-9",record.token(13));
+        assertEquals("-9",record.token(14));
+        assertEquals("-9",record.token(15));
+        assertNull(record.token(16));
     }
 
 }

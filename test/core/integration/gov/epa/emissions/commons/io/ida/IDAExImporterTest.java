@@ -48,7 +48,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testShouldImportASmallAreaFile() throws Exception {
@@ -60,7 +60,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldExportASmallAreaFile() throws Exception {
@@ -78,7 +78,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
         IDANonPointNonRoadExporter exporter = new IDANonPointNonRoadExporter(dataset, dbServer, sqlDataTypes,
                 optimizedBatchSize);
@@ -108,7 +108,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldExportASmallPointFile() throws Exception {
@@ -120,7 +120,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
         IDAPointExporter exporter = new IDAPointExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAPointExported", ".txt");
@@ -152,7 +152,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldExportASmallMobileFile() throws Exception {
@@ -170,7 +170,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
         IDAMobileExporter exporter = new IDAMobileExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAMobileExported", ".txt");
@@ -196,7 +196,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
             // assert
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
-            assertEquals(10, tableReader.count(datasource.getName(), dataset.getName()));
+            assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
             // Test exporter
             File exportfile;
@@ -248,7 +248,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(38, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(38, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldImportACanadaPointFile() throws Exception {
@@ -259,7 +259,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(41, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(41, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldImportACanadaPointFileWithLatinChars() throws Exception {
@@ -270,7 +270,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(22, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(22, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldImportAMexicoPointFile() throws Exception {
@@ -281,7 +281,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(748, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(748, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldImportAMexicoNonPointFile() throws Exception {
@@ -293,7 +293,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(9181, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(9181, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldImportAMexicoNonRoadFile() throws Exception {
@@ -305,7 +305,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(514, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(514, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     public void testShouldImportAMexicoOnRoadFile() throws Exception {
@@ -316,7 +316,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(1932, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(1932, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
     private Date lastModifiedDate(File folder, String fileName) {

@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -50,15 +51,6 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
-
-        String name = dataset.getName();
-        tableCE = name + "_ce";
-        tableEM = name + "_em";
-        tableEP = name + "_ep";
-        tableER = name + "_er";
-        tableEU = name + "_eu";
-        tablePE = name + "_pe";
-        tableSI = name + "_si";
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
@@ -68,6 +60,35 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
                     "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
             NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, dbServer(), sqlDataTypes);
             importer.run();
+            
+            InternalSource[] sources = dataset.getInternalSources();
+            String[] tables = new String[sources.length];
+            
+            for(int i = 0; i < tables.length; i++) {
+                tables[i] = sources[i].getTable();
+                
+                if (tables[i].contains("_em"))
+                tableEM = tables[i];
+                
+                if (tables[i].contains("_ep"))
+                tableEP = tables[i];
+                
+                if (tables[i].contains("_pe"))
+                tablePE = tables[i];
+                
+                if (tables[i].contains("_ce"))
+                tableCE = tables[i];
+                
+                if (tables[i].contains("_er"))
+                tableER = tables[i];
+                
+                if (tables[i].contains("_eu"))
+                tableEU = tables[i];
+                
+                if (tables[i].contains("_si"))
+                tableSI = tables[i];
+            }
+            
             assertEquals(92, countRecords(tableCE));
             assertEquals(143, countRecords(tableEM));
             assertEquals(26, countRecords(tableEP));
@@ -75,7 +96,7 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
             assertEquals(15, countRecords(tableEU));
             assertEquals(26, countRecords(tablePE));
             assertEquals(1, countRecords(tableSI));
-            String[] tables = { tableCE, tableEM, tableEP, tableER, tableEU, tablePE, tableSI };
+            
             Importer tableImporter = new NIFPointTableImporter(tables, dataset, dbServer(), sqlDataTypes);
             tableImporter.run();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmm");
@@ -93,6 +114,35 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
                 "ky_er.txt", "ky_eu.txt", "ky_pe.txt", "ky_si.txt"};
         NIFPointImporter importer = new NIFPointImporter(folder, files, dataset, dbServer(), sqlDataTypes);
         importer.run();
+        
+        InternalSource[] sources = dataset.getInternalSources();
+        String[] tables = new String[sources.length];
+        
+        for(int i = 0; i < tables.length; i++) {
+            tables[i] = sources[i].getTable();
+            
+            if (tables[i].contains("_em"))
+            tableEM = tables[i];
+            
+            if (tables[i].contains("_ep"))
+            tableEP = tables[i];
+            
+            if (tables[i].contains("_pe"))
+            tablePE = tables[i];
+            
+            if (tables[i].contains("_ce"))
+            tableCE = tables[i];
+            
+            if (tables[i].contains("_er"))
+            tableER = tables[i];
+            
+            if (tables[i].contains("_eu"))
+            tableEU = tables[i];
+            
+            if (tables[i].contains("_si"))
+            tableSI = tables[i];
+        }
+        
         assertEquals(92, countRecords(tableCE));
         assertEquals(143, countRecords(tableEM));
         assertEquals(26, countRecords(tableEP));
@@ -100,10 +150,11 @@ public class NIFPointTableImporterTest extends PersistenceTestCase {
         assertEquals(15, countRecords(tableEU));
         assertEquals(26, countRecords(tablePE));
         assertEquals(1, countRecords(tableSI));
-        String[] tables = { tableCE,tableEP};
+        
+        String[] tables2 = { tableCE,tableEP};
         
         try {
-            new NIFPointTableImporter(tables, dataset, dbServer(), sqlDataTypes);
+            new NIFPointTableImporter(tables2, dataset, dbServer(), sqlDataTypes);
         } catch (ImporterException e) {
             assertTrue(e.getMessage().startsWith("NIF point import requires following types"));
             return;

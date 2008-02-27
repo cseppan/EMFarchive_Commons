@@ -16,7 +16,6 @@ import gov.epa.emissions.commons.io.importer.VersionedImporter;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class SpeciationComboProfileExImTest extends PersistenceTestCase {
 
@@ -41,7 +40,6 @@ public class SpeciationComboProfileExImTest extends PersistenceTestCase {
     private Dataset dataset(String name) {
         Dataset dataset = new SimpleDataset();
         dataset.setName(name);
-        dataset.setId(Math.abs(new Random().nextInt()));
         dataset.setDatasetType(new DatasetType("dsType"));
         return dataset;
     }

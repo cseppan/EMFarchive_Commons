@@ -209,12 +209,15 @@ public class GenericExporter implements Exporter {
     }
 
     protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
-        for (int i = startColNumber; i < cols.length; i++) {
-            writer.write(formatValue(i, data));
+        int endCol = cols.length - 1;
+        String toWrite = "";
+        
+        for (int i = startColNumber; i < endCol; i++)
+            toWrite += formatValue(i, data) + delimiter;
+        
+        toWrite += formatValue(endCol, data); // the last column
 
-            if (i + 1 < cols.length)
-                writer.print(delimiter);// delimiter
-        }
+        writer.write(toWrite);
     }
 
     protected String formatValue(int index, ResultSet data) throws SQLException {

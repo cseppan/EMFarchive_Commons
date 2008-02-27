@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -30,7 +31,7 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
     private String tableEP;
 
     private String tablePE;
-
+    
     private Datasource referenceDatasource;
 
     protected void setUp() throws Exception {
@@ -44,28 +45,45 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
-
-        String name = dataset.getName();
-        tableCE = name + "_ce";
-        tableEM = name + "_em";
-        tableEP = name + "_ep";
-        tablePE = name + "_pe";
     }
 
     public void testShouldImportAAllNonPointFilesAndCreateSummary() throws Exception {
-        File folder = new File("test/data/nif/nonpoint");
-        String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
-        NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, 
-                dataset, dbServer(), sqlDataTypes);
-        SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
-        importer.run();
-        summary.createSummary();
+        try {
+            File folder = new File("test/data/nif/nonpoint");
+            String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
+            NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, 
+                    dataset, dbServer(), sqlDataTypes);
+            SummaryTable summary = new NIFNonpointNonRoadSummary(emissionDatasource, referenceDatasource, dataset);
+            importer.run();
+            summary.createSummary();
+            
+            InternalSource[] sources = dataset.getInternalSources();
+            String[] tables = new String[sources.length];
+            
+            for(int i = 0; i < tables.length; i++) {
+                tables[i] = sources[i].getTable();
+                
+                if (tables[i].contains("_ce"))
+                tableCE = tables[i];
+                
+                if (tables[i].contains("_em"))
+                tableEM = tables[i];
+                
+                if (tables[i].contains("_ep"))
+                tableEP = tables[i];
+                
+                if (tables[i].contains("_pe"))
+                tablePE = tables[i];
+            }
 
-        assertEquals(1, countRecords(tableCE));
-        assertEquals(21, countRecords(tableEM));
-        assertEquals(4, countRecords(tableEP));
-        assertEquals(4, countRecords(tablePE));
-        assertEquals(3, countRecords("test_summary"));
+            assertEquals(1, countRecords(tableCE));
+            assertEquals(21, countRecords(tableEM));
+            assertEquals(4, countRecords(tableEP));
+            assertEquals(4, countRecords(tablePE));
+            assertEquals(3, countRecords("test_summary"));
+        } finally {
+            dropTables();
+        }
     }
 
     private int countRecords(String tableName) {
@@ -73,12 +91,16 @@ public class NIFNonPointSummaryTest extends PersistenceTestCase {
         return tableReader.count(emissionDatasource.getName(), tableName);
     }
 
-    protected void doTearDown() throws Exception {
+    protected void dropTables() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
         dbUpdate.dropTable(emissionDatasource.getName(), tableCE);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEM);
         dbUpdate.dropTable(emissionDatasource.getName(), tableEP);
         dbUpdate.dropTable(emissionDatasource.getName(), tablePE);
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
+    }
+    
+    protected void doTearDown() throws Exception {
+        //
     }
 }

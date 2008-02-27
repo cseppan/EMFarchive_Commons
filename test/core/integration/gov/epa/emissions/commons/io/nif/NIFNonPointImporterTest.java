@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.nif;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -40,12 +41,6 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
         dataset = new SimpleDataset();
         dataset.setName("test");
         dataset.setId(Math.abs(new Random().nextInt()));
-
-        String name = dataset.getName();
-        tableCE = name + "_ce";
-        tableEM = name + "_em";
-        tableEP = name + "_ep";
-        tablePE = name + "_pe";
     }
 
     public void testShouldImportAAllNonPointFiles() throws Exception {
@@ -54,6 +49,26 @@ public class NIFNonPointImporterTest extends PersistenceTestCase {
             String[] files = {"ky_ce.txt", "ky_em.txt", "ky_ep.txt", "ky_pe.txt"};
             NIFNonPointImporter importer = new NIFNonPointImporter(folder, files, dataset, dbServer, sqlDataTypes);
             importer.run();
+            
+            InternalSource[] sources = dataset.getInternalSources();
+            String[] tables = new String[sources.length];
+            
+            for(int i = 0; i < tables.length; i++) {
+                tables[i] = sources[i].getTable();
+                
+                if (tables[i].contains("_ce"))
+                tableCE = tables[i];
+                
+                if (tables[i].contains("_em"))
+                tableEM = tables[i];
+                
+                if (tables[i].contains("_ep"))
+                tableEP = tables[i];
+                
+                if (tables[i].contains("_pe"))
+                tablePE = tables[i];
+            }
+            
             assertEquals(1, countRecords(tableCE));
             assertEquals(21, countRecords(tableEM));
             assertEquals(4, countRecords(tableEP));

@@ -38,7 +38,7 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getName());
+        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
     public void testImportGridCrossReferenceData() throws Exception {
@@ -68,7 +68,7 @@ public class GridCrossReferenceImporterTest extends PersistenceTestCase {
     private int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
     
     private Date lastModifiedDate(File folder, String fileName) {
