@@ -146,7 +146,7 @@ public class ORLImporter {
         }
     }
 
-    private void splitFile(File file, File headerFile, File dataFile) throws IOException, InterruptedException {
+    private void splitFile(File file, File headerFile, File dataFile) throws Exception {
         if (windowsOS) {
             splitOnWindows(file, headerFile, dataFile);
             return;
@@ -159,7 +159,10 @@ public class ORLImporter {
         String[] cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd };
 
         Process p = Runtime.getRuntime().exec(cmd);
-        p.waitFor();
+        int errorLevel = p.waitFor();
+        
+        if (errorLevel > 0)
+            throw new Exception("Saving data/header files to " + headerFile.getParent() + " directory failed (check permissions).");
     }
 
     private void splitOnWindows(File file, File headerFile, File dataFile) throws IOException {

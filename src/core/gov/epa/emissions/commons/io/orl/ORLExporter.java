@@ -184,8 +184,10 @@ public class ORLExporter extends GenericExporter {
         }
 
         Process p = Runtime.getRuntime().exec(cmd);
-        p.waitFor();
-
+        int errorLevel = p.waitFor();
+        
+        if (errorLevel > 0)
+            throw new Exception("Concatinating header and ORL data to file " + file.getAbsolutePath() + " failed.");
     }
 
     private String[] getCommands(String command) {
