@@ -47,7 +47,7 @@ public class CustomDateFormat {
         dateFormatter.applyPattern("MM/dd/yyyy");
         return date == null ? null : dateFormatter.parse(date);
     }
-
+    
     public static String format_ddMMMyyyy(Date date) {
         dateFormatter.applyPattern("ddMMMyyyy");
         return date == null ? "" : dateFormatter.format(date);

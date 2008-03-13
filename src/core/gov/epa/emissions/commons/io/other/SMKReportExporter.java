@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
@@ -12,7 +13,9 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
+import gov.epa.emissions.commons.io.VersionedQuery;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
+import gov.epa.emissions.commons.util.CustomDateFormat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +34,8 @@ public class SMKReportExporter implements Exporter {
 
     private Datasource datasource;
 
+    private Datasource emfDatasource;
+
     private String delimiter;
 
     private String tableframe;
@@ -44,9 +49,9 @@ public class SMKReportExporter implements Exporter {
     private String inlineCommentChar;
 
     protected int startColNumber;
-    
+
     protected List<Integer> colTypes = new ArrayList<Integer>();
-    
+
     protected List<String> colNames = new ArrayList<String>();
 
     public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
@@ -62,6 +67,7 @@ public class SMKReportExporter implements Exporter {
             Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
+        this.emfDatasource = dbServer.getEmfDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
@@ -71,7 +77,7 @@ public class SMKReportExporter implements Exporter {
     public void export(File file) throws ExporterException {
         PrintWriter writer = null;
         try {
-            //writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            // writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
             write(file, writer);
         } catch (IOException e) {
@@ -121,7 +127,7 @@ public class SMKReportExporter implements Exporter {
         }
     }
 
-    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String desc = dataset.getDescription();
         if (desc != null) {
             if (desc.lastIndexOf('#') + 2 == desc.length()) {
@@ -133,19 +139,49 @@ public class SMKReportExporter implements Exporter {
             } else
                 writer.print(desc);
         }
-        
+
         printExportInfo(writer);
     }
-    
-    private void printExportInfo(PrintWriter writer) {
+
+    private void printExportInfo(PrintWriter writer) throws SQLException {
         Version version = dataFormatFactory.getVersion();
         writer.println("#EXPORT_DATE=" + new Date().toString());
         writer.println("#EXPORT_VERSION_NAME=" + (version == null ? "None" : version.getName()));
         writer.println("#EXPORT_VERSION_NUMBER=" + (version == null ? "None" : version.getVersion()));
+
+        writeRevisionHistories(writer, version);
     }
 
-    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws Exception {
+    private void writeRevisionHistories(PrintWriter writer, Version version) throws SQLException {
+        VersionedQuery versionQuery = new VersionedQuery(version);
+        DataQuery query = datasource.query();
+        String revisionsTable = emfDatasource.getName() + ".revisions";
+        String[] revisionsTableCols = { "date_time", "what", "why" };
+        String usersTable = emfDatasource.getName() + ".users";
+        String[] userCols = { "name" };
+        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable, userCols,
+                usersTable);
+
+        if (revisionsHistoryQuery == null || revisionsHistoryQuery.isEmpty())
+            return;
+
+        ResultSet data = null;
+
+        try {
+            data = query.executeQuery(revisionsHistoryQuery);
+
+            while (data.next())
+                writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
+                        + data.getString(4) + ".    What: " + data.getString(2) + "    Why: " + data.getString(3));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (data != null)
+                data.close();
+        }
+    }
+
+    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws Exception {
         writeData(writer, dataset, datasource, true);
     }
 
@@ -164,11 +200,11 @@ public class SMKReportExporter implements Exporter {
 
         int pad = 0;
         if (!comments) {
-            pad = 1;     // Add a comment column to header line
+            pad = 1; // Add a comment column to header line
         }
-        
+
         if (!csvHeaderLine)
-            pad = 2;    // Turn off head line
+            pad = 2; // Turn off head line
 
         while (runner.execute()) {
             ResultSet rs = runner.getResultSet();
@@ -228,7 +264,7 @@ public class SMKReportExporter implements Exporter {
     protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         for (int i = startColNumber; i < cols.length; i++) {
             String value = data.getString(i);
-            
+
             if (value != null)
                 writer.write(formatValue(cols, colTypes.get(i).intValue(), i, value));
 
@@ -276,7 +312,7 @@ public class SMKReportExporter implements Exporter {
         ResultSetMetaData md = data.getMetaData();
         colNames.clear();
         colTypes.clear();
-        
+
         for (int i = 1; i <= md.getColumnCount(); i++) {
             colNames.add(md.getColumnName(i));
             colTypes.add(md.getColumnType(i));

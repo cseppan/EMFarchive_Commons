@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
@@ -13,7 +14,9 @@ import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.VersionedQuery;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
+import gov.epa.emissions.commons.util.CustomDateFormat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,6 +35,8 @@ public class GenericExporter implements Exporter {
     private Dataset dataset;
 
     private Datasource datasource;
+
+    private Datasource emfDatasource;
 
     protected String delimiter;
 
@@ -55,6 +60,7 @@ public class GenericExporter implements Exporter {
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
+        this.emfDatasource = dbServer.getEmfDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.fileFormat = fileFormat;
         this.batchSize = optimizedBatchSize.intValue();
@@ -70,6 +76,7 @@ public class GenericExporter implements Exporter {
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         } catch (Exception e2) {
+            e2.printStackTrace();
             throw new ExporterException(e2.getMessage());
         }
     }
@@ -103,7 +110,7 @@ public class GenericExporter implements Exporter {
         }
     }
 
-    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String header = dataset.getDescription();
         String cr = System.getProperty("line.separator");
 
@@ -118,15 +125,47 @@ public class GenericExporter implements Exporter {
             if (lasttoken.indexOf(cr) < 0)
                 writer.print(cr);
         }
-        
+
         printExportInfo(writer);
     }
 
-    private void printExportInfo(PrintWriter writer) {
+    protected void printExportInfo(PrintWriter writer) throws SQLException {
         Version version = dataFormatFactory.getVersion();
+
         writer.println("#EXPORT_DATE=" + new Date().toString());
         writer.println("#EXPORT_VERSION_NAME=" + (version == null ? "None" : version.getName()));
         writer.println("#EXPORT_VERSION_NUMBER=" + (version == null ? "None" : version.getVersion()));
+
+        writeRevisionHistories(writer, version);
+    }
+
+    private void writeRevisionHistories(PrintWriter writer, Version version) throws SQLException {
+        VersionedQuery versionQuery = new VersionedQuery(version);
+        DataQuery query = datasource.query();
+        String revisionsTable = emfDatasource.getName() + ".revisions";
+        String[] revisionsTableCols = { "date_time", "what", "why" };
+        String usersTable = emfDatasource.getName() + ".users";
+        String[] userCols = { "name" };
+        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable,
+                userCols, usersTable);
+
+        if (revisionsHistoryQuery == null || revisionsHistoryQuery.isEmpty())
+            return;
+
+        ResultSet data = null;
+
+        try {
+            data = query.executeQuery(revisionsHistoryQuery);
+
+            while (data.next())
+                writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
+                        + data.getString(4) + ".    What: " + data.getString(2) + "    Why: " + data.getString(3));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (data != null)
+                data.close();
+        }
     }
 
     final protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
@@ -211,10 +250,10 @@ public class GenericExporter implements Exporter {
     protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         int endCol = cols.length - 1;
         String toWrite = "";
-        
+
         for (int i = startColNumber; i < endCol; i++)
             toWrite += formatValue(i, data) + delimiter;
-        
+
         toWrite += formatValue(endCol, data); // the last column
 
         writer.write(toWrite);

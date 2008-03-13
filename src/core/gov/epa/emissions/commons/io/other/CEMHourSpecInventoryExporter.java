@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 public class CEMHourSpecInventoryExporter extends GenericExporter {
     public CEMHourSpecInventoryExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
@@ -24,8 +25,9 @@ public class CEMHourSpecInventoryExporter extends GenericExporter {
         this.setDelimiter(",");
     }
     
-    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         writer.print(dataset.getDescription());
+        printExportInfo(writer);
     }
        
 }

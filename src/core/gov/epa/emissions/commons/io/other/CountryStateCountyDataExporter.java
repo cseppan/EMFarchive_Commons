@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
+import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
@@ -14,7 +15,9 @@ import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.io.VersionedQuery;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
+import gov.epa.emissions.commons.util.CustomDateFormat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,6 +52,8 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     protected int startColNumber;
 
+    private Datasource emfDatasource;
+
     public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             Integer optimizedBatchSize) {
         setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizedBatchSize);
@@ -63,6 +68,7 @@ public class CountryStateCountyDataExporter implements Exporter {
             Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
+        this.datasource = dbServer.getEmfDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.types = types;
         this.batchSize = optimizedBatchSize.intValue();
@@ -111,7 +117,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         }
     }
 
-    private void writeHeaders(PrintWriter writer, Dataset dataset) {
+    private void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String header = dataset.getDescription();
 
         if (header != null) {
@@ -124,14 +130,44 @@ public class CountryStateCountyDataExporter implements Exporter {
         printExportInfo(writer);
     }
     
-    private void printExportInfo(PrintWriter writer) {
+    private void printExportInfo(PrintWriter writer) throws SQLException {
         Version version = dataFormatFactory.getVersion();
         writer.println("#EXPORT_DATE=" + new Date().toString());
         writer.println("#EXPORT_VERSION_NAME=" + (version == null ? "None" : version.getName()));
         writer.println("#EXPORT_VERSION_NUMBER=" + (version == null ? "None" : version.getVersion()));
+        
+        writeRevisionHistories(writer, version);
     }
 
+    private void writeRevisionHistories(PrintWriter writer, Version version) throws SQLException {
+        VersionedQuery versionQuery = new VersionedQuery(version);
+        DataQuery query = datasource.query();
+        String revisionsTable = emfDatasource.getName() + ".revisions";
+        String[] revisionsTableCols = { "date_time", "what", "why" };
+        String usersTable = emfDatasource.getName() + ".users";
+        String[] userCols = { "name" };
+        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable,
+                userCols, usersTable);
 
+        if (revisionsHistoryQuery == null || revisionsHistoryQuery.isEmpty())
+            return;
+
+        ResultSet data = null;
+
+        try {
+            data = query.executeQuery(revisionsHistoryQuery);
+
+            while (data.next())
+                writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
+                        + data.getString(4) + ".    What: " + data.getString(2) + "    Why: " + data.getString(3));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (data != null)
+                data.close();
+        }
+    }
+    
     protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
             throws Exception {
         writeData(writer, dataset, datasource, true);

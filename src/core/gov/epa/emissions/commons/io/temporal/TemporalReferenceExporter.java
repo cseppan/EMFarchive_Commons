@@ -8,6 +8,7 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.StringTokenizer;
 
 public class TemporalReferenceExporter extends GenericExporter {
@@ -22,10 +23,10 @@ public class TemporalReferenceExporter extends GenericExporter {
                 dataFormatFactory, optimizedBatchSize);
     }
 
-    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String header = dataset.getDescription();
         String lasttoken = null;
-        String cr = System.getProperty("line.separator");
+        String lastHeaderLine = null;
 
         if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
@@ -35,11 +36,13 @@ public class TemporalReferenceExporter extends GenericExporter {
                 if (index < 0)
                     writer.print("#" + lasttoken);
                 else
-                    writer.print(lasttoken);
+                    lastHeaderLine = lasttoken;
             }
 
-            if (lasttoken.indexOf(cr) < 0)
-                writer.print(cr);
+            printExportInfo(writer);
+
+            if (lastHeaderLine != null)
+                writer.print(lastHeaderLine);
         }
     }
 

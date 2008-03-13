@@ -7,37 +7,42 @@ import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.StringTokenizer;
 
 public class SpeciationCrossReferenceExporter extends GenericExporter {
-    
-    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
+
+    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+            Integer optimizedBatchSize) {
         super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), optimizedBatchSize);
     }
-    
+
     public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory, Integer optimizedBatchSize) {
         super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), factory, optimizedBatchSize);
     }
-    
-    protected void writeHeaders(PrintWriter writer, Dataset dataset) {
+
+    protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String header = dataset.getDescription();
         String lasttoken = null;
+        String lastHeaderLine = null;
 
-        if(header != null){
+        if (header != null) {
             StringTokenizer st = new StringTokenizer(header, "#");
-            while (st.hasMoreTokens()){
+            while (st.hasMoreTokens()) {
                 lasttoken = st.nextToken();
                 int index = lasttoken.indexOf("/POINT DEFN/");
-                if(index < 0)
+                if (index < 0)
                     writer.print("#" + lasttoken);
-                else if(index == 0)
-                    writer.print(lasttoken);
                 else
-                    writer.print("#" + lasttoken.substring(0,index)
-                            + lasttoken.substring(index));
+                    lastHeaderLine = lasttoken;
             }
+
+            printExportInfo(writer);
+
+            if (lastHeaderLine != null)
+                writer.print(lastHeaderLine);
         }
     }
-    
+
 }
