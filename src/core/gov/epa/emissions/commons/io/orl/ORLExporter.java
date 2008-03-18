@@ -60,12 +60,13 @@ public class ORLExporter extends GenericExporter {
 
         if (tempDir == null || tempDir.isEmpty())
             tempDir = System.getProperty("java.io.tmpdir");
-        
+
         File tempDirFile = new File(tempDir);
-        
+
         if (!(tempDirFile.exists() && tempDirFile.isDirectory() && tempDirFile.canWrite() && tempDirFile.canRead()))
-            throw new ExporterException("Import-export temporary folder does not exist or lacks write permissions: " + tempDir + "");
-        
+            throw new ExporterException("Import-export temporary folder does not exist or lacks write permissions: "
+                    + tempDir + "");
+
         Random rando = new Random();
         long id = Math.abs(rando.nextInt());
 
@@ -83,7 +84,8 @@ public class ORLExporter extends GenericExporter {
             String originalQuery = getQueryString(dataset, datasource);
             String query = getColsSpecdQueryString(dataset, originalQuery);
             String writeQuery = getWriteQueryString(dataFileName, query);
-            log.warn(writeQuery);
+
+            //log.warn(writeQuery);
 
             connection = datasource.getConnection();
 
@@ -92,18 +94,20 @@ public class ORLExporter extends GenericExporter {
             setExportedLines(originalQuery, connection);
         } catch (Exception e) {
             e.printStackTrace();
-            //NOTE: this closes the db server for other exporters
-//            try {
-//                if ((connection != null) && !connection.isClosed())
-//                    connection.close();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//                throw new ExporterException(ex.getMessage());
-//            }
+            // NOTE: this closes the db server for other exporters
+            // try {
+            // if ((connection != null) && !connection.isClosed())
+            // connection.close();
+            // } catch (Exception ex) {
+            // ex.printStackTrace();
+            // throw new ExporterException(ex.getMessage());
+            // }
             throw new ExporterException(e.getMessage());
         } finally {
-             if (dataFile.exists()) dataFile.delete();
-             if (headerFile.exists()) headerFile.delete();
+            if (dataFile.exists())
+                dataFile.delete();
+            if (headerFile.exists())
+                headerFile.delete();
         }
     }
 
@@ -176,7 +180,7 @@ public class ORLExporter extends GenericExporter {
         String[] cmd = null;
 
         if (windowsOS) {
-//System.out.println("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
+            // System.out.println("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
             cmd = getCommands("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
         } else {
             String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
@@ -185,7 +189,7 @@ public class ORLExporter extends GenericExporter {
 
         Process p = Runtime.getRuntime().exec(cmd);
         int errorLevel = p.waitFor();
-        
+
         if (errorLevel > 0)
             throw new Exception("Concatinating header and ORL data to file " + file.getAbsolutePath() + " failed.");
     }
@@ -214,8 +218,8 @@ public class ORLExporter extends GenericExporter {
 
         for (int i = 0; i < numCols; i++) {
             String colName = cols[i].name().toLowerCase();
-            //make sure you only include columns that exist in the table, new columns could have been
-            //added to the ORL file format...
+            // make sure you only include columns that exist in the table, new columns could have been
+            // added to the ORL file format...
             selectColsString += (tableColsMap.containsKey(colName) ? colName : "null as " + colName) + ",";
         }
 
