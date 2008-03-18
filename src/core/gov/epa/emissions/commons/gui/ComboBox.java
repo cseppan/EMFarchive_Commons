@@ -37,6 +37,15 @@ public class ComboBox extends JComboBox implements Changeable {
     public ComboBox() {
         super();
     }
+    
+    public void resetModel(Object[] values) {
+        List list = new ArrayList(Arrays.asList(values));
+        if (!list.contains(defaultLabel))
+            list.add(0, defaultLabel);
+
+        setModel(new DefaultComboBoxModel(list.toArray()));
+        setRenderer(new ComboBoxRenderer(defaultLabel));
+    }
 
     public Object getSelectedItem() {
         if (defaultLabel == null) {
