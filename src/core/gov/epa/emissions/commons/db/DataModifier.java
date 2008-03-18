@@ -26,7 +26,7 @@ public class DataModifier {
         typeMap = new JdbcToCommonsSqlTypeMap(types);
     }
 
-    private void execute(String sql) throws SQLException {
+    public void execute(String sql) throws SQLException {
         Statement statement = connection.createStatement();
         try {
             statement.execute(sql);
