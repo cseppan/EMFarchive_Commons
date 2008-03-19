@@ -37,6 +37,18 @@ public class DataModifier {
         }
     }
 
+    public ResultSet executeQuery(String sql) throws SQLException {
+        Statement statement = connection.createStatement();
+        
+        try {
+            return statement.executeQuery(sql);
+        } catch (SQLException e) {
+            throw new SQLException("Error executing query-" + sql + "\n" + e.getMessage());
+        } finally {
+            statement.close();
+        }
+    }
+
     /**
      * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] LIKE 'likeClauses[i]'
      * 
