@@ -68,7 +68,7 @@ public class CountryStateCountyDataExporter implements Exporter {
             Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
-        this.datasource = dbServer.getEmfDatasource();
+        this.emfDatasource = dbServer.getEmfDatasource();
         this.dataFormatFactory = dataFormatFactory;
         this.types = types;
         this.batchSize = optimizedBatchSize.intValue();
@@ -84,7 +84,8 @@ public class CountryStateCountyDataExporter implements Exporter {
         } catch (IOException e) {
             throw new ExporterException("could not open file - " + file + " for writing");
         } catch (Exception e2) {
-            throw new ExporterException(e2.getMessage());
+            e2.printStackTrace();
+            throw new ExporterException(e2.getMessage() != null ? e2.getMessage() : "Problem exporting country state county file");
         }
     }
 
