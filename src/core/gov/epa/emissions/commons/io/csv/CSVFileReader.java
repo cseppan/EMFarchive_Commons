@@ -148,9 +148,10 @@ public class CSVFileReader implements Reader {
             for (; lineRead != null; lineRead = fileReader.readLine()) {
                 if (isExportInfo(lineRead))
                     continue;
-                else if (isComment(lineRead))
+                else if (isComment(lineRead)) {
                     header.add(lineRead);
-                else if (lineRead.split(",").length >= 2)
+                    comments.add(lineRead);
+                } else if (lineRead.split(",").length >= 2)
                     tokenizer = new CommaDelimitedTokenizer();
 
                 if (tokenizer != null) {
