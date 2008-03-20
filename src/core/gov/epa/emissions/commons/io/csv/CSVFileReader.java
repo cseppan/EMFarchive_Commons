@@ -113,7 +113,7 @@ public class CSVFileReader implements Reader {
         return line.startsWith("#");
     }
     
-    public List comments() {
+    public List<String> comments() {
         return comments;
     }
 

@@ -9,7 +9,7 @@ public interface Reader {
 
     Record read() throws IOException, ImporterException;
 
-    List comments();
+    List<String> comments();
 
     void close() throws IOException;
 
