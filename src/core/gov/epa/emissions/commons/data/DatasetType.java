@@ -36,6 +36,16 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     private QAStepTemplate[] qaStepTemplates = new QAStepTemplate[]{};
 
+    public static final String orlMergedInventory = "ORL Merged Inventory";
+
+    public static final String orlNonpointInventory = "ORL Nonpoint Inventory (ARINV)";
+
+    public static final String orlPointInventory = "ORL Point Inventory (PTINV)";
+
+    public static final String orlNonroadInventory = "ORL Nonroad Inventory (ARINV)";
+
+    public static final String orlOnroadInventory = "ORL Onroad Inventory (MBINV)";
+
     public DatasetType() {
 //        keyValsList = new ArrayList();
 //        qaStepTemplates = new ArrayList();
