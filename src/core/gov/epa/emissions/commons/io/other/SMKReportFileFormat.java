@@ -36,6 +36,7 @@ public class SMKReportFileFormat implements FileFormat, DelimitedFileFormat {
         HashMap map = new HashMap();
         map.put("DATE", new Column("DATE", types.stringType(10), 10, new StringFormatter(10)));
         map.put("STATE", new Column("STATE", types.stringType(50), 50, new StringFormatter(50)));
+        map.put("# STATE", new Column("STATE", types.stringType(50), 50, new StringFormatter(50)));
         map.put("REGION", new Column("REGION", types.stringType(10), 10, new StringFormatter(10)));
         map.put("HOUR", new Column("HOUR", types.intType(), new IntegerFormatter()));
         map.put("SCC", new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
@@ -56,23 +57,23 @@ public class SMKReportFileFormat implements FileFormat, DelimitedFileFormat {
         map.put("MACT", new Column("MACT", types.stringType(32), 32, new StringFormatter(32)));
         map.put("NAICS", new Column("NAICS", types.stringType(32), 32, new StringFormatter(32)));
         map.put("SOURCE TYPE", new Column("SOURCE_TYPE", types.stringType(128), 128, new StringFormatter(128)));
-        map.put("PRIMARY SRG", new Column("PRIMARY_SRG", types.stringType(255), 255, new StringFormatter(255)));
-        map.put("FALLBK SRG", new Column("FALLBK_SRG", types.stringType(255), 255, new StringFormatter(255)));
-        map.put("MONTHLY PRF", new Column("MONTHLY_PRF", types.stringType(255), 255, new StringFormatter(255)));
-        map.put("MONTHLY PRF", new Column("MONTHLY_PRF", types.stringType(255), 255, new StringFormatter(255)));
-        map.put("WEEKLY PRF", new Column("WEEKLY_PRF", types.stringType(255), 255, new StringFormatter(255)));
-        map.put("DIURNAL PRF", new Column("DIURNAL_PRF", types.stringType(255), 255, new StringFormatter(255)));
-        map.put("SPEC PRF", new Column("SPEC_PRF", types.stringType(255), 255, new StringFormatter(255)));
+        map.put("PRIMARY SRG", new Column("PRIMARY_SRG", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("FALLBK SRG", new Column("FALLBK_SRG", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("MONTHLY PRF", new Column("MONTHLY_PRF", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("MONTHLY PRF", new Column("MONTHLY_PRF", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("WEEKLY PRF", new Column("WEEKLY_PRF", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("DIURNAL PRF", new Column("DIURNAL_PRF", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("SPEC PRF", new Column("SPEC_PRF", types.stringType(16), 16, new StringFormatter(16)));
         map.put("ELEVSTAT", new Column("ELEVSTAT", types.stringType(1), 1, new StringFormatter(1)));
-        map.put("PLT NAME", new Column("PLT_NAME", types.stringType(255), 255, new StringFormatter(255)));
+        map.put("PLT NAME", new Column("PLT_NAME", types.stringType(128), 128, new StringFormatter(128)));
         map.put("SIC DESCRIPTION", new Column("SIC_DESCRIPTION", types.stringType(256), 256, new StringFormatter(256)));
         map.put("MACT DESCRIPTION", new Column("MACT_DESCRIPTION", types.stringType(256), 256, new StringFormatter(256)));
         map.put("NAICS DESCRIPTION", new Column("NAICS_DESCRIPTION", types.stringType(256), 256, new StringFormatter(256)));
-        map.put("VARIABLE", new Column("VARIABLE", types.stringType(256), 256, new StringFormatter(256)));
-        map.put("DATA VALUE", new Column("DATA_VALUE", types.stringType(128), 128, new StringFormatter(128)));
-        map.put("UNITS", new Column("UNITS", types.stringType(128), 128, new StringFormatter(128)));
-        map.put("NFDRS", new Column("NFDRS", types.stringType(256), 256, new StringFormatter(256)));
-        map.put("MATBURNED", new Column("MATBURNED", types.stringType(256), 256, new StringFormatter(256)));
+        map.put("VARIABLE", new Column("VARIABLE", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("POLLUTANT", new Column("POLLUTANT", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("UNITS", new Column("UNITS", types.stringType(32), 32, new StringFormatter(32)));
+        map.put("NFDRS", new Column("NFDRS", types.stringType(16), 16, new StringFormatter(16)));
+        map.put("MATBURNED", new Column("MATBURNED", types.stringType(16), 16, new StringFormatter(16)));
         
         return map;
     }
