@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.io.Column;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -37,11 +38,12 @@ public class DataModifier {
         }
     }
 
-    public ResultSet executeQuery(String sql) throws SQLException {
+    public ResultSetMetaData getMetaData(String sql) throws SQLException {
         Statement statement = connection.createStatement();
         
         try {
-            return statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
+            return rs.getMetaData();
         } catch (SQLException e) {
             throw new SQLException("Error executing query-" + sql + "\n" + e.getMessage());
         } finally {
