@@ -27,6 +27,14 @@ public class VersionedDatasetQuery implements ExportStatement {
         
         return "SELECT " + colString + " FROM " + table + " WHERE " + versionedQuery.query() + filter + orderByClause();
     }
+    
+    public String getVersionQuery() {
+        return versionedQuery.query();
+    }
+    
+    public String getDefaultOrderByClasue() {
+        return orderByClause();
+    }
 
     private String orderByClause() {
         String defaultSortOrder = datasetType.getDefaultSortOrder();
@@ -38,4 +46,6 @@ public class VersionedDatasetQuery implements ExportStatement {
 
         return "";
     }
+
+
 }
