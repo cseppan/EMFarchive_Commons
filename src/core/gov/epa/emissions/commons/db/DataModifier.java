@@ -77,6 +77,9 @@ public class DataModifier {
             ResultSet rs = statement.executeQuery(query);
             rs.next();
             
+            if (rs.getRow() == 0)
+                return -1.0;
+            
             return rs.getDouble(1);
         } catch (SQLException e) {
             throw new SQLException("Error executing query-" + query + "\n" + e.getMessage());
