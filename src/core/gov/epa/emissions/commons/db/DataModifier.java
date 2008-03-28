@@ -50,6 +50,55 @@ public class DataModifier {
             statement.close();
         }
     }
+  
+    //NOTE: specifically created for line-based dataset tables
+    public double getLastRowLineNumber(String table) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query = "SELECT line_number FROM " + table + " WHERE line_number=(SELECT MAX(line_number) FROM " + table + ")";
+        
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+            
+            return rs.getDouble(1);
+        } catch (SQLException e) {
+            throw new SQLException("Error executing query-" + query + "\n" + e.getMessage());
+        } finally {
+            statement.close();
+        }
+    }
+    
+    //NOTE: specifically created for line-based dataset tables
+    public double getNextBiggerLineNumber(String table, double lineNumber) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query = "SELECT line_number FROM " + table + " WHERE line_number > " + lineNumber + " ORDER BY line_number ASC LIMIT 1";
+        
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+            
+            return rs.getDouble(1);
+        } catch (SQLException e) {
+            throw new SQLException("Error executing query-" + query + "\n" + e.getMessage());
+        } finally {
+            statement.close();
+        }
+    }
+    
+    public long getRowCount(String selectCountQuery) throws SQLException {
+        Statement statement = connection.createStatement();
+        
+        try {
+            ResultSet rs = statement.executeQuery(selectCountQuery);
+            rs.next();
+            
+            return rs.getLong(1);
+        } catch (SQLException e) {
+            throw new SQLException("Error executing query-" + selectCountQuery + "\n" + e.getMessage());
+        } finally {
+            statement.close();
+        }
+    }
 
     /**
      * UPDATE databaseName.tableName SET columnName = setExpr WHERE whereColumns[i] LIKE 'likeClauses[i]'
