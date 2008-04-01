@@ -128,6 +128,16 @@ public class CSVFileReader implements Reader {
     public List getHeader() {
         return header;
     }
+    
+    public String headerToString(){
+        String lineFeeder = System.getProperty("line.separator");
+        String output = "";
+        if (header != null){
+            for (int i=0; i<header.size(); i++)
+                output += header.get(i) + lineFeeder;
+        }
+        return  output;  
+    }
 
     public String[] getCols() {
         return cols;
@@ -143,6 +153,7 @@ public class CSVFileReader implements Reader {
 
     private boolean getTokenizer() throws ImporterException {
         try {
+            
             String lineRead = fileReader.readLine();
             
             for (; lineRead != null; lineRead = fileReader.readLine()) {
