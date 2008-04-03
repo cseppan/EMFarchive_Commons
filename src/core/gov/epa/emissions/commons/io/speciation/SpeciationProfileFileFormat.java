@@ -31,7 +31,7 @@ public class SpeciationProfileFileFormat implements FileFormat, DelimitedFileFor
 
         columns.add(new Column("CODE", types.stringType(5), 5, new StringFormatter(5)));
         columns.add(new Column("POLLUTANT", types.stringType(16), 16, new StringFormatter(16)));
-        columns.add(new Column("SPECIES", types.stringType(16), 32, new StringFormatter(16)));
+        columns.add(new Column("SPECIES", types.stringType(16), 16, new StringFormatter(16)));
         columns.add(new Column("SPLIT", types.realType(), new RealFormatter()));
         columns.add(new Column("DIVISOR", types.realType(), new RealFormatter()));
         columns.add(new Column("MASSFRAC", types.realType(), new RealFormatter()));
