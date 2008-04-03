@@ -2,6 +2,8 @@ package gov.epa.emissions.commons.gui;
 
 import gov.epa.mims.analysisengine.table.MultiRowHeaderTableModel;
 import gov.epa.mims.analysisengine.table.SortFilterTablePanel;
+import gov.epa.mims.analysisengine.table.filter.FilterCriteria;
+import gov.epa.mims.analysisengine.table.sort.SortCriteria;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -34,7 +36,17 @@ public class SortFilterSelectionPanel extends SortFilterTablePanel {
         super(parent, model);
         this.selectModel = model;
     }
+    
+    public SortCriteria getSortCriteria()
+    {
+        return overallModel.getSortCriteria();
+    }
 
+    public FilterCriteria getFilterCriteria()
+    {
+        return overallModel.getFilterCriteria();
+    }
+    
     /**
      * Adding/Removing different actions are implemented in createPopupMenuAndToolBar This is only implemented in the
      * gov.epa.emissions.emisview.gui.SortFilterSelectionPanel So if you want to use this constructor from some other
