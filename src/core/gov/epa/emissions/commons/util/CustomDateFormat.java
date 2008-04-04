@@ -83,4 +83,9 @@ public class CustomDateFormat {
         return date == null ? "" : dateFormatter.format(date);
     }
 
+
+    public static String format_YYYYMMDDHHMMSSSS(Date date) {
+        dateFormatter.applyPattern("yyyyMMddHHmmssSS");
+        return date == null ? "" : dateFormatter.format(date);
+    }
 }

@@ -10,21 +10,21 @@ import gov.epa.emissions.commons.io.FileFormat;
 
 import java.io.File;
 
-public class ORLCoSTPointExporter implements Exporter {
+public class ORLMergedExporter implements Exporter {
 
     private ORLExporter delegate;
 
-    public ORLCoSTPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
+    public ORLMergedExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
         delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
     }
 
-    public ORLCoSTPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public ORLMergedExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory, Integer optimizedBatchSize) {
         delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory, optimizedBatchSize);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {
-        return new ORLCoSTPointFileFormat(sqlDataTypes);
+        return new ORLMergedFileFormat(sqlDataTypes);
     }
 
     public void export(File file) throws ExporterException {

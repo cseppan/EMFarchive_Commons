@@ -13,21 +13,21 @@ import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.io.File;
 
-public class ORLCoSTPointImporter implements Importer {
+public class ORLMergedImporter implements Importer {
 
     private ORLImporter delegate;
 
-    public ORLCoSTPointImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
+    public ORLMergedImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
-        FileFormatWithOptionalCols fileFormat = new ORLCoSTPointFileFormat(sqlDataTypes);
+        FileFormatWithOptionalCols fileFormat = new ORLMergedFileFormat(sqlDataTypes);
         TableFormat tableFormat = new NonVersionedTableFormat(fileFormat, sqlDataTypes);
 
         create(folder, filePatterns, dataset, dbServer, fileFormat, tableFormat);
     }
 
-    public ORLCoSTPointImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
+    public ORLMergedImporter(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
-        FileFormatWithOptionalCols fileFormat = new ORLCoSTPointFileFormat(sqlDataTypes, factory.defaultValuesFiller());
+        FileFormatWithOptionalCols fileFormat = new ORLMergedFileFormat(sqlDataTypes, factory.defaultValuesFiller());
         TableFormat tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
 
         create(folder, filePatterns, dataset, dbServer, fileFormat, tableFormat);
