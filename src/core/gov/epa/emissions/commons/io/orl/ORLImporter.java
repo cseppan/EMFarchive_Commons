@@ -249,13 +249,18 @@ public class ORLImporter {
                     .minCols().length);
             record = reader.read();
 
-            if (!reader.delimiter().equals(","))
+            if (reader.delimiter() == null || !reader.delimiter().equals(","))
                 throw new ImporterException("Data file is not delimited by comma.");
-
-            reader.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ImporterException(e.getMessage());
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ImporterException(e.getMessage());
+            }
         }
+        
         addAttributes(reader.comments(), dataset);
     }
 
