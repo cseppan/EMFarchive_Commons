@@ -160,9 +160,10 @@ public class ORLImporter {
 
         Process p = Runtime.getRuntime().exec(cmd);
         int errorLevel = p.waitFor();
-        
+
         if (errorLevel > 0)
-            throw new Exception("Saving data/header files to " + headerFile.getParent() + " directory failed (check permissions).");
+            throw new Exception("Saving data/header files to " + headerFile.getParent()
+                    + " directory failed (check permissions).");
     }
 
     private void splitOnWindows(File file, File headerFile, File dataFile) throws IOException {
@@ -236,8 +237,12 @@ public class ORLImporter {
     }
 
     private void loadDataset(List<String> comments, Dataset dataset) {
+        String tempResltn = dataset.getTemporalResolution();
+
+        if (tempResltn == null || tempResltn.trim().isEmpty())
+            dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
+        
         dataset.setUnits("short tons/year");
-        dataset.setTemporalResolution(TemporalResolution.ANNUAL.getName());
         dataset.setDescription(new Comments(comments).all());
     }
 
@@ -260,7 +265,7 @@ public class ORLImporter {
                 throw new ImporterException(e.getMessage());
             }
         }
-        
+
         addAttributes(reader.comments(), dataset);
     }
 
@@ -279,7 +284,7 @@ public class ORLImporter {
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
         String year = comments.content("YEAR");
         dataset.setYear(Integer.parseInt(year));
-        
+
         if (!comments.hasContent("EMF_START_DATE") && !comments.hasContent("EMF_END_DATE"))
             setStartStopDateTimes(dataset, Integer.parseInt(year));
     }
