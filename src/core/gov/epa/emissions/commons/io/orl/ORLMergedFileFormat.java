@@ -39,11 +39,11 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
     }
 
     private Column[] asArray(Column[] minCols, Column[] optionalCols) {
-        List list = new ArrayList();
+        List<Column> list = new ArrayList<Column>();
         list.addAll(Arrays.asList(minCols));
         list.addAll(Arrays.asList(optionalCols));
 
-        return (Column[]) list.toArray(new Column[0]);
+        return list.toArray(new Column[0]);
     }
 
     public Column[] minCols() {
@@ -79,7 +79,7 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
     }
 
     public Column[] optionalCols() {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
@@ -135,10 +135,10 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
 //        cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
         cols.add(new Column("SECTOR", types.stringType(64), 64, new StringFormatter(255)));
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
-    public void fillDefaults(List data, long datasetId) {
+    public void fillDefaults(List<Column> data, long datasetId) {
         filler.fill(this, data, datasetId);
     }
     

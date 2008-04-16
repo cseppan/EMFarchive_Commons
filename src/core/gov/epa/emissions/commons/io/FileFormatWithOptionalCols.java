@@ -17,6 +17,6 @@ public interface FileFormatWithOptionalCols extends FileFormat {
      *            represents a line in the input file
      * 
      */
-    void fillDefaults(List data, long datasetId);
+    void fillDefaults(List<Column> data, long datasetId);
 
 }
