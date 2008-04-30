@@ -159,13 +159,27 @@ public class GenericExporter implements Exporter {
 
             while (data.next())
                 writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
-                        + data.getString(4) + ".    What: " + data.getString(2) + "    Why: " + data.getString(3));
+                        + data.getString(4) + ".    What: " + replaceLineSeparator(data.getString(2)) + "    Why: " + replaceLineSeparator(data.getString(3)));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (data != null)
                 data.close();
         }
+    }
+
+    private String replaceLineSeparator(String content) {
+        if (content == null)
+            return "";
+
+        String ls = System.getProperty("line.separator");
+        StringTokenizer st = new StringTokenizer(content, ls);
+        StringBuffer sb = new StringBuffer();
+        
+        while (st.hasMoreTokens())
+            sb.append(" " + st.nextToken());
+
+        return sb.toString();
     }
 
     final protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)

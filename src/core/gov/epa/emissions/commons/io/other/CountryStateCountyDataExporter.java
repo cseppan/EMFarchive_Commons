@@ -85,7 +85,8 @@ public class CountryStateCountyDataExporter implements Exporter {
             throw new ExporterException("could not open file - " + file + " for writing");
         } catch (Exception e2) {
             e2.printStackTrace();
-            throw new ExporterException(e2.getMessage() != null ? e2.getMessage() : "Problem exporting country state county file");
+            throw new ExporterException(e2.getMessage() != null ? e2.getMessage()
+                    : "Problem exporting country state county file");
         }
     }
 
@@ -127,16 +128,16 @@ public class CountryStateCountyDataExporter implements Exporter {
                 writer.println("#" + st.nextToken());
             }
         }
-        
+
         printExportInfo(writer);
     }
-    
+
     private void printExportInfo(PrintWriter writer) throws SQLException {
         Version version = dataFormatFactory.getVersion();
         writer.println("#EXPORT_DATE=" + new Date().toString());
         writer.println("#EXPORT_VERSION_NAME=" + (version == null ? "None" : version.getName()));
         writer.println("#EXPORT_VERSION_NUMBER=" + (version == null ? "None" : version.getVersion()));
-        
+
         writeRevisionHistories(writer, version);
     }
 
@@ -147,8 +148,8 @@ public class CountryStateCountyDataExporter implements Exporter {
         String[] revisionsTableCols = { "date_time", "what", "why" };
         String usersTable = emfDatasource.getName() + ".users";
         String[] userCols = { "name" };
-        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable,
-                userCols, usersTable);
+        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable, userCols,
+                usersTable);
 
         if (revisionsHistoryQuery == null || revisionsHistoryQuery.isEmpty())
             return;
@@ -160,7 +161,8 @@ public class CountryStateCountyDataExporter implements Exporter {
 
             while (data.next())
                 writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
-                        + data.getString(4) + ".    What: " + data.getString(2) + "    Why: " + data.getString(3));
+                        + data.getString(4) + ".    What: " + replaceLineSeparator(data.getString(2)) + "    Why: "
+                        + replaceLineSeparator(data.getString(3)));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -168,9 +170,22 @@ public class CountryStateCountyDataExporter implements Exporter {
                 data.close();
         }
     }
-    
-    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource)
-            throws Exception {
+
+    private String replaceLineSeparator(String content) {
+        if (content == null)
+            return "";
+
+        String ls = System.getProperty("line.separator");
+        StringTokenizer st = new StringTokenizer(content, ls);
+        StringBuffer sb = new StringBuffer();
+
+        while (st.hasMoreTokens())
+            sb.append(" " + st.nextToken());
+
+        return sb.toString();
+    }
+
+    protected void writeDataWithComments(PrintWriter writer, Dataset dataset, Datasource datasource) throws Exception {
         writeData(writer, dataset, datasource, true);
     }
 
@@ -192,18 +207,18 @@ public class CountryStateCountyDataExporter implements Exporter {
         }
     }
 
-    protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments, String section)
-            throws Exception {
+    protected void writeResultSet(PrintWriter writer, InternalSource source, Datasource datasource, boolean comments,
+            String section) throws Exception {
         String query = getQueryString(source, datasource);
         String orderby = "";
-        
+
         if (section.toUpperCase().equals("COUNTRY"))
             orderby = " ORDER BY code";
         else if (section.toUpperCase().equals("STATE"))
             orderby = " ORDER BY countrycode, statecode";
         else if (section.toUpperCase().equals("COUNTY"))
             orderby = " ORDER BY countrycode, statecode, countycode";
-            
+
         OptimizedQuery runner = datasource.optimizedQuery(query + orderby, batchSize);
         boolean firstbatch = true;
         String[] cols = null;
@@ -241,7 +256,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         while (data.next())
             writeRecordWithoutComment(cols, data, writer);
     }
-    
+
     protected void writeRecordWithComment(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {
         writeDataCols(cols, data, writer);
         String value = data.getString(cols.length);
