@@ -52,6 +52,8 @@ public class CSVImporter implements Importer {
         this.sqlDataTypes = sqlDataTypes;
 
         reader = new CSVFileReader(file);
+        // TODO: get header from the reader
+        // pass header to fileFormat
         FileFormat fileFormat = fileFormat(reader);
         TableFormat tableFormat = dataFormatFactory.tableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
@@ -102,7 +104,13 @@ public class CSVImporter implements Importer {
         return reader.getHeader();
     }
 
-    private CSVFileFormat fileFormat(CSVFileReader reader) {
+    private CSVFileFormat fileFormat(CSVFileReader reader) throws ImporterException {
+        String[] types =reader.getColTypes();
+        if (types!=null && types.length>0){
+            if(reader.getCols().length != types.length)
+                throw new ImporterException("There are " + reader.getCols().length + " column names, but "+types.length + " column types. ");
+            return new CSVFileFormat(sqlDataTypes, reader.getCols(), types);
+        }
         return new CSVFileFormat(sqlDataTypes, reader.getCols());
     }
 

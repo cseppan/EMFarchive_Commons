@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,8 @@ public class CSVFileReader implements Reader {
     private String currentLine;
 
     private String[] cols;
+    
+    private String[] colTypes;
 
     private List<String> header;
 
@@ -95,6 +98,10 @@ public class CSVFileReader implements Reader {
     private boolean isExportInfo(String line) {
         return line == null ? false : (line.trim().startsWith("#EXPORT_")); // || line.startsWith("#EMF_"));
     }
+    
+    private boolean isColTypes(String line) {
+        return line == null ? false : (line.trim().startsWith("#TYPES")); // || line.startsWith("#EMF_"));
+    }
 
     private Record doRead(String line) throws ImporterException {
         Record record = new Record();
@@ -142,13 +149,17 @@ public class CSVFileReader implements Reader {
     public String[] getCols() {
         return cols;
     }
+    
+    public String[] getColTypes() {
+        return colTypes;
+    }
 
     private void detectDelimiter() throws ImporterException {
         if (file.length() == 0)
             throw new ImporterException("File: " + file.getAbsolutePath() + " is empty.");
 
-        if (getTokenizer())
-            return;
+            if (getTokenizer())
+                return;
     }
 
     private boolean getTokenizer() throws ImporterException {
@@ -162,6 +173,8 @@ public class CSVFileReader implements Reader {
                 else if (isComment(lineRead)) {
                     header.add(lineRead);
                     comments.add(lineRead);
+                    if (isColTypes(lineRead))
+                        setColTypes(lineRead);
                 } else if (lineRead.split(",").length >= 2)
                     tokenizer = new CommaDelimitedTokenizer();
 
@@ -176,6 +189,22 @@ public class CSVFileReader implements Reader {
         }
 
         return false;
+    }
+    
+    private void setColTypes(String lineRead) throws ImporterException{
+        List<String> columnTypes = new ArrayList<String>();
+        int index = lineRead.indexOf("=");
+
+        if (index < 0)
+            throw new ImporterException(
+                    "Column types line format is not correct. The correct format is: #TYPES=[type_1] [type_2] ... [type_n]");
+
+        StringTokenizer st = new StringTokenizer(lineRead.substring(++index), "|");
+
+        while (st.hasMoreTokens())
+            columnTypes.add(st.nextToken());
+
+        colTypes = columnTypes.toArray(new String[0]);
     }
 
     private String[] underScoreTheSpace(String[] cols) {
