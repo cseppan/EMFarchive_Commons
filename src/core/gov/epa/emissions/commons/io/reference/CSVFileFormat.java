@@ -30,10 +30,19 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
     private Column[] createCols(String[] colNames, String[] dataTypes) {
         //parse the header if it has a #TYPES to create columns of appropriate types
         List<Column> cols = new ArrayList<Column>();
+        
         for (int i = 0; i < colNames.length; i++) {
             String name = replaceSpecialChars(colNames[i]);
-            if (dataTypes[i].toUpperCase().startsWith("VARCHAR"))
-                cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
+            if (dataTypes[i].toUpperCase().startsWith("VARCHAR")){
+                int startIndex = dataTypes[i].lastIndexOf("(");
+                int endIndex = dataTypes[i].lastIndexOf(")");
+                //System.out.println(dataTypes[i]+ ": startIndes "+ startIndex + " endIndex " + endIndex);
+                int charLen = Integer.parseInt(dataTypes[i].substring(++startIndex, endIndex));
+                if (charLen == 0)
+                    cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
+                else
+                    cols.add(new Column(name, types.stringType(charLen), charLen, new StringFormatter(charLen)));
+            }
             else if (dataTypes[i].toUpperCase().startsWith("TEXT"))
                 cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
             else if (dataTypes[i].toUpperCase().startsWith("INT"))
