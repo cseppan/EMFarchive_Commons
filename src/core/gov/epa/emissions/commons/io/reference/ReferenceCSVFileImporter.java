@@ -5,15 +5,12 @@ import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.OptimizedTableModifier;
 import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.io.importer.CommaDelimitedTokenizer;
-import gov.epa.emissions.commons.io.importer.DelimitedFileReader;
+import gov.epa.emissions.commons.io.csv.CSVFileReader;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
 import gov.epa.emissions.commons.io.importer.Reader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +26,7 @@ public class ReferenceCSVFileImporter implements Importer {
 
     private String tableName;
 
-    private Reader reader;
+    private CSVFileReader reader;
 
     private FileFormat fileFormat;
 
@@ -41,11 +38,8 @@ public class ReferenceCSVFileImporter implements Importer {
         this.sqlDataTypes = sqlDataTypes;
         this.file = file;
 
-        try {
-            reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
-        } catch (FileNotFoundException e) {
-            throw new ImporterException("File not found: " + file.getAbsolutePath() + "\n" + e.getMessage());
-        }
+        //            reader = new DelimitedFileReader(file, new CommaDelimitedTokenizer());
+        reader = new CSVFileReader(file);
         this.fileFormat = fileFormat(reader);
     }
 
@@ -56,6 +50,7 @@ public class ReferenceCSVFileImporter implements Importer {
             doImport(tableModifier);
         } catch (Exception e) {
             dropTable(tableName);
+            e.printStackTrace();
             throw new ImporterException("Could not import file: " + file.getAbsolutePath() + "\n" + "Line No-"
                     + reader.lineNumber() + ", line-" + reader.line());
         } finally {
@@ -123,14 +118,23 @@ public class ReferenceCSVFileImporter implements Importer {
         }
     }
 
-    private CSVFileFormat fileFormat(Reader reader) throws ImporterException {
-        try {
-            Record record = reader.read();
-            String[] tokens = record.getTokens();
-            return new CSVFileFormat(sqlDataTypes, tokens);
-        } catch (IOException e) {
-            throw new ImporterException(e.getMessage());
-        }
-    }
+//    private CSVFileFormat fileFormat(Reader reader) throws ImporterException {
+//        try {
+//            Record record = reader.read();
+//            String[] tokens = record.getTokens();
+//            return new CSVFileFormat(sqlDataTypes, tokens);
+//        } catch (IOException e) {
+//            throw new ImporterException(e.getMessage());
+//        }
+//    }
 
+    private CSVFileFormat fileFormat(CSVFileReader reader) throws ImporterException {
+        String[] types =reader.getColTypes();
+        if (types!=null && types.length>0){
+            if(reader.getCols().length != types.length)
+                throw new ImporterException("There are " + reader.getCols().length + " column names, but "+types.length + " column types. ");
+            return new CSVFileFormat(sqlDataTypes, reader.getCols(), types);
+        }
+        return new CSVFileFormat(sqlDataTypes, reader.getCols());
+    }
 }
