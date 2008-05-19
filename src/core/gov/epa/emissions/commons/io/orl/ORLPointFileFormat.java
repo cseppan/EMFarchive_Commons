@@ -41,15 +41,15 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
     }
 
     private Column[] asArray(Column[] minCols, Column[] optionalCols) {
-        List list = new ArrayList();
+        List<Column> list = new ArrayList<Column>();
         list.addAll(Arrays.asList(minCols));
         list.addAll(Arrays.asList(optionalCols));
 
-        return (Column[]) list.toArray(new Column[0]);
+        return list.toArray(new Column[0]);
     }
 
     public Column[] minCols() {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
         cols.add(new Column("PLANTID", types.stringType(15), 15, new StringFormatter(15)));
@@ -75,11 +75,11 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
         cols.add(new Column("POLL", types.stringType(16), 16, new StringFormatter(16)));
         cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));
         
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
     public Column[] optionalCols() {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
@@ -133,10 +133,10 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
         cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
         cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
-    public void fillDefaults(List data, long datasetId) {
+    public void fillDefaults(List<Column> data, long datasetId) {
         filler.fill(this, data, datasetId);
     }
 

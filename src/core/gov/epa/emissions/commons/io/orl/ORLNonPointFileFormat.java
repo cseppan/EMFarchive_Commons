@@ -44,11 +44,11 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
     }
 
     private Column[] asArray(Column[] minCols, Column[] optionalCols) {
-        List list = new ArrayList();
+        List<Column> list = new ArrayList<Column>();
         list.addAll(Arrays.asList(minCols));
         list.addAll(Arrays.asList(optionalCols));
 
-        return (Column[]) list.toArray(new Column[0]);
+        return list.toArray(new Column[0]);
     }
 
     public Column[] minCols() {
@@ -60,7 +60,7 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
     }
 
     private Column[] createMinCols() {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
         cols.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
@@ -71,11 +71,11 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
         cols.add(new Column("POLL", types.stringType(16), 16, new StringFormatter(16)));
         cols.add(new Column("ANN_EMIS", types.realType(), new RealFormatter()));
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
     private Column[] createOptionalCols() {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("AVD_EMIS", types.realType(), new RealFormatter()));
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
@@ -111,10 +111,10 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
         cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
         cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
-    public void fillDefaults(List data, long datasetId) {
+    public void fillDefaults(List<Column> data, long datasetId) {
         filler.fill(this, data, datasetId);
     }
 }
