@@ -1,7 +1,9 @@
 package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.DatasetTypeUnit;
+import gov.epa.emissions.commons.data.KeyVal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -22,7 +24,9 @@ import gov.epa.emissions.commons.io.reference.CSVFileFormat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class CSVImporter implements Importer {
     
@@ -106,12 +110,42 @@ public class CSVImporter implements Importer {
 
     private CSVFileFormat fileFormat(CSVFileReader reader) throws ImporterException {
         String[] types =reader.getColTypes();
+        
+        DatasetType datasetType = dataset.getDatasetType();
+        KeyVal[] keyvalues = datasetType.getKeyVals();
+        KeyVal keyVal = findColTypes(keyvalues);
+        if (keyVal != null){
+            //System.out.println("Find KeyVal:  " + keyVal.getName() + "  "+ keyVal.getValue());   
+            types = getColTypes(keyVal.getValue());
+        }
         if (types!=null && types.length>0){
+            //System.out.println("There are " + reader.getCols().length + " the third column is "+types[2].toString() );
             if(reader.getCols().length != types.length)
                 throw new ImporterException("There are " + reader.getCols().length + " column names, but "+types.length + " column types. ");
             return new CSVFileFormat(sqlDataTypes, reader.getCols(), types);
         }
         return new CSVFileFormat(sqlDataTypes, reader.getCols());
+    }
+    
+    
+
+    private KeyVal findColTypes(KeyVal[] keyValues){
+        for (KeyVal keyVal : keyValues){
+            if (keyVal.getName().equals("COLUMN_TYPES"))
+                return keyVal; 
+        }
+        return null; 
+    }
+
+    private String[] getColTypes(String lineRead){
+        List<String> columnTypes = new ArrayList<String>();
+
+        StringTokenizer st = new StringTokenizer(lineRead, "|");
+
+        while (st.hasMoreTokens())
+            columnTypes.add(st.nextToken());
+
+        return columnTypes.toArray(new String[0]);
     }
 
 }

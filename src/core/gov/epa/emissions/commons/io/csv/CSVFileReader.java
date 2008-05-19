@@ -100,7 +100,7 @@ public class CSVFileReader implements Reader {
     }
     
     private boolean isColTypes(String line) {
-        return line == null ? false : (line.trim().startsWith("#TYPES")); // || line.startsWith("#EMF_"));
+        return line == null ? false : (line.trim().startsWith("#COLUMN_TYPES"));
     }
 
     private Record doRead(String line) throws ImporterException {
@@ -173,8 +173,9 @@ public class CSVFileReader implements Reader {
                 else if (isComment(lineRead)) {
                     header.add(lineRead);
                     comments.add(lineRead);
-                    if (isColTypes(lineRead))
+                    if (isColTypes(lineRead)){
                         setColTypes(lineRead);
+                    }
                 } else if (lineRead.split(",").length >= 2)
                     tokenizer = new CommaDelimitedTokenizer();
 
@@ -194,7 +195,6 @@ public class CSVFileReader implements Reader {
     private void setColTypes(String lineRead) throws ImporterException{
         List<String> columnTypes = new ArrayList<String>();
         int index = lineRead.indexOf("=");
-
         if (index < 0)
             throw new ImporterException(
                     "Column types line format is not correct. The correct format is: #TYPES=[type_1] [type_2] ... [type_n]");
@@ -203,7 +203,7 @@ public class CSVFileReader implements Reader {
 
         while (st.hasMoreTokens())
             columnTypes.add(st.nextToken());
-
+    
         colTypes = columnTypes.toArray(new String[0]);
     }
 
