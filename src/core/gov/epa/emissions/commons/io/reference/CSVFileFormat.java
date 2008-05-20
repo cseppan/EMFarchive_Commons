@@ -7,6 +7,7 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,12 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
         cols = createCols(colNames);
     }
     
-    public CSVFileFormat(SqlDataTypes types, String[] colNames, String[] dataTypes) {
+    public CSVFileFormat(SqlDataTypes types, String[] colNames, String[] dataTypes) throws ImporterException {
         this.types = types;
         cols = createCols(colNames, dataTypes);
     }
 
-    private Column[] createCols(String[] colNames, String[] dataTypes) {
+    private Column[] createCols(String[] colNames, String[] dataTypes) throws ImporterException {
         //parse the header if it has a #COLUMN_TYPES to create columns of appropriate types
         List<Column> cols = new ArrayList<Column>();
         
@@ -58,7 +59,9 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
             else if (dataTypes[i].toUpperCase().startsWith("TIME"))
                 cols.add(new Column(name, types.timestamp()));
             else 
-                cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
+                throw new ImporterException(
+                "Column type " + dataTypes[i] + " doesn't exist. ");
+                //cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
         }
         return cols.toArray(new Column[0]);
     }

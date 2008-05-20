@@ -42,4 +42,14 @@ public class IDATableFormat implements TableFormat {
         return (Column[]) cols.toArray(new Column[0]);
     }
 
+    public int getBaseLength() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public int getOffset() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.OptimizedTableModifier;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.temporal.VersionedTableFormat;
 
@@ -28,6 +29,7 @@ public class FixedColumnsDataLoader implements DataLoader {
             dataModifier = dataModifier(datasource, table);
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
+            e.printStackTrace();
             dropData(table, dataset, dataModifier);
             throw new ImporterException(e.getMessage()
                     + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
@@ -68,14 +70,41 @@ public class FixedColumnsDataLoader implements DataLoader {
         try {
             Record record = reader.read();
             while (!record.isEnd()) {
+                // TODO: check to see if the records of type string are not too long for the format
+                // can you get the field length info from the TableFormat? or do you need the FileFormat?
+                // if need FileFormat, is it OK to pass in?
+                checkDataLengths(record);
+
                 dataModifier.insert(data(dataset, record));
                 record = reader.read();
             }
-        } finally {
+        }catch (ImporterException e) {
+            throw new ImporterException(e.getMessage());
+        }finally {
             dataModifier.finish();
         }
     }
 
+    private void checkDataLengths(Record record) throws Exception
+    {
+        int firstCol = tableFormat.getOffset();
+        int offSet = tableFormat.getOffset();
+        
+        Column [] columns = tableFormat.cols();
+        
+        for (int c = firstCol; c < firstCol+tableFormat.getBaseLength(); c++)
+        {
+            Column col = columns[c];
+            System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
+            if (col.sqlType().toLowerCase().startsWith("varchar"))
+            {  
+               String item = record.token(c-offSet);
+               if (col.width() < item.length())
+                   throw new ImporterException ("Value "+item+" is too large for the column "+ col.name());
+            }           
+        }
+    }
+    
     protected String[] data(Dataset dataset, Record record) {
         List data = new ArrayList();
 

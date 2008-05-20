@@ -17,6 +17,8 @@ public class VersionedTableFormat implements TableFormat {
     private FileFormat base;
 
     private Column[] cols;
+    
+    private int offset=0; 
 
     public VersionedTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
@@ -38,11 +40,11 @@ public class VersionedTableFormat implements TableFormat {
 
     private Column[] createCols(FileFormat base, SqlDataTypes types) {
         List cols = new ArrayList();
-
+        offset =4; 
         cols.addAll(Arrays.asList(versionCols(types)));
         cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
 
-        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
+        Column inlineComments = new Column("Comments", types.stringType(256), new StringFormatter(256));
         cols.add(inlineComments);
 
         return (Column[]) cols.toArray(new Column[0]);
@@ -50,12 +52,11 @@ public class VersionedTableFormat implements TableFormat {
 
     private Column[] createCols(FileFormat base, SqlDataTypes types, String lineNum) {
         List cols = new ArrayList();
-        
+        offset =5; 
         cols.addAll(Arrays.asList(versionCols(types)));
         cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
         cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
-        
-        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
+        Column inlineComments = new Column("Comments", types.stringType(256), new StringFormatter(256));
         cols.add(inlineComments);
         
         return (Column[]) cols.toArray(new Column[0]);
@@ -79,5 +80,13 @@ public class VersionedTableFormat implements TableFormat {
 
     public String identify() {
         return base.identify();
+    }
+    
+    public int getOffset(){
+        return offset; 
+    }
+
+    public int getBaseLength() {
+        return base.cols().length;
     }
 }

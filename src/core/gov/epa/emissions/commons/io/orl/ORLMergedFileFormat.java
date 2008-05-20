@@ -154,5 +154,15 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
     public String key() {
         return "Record_Id";
     }
+
+    public int getBaseLength() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public int getOffset() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
     
 }

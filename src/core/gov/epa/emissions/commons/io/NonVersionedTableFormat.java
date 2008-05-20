@@ -13,6 +13,8 @@ public class NonVersionedTableFormat implements TableFormat {
     private SqlDataTypes types;
     
     private Column[] cols;
+    
+    private int offset=0; 
 
     public NonVersionedTableFormat(FileFormat base, SqlDataTypes types) {
         this.base = base;
@@ -40,6 +42,7 @@ public class NonVersionedTableFormat implements TableFormat {
 
     private Column[] createCols() {
         List cols = new ArrayList();
+        offset=0;
         cols.addAll(Arrays.asList(base.cols()));
 
         Column datasetId = new Column(key(), types.longType(), new LongFormatter());
@@ -53,6 +56,7 @@ public class NonVersionedTableFormat implements TableFormat {
 
     private Column[] createCols(String lineNum) {
         List cols = new ArrayList();
+        offset =1; 
         cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
         cols.addAll(Arrays.asList(base.cols()));
         
@@ -63,6 +67,14 @@ public class NonVersionedTableFormat implements TableFormat {
         cols.add(inlineComments);
         
         return (Column[]) cols.toArray(new Column[0]);
+    }
+    
+    public int getOffset(){
+        return offset; 
+    }
+    
+    public int getBaseLength(){
+        return base.cols().length;
     }
 
 }

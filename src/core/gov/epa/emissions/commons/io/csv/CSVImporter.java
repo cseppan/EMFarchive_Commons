@@ -114,8 +114,11 @@ public class CSVImporter implements Importer {
         DatasetType datasetType = dataset.getDatasetType();
         KeyVal[] keyvalues = datasetType.getKeyVals();
         KeyVal keyVal = findColTypes(keyvalues);
+        // if the column types keyword is set for the dataset type, then override file format 
         if (keyVal != null){
             //System.out.println("Find KeyVal:  " + keyVal.getName() + "  "+ keyVal.getValue());   
+            // here types specified from the dataset itself will be overridden by the types in
+            // the dataset type
             types = getColTypes(keyVal.getValue());
         }
         if (types!=null && types.length>0){
