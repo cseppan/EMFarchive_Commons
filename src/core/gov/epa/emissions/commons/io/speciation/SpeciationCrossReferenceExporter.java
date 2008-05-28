@@ -27,7 +27,7 @@ public class SpeciationCrossReferenceExporter extends GenericExporter {
         String lasttoken = null;
         String lastHeaderLine = null;
 
-        if (header != null) {
+        if (header != null && !header.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(header, "#");
             while (st.hasMoreTokens()) {
                 lasttoken = st.nextToken();

@@ -122,7 +122,7 @@ public class CountryStateCountyDataExporter implements Exporter {
     private void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String header = dataset.getDescription();
 
-        if (header != null) {
+        if (header != null && !header.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(header, "#");
             while (st.hasMoreTokens()) {
                 writer.println("#" + st.nextToken());

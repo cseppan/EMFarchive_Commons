@@ -114,7 +114,7 @@ public class GenericExporter implements Exporter {
         String header = dataset.getDescription();
         String cr = System.getProperty("line.separator");
 
-        if (header != null) {
+        if (header != null && !header.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(header, "#");
             String lasttoken = "";
             while (st.hasMoreTokens()) {
@@ -146,8 +146,8 @@ public class GenericExporter implements Exporter {
         String[] revisionsTableCols = { "date_time", "what", "why" };
         String usersTable = emfDatasource.getName() + ".users";
         String[] userCols = { "name" };
-        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable,
-                userCols, usersTable);
+        String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable, userCols,
+                usersTable);
 
         if (revisionsHistoryQuery == null || revisionsHistoryQuery.isEmpty())
             return;
@@ -159,7 +159,8 @@ public class GenericExporter implements Exporter {
 
             while (data.next())
                 writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
-                        + data.getString(4) + ".    What: " + replaceLineSeparator(data.getString(2)) + "    Why: " + replaceLineSeparator(data.getString(3)));
+                        + data.getString(4) + ".    What: " + replaceLineSeparator(data.getString(2)) + "    Why: "
+                        + replaceLineSeparator(data.getString(3)));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -175,7 +176,7 @@ public class GenericExporter implements Exporter {
         String ls = System.getProperty("line.separator");
         StringTokenizer st = new StringTokenizer(content, ls);
         StringBuffer sb = new StringBuffer();
-        
+
         while (st.hasMoreTokens())
             sb.append(" " + st.nextToken());
 

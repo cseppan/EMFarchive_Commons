@@ -129,12 +129,14 @@ public class SMKReportExporter implements Exporter {
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String desc = dataset.getDescription();
-        if (desc != null) {
+        
+        if (desc != null && !desc.trim().isEmpty()) {
             if (desc.lastIndexOf('#') + 2 == desc.length()) {
                 StringTokenizer st = new StringTokenizer(desc, System.getProperty("line.separator"));
                 while (st.hasMoreTokens()) {
                     tableframe = st.nextToken();
                 }
+                
                 writer.print(desc.substring(0, desc.indexOf(tableframe)));
             } else
                 writer.print(desc);
