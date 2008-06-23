@@ -61,7 +61,7 @@ public class DataTable {
         try {
             delegate.create(table, tableFormat);
         } catch (Exception e) {
-            throw new ImporterException(e.getMessage());
+            throw new ImporterException("Check for usable column names - "+ e.getMessage());
         }
     }
     
@@ -83,7 +83,7 @@ public class DataTable {
             delegate.drop(table);
         } catch (Exception e) {
             throw new ImporterException(
-                    "could not drop table " + table + " after encountering error importing dataset", e);
+                   "could not drop table " + table + " after encountering error importing dataset", e);
         }
     }
 
