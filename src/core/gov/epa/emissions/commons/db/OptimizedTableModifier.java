@@ -51,8 +51,17 @@ public class OptimizedTableModifier extends TableModifier {
             } catch (ParseException e1) {
                 line = 0;
             }
-            
-            throw new SQLException("Data line (" + (batchCount * BATCH_SIZE + line + 1) + ") has errors: " + e.getMessage());
+            e.printStackTrace();
+            String exmsg = e.getMessage();
+            if (e instanceof SQLException)
+            {
+                SQLException sqle = (SQLException)e;
+                if (sqle.getNextException() != null)
+                    exmsg = exmsg +"; "+sqle.getMessage();
+                    sqle.printStackTrace();
+                System.out.println("SQL Exception ERROR: "+exmsg);
+            }
+            throw new SQLException("Data line (" + (batchCount * BATCH_SIZE + line + 1) + ") has errors: " + exmsg);
         } finally {
             connection.commit();
             connection.setAutoCommit(true);
