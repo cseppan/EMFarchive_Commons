@@ -124,7 +124,8 @@ public class CSVImporter implements Importer {
         if (types!=null && types.length>0){
             //System.out.println("There are " + reader.getCols().length + " the third column is "+types[2].toString() );
             if(reader.getCols().length != types.length)
-                throw new ImporterException("There are " + reader.getCols().length + " column names, but "+types.length + " column types. ");
+                throw new ImporterException("There are " + reader.getCols().length + " column names, but "+types.length + " column types. (Use | between the types)");
+           
             return new CSVFileFormat(sqlDataTypes, reader.getCols(), types);
         }
         return new CSVFileFormat(sqlDataTypes, reader.getCols());
