@@ -69,8 +69,8 @@ public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols, Delimit
         cols.add(new Column("YEAR", types.stringType(4), 4, new StringFormatter(4)));
         cols.add(new Column("TRIBAL_CODE", types.stringType(3), 3, new StringFormatter(3)));
         
-        cols.add(new Column("START_DATE", types.stringType(8), 8, new StringFormatter(8)));
-        cols.add(new Column("END_DATE", types.stringType(8), 8, new StringFormatter(8)));
+        cols.add(new Column("START_DATE", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("END_DATE", types.stringType(10), 10, new StringFormatter(10)));
         cols.add(new Column("WINTER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
         cols.add(new Column("SPRING_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
         cols.add(new Column("SUMMER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));

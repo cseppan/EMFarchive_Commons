@@ -109,8 +109,8 @@ public class ORLPointFileFormat implements FileFormatWithOptionalCols, Delimited
         cols.add(new Column("BART_SOURCE", types.stringType(10), 10, new StringFormatter(10)));
         cols.add(new Column("BART_UNIT", types.stringType(10), 10, new StringFormatter(10)));
         cols.add(new Column("CONTROL_STATUS", types.stringType(12), 12, new StringFormatter(12)));
-        cols.add(new Column("START_DATE", types.stringType(8), 8, new StringFormatter(8)));
-        cols.add(new Column("END_DATE", types.stringType(8), 8, new StringFormatter(8)));
+        cols.add(new Column("START_DATE", types.stringType(10), 10, new StringFormatter(10)));
+        cols.add(new Column("END_DATE", types.stringType(10), 10, new StringFormatter(10)));
         cols.add(new Column("WINTER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
         cols.add(new Column("SPRING_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
         cols.add(new Column("SUMMER_THROUGHPUT_PCT", types.realType(), new RealFormatter()));
