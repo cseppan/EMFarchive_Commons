@@ -81,7 +81,7 @@ public class TableDefinitionDelegate {
                 statement.close();
         }
     }
-
+    
     public int totalRows(String qualfiedTableName) throws SQLException {
         String query = "SELECT COUNT(*) FROM " + qualfiedTableName;
         Statement statement = null;

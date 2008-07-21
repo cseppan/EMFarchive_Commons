@@ -43,5 +43,9 @@ public interface TableDefinition {
     void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception;
     
     void deleteRecords(String table, String columnName, String columnType, String value) throws Exception;
+    
+    public String checkTableConsolidations(int dsTypeId, String colNames, String colTypes, float sizeLimit) throws SQLException;
+
+    void addConsolidationItem(int id, String table, int numOfCols, String colNames, String colTypes, int sizeLimit) throws SQLException;
 
 }

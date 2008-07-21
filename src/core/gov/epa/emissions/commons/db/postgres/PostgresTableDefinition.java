@@ -6,7 +6,9 @@ import gov.epa.emissions.commons.db.TableDefinitionDelegate;
 import gov.epa.emissions.commons.io.TableMetadata;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class PostgresTableDefinition implements TableDefinition {
@@ -15,9 +17,12 @@ public class PostgresTableDefinition implements TableDefinition {
 
     private TableDefinitionDelegate delegate;
 
+    private Connection connection;
+
     protected PostgresTableDefinition(String schema, Connection connection) {
         this.schema = schema;
         this.delegate = new TableDefinitionDelegate(connection);
+        this.connection = connection;
     }
 
     public List getTableNames() throws SQLException {
@@ -89,7 +94,7 @@ public class PostgresTableDefinition implements TableDefinition {
                     queryString += " NOT NULL DEFAULT " + datasetId;
                 else
                     queryString += " " + cols[i].constraints();
-            } 
+            }
 
             queryString += ", ";
         }// for i
@@ -112,9 +117,56 @@ public class PostgresTableDefinition implements TableDefinition {
     public void deleteRecords(String table, String columnName, String columnType, String value) throws Exception {
         if (!columnType.toUpperCase().contains("INT"))
             value = "'" + value + "'";
-        
+
         String deleteQuery = "DELETE FROM " + qualified(table) + " WHERE " + columnName + "=" + value;
         execute(deleteQuery);
+    }
+
+    public String checkTableConsolidations(int dsTypeId, String colNames, String colTypes, float sizeLimit)
+            throws SQLException {
+        String query = "SELECT output_table FROM emf.table_consolidations WHERE dataset_type_id=" + dsTypeId
+                + " AND col_names='" + colNames + "' AND col_types='" + colTypes + "'";
+
+        Statement statement = null;
+        ResultSet data = null;
+
+        try {
+            statement = connection.createStatement();
+            data = statement.executeQuery(query);
+
+            if (data == null)
+                return null;
+
+            if (data.next())
+                return data.getString(1);
+            
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Could not execute query-" + query + "\n" + e.getMessage());
+        } finally {
+            if (data != null)
+                data.close();
+
+            if (statement != null)
+                statement.close();
+        }
+    }
+
+    public ResultSet executeQuery(String query, Statement statement) throws SQLException {
+        try {
+            statement = connection.createStatement();
+            return statement.executeQuery(query);
+        } catch (SQLException e) {
+            throw new SQLException("Could not execute query-" + query + "\n" + e.getMessage());
+        }
+    }
+
+    public void addConsolidationItem(int dsTypeId, String table, int numCols, String colNames, String colTypes,
+            int sizeLimit) throws SQLException {
+        String query = "INSERT INTO emf.table_consolidations VALUES (DEFAULT, " + dsTypeId + ", '" + table + "', " + numCols + ", '" + colNames + "', '"
+                + colTypes + "', " + sizeLimit + ")";
+        execute(query);
     }
 
 }

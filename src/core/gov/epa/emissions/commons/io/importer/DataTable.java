@@ -5,17 +5,27 @@ import java.util.Random;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.TableCreator;
+import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.TableFormat;
 
 public class DataTable {
 
     private String name;
 
+    private String colNameString;
+
+    private String colTypeString;
+
     private TableCreator delegate;
+
+    private int numOfCols;
     
+    private Dataset dataset;
+
     public DataTable(Dataset dataset, Datasource datasource) {
         this.name = createName(dataset.getName());
         this.delegate = new TableCreator(datasource);
+        this.dataset = dataset;
     }
 
     public String name() {
@@ -25,10 +35,10 @@ public class DataTable {
     public String createName(String name) {
         name = name.trim();
         String prefix = "DS_";
-        String sufix = "_" + Math.abs(new Random().nextInt()); //to make name unique
+        String sufix = "_" + Math.abs(new Random().nextInt()); // to make name unique
         String table = prefix + name + sufix;
-        
-        if (table.length() > 63) {            //postgresql table name max length is 64
+
+        if (table.length() > 63) { // postgresql table name max length is 64
             int space = table.length() - 63;
             table = prefix + name.substring(space + 1) + sufix;
         }
@@ -41,7 +51,6 @@ public class DataTable {
 
         return table;
     }
-
 
     public static String encodeTableName(String tableName) {
         for (int i = 0; i < tableName.length(); i++) {
@@ -61,10 +70,10 @@ public class DataTable {
         try {
             delegate.create(table, tableFormat);
         } catch (Exception e) {
-            throw new ImporterException("Check for usable column names - "+ e.getMessage());
+            throw new ImporterException("Check for usable column names - " + e.getMessage());
         }
     }
-    
+
     public void create(TableFormat tableFormat, int datasetId) throws ImporterException {
         try {
             delegate.create(name(), tableFormat, datasetId);
@@ -72,7 +81,6 @@ public class DataTable {
             throw new ImporterException(e.getMessage());
         }
     }
-
 
     public void create(TableFormat tableFormat) throws ImporterException {
         create(name(), tableFormat);
@@ -83,7 +91,7 @@ public class DataTable {
             delegate.drop(table);
         } catch (Exception e) {
             throw new ImporterException(
-                   "could not drop table " + table + " after encountering error importing dataset", e);
+                    "could not drop table " + table + " after encountering error importing dataset", e);
         }
     }
 
@@ -98,9 +106,47 @@ public class DataTable {
             throw new ImporterException("could not rename table " + name + ", " + e.getMessage());
         }
     }
-    
+
     public boolean exists(String table) throws Exception {
         return delegate.exists(table);
+    }
+
+    public String createConsolidatedTable(TableFormat tableFormat) throws ImporterException {
+        getTableColInfo(tableFormat);
+
+        try {
+            String consolidatedTable = delegate
+                    .checkTableConsolidation(this.colNameString, this.colTypeString, dataset);
+
+            if (consolidatedTable != null && !consolidatedTable.isEmpty())
+                return consolidatedTable;
+            
+            create(tableFormat);
+            delegate.addConsolidationItem(this.numOfCols, this.name, this.colNameString, this.colTypeString, dataset);
+            return this.name;
+        } catch (Exception e) {
+            throw new ImporterException("Error during creating consolidated dataset table", e);
+        }
+    }
+
+    private void getTableColInfo(TableFormat tableFormat) {
+        StringBuffer colNames = new StringBuffer();
+        StringBuffer colTypes = new StringBuffer();
+        Column[] cols = tableFormat.cols();
+        int count = 0;
+
+        for (Column col : cols) {
+            colNames.append(col.name() + ",");
+            colTypes.append(col.sqlType() + ",");
+            count++;
+        }
+
+        colNames.deleteCharAt(colNames.length() - 1);
+        colTypes.deleteCharAt(colTypes.length() - 1);
+
+        this.colNameString = colNames.toString();
+        this.colTypeString = colTypes.toString();
+        this.numOfCols = count;
     }
 
 }

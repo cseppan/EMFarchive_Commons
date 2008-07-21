@@ -1,9 +1,10 @@
 package gov.epa.emissions.commons.db;
 
-import java.sql.SQLException;
-
+import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+
+import java.sql.SQLException;
 
 public class TableCreator {
 
@@ -66,6 +67,14 @@ public class TableCreator {
     public void deleteRecords(String table, String columnName, String columnType, String value) throws Exception {
         TableDefinition def = datasource.tableDefinition();
         def.deleteRecords(table, columnName, columnType, value);
+    }
+
+    public String checkTableConsolidation(String colNames, String colTypes, Dataset dataset) throws Exception {
+        return datasource.tableDefinition().checkTableConsolidations(dataset.getDatasetType().getId(), colNames, colTypes, 0);
+    }
+    
+    public void addConsolidationItem(int numOfCols, String table, String colNames, String colTypes, Dataset dataset) throws Exception {
+        datasource.tableDefinition().addConsolidationItem(dataset.getDatasetType().getId(), table, numOfCols, colNames, colTypes, 0);
     }
 
 }

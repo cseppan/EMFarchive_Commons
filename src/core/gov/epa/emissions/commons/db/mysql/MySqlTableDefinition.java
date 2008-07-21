@@ -115,4 +115,14 @@ public class MySqlTableDefinition implements TableDefinition {
         
     }
 
+    public String checkTableConsolidations(int dsTypeId, String colNames, String colTypes, float sizeLimit) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void addConsolidationItem(int id, String table, int numOfCols, String colNames, String colTypes, int sizeLimit) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
