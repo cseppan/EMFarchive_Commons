@@ -42,7 +42,8 @@ public class NonVersionedTableFormat implements TableFormat {
 
     private Column[] createCols() {
         List cols = new ArrayList();
-        offset=0;
+        //offset=0;   //NOTE: WRONG! Since you add datasetId column to the base file format
+        offset = 1;
         cols.addAll(Arrays.asList(base.cols()));
 
         Column datasetId = new Column(key(), types.longType(), new LongFormatter());
@@ -56,7 +57,8 @@ public class NonVersionedTableFormat implements TableFormat {
 
     private Column[] createCols(String lineNum) {
         List cols = new ArrayList();
-        offset =1; 
+        //offset =1;   //NOTE: WRONG! Since you add "lineNum" and "datasetId" columns before the base columns
+        offset = 2;
         cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
         cols.addAll(Arrays.asList(base.cols()));
         
