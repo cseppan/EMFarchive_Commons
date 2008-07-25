@@ -27,8 +27,13 @@ public class OptimizedTableModifier extends TableModifier {
 
     public void insert(String[] data) throws Exception {
         if (data.length > columns.length) {
+            for(int i = 0; i < data.length; i++)
+                System.out.println("Data line: " + data[i]);
+            
             throw new Exception("Invalid number of data tokens - " + data.length + ". Number of columns in the table: "
                     + columns.length);
+            
+
         }
         insertRow(tableName, data, columns);
     }

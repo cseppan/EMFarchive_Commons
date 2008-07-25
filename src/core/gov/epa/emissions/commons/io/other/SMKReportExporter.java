@@ -241,8 +241,8 @@ public class SMKReportExporter implements Exporter {
             rs.close();
         }
         runner.close();
-        if (tableframe != null)
-            writer.println(System.getProperty("line.separator") + tableframe);
+//        if (tableframe != null)             //NOTE: don't need them on the exported data
+//            writer.println(System.getProperty("line.separator") + tableframe);
     }
 
     private void writeBatchOfData(PrintWriter writer, ResultSet data, String[] cols, boolean comments)
