@@ -102,7 +102,7 @@ public class ORLReaderTest extends PersistenceTestCase {
 
         for (int i = 0; i < 10; i++) {
             if (i == 0 || i == 1 || i == 4 || i == 9)
-                assertEquals(29, reader.read().size());
+                assertEquals(28, reader.read().size());
             else
                 assertEquals(28, reader.read().size());
         }

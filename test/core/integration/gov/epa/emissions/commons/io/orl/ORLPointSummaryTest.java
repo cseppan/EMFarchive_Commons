@@ -41,21 +41,21 @@ public class ORLPointSummaryTest extends PersistenceTestCase {
 
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
-        dbUpdate.dropTable(emissionDatasource.getName(), "test");
+        dbUpdate.dropTable(emissionDatasource.getName(), dataset.getInternalSources()[0].getTable());
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
     }
 
     public void testShouldImportASmallAndSimplePointFiles() throws Exception {
         File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLPointImporter(folder, new String[] { "small-point.txt" }, dataset,
+        Importer importer = new ORLPointImporter(folder, new String[] { "small-point-comma.txt" }, dataset,
                 dbServer, sqlDataTypes);
         importer.run();
 
         SummaryTable summary = new ORLPointSummary(emissionDatasource, referenceDatasource, dataset);
         summary.createSummary();
 
-        assertEquals(10, countRecords("test"));
-        assertEquals(2, countRecords("test_summary"));
+        assertEquals(10, countRecords(dataset.getInternalSources()[0].getTable()));
+        assertEquals(4, countRecords("test_summary"));
     }
 
     private int countRecords(String tableName) {

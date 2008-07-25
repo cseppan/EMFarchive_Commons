@@ -49,5 +49,30 @@ public class Comments {
         String comment = content(tag);
         return comment != null && comment.length() > 0;
     }
+    
+    /**
+     * SMOKE doesn't like things like #ORLPOINT.
+     * The right format should be '#ORL' or '#ORL POINT', etc.
+     * 
+     */
 
+    public boolean hasRightTagFormat(String tag) {
+        tag = "#" + tag;
+        String comment = null;
+        
+        for (Iterator<?> iter = comments.iterator(); iter.hasNext();) {
+            String temp = (String) iter.next();
+            
+            if (temp != null && temp.trim().startsWith(tag)) 
+                comment = temp.trim().substring(tag.length());
+        }
+        
+        if (comment == null)
+            return false;
+        
+        if (comment.length() > 0 && comment.charAt(0) != ' ')
+            return false;
+        
+        return true;
+    }
 }

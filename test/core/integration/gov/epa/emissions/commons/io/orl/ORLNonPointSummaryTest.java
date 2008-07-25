@@ -41,18 +41,23 @@ public class ORLNonPointSummaryTest extends PersistenceTestCase {
 
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(emissionDatasource);
-        dbUpdate.dropTable(emissionDatasource.getName(), "test");
+        dbUpdate.dropTable(emissionDatasource.getName(), dataset.getInternalSources()[0].getTable());
         dbUpdate.dropTable(emissionDatasource.getName(), "test_summary");
     }
 
     public void testShouldImportASmallAndSimpleNonPointFilesAndCreateSummary() throws Exception {
-        File folder = new File("test/data/orl/nc");
-        Importer importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint.txt" }, dataset,
-                dbServer, sqlDataTypes);
-        importer.run();
-        SummaryTable summary = new ORLNonPointSummary(emissionDatasource, referenceDatasource, dataset);
-        summary.createSummary();
-        assertEquals(6, countRecords("test"));
+        try {
+            File folder = new File("test/data/orl/nc");
+            Importer importer = new ORLNonPointImporter(folder, new String[] { "small-nonpoint-comma.txt" }, dataset,
+                    dbServer, sqlDataTypes);
+            importer.run();
+            SummaryTable summary = new ORLNonPointSummary(emissionDatasource, referenceDatasource, dataset);
+            summary.createSummary();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        assertEquals(6, countRecords(dataset.getInternalSources()[0].getTable()));
         assertEquals(1, countRecords("test_summary"));
     }
 

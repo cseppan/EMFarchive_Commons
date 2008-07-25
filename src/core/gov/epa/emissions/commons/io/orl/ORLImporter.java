@@ -271,8 +271,8 @@ public class ORLImporter {
 
     private void addAttributes(List<String> commentsList, Dataset dataset) throws ImporterException {
         Comments comments = new Comments(commentsList);
-        if (!comments.have("ORL"))
-            throw new ImporterException("The tag - 'ORL' is mandatory.");
+        if (!comments.hasRightTagFormat("ORL"))
+            throw new ImporterException("The tag - 'ORL' in right format (ORL || ORL POINT, etc.) is mandatory.");
 
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
@@ -282,11 +282,16 @@ public class ORLImporter {
 
         if (!comments.hasContent("YEAR"))
             throw new ImporterException("The tag - 'YEAR' is mandatory.");
-        String year = comments.content("YEAR");
-        dataset.setYear(Integer.parseInt(year));
+        
+        int year = Integer.parseInt(comments.content("YEAR"));
+        
+        if (year >= 2200)
+            throw new ImporterException("Invalid ORL Year: " + year + " ( >= 2200 ).");
+            
+        dataset.setYear(year);
 
         if (!comments.hasContent("EMF_START_DATE") && !comments.hasContent("EMF_END_DATE"))
-            setStartStopDateTimes(dataset, Integer.parseInt(year));
+            setStartStopDateTimes(dataset, year);
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {

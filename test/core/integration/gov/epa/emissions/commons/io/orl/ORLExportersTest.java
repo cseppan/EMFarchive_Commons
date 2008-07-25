@@ -200,7 +200,7 @@ public class ORLExportersTest extends PersistenceTestCase {
         List records = readData(file);
         assertEquals(783, records.size());
 
-        String expectedPattern = "37001,\"35273\",\"\",28100010F0,\"106990\",02/04/02,0.000172125,0,23";
+        String expectedPattern = "\"37001\",\"35273\",\"\",\"28100010F0\",\"106990\",\"02/04/02\",0.000172125,0,23";
         String actual = (String) records.get(0);
         assertEquals(expectedPattern, actual);
         assertEquals(783, exporter.getExportedLinesCount());
