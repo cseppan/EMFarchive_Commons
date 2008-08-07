@@ -400,6 +400,7 @@ public class ORLImporterTest extends HibernateTestCase {
                     dataset, dbServer, sqlDataTypes);
             importer.run();
         } catch (Exception e) {
+            e.printStackTrace();
             assertTrue(e.getMessage().contains("Invalid ORL Year: 2200 ( >= 2200 )."));
         }
     }
