@@ -50,16 +50,14 @@ public class ProjectionPacketExImporterTest extends PersistenceTestCase {
         ProjectionPacketImporter importer = new ProjectionPacketImporter(folder, new String[]{"alm_projections_2.txt"}, 
                 dataset, dbServer, sqlDataTypes);
         importer.run();
+        
+        System.out.println(dataset.getDescription());
 
         File exportfile = File.createTempFile("ProjectPacketExportFile", ".txt");
         ProjectionPacketExporter exporter = new ProjectionPacketExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
-//        System.out.println("Data exported: " + data.size());
-//        System.out.println(data.get(0).toString());
-//        System.out.println(data.get(1).toString());
-//        System.out.println(data.get(data.size()-1).toString());
         assertEquals(66, data.size());
         assertEquals("/PROJECTION 2000 2009/", (String) data.get(0));
         assertEquals("/END/", (String) data.get(65));
@@ -79,17 +77,14 @@ public class ProjectionPacketExImporterTest extends PersistenceTestCase {
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"SRGDESC.txt"));
         importerv.run();
 
+        System.out.println(dataset.getDescription());
+        
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
         ProjectionPacketExporter exporter = new ProjectionPacketExporter(dataset, dbServer, 
                 sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
-        
-//        System.out.println("Data exported: " + data.size());
-//        System.out.println(data.get(0).toString());
-//        System.out.println(data.get(1).toString());
-//        System.out.println(data.get(data.size()-1).toString());
         assertEquals(66, data.size());
         assertEquals("/PROJECTION 2000 2009/", (String) data.get(0));
         assertEquals("/END/", (String) data.get(65));

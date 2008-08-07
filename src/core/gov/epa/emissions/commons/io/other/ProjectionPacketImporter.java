@@ -82,6 +82,8 @@ public class ProjectionPacketImporter implements Importer {
 
             loader.load(reader, dataset, table);
             loadDataset(file, table, formatUnit.tableFormat(), dataset, reader.comments());
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             close(reader);
         }
@@ -97,9 +99,14 @@ public class ProjectionPacketImporter implements Importer {
         }
     }
 
-    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) {
+    private void loadDataset(File file, String table, TableFormat tableFormat, Dataset dataset, List comments) throws Exception {
         DatasetLoader loader = new DatasetLoader(dataset);
         loader.internalSource(file, table, tableFormat);
-        dataset.setDescription(new Comments(comments).all());
+        String desc = new Comments(comments).all();
+        
+        if (desc != null && !desc.isEmpty())
+            desc = desc.replace("/END/", "");
+        
+        dataset.setDescription(desc);
     }
 }
