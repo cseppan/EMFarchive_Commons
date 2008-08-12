@@ -46,7 +46,9 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public static final String orlOnroadInventory = "ORL Onroad Inventory (MBINV)";
 
-    public static final String projectionPacket = "Abbreviated Projection (CSV)";
+    public static final String projectionPacket = "Projection Packet";
+
+    public static final String controlPacket = "Control Packet";
 
     public DatasetType() {
 //        keyValsList = new ArrayList();
