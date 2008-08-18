@@ -60,7 +60,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     }
 
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
-        File folder = new File("test/data/reference");
+        File folder = new File("test/data/csv");
         Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
@@ -72,8 +72,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         exporter.export(file);
 
         List data = readData(file);
-        assertEquals(data.get(0), "pollutant_code,pollutant_name");
-        assertEquals(data.get(8), "\"VOC\",\"VOC\"");
+        assertEquals(data.get(0), "pollutant_code,pollutant_name,fake_amount");
+        assertEquals(data.get(8), "\"VOC\",\"VOC\",15.55");
         assertEquals(8, exporter.getExportedLinesCount());
     }
 

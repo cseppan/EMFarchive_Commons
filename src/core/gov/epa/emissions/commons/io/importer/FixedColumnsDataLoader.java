@@ -90,6 +90,9 @@ public class FixedColumnsDataLoader implements DataLoader {
         int firstCol = tableFormat.getOffset();
         int offSet = tableFormat.getOffset();
         
+        if (record.size() < tableFormat.getBaseLength())
+            throw new ImporterException("Data from file not sufficient to feed the format.");
+        
         Column [] columns = tableFormat.cols();
         
         for (int c = firstCol; c < firstCol+tableFormat.getBaseLength(); c++)

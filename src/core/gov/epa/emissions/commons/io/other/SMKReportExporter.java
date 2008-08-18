@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -283,7 +284,7 @@ public class SMKReportExporter implements Exporter {
             String value = data.getString(i);
 
             if (value != null)
-                writer.write(formatValue(cols, colTypes.get(i).intValue(), i, value));
+                writer.write(formatValue(cols, colTypes.get(i - 1).intValue(), i, value)); //NOTE: SQL count column from 1, colTypes from 0
 
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -310,6 +311,9 @@ public class SMKReportExporter implements Exporter {
 
         if (containsDelimiter(value))
             return "\"" + value + "\"";
+        
+        if (colType == Types.DOUBLE || colType == Types.FLOAT)
+            return new Double(Double.valueOf(value)).toString();
 
         return value;
     }
