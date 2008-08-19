@@ -33,10 +33,10 @@ us_timb,D:\MIMS\emiss_shp2003\us\,SPHERE,"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40
 can_socio_econ,D:\MIMS\emiss_shp2003\canada\,SPHERE,"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97",Grided socio-economic data and total labor force 15 years and over by industry source,Extracted from 1996 Census of Population,
 can_rds,D:\MIMS\emiss_shp2003\canada\,SPHERE,"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97",Length of roads in km in grid cell,Provided by Environment Canada,
 mexmunic_new,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico polpulation data in counites,,
-mexico_air_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Airport locations for Mexico,,
-mexico_ports_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Ports locations for Mexico,,
-mexico_region,D:\SPAT\data\shapefiles\Mexico\mexico_region.shp,SPHERE,LATLON,Mexico State population,,,
-mexico_rivers_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico rivers,,
-mexico_roads_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico roads,,
-mexico_rr_fips,D:\SPAT\data\shapefiles\Mexico,SPHERE,LATLON,Mexico railroads,,
-mex_hh,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico State population and housing units,,
+mexico_air_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Airport locations for Mexico
+mexico_ports_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Ports locations for Mexico
+mexico_region,D:\SPAT\data\shapefiles\Mexico\mexico_region.shp,SPHERE,LATLON,Mexico State population
+mexico_rivers_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico rivers
+mexico_roads_fips,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico roads
+mexico_rr_fips,D:\SPAT\data\shapefiles\Mexico,SPHERE,LATLON,Mexico railroads
+mex_hh,D:\SPAT\data\shapefiles\Mexico\,SPHERE,LATLON,Mexico State population and housing units

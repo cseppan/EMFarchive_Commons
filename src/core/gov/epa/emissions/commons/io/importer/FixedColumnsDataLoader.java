@@ -90,9 +90,6 @@ public class FixedColumnsDataLoader implements DataLoader {
         int firstCol = tableFormat.getOffset();
         int offSet = tableFormat.getOffset();
         
-        if (record.size() < tableFormat.getBaseLength())
-            throw new ImporterException("Data from file not sufficient to feed the format.");
-        
         Column [] columns = tableFormat.cols();
         
         for (int c = firstCol; c < firstCol+tableFormat.getBaseLength(); c++)
@@ -101,6 +98,9 @@ public class FixedColumnsDataLoader implements DataLoader {
             //System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
             if (col.sqlType().toLowerCase().startsWith("varchar"))
             {  
+                if (c - offSet > record.size() - 1)
+                    break;
+                
                String item = record.token(c-offSet);
                if (col.width() < item.length())
                    throw new ImporterException ("Value "+item+" is too large for the column "+ col.name());
