@@ -15,7 +15,7 @@ public class DelimitedTokenizer {
 
     public String[] doTokenize(String input) {
         Matcher m = p.matcher(input);
-        List tokens = new ArrayList();
+        List<String> tokens = new ArrayList<String>();
         while (m.find()) {
             String token = input.substring(m.start(), m.end()).trim();
 
@@ -31,7 +31,7 @@ public class DelimitedTokenizer {
             }
         }
 
-        return (String[]) tokens.toArray(new String[0]);
+        return tokens.toArray(new String[0]);
 
     }
 

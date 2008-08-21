@@ -288,6 +288,12 @@ public class GenericExporter implements Exporter {
 
         if ((colType.startsWith("VARCHAR") || colType.startsWith("TEXT")) && column.width() > 10)
             return "\"" + val + "\"";
+        
+        if (colType.startsWith("DOUBLE")) {
+            String temp = new Double(data.getDouble(column.name())).toString();
+            
+            return temp.equals("0.0") ? "0" : temp;
+        }
 
         return val;
     }

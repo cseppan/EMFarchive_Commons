@@ -31,7 +31,7 @@ public class DepricatedDelimitedFileFormat implements FileFormat {
         List columns = new ArrayList();
 
         for (int i = 0; i < cols; i++)
-            columns.add(new Column("Col_" + i, types.stringType(32), new StringFormatter(32)));
+            columns.add(new Column("Col_" + i, types.stringType(32), 32, new StringFormatter(32)));
 
         return (Column[]) columns.toArray(new Column[0]);
     }

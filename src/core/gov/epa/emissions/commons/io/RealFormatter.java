@@ -18,6 +18,7 @@ public class RealFormatter implements ColumnFormatter {
         this.width = width;
     }
 
+    //FIXME: we probably should never alow this construction!!! To have a width equaled to 0 means one will get nothing out of formatter
     public RealFormatter() {
         this.spaces = 0;
         this.width = 0;
@@ -27,8 +28,12 @@ public class RealFormatter implements ColumnFormatter {
         if (data.getString(name) == null || data.getFloat(name) == -9)
             return getSpaces(this.width + this.spaces);
 
-        String dataValue = data.getString(name);
+        String dataValue = new Double(data.getDouble(name)).toString(); //add for rounding off unnecessary digits
         int dataWidth = dataValue.length();
+        
+        //NOTE: if width never specified, it should always be the width of the data itself
+        if (this.width == 0)
+            this.width = dataWidth;
 
         if (dataWidth < this.width) {
             int prefix = this.width - dataWidth;

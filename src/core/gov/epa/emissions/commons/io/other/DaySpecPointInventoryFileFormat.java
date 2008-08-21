@@ -41,7 +41,7 @@ public class DaySpecPointInventoryFileFormat implements FileFormat, FixedWidthFi
         //a DateFormater
         columns.add(new Column("DATE", types.stringType(8), 8, new StringFormatter(8)));
         columns.add(new Column("TIMEZONE", types.stringType(3), 3, new StringFormatter(3)));
-        columns.add(new Column("DAILYTOTAL", types.realType(), 18, new RealFormatter()));
+        columns.add(new Column("DAILYTOTAL", types.realType(), 18, new RealFormatter(18,0)));
         //FIXME: SCC code is a 10 digit code
         columns.add(new Column("SCC", types.stringType(9), 9, new StringFormatter(9)));
         

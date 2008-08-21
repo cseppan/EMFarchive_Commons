@@ -94,8 +94,8 @@ public class SpeciationComboProfileExImTest extends PersistenceTestCase {
         exporter.export(exportfile);
 
         List data = readData(exportfile);
-        String line1 = "\"EXH_VOC\",001000,1,2,8750,1,8751,0";
-        String line1000 = "\"EXH_VOC\",006047,9,2,8750,1,8751,0";
+        String line1 = "\"EXH_VOC\",001000,1,2,8750,1.0,8751,0";
+        String line1000 = "\"EXH_VOC\",006047,9,2,8750,1.0,8751,0";
         assertEquals(data.get(0), line1);
         assertEquals(data.get(999), line1000);
         assertEquals(1000, data.size());

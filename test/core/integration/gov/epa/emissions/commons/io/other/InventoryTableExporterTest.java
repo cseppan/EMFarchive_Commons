@@ -60,7 +60,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         List data = readData(file);
 
         String expectedFirst = "HGSUM           593748                   Y 0.8696      N     tons/yr          Mercury, Unspeciated                    Methyl Mercury                          ";
-        String expectedLast = "DIMTHYLAMAZ     60117                    N      1  N   N     tons/yr          Dimethyl aminoazobenzene, 4- , fine PM  4-Dimethylaminoazobenzene               ";
+        String expectedLast = "DIMTHYLAMAZ     60117                    N    1.0  N   N     tons/yr          Dimethyl aminoazobenzene, 4- , fine PM  4-Dimethylaminoazobenzene               ";
         assertEquals(expectedFirst, data.get(0));
         assertEquals(expectedLast, data.get(597));
         assertEquals(598, countRecords());

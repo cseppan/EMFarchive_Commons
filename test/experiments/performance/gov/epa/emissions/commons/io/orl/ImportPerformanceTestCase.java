@@ -61,7 +61,7 @@ public class ImportPerformanceTestCase extends PerformanceTestCase {
     protected int countRecords() {
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        return tableReader.count(datasource.getName(), dataset.getName());
+        return tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
 
 }

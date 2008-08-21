@@ -41,7 +41,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have enctountered an error(missing cols) on record 5, and dropped the table",
-                    tableReader.exists(datasource.getName(), dataset.getName()));
+                    tableReader.exists(datasource.getName(), dataset.getInternalSources()[0].getTable()));
             return;
         }
 
@@ -58,7 +58,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to missing 'ORL' tag, and dropped the table", tableReader
-                    .exists(datasource.getName(), dataset.getName()));
+                    .exists(datasource.getName(), dataset.getInternalSources()[0].getTable()));
             return;
         }
 
@@ -75,7 +75,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to missing 'COUNTRY' tag, and dropped the table",
-                    tableReader.exists(datasource.getName(), dataset.getName()));
+                    tableReader.exists(datasource.getName(), dataset.getInternalSources()[0].getTable()));
             return;
         }
 
@@ -92,7 +92,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to empty 'COUNTRY' tag, and dropped the table",
-                    tableReader.exists(datasource.getName(), dataset.getName()));
+                    tableReader.exists(datasource.getName(), dataset.getInternalSources()[0].getTable()));
             return;
         }
 
@@ -110,7 +110,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to missing 'YEAR' tag, and dropped the table",
-                    tableReader.exists(datasource.getName(), dataset.getName()));
+                    tableReader.exists(datasource.getName(), dataset.getInternalSources()[0].getTable()));
             return;
         }
 
@@ -127,7 +127,7 @@ public class OrlImporterErrorsTest extends PersistenceTestCase {
             Datasource datasource = dbServer.getEmissionsDatasource();
             TableReader tableReader = tableReader(datasource);
             assertFalse("should have encountered an error due to empty 'YEAR' tag, and dropped the table", tableReader
-                    .exists(datasource.getName(), dataset.getName()));
+                    .exists(datasource.getName(), dataset.getInternalSources()[0].getTable()));
             return;
         }
 

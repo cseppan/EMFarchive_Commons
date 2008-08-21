@@ -34,14 +34,21 @@ public class SpeciationCrossReferenceExporter extends GenericExporter {
                 int index = lasttoken.indexOf("/POINT DEFN/");
                 if (index < 0)
                     writer.print("#" + lasttoken);
-                else
-                    lastHeaderLine = lasttoken;
+                else {
+                    String temp = lasttoken.substring(0, index);
+
+                    if (temp != null && !temp.trim().isEmpty())
+                        writer.print("#" + temp);
+                    
+                    lastHeaderLine = lasttoken.substring(index);
+                }
             }
 
+            writer.println();
             printExportInfo(writer);
 
-            if (lastHeaderLine != null)
-                writer.print(lastHeaderLine);
+            if (lastHeaderLine != null && lastHeaderLine.contains("/POINT DEFN/"))
+                writer.println(lastHeaderLine);
         }
     }
 

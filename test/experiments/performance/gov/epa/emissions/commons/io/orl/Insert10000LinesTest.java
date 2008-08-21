@@ -19,7 +19,7 @@ public class Insert10000LinesTest extends ImportPerformanceTestCase {
                 System.out.println("10000 inserts completed in seconds " + (time() - before));
                 assertEquals(10000, countRecords());
             } finally {
-                dropTable(dataset.getName(), dbServer.getEmissionsDatasource());
+                dropTable(dataset.getInternalSources()[0].getTable(), dbServer.getEmissionsDatasource());
             }
         }
     }

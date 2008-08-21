@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.other;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.DatasetType;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -43,7 +44,10 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), "GSCNV");
+        InternalSource[] src = dataset.getInternalSources();
+
+        if (src != null && src.length > 0)
+            dbUpdate.dropTable(datasource.getName(), src[0].getTable());
     }
 
     public void testImportVersionedGSCNVFile() throws Exception {
@@ -51,10 +55,14 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         Importer importer = new GSCNVImporter(folder, new String[] { "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt" },
                 dataset, localDbServer, sqlDataTypes);
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
+                "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
         importerv.run();
 
-        assertEquals(1231, countRecords(dbServer, "GSCNV"));
+        InternalSource[] src = dataset.getInternalSources();
+
+        if (src != null && src.length > 0)
+            assertEquals(1231, countRecords(dbServer, src[0].getTable()));
     }
 
     public void testExportVersionedGSCNVFile() throws Exception {
@@ -62,10 +70,14 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         File folder = new File("test/data/other");
         Importer importer = new GSCNVImporter(folder, new String[] { "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt" },
                 dataset, localDbServer, sqlDataTypes);
-        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
+        VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,
+                "gscnv_cb05_notoxics_cmaq_29aug2006.out.txt"));
         importerv.run();
 
-        assertEquals(1231, countRecords(dbServer, "GSCNV"));
+        InternalSource[] src = dataset.getInternalSources();
+
+        if (src != null && src.length > 0)
+            assertEquals(1231, countRecords(dbServer, src[0].getTable()));
 
         Exporter exporter = new GSCNVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File file = doExport(exporter);

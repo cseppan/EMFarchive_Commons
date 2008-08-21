@@ -42,7 +42,7 @@ public class IDAPrecisionsTest extends PersistenceTestCase {
         // assert
         Datasource datasource = dbServer.getEmissionsDatasource();
         TableReader tableReader = tableReader(datasource);
-        assertEquals(11, tableReader.count(datasource.getName(), dataset.getName()));
+        assertEquals(11, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
     }
 
 }

@@ -93,6 +93,9 @@ public class SMKReportFileFormat implements FileFormat, DelimitedFileFormat {
     }
     
     private String fillSpacesInColName(String col) {
+        if (Character.isDigit(col.charAt(0)))
+            col = "_" + col;
+        
         return  col.replace(' ', '_');
     }
 

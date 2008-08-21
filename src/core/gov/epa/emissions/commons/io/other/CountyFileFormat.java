@@ -35,21 +35,21 @@ public class CountyFileFormat implements FileFormat, FixedWidthFileFormat {
         Column spacer4 = new Column("spacer4", types.stringType(1), 1, new StringFormatter(1));
         Column timezone = new Column("TIMEZONE", types.stringType(3), 3, new StringFormatter(3));
         Column daylightsaving = new Column("DAYLIGHTSAVING", types.stringType(1), 1, new StringFormatter(1));
-        Column centerlongitude = new Column("CENTERLONGITUDE", types.realType(), 9, new RealFormatter());
+        Column centerlongitude = new Column("CENTERLONGITUDE", types.realType(), 9, new RealFormatter(9,0));
         Column spacer5 = new Column("spacer5", types.stringType(1), 1, new StringFormatter(1));
-        Column centerlatitude = new Column("CENTERLATITUDE", types.realType(), 8, new RealFormatter());
+        Column centerlatitude = new Column("CENTERLATITUDE", types.realType(), 8, new RealFormatter(8,0));
         Column spacer6 = new Column("spacer6", types.stringType(1), 1, new StringFormatter(1));
-        Column countyarea = new Column("COUNTYAREA", types.realType(), 12, new RealFormatter());
+        Column countyarea = new Column("COUNTYAREA", types.realType(), 12, new RealFormatter(12,0));
         Column spacer7 = new Column("spacer7", types.stringType(1), 1, new StringFormatter(1));
-        Column westlongitude = new Column("WESTLONGITUDE", types.realType(), 9, new RealFormatter());
+        Column westlongitude = new Column("WESTLONGITUDE", types.realType(), 9, new RealFormatter(9,0));
         Column spacer8 = new Column("spacer8", types.stringType(1), 1, new StringFormatter(1));
-        Column eastlongitude = new Column("EASTLONGITUDE", types.realType(), 9, new RealFormatter());
+        Column eastlongitude = new Column("EASTLONGITUDE", types.realType(), 9, new RealFormatter(9,0));
         Column spacer9 = new Column("spacer9", types.stringType(1), 1, new StringFormatter(1));
-        Column southlatitude = new Column("SOUTHLATITUDE", types.realType(), 8, new RealFormatter());
+        Column southlatitude = new Column("SOUTHLATITUDE", types.realType(), 8, new RealFormatter(8,0));
         Column spacer10 = new Column("spacer10", types.stringType(1), 1, new StringFormatter(1));
-        Column northlatitude = new Column("NORTHLATITUDE", types.realType(), 8, new RealFormatter());
+        Column northlatitude = new Column("NORTHLATITUDE", types.realType(), 8, new RealFormatter(8,0));
         Column spacer11 = new Column("spacer11", types.stringType(1), 1, new StringFormatter(1));
-        Column population = new Column("POPULATION", types.realType(), 8, new RealFormatter());
+        Column population = new Column("POPULATION", types.realType(), 8, new RealFormatter(8,0));
 
         return new Column[] { spacer1, statebrev, spacer2, name, spacer3, countrycode,
                 statecode, countycode, aerosstatecode, aeroscountycode, spacer4, timezone,

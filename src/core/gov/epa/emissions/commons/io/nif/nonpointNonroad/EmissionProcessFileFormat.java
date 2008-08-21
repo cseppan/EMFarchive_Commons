@@ -42,27 +42,27 @@ public class EmissionProcessFileFormat implements FileFormat, FixedWidthFileForm
 		Column naicsCode = new Column("naics_code", types.stringType(6), 6,
 				new StringFormatter(6));
 		Column winterThruputPct = new Column("winter_thruput_pct", types
-				.realType(), 3, new RealFormatter());
+				.realType(), 3, new RealFormatter(3,0));
 		Column springThruputPct = new Column("spring_thruput_pct", types
-				.realType(), 3, new RealFormatter());
+				.realType(), 3, new RealFormatter(3,0));
 		Column summerThruputPct = new Column("summer_thruput_pct", types
-				.realType(), 3, new RealFormatter());
+				.realType(), 3, new RealFormatter(3,0));
 		Column fallThruputPct = new Column("fall_thruput_pct",
-				types.realType(), 3, new RealFormatter());
+				types.realType(), 3, new RealFormatter(3,0));
 		Column avgDaysPerWeek = new Column("avg_days_per_week", types
-				.realType(), 1, new RealFormatter());
+				.realType(), 1, new RealFormatter(1,0));
 		Column avgWeeksPerYear = new Column("avg_weeks_per_year", types
-				.realType(), 2, new RealFormatter());
+				.realType(), 2, new RealFormatter(2,0));
 		Column avgHoursPerDay = new Column("avg_hours_per_day", types
-				.realType(), 2, new RealFormatter());
+				.realType(), 2, new RealFormatter(2,0));
 		Column avgHoursPerYear = new Column("avg_hours_per_year", types
-				.realType(), 4, new RealFormatter());
+				.realType(), 4, new RealFormatter(4,0));
 		Column heatContent = new Column("heat_content", types.realType(), 8,
-				new RealFormatter());
+				new RealFormatter(8,0));
 		Column sulfurContent = new Column("sulfur_content", types.realType(),
-				5, new RealFormatter());
+				5, new RealFormatter(5,0));
 		Column ashContent = new Column("ash_content", types.realType(), 5,
-				new RealFormatter());
+				new RealFormatter(5,0));
 		Column mactCompliance = new Column("mact_compliance", types
 				.stringType(6), 6, new StringFormatter(6));
 		Column submittalFlag = new Column("submittal_flag",

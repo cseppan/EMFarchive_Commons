@@ -44,25 +44,25 @@ public class EmissionRecordsFileFormat implements FileFormat, FixedWidthFileForm
 		Column spacer2 = new Column("spacer2", types.stringType(2), 2,
 				new StringFormatter(2));
 		Column startTime = new Column("start_time", types.realType(), 4,
-				new RealFormatter());
+				new RealFormatter(4,0));
 		Column endTime = new Column("end_time", types.realType(), 4,
-				new RealFormatter());
+				new RealFormatter(4,0));
 		Column emissionValue = new Column("emission_value", types.realType(),
-				20, new RealFormatter());
+				20, new RealFormatter(20,0));
 		Column emissionUnitsCode = new Column("emission_units_code", types
 				.stringType(10), 10, new StringFormatter(10));
 		Column emissionType = new Column("emission_type", types.stringType(2),
 				2, new StringFormatter(2));
 		Column reliabilityInd = new Column("reliability_ind", types.realType(),
-				5, new RealFormatter());
+				5, new RealFormatter(5,0));
 		Column factorValue = new Column("factor_value", types.realType(), 10,
-				new RealFormatter());
+				new RealFormatter(10,0));
 		Column factorUnitsNum = new Column("factor_units_num", types
 				.stringType(10), 10, new StringFormatter(10));
 		Column factorUnitsDenom = new Column("factor_units_denom", types
 				.stringType(10), 10, new StringFormatter(10));
 		Column materialCode = new Column("material_code", types.realType(), 4,
-				new RealFormatter());
+				new RealFormatter(4,0));
 		Column materialIO = new Column("material_io", types.stringType(10), 10,
 				new StringFormatter(10));
 		Column spacer3 = new Column("spacer3", types.stringType(5), 5,
@@ -72,11 +72,11 @@ public class EmissionRecordsFileFormat implements FileFormat, FixedWidthFileForm
 		Column efReliabilityInd = new Column("ef_reliability_ind", types
 				.stringType(5), 5, new StringFormatter(5));
 		Column ruleEffect = new Column("rule_effect", types.realType(), 5,
-				new RealFormatter());
+				new RealFormatter(5,0));
 		Column ruleEffectMethod = new Column("rule_effect_method", types
 				.stringType(2), 2, new StringFormatter(2));
 		Column rulePenetration = new Column("rule_penetration", types
-				.realType(), 5, new RealFormatter());
+				.realType(), 5, new RealFormatter(5,0));
 		Column submittalFlag = new Column("submittal_flag",
 				types.stringType(4), 4, new StringFormatter(4));
 		Column tribalCode = new Column("tribal_code", types.stringType(4), 4,

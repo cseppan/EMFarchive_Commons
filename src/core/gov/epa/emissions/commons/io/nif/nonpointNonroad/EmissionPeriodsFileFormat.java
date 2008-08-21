@@ -40,25 +40,25 @@ public class EmissionPeriodsFileFormat implements FileFormat, FixedWidthFileForm
 		Column spacer1 = new Column("spacer1", types.stringType(2), 2,
 				new StringFormatter(2));
 		Column start_time = new Column("start_time", types.realType(), 4,
-				new RealFormatter());
+				new RealFormatter(4,0));
 		Column end_time = new Column("end_time", types.realType(), 4,
-				new RealFormatter());
+				new RealFormatter(4,0));
 		Column thruput = new Column("thruput", types.realType(), 10,
-				new RealFormatter());
+				new RealFormatter(10,0));
 		Column thruputUnits = new Column("thruput_units", types.stringType(10),
 				10, new StringFormatter(10));
 		Column materialCode = new Column("material_code", types.realType(), 4,
-				new RealFormatter());
+				new RealFormatter(4,0));
 		Column materialIO = new Column("material_io", types.stringType(10), 10,
 				new StringFormatter(10));
 		Column daysPerWeek = new Column("days_per_week", types.realType(), 1,
-				new RealFormatter());
+				new RealFormatter(1,0));
 		Column weeksPerPeriod = new Column("weeks_per_period",
-				types.realType(), 2, new RealFormatter());
+				types.realType(), 2, new RealFormatter(2,0));
 		Column hoursPerDay = new Column("hours_per_day", types.realType(), 2,
-				new RealFormatter());
+				new RealFormatter(2,0));
 		Column hoursPerPeriod = new Column("hours_per_period",
-				types.realType(), 4, new RealFormatter());
+				types.realType(), 4, new RealFormatter(4,0));
 		Column submittal_flag = new Column("submittal_flag", types
 				.stringType(4), 4, new StringFormatter(4));
 		Column tribal_code = new Column("tribal_code", types.stringType(4), 4,
