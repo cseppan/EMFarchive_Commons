@@ -31,11 +31,11 @@ public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols, 
     }
 
     public Column[] cols() {
-        List allCols = new ArrayList();
+        List<Column> allCols = new ArrayList<Column>();
         allCols.addAll(Arrays.asList(requiredCols));
         allCols.addAll(Arrays.asList(optionalCols));
 
-        return (Column[]) allCols.toArray(new Column[0]);
+        return allCols.toArray(new Column[0]);
     }
 
     public Column[] optionalCols() {
@@ -52,7 +52,7 @@ public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols, 
     }
 
     public Column[] createRequiredCols(SqlDataTypes types) {
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
 
         columns.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
         columns.add(new Column("Monthly_Code", types.intType(), new IntegerFormatter()));
@@ -60,11 +60,11 @@ public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols, 
         columns.add(new Column("Diurnal_Code", types.intType(), new IntegerFormatter()));
         
 
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
 
     private Column[] createOptionalCols(SqlDataTypes types) {
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
         
         columns.add(new Column("Pollutants", types.stringType(32), 32, new StringFormatter(32)));
         columns.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
@@ -75,7 +75,7 @@ public class TemporalReferenceFileFormat implements FileFormatWithOptionalCols, 
         columns.add(new Column("Characteristic_4", types.stringType(32), 32, new StringFormatter(32)));
         columns.add(new Column("Characteristic_5", types.stringType(32), 32, new StringFormatter(32)));
 
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
 
 }

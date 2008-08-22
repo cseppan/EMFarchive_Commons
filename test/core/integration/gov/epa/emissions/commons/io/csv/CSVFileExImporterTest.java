@@ -63,7 +63,6 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         File folder = new File("test/data/csv");
         Importer importer = new CSVImporter(folder, new String[] { "pollutants.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
-
         int rows = countRecords();
         assertEquals(8, rows);
 
@@ -73,6 +72,25 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         List data = readData(file);
         assertEquals(data.get(0), "pollutant_code,pollutant_name,fake_amount");
+        assertEquals(data.get(8), "\"VOC\",\"VOC\",15.55");
+        assertEquals(8, exporter.getExportedLinesCount());
+    }
+    
+    public void testImportASmallAndSimplePointFileWithDigitsInColumnNames() throws Exception {
+        File folder = new File("test/data/csv");
+        Importer importer = new CSVImporter(folder, new String[] { "pollutants-with-digit-column-names.txt" }, dataset, dbServer, sqlDataTypes);
+        importer.run();
+        
+        int rows = countRecords();
+        assertEquals(8, rows);
+
+        File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
+        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        exporter.export(file);
+
+        List data = readData(file);
+        System.out.println(data.get(0));
+        assertEquals(data.get(0), "_123pollutant_code,_456pollutant_4name,fake_amount567");
         assertEquals(data.get(8), "\"VOC\",\"VOC\",15.55");
         assertEquals(8, exporter.getExportedLinesCount());
     }
@@ -135,8 +153,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
             exportFile(file, dataset);
 
             importFile(file.getParentFile(), file.getName(), repeatDataset);
-//            File repeatFile = File.createTempFile("RepeatExportedCommaDelimitedFile", ".txt");
-            File repeatFile = new File("C:\\RepeatExportedCommaDelimitedFile.txt");
+            File repeatFile = File.createTempFile("RepeatExportedCommaDelimitedFile", ".txt");
             exportFile(repeatFile, repeatDataset);
 
             List data = readData(file);

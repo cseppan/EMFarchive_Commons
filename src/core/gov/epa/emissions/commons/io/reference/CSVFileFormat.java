@@ -34,13 +34,10 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
         
         for (int i = 0; i < colNames.length; i++) {
             String name = replaceSpecialChars(colNames[i]);
-            //System.out.println("column type   " + i + " " + dataTypes[i]); 
             if (dataTypes[i].toUpperCase().startsWith("VARCHAR")){
                 int startIndex = dataTypes[i].lastIndexOf("(");
                 int endIndex = dataTypes[i].lastIndexOf(")");
-                //System.out.println(dataTypes[i]+ ": startIndes "+ startIndex + " endIndex " + endIndex);
                 int charLen = Integer.parseInt(dataTypes[i].substring(++startIndex, endIndex));
-                //System.out.println("charlen is  " + charLen); 
                 if (charLen == 0)
                     cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
                 else
@@ -61,22 +58,25 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
             else 
                 throw new ImporterException(
                 "Column type " + dataTypes[i] + " doesn't exist. ");
-                //cols.add(new Column(name, types.stringType(255), 255, new StringFormatter(255)));
         }
+        
         return cols.toArray(new Column[0]);
     }
 
     private Column[] createCols(String[] colNames) {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
         for (int i = 0; i < colNames.length; i++) {
             String name = replaceSpecialChars(colNames[i]);
             Column col = new Column(name, types.stringType(255), 255, new StringFormatter(255));
             cols.add(col);
         }
-        return (Column[]) cols.toArray(new Column[] {});
+        return cols.toArray(new Column[] {});
     }
 
     private String replaceSpecialChars(String colName) {
+        if (Character.isDigit(colName.charAt(0)))
+            colName = "_" + colName; 
+        
         return colName.replace(' ', '_');
     }
 

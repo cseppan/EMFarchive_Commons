@@ -19,14 +19,14 @@ public class NIFFileFormat {
     
     public Column[] createCols(String[] names, String[] colTypes, int[] widths) {
         
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
         for (int i = 0; i < names.length; i++) {
             String type = sqlType(colTypes[i], widths[i], sqlDataTypes);
             ColumnFormatter formatter = colFormatter(colTypes[i], widths[i]);
             Column col = new Column(names[i], type, widths[i], formatter);
             columns.add(col);
         }
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
 
     private String sqlType(String type, int width, SqlDataTypes sqlTypes) {

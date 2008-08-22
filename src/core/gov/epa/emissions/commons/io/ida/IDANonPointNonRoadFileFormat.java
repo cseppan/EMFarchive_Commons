@@ -12,7 +12,7 @@ import java.util.List;
 
 public class IDANonPointNonRoadFileFormat implements IDAFileFormat, FixedWidthFileFormat {
 
-    private List cols;
+    private List<Column> cols;
 
     private SqlDataTypes sqlDataTypes;
 
@@ -30,11 +30,11 @@ public class IDANonPointNonRoadFileFormat implements IDAFileFormat, FixedWidthFi
     }
 
     public Column[] cols() {
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
-    private List createCols(SqlDataTypes types) {
-        List cols = new ArrayList();
+    private List<Column> createCols(SqlDataTypes types) {
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("STID", types.intType(), 2, new IntegerFormatter(2,0)));
         cols.add(new Column("CYID", types.intType(), 3, new IntegerFormatter(3,0)));
@@ -42,10 +42,10 @@ public class IDANonPointNonRoadFileFormat implements IDAFileFormat, FixedWidthFi
         return cols;
     }
 
-    private List pollutantCols(String[] pollutants, SqlDataTypes types) {
-        List cols = new ArrayList();
+    private List<Column> pollutantCols(String[] pollutants, SqlDataTypes types) {
+        List<Column> cols = new ArrayList<Column>();
         for (int i = 0; i < pollutants.length; i++) {
-            cols.add(new Column("" + pollutants[i], types.realType(), 10, new RealFormatter(10,0)));
+            cols.add(new Column(replaceSpecialChars(pollutants[i]), types.realType(), 10, new RealFormatter(10,0)));
             cols.add(new Column("AVD_" + pollutants[i], types.realType(), 10, new RealFormatter(10,0)));
             cols.add(new Column("EMF_" + pollutants[i], types.realType(), 11, new RealFormatter(11,0)));
             cols.add(new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter(7,0)));
@@ -53,6 +53,13 @@ public class IDANonPointNonRoadFileFormat implements IDAFileFormat, FixedWidthFi
             cols.add(new Column("RP_" + pollutants[i], types.realType(), 6, new RealFormatter(6,0)));
         }
         return cols;
+    }
+    
+    private String replaceSpecialChars(String colName) {
+        if (Character.isDigit(colName.charAt(0)))
+            colName = "_" + colName; 
+        
+        return colName.replace(' ', '_');
     }
 
 }

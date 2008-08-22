@@ -13,7 +13,7 @@ import java.util.List;
 
 public class IDAPointFileFormat implements IDAFileFormat, FixedWidthFileFormat {
 
-    private List cols;
+    private List<Column> cols;
     
     private SqlDataTypes sqlTypes;
 
@@ -31,19 +31,19 @@ public class IDAPointFileFormat implements IDAFileFormat, FixedWidthFileFormat {
     }
 
     public Column[] cols() {
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
-    private List createCols(SqlDataTypes types) {
-        List cols = new ArrayList();
+    private List<Column> createCols(SqlDataTypes types) {
+        List<Column> cols = new ArrayList<Column>();
         cols.addAll(createMandatoryCols(types));
         return cols;
     }
 
-    private List pollutantsBasedCols(SqlDataTypes types, String[] pollutants) {
-        List pollCols = new ArrayList();
+    private List<Column> pollutantsBasedCols(SqlDataTypes types, String[] pollutants) {
+        List<Column> pollCols = new ArrayList<Column>();
         for (int i = 0; i < pollutants.length; i++) {
-            pollCols.add( new Column("" + pollutants[i], types.realType(), 13, new RealFormatter(13,0)));
+            pollCols.add( new Column(replaceSpecialChars(pollutants[i]), types.realType(), 13, new RealFormatter(13,0)));
             pollCols.add( new Column("AVD_" + pollutants[i], types.realType(), 13, new RealFormatter(13,0)));
             pollCols.add( new Column("CE_" + pollutants[i], types.realType(), 7, new RealFormatter(7,0)));
             pollCols.add( new Column("RE_" + pollutants[i], types.realType(), 3, new RealFormatter(3,0)));
@@ -54,8 +54,8 @@ public class IDAPointFileFormat implements IDAFileFormat, FixedWidthFileFormat {
         return pollCols;
     }
 
-    private List createMandatoryCols(SqlDataTypes types) {
-        List cols = new ArrayList();
+    private List<Column> createMandatoryCols(SqlDataTypes types) {
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("STID", types.intType(), 2, new IntegerFormatter(2,0)));
         cols.add(new Column("CYID", types.intType(), 3, new IntegerFormatter(3,0)));
@@ -96,6 +96,13 @@ public class IDAPointFileFormat implements IDAFileFormat, FixedWidthFileFormat {
         cols.add(new Column("OFFSHORE", types.stringType(1), 1, new StringFormatter(1)));
 
         return cols;
+    }
+    
+    private String replaceSpecialChars(String colName) {
+        if (Character.isDigit(colName.charAt(0)))
+            colName = "_" + colName; 
+        
+        return colName.replace(' ', '_');
     }
 
     

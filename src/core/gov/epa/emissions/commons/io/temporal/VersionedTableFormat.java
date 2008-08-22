@@ -39,7 +39,7 @@ public class VersionedTableFormat implements TableFormat {
     }
 
     private Column[] createCols(FileFormat base, SqlDataTypes types) {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
         offset =4; 
         cols.addAll(Arrays.asList(versionCols(types)));
         cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
@@ -47,11 +47,11 @@ public class VersionedTableFormat implements TableFormat {
         Column inlineComments = new Column("Comments", types.stringType(256), new StringFormatter(256));
         cols.add(inlineComments);
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
     private Column[] createCols(FileFormat base, SqlDataTypes types, String lineNum) {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
         offset =5; 
         cols.addAll(Arrays.asList(versionCols(types)));
         cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
@@ -59,7 +59,7 @@ public class VersionedTableFormat implements TableFormat {
         Column inlineComments = new Column("Comments", types.stringType(256), new StringFormatter(256));
         cols.add(inlineComments);
         
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
     private Column[] versionCols(SqlDataTypes types) {

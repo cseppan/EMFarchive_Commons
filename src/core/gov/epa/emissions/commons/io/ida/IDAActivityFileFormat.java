@@ -14,11 +14,11 @@ import java.util.List;
 
 public class IDAActivityFileFormat implements IDAFileFormat, FileFormatWithOptionalCols, DelimitedFileFormat {
 
-    private List requiredCols;
+    private List<Column> requiredCols;
 
     private SqlDataTypes sqlDataTypes;
 
-    private List optionalCols;
+    private List<Column> optionalCols;
 
     private FillDefaultValues filler;
 
@@ -37,14 +37,14 @@ public class IDAActivityFileFormat implements IDAFileFormat, FileFormatWithOptio
     }
 
     public Column[] cols() {
-        List allCols = new ArrayList();
+        List<Column> allCols = new ArrayList<Column>();
         allCols.addAll(requiredCols);
         allCols.addAll(optionalCols);
-        return (Column[])allCols.toArray(new Column[0]);
+        return allCols.toArray(new Column[0]);
     }
 
-    private List createRequiredCols(SqlDataTypes types) {
-        List cols = new ArrayList();
+    private List<Column> createRequiredCols(SqlDataTypes types) {
+        List<Column> cols = new ArrayList<Column>();
 
         cols.add(new Column("STID", types.intType(), new IntegerFormatter()));
         cols.add(new Column("CYID", types.intType(), new IntegerFormatter()));
@@ -53,21 +53,28 @@ public class IDAActivityFileFormat implements IDAFileFormat, FileFormatWithOptio
         return cols;
     }
 
-    private List pollutantCols(String[] pollutants, SqlDataTypes types) {
-        List cols = new ArrayList();
+    private List<Column> pollutantCols(String[] pollutants, SqlDataTypes types) {
+        List<Column> cols = new ArrayList<Column>();
         for (int i = 0; i < pollutants.length; i++) {
-            Column col = new Column(pollutants[i], types.realType(), new RealFormatter());
+            Column col = new Column(replaceSpecialChars(pollutants[i]), types.realType(), new RealFormatter());
             cols.add(col);
         }
         return cols;
     }
+    
+    private String replaceSpecialChars(String colName) {
+        if (Character.isDigit(colName.charAt(0)))
+            colName = "_" + colName; 
+        
+        return colName.replace(' ', '_');
+    }
 
     public Column[] optionalCols() {
-        return (Column[]) optionalCols.toArray(new Column[0]);
+        return optionalCols.toArray(new Column[0]);
     }
 
     public Column[] minCols() {
-        return (Column[]) requiredCols.toArray(new Column[0]);
+        return requiredCols.toArray(new Column[0]);
     }
 
     public void fillDefaults(List data, long datasetId) {

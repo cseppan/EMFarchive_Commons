@@ -37,15 +37,15 @@ public class SpeciationCrossRefFileFormat implements FileFormatWithOptionalCols,
     }
 
     private Column[] asArray(Column[] minCols, Column[] optionalCols) {
-        List list = new ArrayList();
+        List<Column> list = new ArrayList<Column>();
         list.addAll(Arrays.asList(minCols));
         list.addAll(Arrays.asList(optionalCols));
 
-        return (Column[]) list.toArray(new Column[0]);
+        return list.toArray(new Column[0]);
     }
     
     public Column[] optionalCols() {
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
         columns.add(new Column("FIPS", types.stringType(6), 6, new StringFormatter(6)));
         columns.add(new Column("MACT", types.stringType(6), 6, new StringFormatter(6)));
         columns.add(new Column("SIC", types.intType(), new IntegerFormatter()));
@@ -54,16 +54,16 @@ public class SpeciationCrossRefFileFormat implements FileFormatWithOptionalCols,
         columns.add(new Column("STACKID", types.stringType(32), 32, new StringFormatter(32)));
         columns.add(new Column("SEGMENTID", types.stringType(32), 32, new StringFormatter(32)));
 
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
     
     public Column[] minCols() {
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
         columns.add(new Column("SCC", types.stringType(10), 10, new StringFormatter(10)));
         columns.add(new Column("CODE", types.stringType(32), 32, new StringFormatter(32)));
         columns.add(new Column("POLLUTANT", types.stringType(32), 32, new StringFormatter(32)));
         
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
 
     public void fillDefaults(List data, long datasetId) {
