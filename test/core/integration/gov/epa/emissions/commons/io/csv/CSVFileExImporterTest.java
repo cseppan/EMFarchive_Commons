@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.DatasetType;
+import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -56,7 +57,10 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
     protected void doTearDown() throws Exception {
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
-        dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
+        InternalSource[] sources = dataset.getInternalSources();
+
+        if (sources != null && sources.length > 0)
+            dbUpdate.dropTable(datasource.getName(), sources[0].getTable());
     }
 
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
@@ -70,17 +74,29 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(file);
 
-        List data = readData(file);
+        List<String> data = readData(file);
         assertEquals(data.get(0), "pollutant_code,pollutant_name,fake_amount");
         assertEquals(data.get(8), "\"VOC\",\"VOC\",15.55");
         assertEquals(8, exporter.getExportedLinesCount());
     }
-    
+
+    public void testImportASmallProblematicFile() throws Exception {
+        try {
+            File folder = new File("test/data/csv");
+            Importer importer = new CSVImporter(folder, new String[] { "wont_import.txt" }, dataset, dbServer,
+                    sqlDataTypes);
+            importer.run();
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Column names were not found in file"));
+        }
+    }
+
     public void testImportASmallAndSimplePointFileWithDigitsInColumnNames() throws Exception {
         File folder = new File("test/data/csv");
-        Importer importer = new CSVImporter(folder, new String[] { "pollutants-with-digit-column-names.txt" }, dataset, dbServer, sqlDataTypes);
+        Importer importer = new CSVImporter(folder, new String[] { "pollutants-with-digit-column-names.txt" }, dataset,
+                dbServer, sqlDataTypes);
         importer.run();
-        
+
         int rows = countRecords();
         assertEquals(8, rows);
 
@@ -88,8 +104,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(file);
 
-        List data = readData(file);
-        System.out.println(data.get(0));
+        List<String> data = readData(file);
         assertEquals(data.get(0), "_123pollutant_code,_456pollutant_4name,fake_amount567");
         assertEquals(data.get(8), "\"VOC\",\"VOC\",15.55");
         assertEquals(8, exporter.getExportedLinesCount());
@@ -115,7 +130,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
                 dataset), optimizedBatchSize);
         exporter.export(file);
 
-        List data = readData(file);
+        List<String> data = readData(file);
         assertEquals(data.get(1), "\"CO\",\"CO\"");
         assertEquals(data.get(8), "\"VOC\",\"VOC\"");
     }
@@ -133,7 +148,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         exporter.export(file);
 
-        List data = readData(file);
+        List<String> data = readData(file);
         assertEquals(data.get(1), "\"USA\",\"Population\",\"100\",\"NO\",\"YES\"");
         assertEquals(data.get(7), "\"USA\",\"3/4 Total Roadway Miles plus 1/4 Population\",\"255\",\"YES\",\"\"");
     }
@@ -156,14 +171,16 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
             File repeatFile = File.createTempFile("RepeatExportedCommaDelimitedFile", ".txt");
             exportFile(repeatFile, repeatDataset);
 
-            List data = readData(file);
-            List repeatData = readData(repeatFile);
+            List<String> data = readData(file);
+            List<String> repeatData = readData(repeatFile);
 
             assertEquals(data.size(), repeatData.size());
             for (int i = 0; i < data.size(); i++) {
                 assertEquals(data.get(i), repeatData.get(i));
             }
-        } catch (Exception e) {e.printStackTrace();} finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             dropTable(repeatDataset.getInternalSources()[0].getTable(), datasource);
         }
 
@@ -200,7 +217,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
                 dataset), optimizedBatchSize);
         exporter.export(file);
 
-        List data = readData(file);
+        List<String> data = readData(file);
         String expect = "\"cnty_tn_lcc\",\"D:\\MIMS\\mimssp_7_2005\\data\\\",\"SPHERE\","
                 + "\"proj=lcc,+lat_1=33,+lat_2=45,+lat_0=40,+lon_0=-97\","
                 + "\"TN county boundaries\",\"from UNC CEP machine\",\"\"";

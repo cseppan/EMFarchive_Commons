@@ -113,8 +113,8 @@ public abstract class PersistenceTestCase extends TestCase {
         return tableReader.count(datasource.getName(), tableName);
     }
 
-    protected List readData(File file) throws IOException {
-        List data = new ArrayList();
+    protected List<String> readData(File file) throws IOException {
+        List<String> data = new ArrayList<String>();
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(file));

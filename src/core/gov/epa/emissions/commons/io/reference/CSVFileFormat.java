@@ -18,7 +18,7 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
 
     private SqlDataTypes types;
 
-    public CSVFileFormat(SqlDataTypes types, String[] colNames) {
+    public CSVFileFormat(SqlDataTypes types, String[] colNames) throws ImporterException {
         this.types = types;
         cols = createCols(colNames);
     }
@@ -63,7 +63,7 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
         return cols.toArray(new Column[0]);
     }
 
-    private Column[] createCols(String[] colNames) {
+    private Column[] createCols(String[] colNames) throws ImporterException{
         List<Column> cols = new ArrayList<Column>();
         for (int i = 0; i < colNames.length; i++) {
             String name = replaceSpecialChars(colNames[i]);
@@ -73,7 +73,10 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
         return cols.toArray(new Column[] {});
     }
 
-    private String replaceSpecialChars(String colName) {
+    private String replaceSpecialChars(String colName) throws ImporterException {
+        if (colName == null || colName.trim().isEmpty())
+            throw new ImporterException("Column names were not found in file.");
+        
         if (Character.isDigit(colName.charAt(0)))
             colName = "_" + colName; 
         
