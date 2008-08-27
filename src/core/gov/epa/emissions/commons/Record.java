@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Record {
 
-    private List tokens;
+    private List<String> tokens;
 
     public Record() {
-        this.tokens = new ArrayList();
+        this.tokens = new ArrayList<String>();
     }
     
     public Record(String[] tokens) {
@@ -18,7 +18,7 @@ public class Record {
     }
 
     public String token(int position) {
-        return (String) tokens.get(position);
+        return tokens.get(position);
     }
 
     public int size() {
@@ -29,7 +29,7 @@ public class Record {
         tokens.add(token);
     }
 
-    public void add(List list) {
+    public void add(List<String> list) {
         tokens.addAll(list);
     }
 
@@ -37,7 +37,7 @@ public class Record {
         return false;
     }
 
-    public List tokens() {
+    public List<String> tokens() {
         return tokens;
     }
 
@@ -46,7 +46,7 @@ public class Record {
     }
 
     public String[] getTokens() {
-        return (String[]) tokens.toArray(new String[0]);
+        return tokens.toArray(new String[0]);
     }
 
     public void setTokens(String[] tokensList) {
