@@ -30,7 +30,7 @@ public class CustomDateFormat {
 
     public static Date parse_MM_DD_YYYY_HH_mm(String date) throws ParseException {
         dateFormatter.applyPattern(PATTERN_MMddYYYY_HHmm);
-        return date == null ? null : dateFormatter.parse(date);
+        return date == null || date.trim().isEmpty() ? null : dateFormatter.parse(date);
     }
     
     public static String format_YYYY(Date date) {
@@ -40,12 +40,12 @@ public class CustomDateFormat {
 
     public static Date parse_YYYY(String date) throws ParseException {
         dateFormatter.applyPattern("yyyy");
-        return date == null ? null : dateFormatter.parse(date);
+        return date == null || date.trim().isEmpty()? null : dateFormatter.parse(date);
     }
 
     public static Date parse_MMddyyyy(String date) throws ParseException {
         dateFormatter.applyPattern("MM/dd/yyyy");
-        return date == null ? null : dateFormatter.parse(date);
+        return date == null || date.trim().isEmpty()? null : dateFormatter.parse(date);
     }
     
     public static String format_ddMMMyyyy(Date date) {
@@ -65,7 +65,7 @@ public class CustomDateFormat {
 
     public static Date parse_YYYY_MM_DD_HH_MM(String date) throws ParseException {
         dateFormatter.applyPattern("yyyy/MM/dd HH:mm");
-        return date == null ? null : dateFormatter.parse(date);
+        return date == null || date.trim().isEmpty()? null : dateFormatter.parse(date);
     }
 
     public static String format_YYYY_MM_DD_HH_MM_ss_SS(Date date) {

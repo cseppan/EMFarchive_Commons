@@ -32,6 +32,11 @@ public class Version implements Lockable, Serializable {
         lock = new Mutex();
     }
 
+    public Version(int v) {
+        this();
+        version = v;
+    }
+    
     public boolean isFinalVersion() {
         return finalVersion;
     }
