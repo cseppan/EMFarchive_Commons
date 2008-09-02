@@ -132,7 +132,7 @@ public class DatasetType implements Serializable, Lockable, Comparable {
     }
 
     public boolean equals(Object other) {
-        return (other instanceof DatasetType && ((DatasetType) other).id == id);
+        return (other instanceof DatasetType && ((DatasetType) other).getId() == id);
     }
 
     public boolean isExternal() {
