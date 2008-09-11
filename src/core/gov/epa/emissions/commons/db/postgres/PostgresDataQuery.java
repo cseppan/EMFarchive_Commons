@@ -26,6 +26,11 @@ public class PostgresDataQuery implements DataQuery {
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         statement.execute(query);
     }
+    
+    public ResultSet executeUpdateQuery(String query) throws SQLException {
+        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        return statement.executeQuery(query);
+    }
 
     // FIXME: duplicate methods in both datasources
     public ResultSet select(String[] columnNames, String table) throws SQLException {

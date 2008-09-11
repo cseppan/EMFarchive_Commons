@@ -51,4 +51,9 @@ public class MySqlDataQuery implements DataQuery {
     public ResultSet selectAll(String table) throws SQLException {
         return select(new String[] { "*" }, table);
     }
+
+    public ResultSet executeUpdateQuery(String query) throws SQLException {
+        // TODO Auto-generated method stub
+        throw new SQLException("executeUpdateQuery() method not implemented for MySQL");
+    }
 }
