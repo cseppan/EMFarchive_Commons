@@ -49,6 +49,12 @@ public class DatasetType implements Serializable, Lockable, Comparable {
     public static final String projectionPacket = "Projection Packet";
 
     public static final String controlPacket = "Control Packet";
+    
+    public static final String strategyDetailedResult = "Control Strategy Detailed Result";
+
+    public static final String strategyCountySummary = "Strategy County Summary";
+
+    public static final String strategyMeasureSummary = "Strategy Measure Summary";
 
     public DatasetType() {
 //        keyValsList = new ArrayList();
