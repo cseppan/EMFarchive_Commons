@@ -73,8 +73,16 @@ public class CSVImporter implements Importer {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             e.printStackTrace();
-            dataTable.drop();
-            throw new ImporterException(e.getMessage());
+            ImporterException i = new ImporterException(e.getMessage());
+            try
+            {
+               dataTable.drop();
+            } 
+            catch (Exception d)
+            {
+                // do not print this stack trace
+            }
+            throw i;
         } finally {
             close(reader);
         }

@@ -27,6 +27,7 @@ public class TableCreator {
             else
                 tableDefinition.createTable(table, tableFormat.cols());
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new Exception("could not create table - " + table + "\n" + e.getMessage(), e);
         }
     }
@@ -37,6 +38,7 @@ public class TableCreator {
         try {
             tableDefinition.renameTable(table, newName);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new Exception("could not rename table - " + table + " to " + newName + "\n" + e.getMessage(), e);
         }
 
@@ -49,7 +51,7 @@ public class TableCreator {
                         + "' already exists in the database, and cannot be created");
             }
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw e;
         }
 
     }

@@ -70,7 +70,7 @@ public class DataTable {
         try {
             delegate.create(table, tableFormat);
         } catch (Exception e) {
-            throw new ImporterException("Check for usable column names - " + e.getMessage());
+            throw new ImporterException("Note that CSV imports require a row column names before the data rows - " + e.getMessage());
         }
     }
 
@@ -78,7 +78,8 @@ public class DataTable {
         try {
             delegate.create(name(), tableFormat, datasetId);
         } catch (Exception e) {
-            throw new ImporterException(e.getMessage());
+            e.printStackTrace();
+           throw new ImporterException(e.getMessage());
         }
     }
 
@@ -125,6 +126,7 @@ public class DataTable {
             delegate.addConsolidationItem(this.numOfCols, this.name, this.colNameString, this.colTypeString, dataset);
             return this.name;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ImporterException("Error during creating consolidated dataset table", e);
         }
     }
