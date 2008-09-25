@@ -48,6 +48,8 @@ public class ReferenceDatasourceTablesCreator {
         importRefFile("states.txt", "states");
         importRefFile("gdplev.txt", "gdplev");
         importRefFile("invtable.csv", "invtable");
+        importRefFile("rsm_inv_sectors.csv", "rsm_inv_sectors");
+        importRefFile("Impact_per_ton_estimates.csv", "impact_estimates");
 
         System.out.println("Reference Datasource setup completed.");
     }
