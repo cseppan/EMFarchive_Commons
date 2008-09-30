@@ -58,6 +58,8 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public static final String strategyMeasureSummary = "Strategy Measure Summary";
 
+    public static final String rsmPercentReduction = "RSM Percent Reduction";
+
     public DatasetType() {
 //        keyValsList = new ArrayList();
 //        qaStepTemplates = new ArrayList();
