@@ -4,11 +4,17 @@ import gov.epa.emissions.commons.data.ProjectionShapeFile;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.ExporterException;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Writer;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,12 +25,12 @@ public class PostgresSQLToShapeFile {
 
     private boolean windowsOS = false;
     
-//    private DbServer dbServer;
+    private DbServer dbServer;
     
     public PostgresSQLToShapeFile(DbServer dbServer) {
         if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
             windowsOS = true;
-//        this.dbServer = dbServer;
+        this.dbServer = dbServer;
     }
 
     public void create(String postgresBinDir, 
@@ -34,26 +40,41 @@ public class PostgresSQLToShapeFile {
             String filePath, 
             String selectQuery,
             ProjectionShapeFile projectionShapeFile) throws ExporterException {
+        Process process = null;
         try {
-            //make sure there is data for the shape file, if not throw an exception
+            //Validation
+            //1st see if there is data for the shape file, if not throw an exception
             //dbServer
+            //2nd make sure there is the_geom column so the shape file can be created
+          validateSelectQuery(selectQuery);
+         
             
             createNewFile(filePath,
                     projectionShapeFile);
 
-            String exportCommand = getWriteQueryString(postgresBinDir, 
+            String[] exportCommand = getWriteQueryString(postgresBinDir, 
                     postgresDB, 
                     postgresUser, 
                     postgresPassword,
                     filePath, 
                     selectQuery);
 
-            Process process = Runtime.getRuntime().exec(exportCommand);
+
+            process = Runtime.getRuntime().exec(exportCommand);
             //lets wait for the process to end, otherwise the process will run asynchronously,
             //and we swon't know when its finished...
             process.waitFor();
-            
+            logStdout("process.getErrorStream", process.getErrorStream());
+            logStdout("process.getErrorStream", process.getInputStream());
+
         } catch (Exception e) {
+            if (process != null)
+                try {
+                    logStdout("process.getErrorStream", process.getErrorStream());
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             e.printStackTrace();
             throw new ExporterException(e.getMessage());
         } finally {
@@ -61,6 +82,57 @@ public class PostgresSQLToShapeFile {
         }
     }
 
+    private void validateSelectQuery(String selectQuery) throws ExporterException {
+        try {
+            ResultSet rs = dbServer.getEmissionsDatasource().query().executeQuery(selectQuery + " limit 1");
+            //see if there are any rows returned...
+            if (!rs.next()) 
+                throw new ExporterException("Query does not return any data in the resultset.");
+
+            //see if there is a the_geom column...
+            ResultSetMetaData md = rs.getMetaData();
+            int columnCount = md.getColumnCount();
+            boolean hasTheGeomColumn = false;
+            for (int i = 1; i <= columnCount; i++) {
+                if (md.getColumnTypeName(i).equalsIgnoreCase("the_geom")) {
+                    hasTheGeomColumn = true;
+                    break;
+                }
+            }
+            if (!hasTheGeomColumn) 
+                throw new ExporterException("The SQL query does not have the required the_geom column.");
+        } catch (SQLException e) {
+            throw new ExporterException(e.getMessage(), e);
+        }
+    }
+
+    public void logStdout(String title, InputStream inStream) throws Exception {
+        /**
+         * log the stdout from a remote command to the log
+         */
+        BufferedReader reader = null;
+
+        // log the title of this series of message to the LOG
+        log.warn(title);
+
+        reader = new BufferedReader(new InputStreamReader(inStream));
+
+        if (reader != null) {
+            try {
+                String message = reader.readLine();
+
+                while (message != null) {
+                    log.warn(message);
+
+                    message = reader.readLine();
+                }
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new Exception("Error logging remote command's stdout/stderr: " + e.getMessage());
+            }
+        }
+    }
     private String putEscape(String path) {
         if (windowsOS)
             return path.replaceAll("\\\\", "\\\\\\\\");
@@ -68,7 +140,7 @@ public class PostgresSQLToShapeFile {
         return path;
     }
 
-    private String getWriteQueryString(String postgresBinDir, 
+    private String[] getWriteQueryString(String postgresBinDir, 
             String postgresDB, 
             String postgresUser, 
             String postgresPassword, 
@@ -76,9 +148,31 @@ public class PostgresSQLToShapeFile {
             String selectQuery) {
         //"pgsql2shp -f test2 -P postgres -u postgres EMF "select * from us_state_shape"
         
-        System.out.println("\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"");
+        String[] cmds;
+//        cmds[0] = "csh";
+//        cmds[1] = "-c";
+//        cmds[2] = "";
+
+        System.out.println("csh -c \"" + postgresBinDir + "pgsql2shp -f " + putEscape(filePath) + " -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"\"");
+
+        if (windowsOS) {
+            cmds = new String[1];
+            cmds[0] = "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"";
+        } else {
+            cmds = new String[9];
+            cmds[0] = postgresBinDir + "pgsql2shp";
+            cmds[1] = "-f";
+            cmds[2] = putEscape(filePath);
+            cmds[3] = "-P";
+            cmds[4] = postgresPassword;
+            cmds[5] = "-u";
+            cmds[6] = postgresUser;
+            cmds[7] = postgresDB;
+            cmds[8] = selectQuery;
+        }
         
-        return "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"";
+        return cmds;//"csh -c \"" + postgresBinDir + "pgsql2shp -f " + putEscape(filePath) + " -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"\"";
+//        return "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"";
     }
 
     private void createNewFile(String filePath,
