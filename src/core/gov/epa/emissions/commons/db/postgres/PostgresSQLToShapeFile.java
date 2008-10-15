@@ -64,8 +64,8 @@ public class PostgresSQLToShapeFile {
             //lets wait for the process to end, otherwise the process will run asynchronously,
             //and we swon't know when its finished...
             process.waitFor();
-            logStdout("process.getErrorStream", process.getErrorStream());
-            logStdout("process.getErrorStream", process.getInputStream());
+//            logStdout("process.getErrorStream", process.getErrorStream());
+//            logStdout("process.getErrorStream", process.getInputStream());
 
         } catch (Exception e) {
             if (process != null)
@@ -94,7 +94,7 @@ public class PostgresSQLToShapeFile {
             int columnCount = md.getColumnCount();
             boolean hasTheGeomColumn = false;
             for (int i = 1; i <= columnCount; i++) {
-                if (md.getColumnTypeName(i).equalsIgnoreCase("the_geom")) {
+                if (md.getColumnName(i).equalsIgnoreCase("the_geom")) {
                     hasTheGeomColumn = true;
                     break;
                 }
