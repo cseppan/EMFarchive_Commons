@@ -20,15 +20,23 @@ public class FilePatternMatcher {
         
         String regExPattern = filePattern;
         StringBuffer sb = new StringBuffer(regExPattern);
-        int index = regExPattern.indexOf(".");
+        int index = sb.indexOf(".");
+        
         String replacePattern = ".*";
-        if (index > -1) {
-            sb.replace(index, index + 1, "\\.");
-            int lastIndex = sb.toString().lastIndexOf(".");
-            if (lastIndex > -1 && lastIndex != index + 1) {
-                throw new ImporterException("Only one '.' is allowed in the expression for file patterns");
+        
+        try {
+            while (index > -1) {
+                replacePattern = "[\\w\\-\\.]*";
+                sb.replace(index, index + 1, "\\.");
+                int nextIndex = sb.toString().indexOf(".", index + 2);
+                
+                if (nextIndex < 0)
+                    break;
+                
+                index = nextIndex;
             }
-            replacePattern = "[\\w\\-\\.]*";
+        } catch (Exception e) {
+            throw new ImporterException("Error in the specified pattern: " + filePattern + ". Folder: " + folder);
         }
 
         for (int i = 0; i < sb.length(); i++) {
@@ -37,7 +45,7 @@ public class FilePatternMatcher {
                 i = i + replacePattern.length() - 1;
             }
         }
-
+        
         return sb.toString();
     }
 

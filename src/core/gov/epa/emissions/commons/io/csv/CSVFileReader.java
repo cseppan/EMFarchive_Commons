@@ -211,6 +211,13 @@ public class CSVFileReader implements Reader {
         for (int i = 0; i < cols.length; i++) {
             String temp = cols[i].replace(' ', '_');
             temp = (PostgreSQLKeyWords.reserved(temp.toUpperCase())) ? temp + "_" : temp;
+            
+            for (int j = 0; j < temp.length(); j++) {
+                if (!Character.isLetterOrDigit(temp.charAt(j))) {
+                    temp = temp.replace(temp.charAt(j), '_');
+                }
+            }
+            
             cols[i] = checkExistCols(temp);
         }
 
