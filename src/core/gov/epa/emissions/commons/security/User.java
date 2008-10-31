@@ -137,9 +137,16 @@ public class User implements Serializable, Lockable {
             throw new UserException("Password should have at least 8 characters");
         }
 
-        String passwdStr1 = "^([a-zA-Z]+)(\\d+)(\\w)*";
-        String passwdStr2 = "^(\\d+)([a-zA-Z]+)(\\w)*";
-        if (!Pattern.matches(passwdStr1, password) && !Pattern.matches(passwdStr2, password)) {
+        boolean hasDigits = false;
+        
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isDigit(password.charAt(i))) {
+                hasDigits = true;
+                break;
+            }
+        }
+        
+        if (!hasDigits) {
             throw new UserException("One or more characters of password should be a number");
         }
 
