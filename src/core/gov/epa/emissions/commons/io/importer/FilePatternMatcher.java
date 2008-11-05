@@ -26,7 +26,7 @@ public class FilePatternMatcher {
         
         try {
             while (index > -1) {
-                replacePattern = "[\\w\\-\\.]*";
+                replacePattern = "[\\w\\-\\.[\\W\\-\\.]]*";
                 sb.replace(index, index + 1, "\\.");
                 int nextIndex = sb.toString().indexOf(".", index + 2);
                 
