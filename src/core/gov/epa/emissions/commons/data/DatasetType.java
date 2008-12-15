@@ -221,6 +221,15 @@ public class DatasetType implements Serializable, Lockable, Comparable {
         this.qaStepTemplates = templates.toArray(new QAStepTemplate[0]);
     }
 
+    public void removeQaStepTemplate(QAStepTemplate template) {
+        List<QAStepTemplate> templates = new ArrayList<QAStepTemplate>();
+        templates.addAll(Arrays.asList(this.qaStepTemplates));
+        for (int i = 0; i < templates.size(); i++) {
+            if (template.getName().equals(templates.get(i).getName())) templates.remove(i);
+        }
+        this.qaStepTemplates = templates.toArray(new QAStepTemplate[0]);
+    }
+
     public QAStepTemplate[] getQaStepTemplates() {
         return this.qaStepTemplates;
     }
