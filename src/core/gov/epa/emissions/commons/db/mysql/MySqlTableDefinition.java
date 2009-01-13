@@ -71,7 +71,7 @@ public class MySqlTableDefinition implements TableDefinition {
         return dirtyStr.replace('-', '_');
     }
 
-    private void execute(final String query) throws SQLException {
+    public void execute(final String query) throws SQLException {
         delegate.execute(query);
     }
 

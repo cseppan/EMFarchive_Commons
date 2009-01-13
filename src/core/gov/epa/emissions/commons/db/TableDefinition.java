@@ -8,6 +8,8 @@ import java.util.List;
 public interface TableDefinition {
 
     List getTableNames() throws SQLException;
+    
+    void execute(final String query) throws SQLException;
 
     void createTable(String table, DbColumn[] cols) throws SQLException;
     

@@ -19,6 +19,10 @@ public class VersionedDatasetQuery implements ExportStatement {
         return "SELECT * FROM " + table + " WHERE " + versionedQuery.query() + orderByClause();
     }
     
+    public String versionWhereClause() {
+        return " WHERE " + versionedQuery.query() + orderByClause();
+    }
+    
     public String generateFilteringQuery(String colString, String table, String filter) {
         if (filter == null || filter.trim().isEmpty())
             filter = "";

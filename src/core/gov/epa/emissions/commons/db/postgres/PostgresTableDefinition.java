@@ -63,7 +63,7 @@ public class PostgresTableDefinition implements TableDefinition {
         execute(statement);
     }
 
-    private void execute(final String query) throws SQLException {
+    public void execute(final String query) throws SQLException {
         delegate.execute(query);
     }
 
