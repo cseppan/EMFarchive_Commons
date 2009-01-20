@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.util.CustomStringTools;
 
 public class FixedWidthParser implements Parser {
 
@@ -45,7 +46,7 @@ public class FixedWidthParser implements Parser {
         }
 
         if (bipart[1].length() > 0) // add inline comment if there is one
-            record.add(bipart[1]);
+            record.add(CustomStringTools.escapeBackSlash4jdbc(bipart[1]));
     }
 
     private String[] splitLineByInlineComment(String line) {

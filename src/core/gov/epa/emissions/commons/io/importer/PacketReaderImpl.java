@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
+import gov.epa.emissions.commons.util.CustomStringTools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class PacketReaderImpl implements PacketReader {
 
     private String header;
 
-    private List comments;
+    private List<String> comments;
 
     private Parser parser;
 
@@ -28,7 +29,7 @@ public class PacketReaderImpl implements PacketReader {
         header = parseHeader(headerLine);
         this.parser = parser;
         this.lineNumber = lineNumber;
-        comments = new ArrayList();
+        comments = new ArrayList<String>();
         line = null;
     }
 
@@ -54,7 +55,7 @@ public class PacketReaderImpl implements PacketReader {
             if (isData(line))
                 return parser.parse(line);
             if (isComment(line))
-                comments.add(line);
+                comments.add(CustomStringTools.escapeBackSlash(line));
         }
 
         return new TerminatorRecord();
@@ -72,7 +73,7 @@ public class PacketReaderImpl implements PacketReader {
         return line == null ? false : line.trim().startsWith("#");
     }
 
-    public List comments() {
+    public List<String> comments() {
         return comments;
     }
     

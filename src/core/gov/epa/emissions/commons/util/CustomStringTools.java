@@ -11,4 +11,12 @@ public class CustomStringTools {
 
         return string;
     }
+    
+    public static String escapeBackSlash4jdbc(String col) {
+        return col.replaceAll("\\\\", "\\\\\\\\");
+    }
+    
+    public static String escapeBackSlash(String string) {
+        return string.replaceAll("\\\\", "\\\\");
+    }
 }

@@ -11,13 +11,14 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.importer.Parser;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
+import gov.epa.emissions.commons.util.CustomStringTools;
 
 public class CountryStateCountyFileReader implements PacketReader {
     private BufferedReader fileReader;
 
     private String header;
 
-    private List comments;
+    private List<String> comments;
 
     private Parser parser;
 
@@ -30,7 +31,7 @@ public class CountryStateCountyFileReader implements PacketReader {
         this.lineNumber = lineNumber;
         header = parseHeader(headerLine);
         this.parser = parser;
-        comments = new ArrayList();
+        comments = new ArrayList<String>();
     }
 
     private String parseHeader(String header) {
@@ -59,7 +60,7 @@ public class CountryStateCountyFileReader implements PacketReader {
                 return parser.parse(line);
             }
             if (isComment(line))
-                comments.add(line);
+                comments.add(CustomStringTools.escapeBackSlash(line));
         }
 
         return new TerminatorRecord();
@@ -91,7 +92,7 @@ public class CountryStateCountyFileReader implements PacketReader {
         return line.trim().startsWith("#");
     }
 
-    public List comments() {
+    public List<String> comments() {
         return comments;
     }
 

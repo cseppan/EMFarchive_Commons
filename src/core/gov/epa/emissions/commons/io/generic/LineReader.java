@@ -18,7 +18,7 @@ public class LineReader implements Reader {
 
     private BufferedReader fileReader;
 
-    private List comments;
+    private List<String> comments;
 
     private String line;
 
@@ -31,7 +31,7 @@ public class LineReader implements Reader {
         } catch (UnsupportedEncodingException e) {
             throw new FileNotFoundException("Encoding char set not supported.");
         }
-        comments = new ArrayList();
+        comments = new ArrayList<String>();
     }
 
     public void close() throws IOException {
@@ -51,13 +51,13 @@ public class LineReader implements Reader {
             Record record = new Record();
             lineNumber++;
             record.add("" + lineNumber);
-            record.add(line);
+            record.add(checkBackSlash(line));
             return record;
         }
         return new TerminatorRecord();
     }
 
-    public List comments() {
+    public List<String> comments() {
         return comments;
     }
 
@@ -71,5 +71,9 @@ public class LineReader implements Reader {
 
     public String line() {
         return line;
+    }
+    
+    private String checkBackSlash(String col) {
+        return col.replaceAll("\\\\", "\\\\\\\\");
     }
 }

@@ -19,7 +19,7 @@ public class FixedWidthPacketReader implements PacketReader {
         return delegate.read();
     }
 
-    public List comments() {
+    public List<String> comments() {
         return delegate.comments();
     }
 

@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
+import gov.epa.emissions.commons.util.CustomStringTools;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +19,7 @@ public class DelimitedFileReader implements Reader {
 
     protected BufferedReader fileReader;
 
-    private List comments;
+    private List<String> comments;
 
     private Tokenizer tokenizer;
 
@@ -42,7 +43,7 @@ public class DelimitedFileReader implements Reader {
             throw new FileNotFoundException("Unsupported char set encoding.");
         }
 
-        comments = new ArrayList();
+        comments = new ArrayList<String>();
         this.tokenizer = tokenizer;
         this.inLineComments = inLineComments;
         this.lineNumber = 0;
@@ -69,7 +70,7 @@ public class DelimitedFileReader implements Reader {
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
-                comments.add(line);
+                comments.add(CustomStringTools.escapeBackSlash(line));
 
             line = fileReader.readLine();
         }
@@ -146,6 +147,9 @@ public class DelimitedFileReader implements Reader {
         // 127= 128-1=> for inline comment char '!'
         if (comment.length() > 127)
             comment = comment.substring(0, 127);
+        
+        comment = CustomStringTools.escapeBackSlash4jdbc(comment);
+        
         return comment.startsWith("!") ? comment : "!" + comment;
     }
 
@@ -157,7 +161,7 @@ public class DelimitedFileReader implements Reader {
         return false;
     }
 
-    public List comments() {
+    public List<String> comments() {
         return comments;
     }
 
@@ -175,15 +179,16 @@ public class DelimitedFileReader implements Reader {
 
     // Added to remove header lines
     public String[] readHeader(int numLines) throws IOException {
-        List header = new ArrayList();
+        List<String> header = new ArrayList<String>();
         for (int i = 0; i < numLines; i++) {
-            header.add(fileReader.readLine());
+            header.add(CustomStringTools.escapeBackSlash(fileReader.readLine()));
         }
 
-        return (String[]) header.toArray(new String[0]);
+        return header.toArray(new String[0]);
     }
 
     // Added to remove header lines, especially for smk report files
+    // Very specific function, make sure it fits into your file format!!!
     public String[] readHeader(String regex) throws IOException {
         List<String> header = new ArrayList<String>();
         String line = fileReader.readLine();
@@ -211,7 +216,7 @@ public class DelimitedFileReader implements Reader {
     private String readHeaderLines(List<String> header, String line, Pattern pattern) throws IOException {
         while (pattern.split(line).length < 3) {
             if (!isExportInfo(line))
-                header.add(line);
+                header.add(CustomStringTools.escapeBackSlash(line));
             
             line = fileReader.readLine();
         }

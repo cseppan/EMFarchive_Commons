@@ -138,17 +138,21 @@ public class User implements Serializable, Lockable {
         }
 
         boolean hasDigits = false;
+        boolean hasLetter = false;
         
         for (int i = 0; i < password.length(); i++) {
-            if (Character.isDigit(password.charAt(i))) {
+            if (Character.isDigit(password.charAt(i)))
                 hasDigits = true;
-                break;
-            }
+            
+            if (Character.isLetter(password.charAt(i)))
+                hasLetter = true;
         }
         
-        if (!hasDigits) {
+        if (!hasDigits)
             throw new UserException("One or more characters of password should be a number");
-        }
+        
+        if (!hasLetter)
+            throw new UserException("One or more characters of password should be a letter");
 
         if (password.equals(username)) {
             throw new UserException("Username should be different from Password");

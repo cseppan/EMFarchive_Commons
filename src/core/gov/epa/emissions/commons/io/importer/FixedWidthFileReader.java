@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormat;
+import gov.epa.emissions.commons.util.CustomStringTools;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -16,7 +17,7 @@ public class FixedWidthFileReader implements Reader {
 
     private BufferedReader fileReader;
 
-    private List comments;
+    private List<String> comments;
 
     private int lineNumber;
 
@@ -33,7 +34,7 @@ public class FixedWidthFileReader implements Reader {
             throw new ImporterException("Encoding char set not supported.");
         }
         this.fixedWidthParser = new FixedWidthParser(fileFormat);
-        this.comments = new ArrayList();
+        this.comments = new ArrayList<String>();
         lineNumber = 0;
     }
 
@@ -54,7 +55,7 @@ public class FixedWidthFileReader implements Reader {
             if (isData(line))
                 return fixedWidthParser.parse(line);
             if (isComment(line))
-                comments.add(line);
+                comments.add(CustomStringTools.escapeBackSlash(line));
 
             line = fileReader.readLine();
         }
@@ -73,7 +74,7 @@ public class FixedWidthFileReader implements Reader {
         return line.startsWith("#");
     }
 
-    public List comments() {
+    public List<String> comments() {
         return comments;
     }
 

@@ -30,7 +30,7 @@ public class DelimiterIdentifyingFileReader implements Reader {
         return reader.read();
     }
 
-    public List comments() {
+    public List<String> comments() {
         return reader.comments();
     }
 

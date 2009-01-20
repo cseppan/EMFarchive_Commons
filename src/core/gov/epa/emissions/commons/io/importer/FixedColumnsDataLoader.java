@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.OptimizedTableModifier;
 import gov.epa.emissions.commons.io.Column;
@@ -31,8 +32,8 @@ public class FixedColumnsDataLoader implements DataLoader {
         } catch (Exception e) {
             e.printStackTrace();
             dropData(table, dataset, dataModifier);
-            throw new ImporterException(e.getMessage()
-                    + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
+            throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName()
+                    + "' into table - " + table);
         } finally {
             close(dataModifier);
         }
@@ -78,38 +79,35 @@ public class FixedColumnsDataLoader implements DataLoader {
                 dataModifier.insert(data(dataset, record));
                 record = reader.read();
             }
-        }catch (ImporterException e) {
+        } catch (ImporterException e) {
             throw new ImporterException(e.getMessage());
-        }finally {
+        } finally {
             dataModifier.finish();
         }
     }
 
-    private void checkDataLengths(Record record) throws Exception
-    {
+    private void checkDataLengths(Record record) throws Exception {
         int firstCol = tableFormat.getOffset();
         int offSet = tableFormat.getOffset();
-        
-        Column [] columns = tableFormat.cols();
-        
-        for (int c = firstCol; c < firstCol+tableFormat.getBaseLength(); c++)
-        {
+
+        Column[] columns = tableFormat.cols();
+
+        for (int c = firstCol; c < firstCol + tableFormat.getBaseLength(); c++) {
             Column col = columns[c];
-            //System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
-            if (col.sqlType().toLowerCase().startsWith("varchar"))
-            {  
+            // System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
+            if (col.sqlType().toLowerCase().startsWith("varchar")) {
                 if (c - offSet > record.size() - 1)
                     break;
-                
-               String item = record.token(c-offSet);
-               if (col.width() < item.length())
-                   throw new ImporterException ("Value "+item+" is too large for the column "+ col.name());
-            }           
+
+                String item = record.token(c - offSet);
+                if (col.width() < item.length())
+                    throw new ImporterException("Value " + item + " is too large for the column " + col.name());
+            }
         }
     }
-    
+
     protected String[] data(Dataset dataset, Record record) {
-        List data = new ArrayList();
+        List<String> data = new ArrayList<String>();
 
         if (tableFormat instanceof VersionedTableFormat)
             addVersionData(data, dataset.getId(), 0);
@@ -118,21 +116,27 @@ public class FixedColumnsDataLoader implements DataLoader {
 
         data.addAll(record.tokens());
 
-        massageNullMarkers(data);
+        DatasetType type = dataset.getDatasetType();
 
-        return (String[]) data.toArray(new String[0]);
+        if (type != null && type.getImporterClassName() != null
+                && type.getImporterClassName().equalsIgnoreCase("gov.epa.emissions.commons.io.csv.CSVImporter")) {
+            // no-op
+        } else
+            massageNullMarkers(data);
+
+        return data.toArray(new String[0]);
     }
 
-    protected void addVersionData(List data, long datasetId, int version) {
+    protected void addVersionData(List<String> data, long datasetId, int version) {
         data.add(0, "");// record id
         data.add(1, datasetId + "");
         data.add(2, version + "");// version
         data.add(3, "");// delete versions
     }
 
-    protected void massageNullMarkers(List data) {
+    protected void massageNullMarkers(List<String> data) {
         for (int i = 0; i < data.size(); i++) {
-            String element = (String) data.get(i);
+            String element = data.get(i);
             if (element.equals("-9"))// NULL marker
                 data.set(i, "");
         }

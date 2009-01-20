@@ -80,7 +80,7 @@ public class CSVFileReader implements Reader {
                     if (isExportInfo(currentLine))
                         continue; // rip off the export info lines
                     
-                    comments.add(currentLine);
+                    comments.add(checkBackSlash(currentLine));
                     continue;
                 }
 
@@ -132,7 +132,7 @@ public class CSVFileReader implements Reader {
         return currentLine;
     }
 
-    public List getHeader() {
+    public List<String> getHeader() {
         return header;
     }
     
@@ -171,8 +171,8 @@ public class CSVFileReader implements Reader {
                 if (isExportInfo(lineRead))
                     continue;
                 else if (isComment(lineRead)) {
-                    header.add(lineRead);
-                    comments.add(lineRead);
+                    header.add(checkBackSlash(lineRead));
+                    comments.add(checkBackSlash(lineRead));
                     if (isColTypes(lineRead)){
                         setColTypes(lineRead);
                     }
