@@ -49,6 +49,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         SimpleDataset dataset = new SimpleDataset();
         dataset.setName(name);
         DatasetType datasetType = new DatasetType("dsType");
+        datasetType.setImporterClassName("gov.epa.emissions.commons.io.csv.CSVImporter");
         dataset.setDatasetType(datasetType);
         dataset.setInlineCommentSetting(false);
 
