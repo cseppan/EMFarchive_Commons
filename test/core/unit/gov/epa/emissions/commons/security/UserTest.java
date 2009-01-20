@@ -104,8 +104,8 @@ public class UserTest extends TestCase {
     }
 
     public void testShouldFailIfPasswordDoesNotHaveAtleastOneNonAlphabeticCharacter() {
-        assertPasswordInvalidOnContentRulesFailure("abcdefgh");
-        assertPasswordInvalidOnContentRulesFailure("12asd454564");
+        assertPasswordInvalidOnContentRulesFailure("abcdefgh", "number");
+        assertPasswordInvalidOnContentRulesFailure("12000454564", "letter");
     }
 
     public void testShouldFailIfUsernameMatchesPasswordOnSetPassword() throws UserException {
@@ -160,12 +160,12 @@ public class UserTest extends TestCase {
         fail("should fail if password matches username");
     }
 
-    private void assertPasswordInvalidOnContentRulesFailure(String password) {
+    private void assertPasswordInvalidOnContentRulesFailure(String password, String shouldbe) {
         User user = new User();
         try {
             user.setPassword(password);
         } catch (UserException ex) {
-            assertEquals("One or more characters of password should be a number", ex.getMessage());
+            assertEquals("One or more characters of password should be a " + shouldbe, ex.getMessage());
             return;
         }
 
