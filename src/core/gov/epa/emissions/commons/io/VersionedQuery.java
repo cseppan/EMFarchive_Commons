@@ -8,8 +8,15 @@ public class VersionedQuery {
 
     private Version version;
 
+    private String alias = "";
+
     public VersionedQuery(Version version) {
         this.version = version;
+    }
+
+    public VersionedQuery(Version version, String alias) {
+        this(version);
+        this.alias = (alias != null && alias.trim().length() > 0 ? alias + "." : "");
     }
 
     public String query() {
@@ -17,11 +24,14 @@ public class VersionedQuery {
         String deleteClause = createDeleteClause(versionsPath);
 
         // TBD: If dataset type does not have multiple datasets in a table, don't need datasetIdClause
-        return "version IN (" + versionsPath + ")" + deleteClause + " AND " + datasetIdClause();
+        return alias + "version IN (" + versionsPath + ")" + deleteClause + " AND " + datasetIdClause();
+    }
+
+    public void query(String alias) {
     }
 
     private String datasetIdClause() {
-        return "dataset_id=" + version.getDatasetId();
+        return alias + "dataset_id=" + version.getDatasetId();
     }
 
     private String createDeleteClause(String versions) {
@@ -37,7 +47,7 @@ public class VersionedQuery {
                 if (buffer.length() == 0) {
                     buffer.append(" AND ");
                 }
-                buffer.append(" delete_versions NOT SIMILAR TO '" + regex + "'");
+                buffer.append(" " + alias + "delete_versions NOT SIMILAR TO '" + regex + "'");
 
                 if (tokenizer.hasMoreTokens())
                     buffer.append(" AND ");
