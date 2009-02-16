@@ -23,6 +23,11 @@ public class VersionedImporter implements Importer {
         this.datasource = dbServer.getEmissionsDatasource();
         this.lastModifiedDate = lastModifiedDate;
     }
+    
+    //NOTE: need to access the importer to get external sources
+    public Importer getWrappedImporter() {
+        return delegate;
+    }
 
     public void run() throws ImporterException {
         delegate.run();

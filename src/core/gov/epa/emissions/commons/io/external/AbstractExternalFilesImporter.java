@@ -14,6 +14,8 @@ import java.io.File;
 public abstract class AbstractExternalFilesImporter implements Importer {
 
     protected String importerName;
+    
+    protected ExternalSource[] extSrc;
 
     private File[] files;
 
@@ -32,13 +34,17 @@ public abstract class AbstractExternalFilesImporter implements Importer {
     }
 
     public void run() {
-        ExternalSource extSrc = null;
+        extSrc = new ExternalSource[files.length];
 
         for (int i = 0; i < files.length; i++) {
-            extSrc = new ExternalSource(files[i].getAbsolutePath());
-            extSrc.setListindex(i);
-            dataset.addExternalSource(extSrc);
+            extSrc[i] = new ExternalSource(files[i].getAbsolutePath());
+            extSrc[i].setListindex(i);
+            extSrc[i].setDatasetId(dataset.getId());
         }
+    }
+    
+    public ExternalSource[] getExternalSources() {
+        return extSrc;
     }
 
 }

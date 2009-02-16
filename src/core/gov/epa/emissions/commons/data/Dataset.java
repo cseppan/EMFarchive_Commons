@@ -80,15 +80,6 @@ public interface Dataset extends Serializable {
 
     void addInternalSource(InternalSource source);
 
-    // Datasets for external files will have a list of
-    // External Source objects. An external source object will
-    // contain details of each source (sourcename etc)
-    ExternalSource[] getExternalSources();
-
-    void setExternalSources(ExternalSource[] externalSources);
-
-    void addExternalSource(ExternalSource source);
-
     void setSummarySource(InternalSource summary);
 
     public InternalSource getSummarySource();

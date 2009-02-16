@@ -13,7 +13,7 @@ import java.io.File;
 
 public class ExternalFilesExporter implements Exporter {
 
-    private Dataset dataset;
+    private ExternalSource[] srcs;
     
     private int count = 0;
 
@@ -23,15 +23,22 @@ public class ExternalFilesExporter implements Exporter {
 
     public ExternalFilesExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
             DataFormatFactory formatFactory, Integer optimizedBatchSize) {
-        this.dataset = dataset;
+        //no-op
+    }
+    
+    //NOTE: this must be called before export() is called to instantiate the external sources list.
+    public void setExternalSources(ExternalSource[] srcs) {
+        this.srcs = srcs;
     }
 
     public void export(File file) throws ExporterException {
-        ExternalSource[] srcs = dataset.getExternalSources();
         verifyExistance(srcs);
     }
 
     private void verifyExistance(ExternalSource[] srcs) throws ExporterException {
+        if (srcs == null)
+            throw new ExporterException("External sources not specified.");
+        
         for (int i = 0; i < srcs.length; i++) {
             String fileName = srcs[i].getDatasource();
             

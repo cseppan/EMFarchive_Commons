@@ -3,16 +3,19 @@ package gov.epa.emissions.commons.data;
 import java.io.Serializable;
 
 public class ExternalSource implements Serializable {
+    private int id;
+    
+    private int datasetId;
 
     private String datasource;
 
-    private long listindex;
+    private int listindex;
 
-    public long getListindex() {
+    public int getListindex() {
         return listindex;
     }
 
-    public void setListindex(long listindex) {
+    public void setListindex(int listindex) {
         this.listindex = listindex;
     }
 
@@ -29,6 +32,22 @@ public class ExternalSource implements Serializable {
 
     public void setDatasource(String datasource) {
         this.datasource = datasource;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(int datasetId) {
+        this.datasetId = datasetId;
     }
 
 }
