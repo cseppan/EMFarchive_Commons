@@ -59,13 +59,15 @@ public class PostgresDbServer implements DbServer {
     }
 
     public void disconnect() throws Exception {
-        if (isConnected())
+        if (isConnected()) {
             connection.close();
+            connection = null;
+        }
     }
 
     public boolean isConnected() throws Exception {
         // Check connection
-        return !connection.isClosed();
+        return connection != null && !connection.isClosed();
     }
 
 }
