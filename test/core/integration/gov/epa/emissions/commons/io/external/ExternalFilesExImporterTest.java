@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.external;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.DatasetType;
+import gov.epa.emissions.commons.data.ExternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -48,15 +49,17 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         ExternalFilesImporter importer = new ExternalFilesImporter(folder, new String[]{"pstk.m3.txt", "costcy.txt", "costcy2.txt"},
                 dataset, dbServer, sqlDataTypes);
         importer.run();
+        ExternalSource[] srcs = importer.getExternalSources();
 
         ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
+        exporter.setExternalSources(srcs);
         exporter.export(exportfile);
         assertEquals(3, exporter.getExportedLinesCount());
-        assertEquals(3, dataset.getExternalSources().length);
-        assertTrue(dataset.getExternalSources()[0].getDatasource().endsWith("pstk.m3.txt"));
-        assertTrue(dataset.getExternalSources()[1].getDatasource().endsWith("costcy.txt"));
-        assertTrue(dataset.getExternalSources()[2].getDatasource().endsWith("costcy2.txt"));
+        assertEquals(3, srcs.length);
+        assertTrue(srcs[0].getDatasource().endsWith("pstk.m3.txt"));
+        assertTrue(srcs[1].getDatasource().endsWith("costcy.txt"));
+        assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
     }
 
     public void testExportVersionedExportExternalFilesShouldSucceed() throws Exception {
@@ -69,15 +72,17 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
                 dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, new Date());
         importerv.run();
+        ExternalSource[] srcs = importer.getExternalSources();
 
         ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
+        exporter.setExternalSources(srcs);
         exporter.export(exportfile);
         assertEquals(3, exporter.getExportedLinesCount());
-        assertEquals(3, dataset.getExternalSources().length);
-        assertTrue(dataset.getExternalSources()[0].getDatasource().endsWith("pstk.m3.txt"));
-        assertTrue(dataset.getExternalSources()[1].getDatasource().endsWith("costcy.txt"));
-        assertTrue(dataset.getExternalSources()[2].getDatasource().endsWith("costcy2.txt"));
+        assertEquals(3, srcs.length);
+        assertTrue(srcs[0].getDatasource().endsWith("pstk.m3.txt"));
+        assertTrue(srcs[1].getDatasource().endsWith("costcy.txt"));
+        assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
     }
     
     public void testExportExternalFilesShouldFail() throws Exception {
@@ -85,17 +90,19 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         ExternalFilesImporter importer = new ExternalFilesImporter(folder, new String[]{"pstk.m3.txt", "costcy.txt", "costcy2.txt", "does not exist"},
                 dataset, dbServer, sqlDataTypes);
         importer.run();
+        ExternalSource[] srcs = importer.getExternalSources();
         
-        assertEquals(4, dataset.getExternalSources().length);
-        assertTrue(dataset.getExternalSources()[0].getDatasource().endsWith("pstk.m3.txt"));
-        assertTrue(dataset.getExternalSources()[1].getDatasource().endsWith("costcy.txt"));
-        assertTrue(dataset.getExternalSources()[2].getDatasource().endsWith("costcy2.txt"));
-        assertTrue(dataset.getExternalSources()[3].getDatasource().endsWith("does not exist"));
+        assertEquals(4, srcs.length);
+        assertTrue(srcs[0].getDatasource().endsWith("pstk.m3.txt"));
+        assertTrue(srcs[1].getDatasource().endsWith("costcy.txt"));
+        assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
+        assertTrue(srcs[3].getDatasource().endsWith("does not exist"));
         
         ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         
         try {
+            exporter.setExternalSources(srcs);
             exporter.export(exportfile);
         } catch (Exception e) {
             assertEquals(3, exporter.getExportedLinesCount());
@@ -113,17 +120,19 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
                 dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset));
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, new Date());
         importerv.run();
+        ExternalSource[] srcs = importer.getExternalSources();
         
-        assertEquals(4, dataset.getExternalSources().length);
-        assertTrue(dataset.getExternalSources()[0].getDatasource().endsWith("pstk.m3.txt"));
-        assertTrue(dataset.getExternalSources()[1].getDatasource().endsWith("costcy.txt"));
-        assertTrue(dataset.getExternalSources()[2].getDatasource().endsWith("costcy2.txt"));
-        assertTrue(dataset.getExternalSources()[3].getDatasource().endsWith("does not exist"));
+        assertEquals(4, srcs.length);
+        assertTrue(srcs[0].getDatasource().endsWith("pstk.m3.txt"));
+        assertTrue(srcs[1].getDatasource().endsWith("costcy.txt"));
+        assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
+        assertTrue(srcs[3].getDatasource().endsWith("does not exist"));
         
         ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         
         try {
+            exporter.setExternalSources(srcs);
             exporter.export(exportfile);
         } catch (Exception e) {
             assertEquals(3, exporter.getExportedLinesCount());
