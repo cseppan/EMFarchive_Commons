@@ -30,6 +30,8 @@ public class User implements Serializable, Lockable {
     private String encryptedPassword;
 
     private boolean isAdmin;
+    
+    private boolean isLoggedIn;
 
     private boolean isAccountDisabled;
 
@@ -127,6 +129,14 @@ public class User implements Serializable, Lockable {
 
     public void setAdmin(boolean inAdminGroup) {
         this.isAdmin = inAdminGroup;
+    }
+    
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.isLoggedIn = loggedIn;
     }
 
     public void setPassword(String password) throws UserException {
