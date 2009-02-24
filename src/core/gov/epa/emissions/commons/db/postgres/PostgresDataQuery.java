@@ -18,13 +18,43 @@ public class PostgresDataQuery implements DataQuery {
     }
 
     public ResultSet executeQuery(String query) throws SQLException {
+//        Statement statement = null;
+//        ResultSet resultSet = null;
+//        try {
+//            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+//            resultSet = statement.executeQuery(query);
+//            statement.close();
+//            statement = null;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw e;
+//        } finally {
+//            if (statement != null) {
+//                try { statement.close(); } catch (SQLException e) {  }
+//                statement = null;
+//            }
+//        }
+//        return resultSet;
         Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         return statement.executeQuery(query);
     }
 
     public void execute(String query) throws SQLException {
-        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        statement.execute(query);
+        Statement statement = null;
+        try {
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            statement.execute(query);
+            statement.close();
+            statement = null;
+        } catch (SQLException e) {
+            //            e.printStackTrace();
+            throw e;
+        } finally {
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) {  }
+                statement = null;
+            }
+        }
     }
     
     public ResultSet executeUpdateQuery(String query) throws SQLException {

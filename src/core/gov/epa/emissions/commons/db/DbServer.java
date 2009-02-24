@@ -1,5 +1,7 @@
 package gov.epa.emissions.commons.db;
 
+import java.sql.Connection;
+
 
 public interface DbServer {
 
@@ -8,6 +10,8 @@ public interface DbServer {
     Datasource getReferenceDatasource();
     
     Datasource getEmfDatasource();
+
+    Connection getConnection();
 
     SqlDataTypes getSqlDataTypes();
 

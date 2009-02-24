@@ -70,4 +70,8 @@ public class PostgresDbServer implements DbServer {
         return connection != null && !connection.isClosed();
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
 }

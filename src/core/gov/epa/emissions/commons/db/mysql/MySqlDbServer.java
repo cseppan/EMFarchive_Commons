@@ -117,4 +117,9 @@ public class MySqlDbServer implements DbServer {
         return false;
     }
 
+    public Connection getConnection() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
