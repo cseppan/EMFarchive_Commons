@@ -65,11 +65,10 @@ public class CSVImporter implements Importer {
 
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
-        String table = dataTable.name();
+        String table = null;
 
         try {
-            if (!dataTable.exists(table))
-                dataTable.create(formatUnit.tableFormat());
+            table = dataTable.createConsolidatedTable(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             e.printStackTrace();
