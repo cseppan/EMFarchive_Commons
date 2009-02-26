@@ -72,16 +72,11 @@ public class CSVImporter implements Importer {
             doImport(file, dataset, table, formatUnit.tableFormat());
         } catch (Exception e) {
             e.printStackTrace();
-            ImporterException i = new ImporterException(e.getMessage());
-            try
-            {
-               dataTable.drop();
-            } 
-            catch (Exception d)
-            {
-                // do not print this stack trace
-            }
-            throw i;
+            
+            if (table == null || table.isEmpty())
+                throw new ImporterException("could not create csv type data table.");
+            
+            throw new ImporterException(e.getMessage());
         } finally {
             close(reader);
         }
