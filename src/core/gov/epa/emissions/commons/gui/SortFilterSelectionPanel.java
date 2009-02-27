@@ -244,5 +244,16 @@ public class SortFilterSelectionPanel extends SortFilterTablePanel {
             parentRef.selectAll(false);
         }
     }
+    
+    public void updateStatusLabel() {
+        // Parthee's version:
+        // String info = overallModel.getRowCount() + ROWS_STR + overallModel.getDataColumnCount() + COLUMNS_STR
+        // + "[ " + overallModel.filterSortInfoString() + " ]";
+        // Alison's version:
+        String info = " " + overallModel.getRowCount() + ROWS_STR + overallModel.getDataColumnCount() + COLUMNS_STR
+                + ": " + getSelectedIndexes().length + " Selected [" + overallModel.filterSortInfoString() + "]";
+        statusLabel.setText(info);
+        statusLabel.setToolTipText(info);
+    } // updateStatusLabel()
 
 }
