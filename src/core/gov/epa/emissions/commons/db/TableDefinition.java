@@ -50,4 +50,5 @@ public interface TableDefinition {
 
     void addConsolidationItem(int id, String table, int numOfCols, String colNames, String colTypes, int sizeLimit) throws SQLException;
 
+    void updateConsolidationTable(int dsTypeId, String table) throws SQLException;
 }

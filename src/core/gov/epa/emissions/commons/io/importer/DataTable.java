@@ -130,6 +130,14 @@ public class DataTable {
             throw new ImporterException("Error during creating consolidated dataset table", e);
         }
     }
+    
+    public void updateConsolidatedTable(int dsTypeId, String table) {
+        try {
+            delegate.updateConsolidationTable(dsTypeId, table);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void getTableColInfo(TableFormat tableFormat) {
         StringBuffer colNames = new StringBuffer();

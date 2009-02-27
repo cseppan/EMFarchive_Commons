@@ -78,5 +78,9 @@ public class TableCreator {
     public void addConsolidationItem(int numOfCols, String table, String colNames, String colTypes, Dataset dataset) throws Exception {
         datasource.tableDefinition().addConsolidationItem(dataset.getDatasetType().getId(), table, numOfCols, colNames, colTypes, 0);
     }
+    
+    public void updateConsolidationTable(int datasetTypeId, String table) throws SQLException {
+        datasource.tableDefinition().updateConsolidationTable(datasetTypeId, table);
+    }
 
 }

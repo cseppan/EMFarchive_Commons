@@ -70,6 +70,7 @@ public class CSVImporter implements Importer {
         try {
             table = dataTable.createConsolidatedTable(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
+            dataTable.updateConsolidatedTable(dataset.getDatasetType().getId(), table);
         } catch (Exception e) {
             e.printStackTrace();
             

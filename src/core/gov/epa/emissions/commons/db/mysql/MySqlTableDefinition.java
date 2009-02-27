@@ -125,4 +125,9 @@ public class MySqlTableDefinition implements TableDefinition {
         
     }
 
+    public void updateConsolidationTable(int dsTypeId, String table) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

@@ -67,15 +67,9 @@ public class SMKReportImporter implements Importer {
         try {
             table = dataTable.createConsolidatedTable(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
+            dataTable.updateConsolidatedTable(dataset.getDatasetType().getId(), table);
         } catch (Exception e) {
             e.printStackTrace();
-            
-//            try {
-//                if (table != null && dataTable.exists(table))
-//                    dataTable.drop();
-//            } catch (Exception e1) {
-//                throw new ImporterException("could not drop table " + table + ".");
-//            }
             
             if (table == null || table.isEmpty())
                 throw new ImporterException("could not create SMOKE Report type data table.");

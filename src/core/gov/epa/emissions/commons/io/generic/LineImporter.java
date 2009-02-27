@@ -55,14 +55,19 @@ public class LineImporter implements Importer {
 
     public void run() throws ImporterException {
         DataTable dataTable = new DataTable(dataset, datasource);
-        String table = dataTable.name();
+        String table = null;
+        
         try {
-            if (!dataTable.exists(table))
-                dataTable.create(formatUnit.tableFormat());
+            table = dataTable.createConsolidatedTable(formatUnit.tableFormat());
             doImport(file, dataset, table, formatUnit.tableFormat());
+            dataTable.updateConsolidatedTable(dataset.getDatasetType().getId(), table);
         } catch (Exception e) {
-            dataTable.drop(table);
-            throw new ImporterException("could not import File - " + file.getAbsolutePath()+" - " + e.getMessage());
+            e.printStackTrace();
+            
+            if (table == null || table.isEmpty())
+                throw new ImporterException("could not create csv type data table.");
+            
+            throw new ImporterException(e.getMessage());
         }
     }
 

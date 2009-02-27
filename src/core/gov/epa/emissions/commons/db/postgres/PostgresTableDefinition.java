@@ -168,5 +168,12 @@ public class PostgresTableDefinition implements TableDefinition {
                 + colTypes + "', " + sizeLimit + ")";
         execute(query);
     }
+    
+    public void updateConsolidationTable(int dsTypeId, String table) throws SQLException {
+        String query = "UPDATE emf.table_consolidations SET number_records = (SELECT COUNT(*) FROM emissions." + table + 
+            ") WHERE dataset_type_id = " + dsTypeId + " AND output_table = '" + table + "'";
+        execute(query);
+    }
+
 
 }
