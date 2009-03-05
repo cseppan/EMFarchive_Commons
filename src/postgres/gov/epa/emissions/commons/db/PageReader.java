@@ -43,11 +43,13 @@ public class PageReader {
      */
     public Page page(int pageNumber) throws SQLException {
         int actualPage = pageNumber - 1; // page '1' maps to page '0'
-        if (actualPage > totalPages())
-            return null;
+        
+        if (actualPage >= totalPages())
+            actualPage = 0;
 
         int start = actualPage * pageSize;
         int end = start + pageSize - 1;// since, end is inclusive in the range
+        
         VersionedRecord[] records = scrollableRecords.range(start, end);
 
         Page page = new Page(pageNumber);
