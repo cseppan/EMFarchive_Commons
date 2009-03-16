@@ -44,6 +44,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.deleteAll("emf", "table_consolidations");
+        dbUpdate.deleteAll("emf", "table_consolidations");
     }
 
     public void testImportSMKreportDataSemicolon() throws Exception {

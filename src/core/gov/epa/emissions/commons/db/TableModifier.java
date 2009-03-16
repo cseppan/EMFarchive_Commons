@@ -68,30 +68,40 @@ public class TableModifier {
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
         for (int i = 0; i < data.length; i++) {
+            String colName = cols[i].name();
+
             if (isTypeString(cols[i])) {
-                if (cols[i].name().equalsIgnoreCase("POLL")) {
+                if (colName.equalsIgnoreCase("POLL")) {
                     data[i] = data[i].toUpperCase();
                     if (data[i].equals("PM10-PRI"))
                         data[i] = "PM10";
                     else if (data[i].equals("PM25-PRI"))
                         data[i] = "PM2_5";
-                } else if (cols[i].name().equalsIgnoreCase("FIPS")) {
+                } else if (colName.equalsIgnoreCase("FIPS")) {
                     // add a leading zero if it is missing
                     if (data[i].trim().length() == 4)
                         data[i] = "0" + data[i];
+                } else if (!colName.equalsIgnoreCase("Lines")) {
+                    data[i] = (data[i] != null ? data[i].trim() : "");
                 }
-                //make sure the value is not to big....
-                if (cols[i].sqlType().toUpperCase().startsWith("VARCHAR")) {
-                    if (data[i].trim().length() > cols[i].width() && cols[i].width() > 0) {
+
+                // make sure the value is not to big....
+                if (data[i] != null && cols[i].sqlType().toUpperCase().startsWith("VARCHAR")) {
+                    if (colName.equalsIgnoreCase("Lines") && data[i].length() > cols[i].width() && cols[i].width() > 0) {
+                        data[i] = data[i].substring(0, cols[i].width());
+                    } else if (data[i].trim().length() > cols[i].width() && cols[i].width() > 0) {
                         data[i] = data[i].trim().substring(0, cols[i].width());
                     }
                 }
+
                 data[i] = escapeString(data[i]);
             } else {
                 if ((data[i] == null || (data[i].trim().length() == 0)))
                     data[i] = "DEFAULT";
-                else if (isTypeTimeStamp(cols[i]))
+                else if (isTypeTimeStamp(cols[i])) {
+                    data[i] = (data[i] != null ? data[i].trim() : data[i]);
                     data[i] = escapeString(data[i]) + "::" + cols[i].sqlType();
+                }
             }
 
             insert.append(data[i]);
@@ -117,7 +127,6 @@ public class TableModifier {
         if (val == null)
             return "''";
 
-        val = val.trim();
         String cleaned = val.replaceAll("\'", "''");
         return "'" + cleaned + "'";
     }

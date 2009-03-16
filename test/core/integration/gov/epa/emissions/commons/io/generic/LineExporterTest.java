@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class LineExporterTest extends PersistenceTestCase {
 
@@ -37,18 +36,28 @@ public class LineExporterTest extends PersistenceTestCase {
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
         optimizedBatchSize = new Integer(10000);
-        dataset = new SimpleDataset();
-        dataset.setName("test");
-        dataset.setId(Math.abs(new Random().nextInt()));
-        dataset.setDatasetType(new DatasetType("dsType"));
+        dataset = dataset("test");
     }
 
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
+        dbUpdate.deleteAll("emf", "table_consolidations");
     }
 
+    private Dataset dataset(String name) {
+        SimpleDataset dataset = new SimpleDataset();
+        dataset.setName(name);
+        DatasetType datasetType = new DatasetType("dsType");
+        datasetType.setId(1); //fake id
+        datasetType.setImporterClassName("gov.epa.emissions.commons.io.generic.LineImporter");
+        dataset.setDatasetType(datasetType);
+        dataset.setInlineCommentSetting(false);
+
+        return dataset;
+    }
+    
     public void testExportSmallLineFile() throws Exception {
         try {
             File folder = new File("test/data/orl/nc");

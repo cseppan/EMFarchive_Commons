@@ -52,12 +52,9 @@ public class PageReaderTest extends MockObjectTestCase {
                 returnValue(records));
 
         PageReader reader = new PageReader(10, (ScrollableVersionedRecords) scrollableRecords.proxy());
-
         Page page = reader.page(5);
         assertNotNull("Should be able to fetch Page 5", page);
         assertEquals(records.length, page.getRecords().length);
-
-        assertNull("Page 1801 does not exist", reader.page(1801));
     }
 
     public void testShouldGetPageBasedOnRecordNumber() throws Exception {

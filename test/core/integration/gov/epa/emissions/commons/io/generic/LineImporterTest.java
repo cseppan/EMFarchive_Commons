@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
@@ -33,16 +34,27 @@ public class LineImporterTest extends HibernateTestCase {
 
         dbServer = dbSetup.getDbServer();
         sqlDataTypes = dbServer.getSqlDataTypes();
-
-        dataset = new SimpleDataset();
-        dataset.setName("test");
-        dataset.setId(Math.abs(new Random().nextInt()));
+        dataset = dataset("test");
     }
 
     protected void doTearDown() throws Exception {
         Datasource datasource = dbServer.getEmissionsDatasource();
         DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
         dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
+        dbUpdate.deleteAll("emf", "table_consolidations");
+    }
+    
+    private Dataset dataset(String name) {
+        SimpleDataset dataset = new SimpleDataset();
+        dataset.setId(Math.abs(new Random().nextInt()));
+        dataset.setName(name);
+        DatasetType datasetType = new DatasetType("dsType");
+        datasetType.setId(1); //fake id
+        datasetType.setImporterClassName("gov.epa.emissions.commons.io.generic.LineImporter");
+        dataset.setDatasetType(datasetType);
+        dataset.setInlineCommentSetting(false);
+
+        return dataset;
     }
 
     public void testShouldImportASmallLineFile() throws Exception {

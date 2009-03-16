@@ -49,6 +49,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         SimpleDataset dataset = new SimpleDataset();
         dataset.setName(name);
         DatasetType datasetType = new DatasetType("dsType");
+        datasetType.setId(1); //fake id
         datasetType.setImporterClassName("gov.epa.emissions.commons.io.csv.CSVImporter");
         dataset.setDatasetType(datasetType);
         dataset.setInlineCommentSetting(false);
@@ -62,6 +63,8 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
 
         if (sources != null && sources.length > 0)
             dbUpdate.dropTable(datasource.getName(), sources[0].getTable());
+        
+        dbUpdate.deleteAll("emf", "table_consolidations");
     }
 
     public void testImportASmallAndSimplePointFileWithCSVImporter() throws Exception {
