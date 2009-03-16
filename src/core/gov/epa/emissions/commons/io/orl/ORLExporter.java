@@ -85,7 +85,7 @@ public class ORLExporter extends GenericExporter {
             String query = getColsSpecdQueryString(dataset, originalQuery);
             String writeQuery = getWriteQueryString(dataFileName, query);
 
-            //log.warn(writeQuery);
+            // log.warn(writeQuery);
 
             connection = datasource.getConnection();
 
@@ -171,9 +171,18 @@ public class ORLExporter extends GenericExporter {
     }
 
     private void executeQuery(Connection connection, String writeQuery) throws SQLException {
-        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        statement.execute(writeQuery);
-        statement.close();
+        Statement statement = null;
+        
+        try {
+            statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            statement.execute(writeQuery);
+        } catch (Exception e) {
+            log.error("Error executing query: " + writeQuery + ".", e);
+            throw new SQLException(e.getMessage());
+        } finally {
+            if (statement != null)
+                statement.close();
+        }
     }
 
     private void concatFiles(File file, String headerFile, String dataFile) throws Exception {
