@@ -112,8 +112,8 @@ public class ORLExporter extends GenericExporter {
             try {
                 if (statement != null)
                     statement.close();
-                if (connection != null)
-                    connection.close();
+//                if (connection != null)
+//                    connection.close();
             } catch (SQLException e) {
                 //
             }
