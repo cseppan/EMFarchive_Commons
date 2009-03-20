@@ -34,7 +34,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
 
     public Class<?> getColumnClass(int col) {
         if (col == 0)
-            return boolean.class;
+            return super.getColumnClass(col);
 
         return delegate.getColumnClass(col - 1);
 
@@ -154,7 +154,10 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
     
     public void refresh(RefreshableTableModel delegate){
         this.delegate = delegate; 
+        //delegate.refresh();
         resetSelections();
+        //setColumnHeaders(getDelegateColumnNames());
+        //fireTableStructureChanged();       
     }
 
     public List<?> selected() {
