@@ -256,4 +256,9 @@ public class SortFilterSelectionPanel extends SortFilterTablePanel {
         statusLabel.setToolTipText(info);
     } // updateStatusLabel()
 
+    public void setModel(SortFilterSelectModel selectModel){
+        this.selectModel = selectModel;
+        setTableModel(selectModel);
+        updateStatusLabel();            
+    }
 }
