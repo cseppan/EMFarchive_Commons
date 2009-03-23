@@ -34,7 +34,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
 
     public Class<?> getColumnClass(int col) {
         if (col == 0)
-            return super.getColumnClass(col);
+            return Boolean.class;
 
         return delegate.getColumnClass(col - 1);
 
