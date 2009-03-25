@@ -154,10 +154,7 @@ public class SortFilterSelectModel extends MultiRowHeaderTableModel implements S
     
     public void refresh(RefreshableTableModel delegate){
         this.delegate = delegate; 
-        //delegate.refresh();
         resetSelections();
-        //setColumnHeaders(getDelegateColumnNames());
-        //fireTableStructureChanged();       
     }
 
     public List<?> selected() {
