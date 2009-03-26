@@ -48,6 +48,8 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public static final String projectionPacket = "Projection Packet";
 
+    public static final String allowablePacket = "Allowable Packet";
+
     public static final String controlPacket = "Control Packet";
     
     public static final String strategyDetailedResult = "Control Strategy Detailed Result";
