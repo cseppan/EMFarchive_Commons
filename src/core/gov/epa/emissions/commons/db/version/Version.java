@@ -25,6 +25,8 @@ public class Version implements Lockable, Serializable {
     private Date lastModifiedDate;
 
     private User creator;
+    
+    private int numberRecords;
 
     private Mutex lock;
 
@@ -106,6 +108,14 @@ public class Version implements Lockable, Serializable {
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+    
+    public void setNumberRecords(int numberRecords){
+        this.numberRecords = numberRecords;
+    }
+    
+    public int getNumberRecords(){
+        return numberRecords;
     }
 
     public User getCreator() {
