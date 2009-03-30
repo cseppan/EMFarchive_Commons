@@ -108,11 +108,12 @@ public class Versions {
         version.setName(name);
         version.setVersion(newVersionNum);
         version.setPath(path(base));
+        version.setCreator(user);
         version.setDatasetId(base.getDatasetId());
         version.setLastModifiedDate(new Date());
-        version.setCreator(user);
-
-        save(version, session);
+        version.setNumberRecords(base.getNumberRecords());
+        session.clear();
+        add(version, session);
 
         return version;
     }
@@ -122,6 +123,18 @@ public class Versions {
         try {
             tx = session.beginTransaction();
             session.saveOrUpdate(version);
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+            throw e;
+        }
+    }
+    
+    public void add(Object obj, Session session) {
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(obj);
             tx.commit();
         } catch (HibernateException e) {
             tx.rollback();
