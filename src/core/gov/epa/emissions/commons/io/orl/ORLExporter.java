@@ -75,8 +75,8 @@ public class ORLExporter extends GenericExporter {
         String headerFileName = tempDir + separator + file.getName() + id + ".hed";
         File dataFile = new File(dataFileName);
         File headerFile = new File(headerFileName);
-        
-        //use one statement and connection object for all operations, this we can easily clean them up.... 
+
+        // use one statement and connection object for all operations, this we can easily clean them up....
         Connection connection = null;
         Statement statement = null;
 
@@ -91,7 +91,7 @@ public class ORLExporter extends GenericExporter {
             // log.warn(writeQuery);
 
             connection = datasource.getConnection();
-            
+
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
             executeQuery(statement, writeQuery);
@@ -112,8 +112,8 @@ public class ORLExporter extends GenericExporter {
             try {
                 if (statement != null)
                     statement.close();
-//                if (connection != null)
-//                    connection.close();
+                // if (connection != null)
+                // connection.close();
             } catch (SQLException e) {
                 //
             }
@@ -184,17 +184,17 @@ public class ORLExporter extends GenericExporter {
     }
 
     private void executeQuery(Statement statement, String writeQuery) throws SQLException {
-//        Statement statement = null;
-        
+        // Statement statement = null;
+
         try {
-//            statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            // statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.execute(writeQuery);
         } catch (Exception e) {
             log.error("Error executing query: " + writeQuery + ".", e);
             throw new SQLException(e.getMessage());
         } finally {
-//            if (statement != null)
-//                statement.close();
+            // if (statement != null)
+            // statement.close();
         }
     }
 
@@ -274,7 +274,8 @@ public class ORLExporter extends GenericExporter {
     public void setExportedLines(String originalQuery, Statement statement) throws SQLException {
         Date start = new Date();
 
-//        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        // Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+        // ResultSet.CONCUR_READ_ONLY);
         String fromClause = getSubString(originalQuery, "FROM", false);
         String queryCount = "SELECT COUNT(\"dataset_id\") " + getSubString(fromClause, "ORDER BY", true);
         ResultSet rs = statement.executeQuery(queryCount);
@@ -283,7 +284,10 @@ public class ORLExporter extends GenericExporter {
         statement.close();
 
         Date ended = new Date();
-        log.warn("Time used to count exported data lines(second): " + (ended.getTime() - start.getTime()) / 1000.00);
+        double lapsed = (ended.getTime() - start.getTime()) / 1000.00;
+
+        if (lapsed > 5.0)
+            log.warn("Time used to count exported data lines(second): " + lapsed);
     }
 
     private String getSubString(String origionalString, String mark, boolean beforeMark) {
