@@ -62,6 +62,10 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public static final String rsmPercentReduction = "RSM Percent Reduction";
 
+    public static final String smokeReportCountyMoncodeAnnual = "Smkreport county-moncode annual";
+
+    public static final String temporalProfile = "Temporal Profile (A/M/PTPRO)";
+
     public DatasetType() {
 //        keyValsList = new ArrayList();
 //        qaStepTemplates = new ArrayList();
