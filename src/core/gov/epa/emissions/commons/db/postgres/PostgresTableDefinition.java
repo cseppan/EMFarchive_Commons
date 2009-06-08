@@ -125,7 +125,8 @@ public class PostgresTableDefinition implements TableDefinition {
     public String checkTableConsolidations(int dsTypeId, String colNames, String colTypes, float sizeLimit)
             throws SQLException {
         String query = "SELECT output_table FROM emf.table_consolidations WHERE dataset_type_id=" + dsTypeId
-                + " AND col_names='" + colNames + "' AND col_types='" + colTypes + "'";
+                + " AND lower(col_names)='" + colNames.toLowerCase() 
+                + "' AND lower(col_types)='" + colTypes.toLowerCase() + "'";
 
         Statement statement = null;
         ResultSet data = null;
