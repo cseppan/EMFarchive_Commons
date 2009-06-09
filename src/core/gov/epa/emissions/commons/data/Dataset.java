@@ -15,6 +15,14 @@ public interface Dataset extends Serializable {
     
     public static final String csv_header_line = "EXPORT_COLUMN_LABEL";
     
+    public static final String csv_header_line_value = "ALL_CAPS";
+    
+    public static final int upper_case = 2;
+    
+    public static final int lower_case = 1;
+    
+    public static final int no_head_line = 0;
+    
     public int getId();
 
     public void setId(int id);
@@ -88,7 +96,7 @@ public interface Dataset extends Serializable {
     
     boolean getHeaderCommentsSetting();
 
-    boolean getCSVHeaderLineSetting();
+    int getCSVHeaderLineSetting();
     
     String getInlineCommentChar();
     

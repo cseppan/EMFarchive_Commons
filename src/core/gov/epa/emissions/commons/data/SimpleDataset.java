@@ -244,8 +244,8 @@ public class SimpleDataset implements Dataset {
         this.inlineComments = inlineComments;
     }
 
-    public boolean getCSVHeaderLineSetting() {
-        return this.csvHeaderLineOn;
+    public int getCSVHeaderLineSetting() {
+        return this.csvHeaderLineOn ? 1 : 0;
     }
 
     public void setCSVHeaderLineSetting(boolean headerLineOn) {

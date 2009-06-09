@@ -130,14 +130,14 @@ public class SMKReportExporter implements Exporter {
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {
         String desc = dataset.getDescription();
-        
+
         if (desc != null && !desc.trim().isEmpty()) {
             if (desc.lastIndexOf('#') + 2 == desc.length()) {
                 StringTokenizer st = new StringTokenizer(desc, System.getProperty("line.separator"));
                 while (st.hasMoreTokens()) {
                     tableframe = st.nextToken();
                 }
-                
+
                 writer.print(desc.substring(0, desc.indexOf(tableframe)));
             } else
                 writer.print(desc);
@@ -192,7 +192,7 @@ public class SMKReportExporter implements Exporter {
         String ls = System.getProperty("line.separator");
         StringTokenizer st = new StringTokenizer(content, ls);
         StringBuffer sb = new StringBuffer();
-        
+
         while (st.hasMoreTokens())
             sb.append(" " + st.nextToken());
 
@@ -210,7 +210,7 @@ public class SMKReportExporter implements Exporter {
 
     private void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws Exception {
-        boolean csvHeaderLine = dataset.getCSVHeaderLineSetting();
+        int csvHeaderLine = dataset.getCSVHeaderLineSetting();
         String query = getQueryString(dataset, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
         boolean firstbatch = true;
@@ -220,9 +220,6 @@ public class SMKReportExporter implements Exporter {
         if (!comments) {
             pad = 1; // Add a comment column to header line
         }
-
-        if (!csvHeaderLine)
-            pad = 2; // Turn off head line
 
         while (runner.execute()) {
             ResultSet rs = runner.getResultSet();
@@ -234,16 +231,15 @@ public class SMKReportExporter implements Exporter {
                 firstbatch = false;
             }
 
-            if (pad < 2)
-                writeCols(writer, cols, pad);
+            writeCols(writer, cols, pad, csvHeaderLine);
 
             writeBatchOfData(writer, rs, cols, comments);
             pad = 2;
             rs.close();
         }
         runner.close();
-//        if (tableframe != null)             //NOTE: don't need them on the exported data
-//            writer.println(System.getProperty("line.separator") + tableframe);
+        // if (tableframe != null) //NOTE: don't need them on the exported data
+        // writer.println(System.getProperty("line.separator") + tableframe);
     }
 
     private void writeBatchOfData(PrintWriter writer, ResultSet data, String[] cols, boolean comments)
@@ -284,7 +280,8 @@ public class SMKReportExporter implements Exporter {
             String value = data.getString(i);
 
             if (value != null)
-                writer.write(formatValue(cols, colTypes.get(i - 1).intValue(), i, value)); //NOTE: SQL count column from 1, colTypes from 0
+                writer.write(formatValue(cols, colTypes.get(i - 1).intValue(), i, value)); // NOTE: SQL count column
+                                                                                            // from 1, colTypes from 0
 
             if (i + 1 < cols.length)
                 writer.print(delimiter);// delimiter
@@ -311,7 +308,7 @@ public class SMKReportExporter implements Exporter {
 
         if (containsDelimiter(value))
             return "\"" + value + "\"";
-        
+
         if (colType == Types.DOUBLE || colType == Types.FLOAT)
             return new Double(Double.valueOf(value)).toString();
 
@@ -348,10 +345,15 @@ public class SMKReportExporter implements Exporter {
         return s.indexOf(delimiter) >= 0;
     }
 
-    private void writeCols(PrintWriter writer, String[] cols, int pad) {
+    private void writeCols(PrintWriter writer, String[] cols, int pad, int csvHeaderLine) {
+        if (csvHeaderLine == Dataset.no_head_line)
+            return; // Turn off head line
+
         int i = startCol(cols) - 1;
+        
         for (; i < cols.length - pad; i++) {
-            writer.print(cols[i]);
+            writer.print(csvHeaderLine == Dataset.upper_case ? cols[i].toUpperCase() : cols[i]);
+            
             if (i + 1 + pad < cols.length)
                 writer.print(delimiter);// delimiter
         }
