@@ -352,7 +352,8 @@ public class SMKReportExporter implements Exporter {
         int i = startCol(cols) - 1;
         
         for (; i < cols.length - pad; i++) {
-            writer.print(csvHeaderLine == Dataset.upper_case ? cols[i].toUpperCase() : cols[i]);
+            String temp = (csvHeaderLine == Dataset.upper_case) ? cols[i].toUpperCase().replaceAll("_", " ") : cols[i];
+            writer.print(temp);
             
             if (i + 1 + pad < cols.length)
                 writer.print(delimiter);// delimiter
