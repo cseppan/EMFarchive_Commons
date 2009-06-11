@@ -66,6 +66,9 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public static final String temporalProfile = "Temporal Profile (A/M/PTPRO)";
 
+    public static final String smkmergeRptStateAnnualSummary = "Smkmerge report state annual summary (CSV)";
+    
+    
     public DatasetType() {
 //        keyValsList = new ArrayList();
 //        qaStepTemplates = new ArrayList();
