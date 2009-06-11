@@ -29,6 +29,9 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
     }
 
     private Column[] createCols(String[] colNames, String[] dataTypes) throws ImporterException {
+        if (colNames == null || colNames.length == 0)
+            throw new ImporterException("No column names were found.");
+        
         //parse the header if it has a #COLUMN_TYPES to create columns of appropriate types
         List<Column> cols = new ArrayList<Column>();
         
@@ -64,6 +67,9 @@ public class CSVFileFormat implements FileFormat, DelimitedFileFormat {
     }
 
     private Column[] createCols(String[] colNames) throws ImporterException{
+        if (colNames == null || colNames.length == 0)
+            throw new ImporterException("No column names were found.");
+        
         List<Column> cols = new ArrayList<Column>();
         for (int i = 0; i < colNames.length; i++) {
             String name = replaceSpecialChars(colNames[i]);
