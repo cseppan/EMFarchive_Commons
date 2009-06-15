@@ -176,6 +176,8 @@ public class CSVFileReader implements Reader {
                     if (isColTypes(lineRead)){
                         setColTypes(lineRead);
                     }
+                } else if (lineRead.split(",").length < 2) {
+                    throw new ImporterException("At least 2 columns are required.");
                 } else if (lineRead.split(",").length >= 2)
                     tokenizer = new CommaDelimitedTokenizer();
 
