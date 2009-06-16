@@ -28,7 +28,7 @@ public class TableCreator {
                 tableDefinition.createTable(table, tableFormat.cols());
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new Exception("could not create table - " + table + "\n" + e.getMessage(), e);
+            throw e;
         }
     }
 

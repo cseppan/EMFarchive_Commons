@@ -75,7 +75,9 @@ public class CSVImporter implements Importer {
             e.printStackTrace();
             
             if (table == null || table.isEmpty())
-                throw new ImporterException("could not create csv type data table.");
+                throw new ImporterException("could not create csv type data table. " + (e.getMessage() != null ? e.getMessage() : "Please" +
+                		"check column names from the data file."));
+                
             
             throw new ImporterException(e.getMessage());
         } finally {

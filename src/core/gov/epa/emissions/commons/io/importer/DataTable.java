@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.io.importer;
 
+import java.sql.SQLException;
 import java.util.Random;
 
 import gov.epa.emissions.commons.data.Dataset;
@@ -70,6 +71,12 @@ public class DataTable {
         try {
             delegate.create(table, tableFormat);
         } catch (Exception e) {
+            if (e instanceof SQLException) {
+                String errStr = e.getMessage();
+                int index = errStr.indexOf("ERROR:");
+                throw new ImporterException(index >= 0 ? errStr.substring(index + 6) + "." : errStr);
+            }
+            
             throw new ImporterException("Note that CSV imports require a row column names before the data rows - " + e.getMessage());
         }
     }
@@ -127,7 +134,7 @@ public class DataTable {
             return this.name;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ImporterException("Error during creating consolidated dataset table", e);
+            throw new ImporterException(e.getMessage());
         }
     }
     

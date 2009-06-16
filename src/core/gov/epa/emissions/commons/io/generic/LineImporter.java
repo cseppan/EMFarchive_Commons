@@ -65,7 +65,8 @@ public class LineImporter implements Importer {
             e.printStackTrace();
             
             if (table == null || table.isEmpty())
-                throw new ImporterException("could not create csv type data table.");
+                throw new ImporterException("could not create line-based type data table. " 
+                        + (e.getMessage() != null ? e.getMessage() : ""));
             
             throw new ImporterException(e.getMessage());
         }
