@@ -68,6 +68,8 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public static final String smkmergeRptStateAnnualSummary = "Smkmerge report state annual summary (CSV)";
     
+    public static final String invTable = "Inventory Table Data (INVTABLE)";
+    
     
     public DatasetType() {
 //        keyValsList = new ArrayList();
