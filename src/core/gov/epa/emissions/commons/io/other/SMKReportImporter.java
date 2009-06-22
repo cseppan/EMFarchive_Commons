@@ -72,7 +72,7 @@ public class SMKReportImporter implements Importer {
             e.printStackTrace();
             
             if (table == null || table.isEmpty())
-                throw new ImporterException("could not create SMOKE Report type data table.");
+                throw new ImporterException(e.getMessage());
             
             throw new ImporterException("could not import File - " + file.getAbsolutePath() + "; Details: "
                     + e.getMessage());
