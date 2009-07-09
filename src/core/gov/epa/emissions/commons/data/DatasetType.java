@@ -70,6 +70,10 @@ public class DatasetType implements Serializable, Lockable, Comparable {
     
     public static final String invTable = "Inventory Table Data (INVTABLE)";
     
+    public static final String stateComparisonTolerance = "State Comparison Tolerance (CSV)";
+    
+    public static final String countryStateCountyNamesAndDataCOSTCY = "Country, state, and county names and data (COSTCY)";
+    
     
     public DatasetType() {
 //        keyValsList = new ArrayList();
