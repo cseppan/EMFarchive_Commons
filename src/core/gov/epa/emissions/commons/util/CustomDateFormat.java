@@ -78,6 +78,18 @@ public class CustomDateFormat {
         return date == null ? "" : dateFormatter.format(date);
     }
 
+    public static Date format_yyyy_MM_dd_HHmmssSS(String date) throws ParseException {
+        dateFormatter.applyPattern("yyyy-MM-dd-HH:mm:ss:SS");
+        return date == null || date.trim().isEmpty()? null : dateFormatter.parse(date);
+//        return date == null ? "" : dateFormatter.format(date);
+    }
+
+    public static Date format_yyyy_MM_dd_HHmmss(String date) throws ParseException {
+        dateFormatter.applyPattern("yyyy-MM-dd HH:mm:ss");
+        return date == null || date.trim().isEmpty()? null : dateFormatter.parse(date);
+//        return date == null ? "" : dateFormatter.format(date);
+    }
+
     public static String format_YYYYMMDDHHMMSS(Date date) {
         dateFormatter.applyPattern("yyyyMMddHHmmss");
         return date == null ? "" : dateFormatter.format(date);
