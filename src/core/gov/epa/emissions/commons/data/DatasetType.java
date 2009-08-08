@@ -74,6 +74,10 @@ public class DatasetType implements Serializable, Lockable, Comparable {
     
     public static final String countryStateCountyNamesAndDataCOSTCY = "Country, state, and county names and data (COSTCY)";
     
+    public static final String chemicalSpeciationCrossReferenceGSREF = "Chemical Speciation Cross-Reference (GSREF)";
+    
+    public static final String chemicalSpeciationProfilesGSPRO = "Chemical Speciation Profiles (GSPRO)";
+    
     
     public DatasetType() {
 //        keyValsList = new ArrayList();
