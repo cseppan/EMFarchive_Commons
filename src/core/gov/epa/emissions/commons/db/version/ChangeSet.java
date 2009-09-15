@@ -29,6 +29,9 @@ public class ChangeSet {
             newRecords.remove(record);
             return;
         }
+        
+        if (containsUpdated(record))
+            updatedRecords.remove(record);
 
         deletedRecords.add(record);
     }

@@ -167,7 +167,15 @@ public class VersionsTest extends HibernateTestCase {
 
     private User user() {
         User user = new User();
-        user.setName("cep");
+        user.setUsername("emf");
+        user.setPassword("emf12345");
+        user.setAffiliation("IE CEMPD");
+        user.setAdmin(false);
+        user.setEmail("abc@abc.com");
+        user.setEncryptedPassword("7Dq/pgn1VOcABL644L59KlfI/eo=");
+        user.setName("emf");
+        user.setPhone("919-123-4567");
+        user.setId(2); //To pretend to be the 'emf' user in emf.users table
         return user;
     }
 

@@ -23,6 +23,7 @@
         
         <!-- Mappings -->
         <mapping resource="gov/epa/emissions/commons/db/version/Version.hbm.xml"/>
+        <mapping resource="gov/epa/emissions/commons/security/User.hbm.xml"/>
         
     </session-factory>
     
