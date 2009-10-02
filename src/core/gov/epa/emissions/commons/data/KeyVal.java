@@ -9,6 +9,8 @@ public class KeyVal implements Serializable {
     private Keyword keyword;
 
     private String value;
+    
+    private String kwname;
 
     private long listindex;
 
@@ -18,6 +20,7 @@ public class KeyVal implements Serializable {
     public KeyVal(Keyword keyword, String value) {
         this.keyword = keyword;
         this.value = value;
+        this.kwname = keyword.getName();
     }
 
     public long getId() {
@@ -34,6 +37,7 @@ public class KeyVal implements Serializable {
 
     public void setKeyword(Keyword keyword) {
         this.keyword = keyword;
+        this.kwname = keyword.getName();
     }
 
     public String getValue() {
@@ -54,6 +58,15 @@ public class KeyVal implements Serializable {
 
     public String getName() {
         return keyword.getName();
+    }
+    
+    public String getKwname() {
+        kwname = keyword.getName();
+        return kwname;
+    }
+
+    public void setKwname(String kwname) {
+        //this.kwname = kwname;
     }
 
 }

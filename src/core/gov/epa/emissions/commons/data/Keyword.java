@@ -41,5 +41,9 @@ public class Keyword implements Serializable {
     public int hashCode() {
         return id;
     }
+    
+    public String toString() {
+        return name;
+    }
 
 }
