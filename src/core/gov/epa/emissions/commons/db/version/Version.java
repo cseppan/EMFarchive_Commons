@@ -22,6 +22,8 @@ public class Version implements Lockable, Serializable {
 
     private String name;
 
+    private String description;
+
     private Date lastModifiedDate;
 
     private User creator;
@@ -76,11 +78,29 @@ public class Version implements Lockable, Serializable {
     }
 
     public void setName(String name) {
+        
+//        if (true)
+//            throw new RuntimeException();
+        
+        System.out.println("Setting name to " + name);
         this.name = name;
     }
 
     public String getName() {
+        System.out.println("Getting name of " + name);
         return name;
+    }
+
+    public String getDescription() {
+
+        System.out.println("Getting description of " + description);
+        return description;
+    }
+
+    public void setDescription(String description) {
+
+        System.out.println("Setting description to " + description);
+        this.description = description;
     }
 
     /**
