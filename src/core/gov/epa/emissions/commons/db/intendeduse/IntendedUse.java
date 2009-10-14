@@ -28,8 +28,6 @@ public class IntendedUse implements Comparable, Serializable {
     }
 
     public void setName(String name) {
-
-        System.out.println("in IntendedUse: " + name);
         this.name = name;
     }
 
