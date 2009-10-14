@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.db.version;
 
 import gov.epa.emissions.commons.data.Lockable;
 import gov.epa.emissions.commons.data.Mutex;
+import gov.epa.emissions.commons.db.intendeduse.IntendedUse;
 import gov.epa.emissions.commons.security.User;
 
 import java.io.Serializable;
@@ -29,6 +30,8 @@ public class Version implements Lockable, Serializable {
     private User creator;
 
     private int numberRecords;
+    
+    private IntendedUse intendedUse;
     
     private Mutex lock;
 
@@ -91,6 +94,14 @@ public class Version implements Lockable, Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public IntendedUse getIntendedUse() {
+        return intendedUse;
+    }
+
+    public void setIntendedUse(IntendedUse intendedUse) {
+        this.intendedUse = intendedUse;
     }
 
     /**
