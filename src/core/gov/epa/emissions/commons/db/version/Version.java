@@ -15,7 +15,7 @@ public class Version implements Lockable, Serializable {
 
     private int version;
 
-    /*parent versions*/
+    /* parent versions */
     private String path;
 
     private boolean finalVersion = false;
@@ -27,9 +27,9 @@ public class Version implements Lockable, Serializable {
     private Date lastModifiedDate;
 
     private User creator;
-    
-    private int numberRecords;
 
+    private int numberRecords;
+    
     private Mutex lock;
 
     public Version() {
@@ -40,7 +40,7 @@ public class Version implements Lockable, Serializable {
         this();
         version = v;
     }
-    
+
     public boolean isFinalVersion() {
         return finalVersion;
     }
@@ -78,28 +78,18 @@ public class Version implements Lockable, Serializable {
     }
 
     public void setName(String name) {
-        
-//        if (true)
-//            throw new RuntimeException();
-        
-        System.out.println("Setting name to " + name);
         this.name = name;
     }
 
     public String getName() {
-        System.out.println("Getting name of " + name);
         return name;
     }
 
     public String getDescription() {
-
-        System.out.println("Getting description of " + description);
         return description;
     }
 
     public void setDescription(String description) {
-
-        System.out.println("Setting description to " + description);
         this.description = description;
     }
 
@@ -129,12 +119,12 @@ public class Version implements Lockable, Serializable {
     public void setCreator(User creator) {
         this.creator = creator;
     }
-    
-    public void setNumberRecords(int numberRecords){
+
+    public void setNumberRecords(int numberRecords) {
         this.numberRecords = numberRecords;
     }
-    
-    public int getNumberRecords(){
+
+    public int getNumberRecords() {
         return numberRecords;
     }
 
