@@ -23,7 +23,7 @@ public class Version implements Lockable, Serializable {
 
     private String name;
 
-    private String description;
+    private String description = "";
 
     private Date lastModifiedDate;
 

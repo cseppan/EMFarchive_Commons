@@ -112,6 +112,7 @@ public class Versions {
         version.setDatasetId(base.getDatasetId());
         version.setLastModifiedDate(new Date());
         version.setNumberRecords(base.getNumberRecords());
+        version.setDescription("");
         session.clear();
         add(version, session);
 
