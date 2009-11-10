@@ -110,4 +110,10 @@ public class CustomDateFormat {
         dateFormatter.applyPattern("HHmm");
         return date == null ? "" : dateFormatter.format(date);
     }
+
+    public static String format_HHMMSSSS(Date date) {
+        dateFormatter.applyPattern("HHmmssSS");
+        return date == null ? "" : dateFormatter.format(date);
+    }
+
 }
