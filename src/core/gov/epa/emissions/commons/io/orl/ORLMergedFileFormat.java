@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
+import gov.epa.emissions.commons.io.SmallIntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.TableFormat;
 import gov.epa.emissions.commons.io.importer.FillDefaultValues;
@@ -134,6 +135,21 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
 //        cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
 //        cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
         cols.add(new Column("SECTOR", types.stringType(64), 64, new StringFormatter(255)));
+        //Added month to store month the source record is good for
+        //0 - Annual
+        //1 - Jan
+        //2 - Feb
+        //3 - Mar
+        //4 - Apr
+        //5 - May
+        //6 - Jun
+        //7 - Jul
+        //8 - Aug
+        //9 - Sep
+        //10 - Oct
+        //11 - Nov
+        //12 - Dec
+        cols.add(new Column("MONTH", types.smallInt(), new SmallIntegerFormatter()));
 
         return cols.toArray(new Column[0]);
     }
@@ -142,7 +158,7 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
         filler.fill(this, data, datasetId);
     }
     
-    public String columnDelimitedList() {
+    public String columnList() {
         String delimitedList = "";
         Column[] columns = cols();
         for (int i = 0; i < columns.length; i++) {
