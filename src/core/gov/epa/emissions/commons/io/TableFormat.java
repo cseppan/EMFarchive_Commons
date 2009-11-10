@@ -8,4 +8,5 @@ public interface TableFormat extends FileFormat {
     
     int getBaseLength(); // base table column length
 
+    Column[] cols(); // get columns meta data for the table
 }
