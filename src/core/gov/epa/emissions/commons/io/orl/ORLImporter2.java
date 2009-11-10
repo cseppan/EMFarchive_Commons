@@ -334,7 +334,7 @@ public class ORLImporter2 {
     private void addAttributes(List<String> commentsList, Dataset dataset) throws ImporterException {
         Comments comments = new Comments(commentsList);
         if (!comments.hasRightTagFormat("ORL"))
-            throw new ImporterException("The tag - 'ORL' in right format (ORL || ORL POINT, etc.) is mandatory.");
+            throw new ImporterException("The first line of ORL files must start with #ORL.");
 
         if (!comments.hasContent("COUNTRY"))
             throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
