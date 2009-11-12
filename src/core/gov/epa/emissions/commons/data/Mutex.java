@@ -28,7 +28,7 @@ public class Mutex implements Serializable {
     }
 
     public boolean isLocked(String owner) {
-        return (this.owner.equals(owner));
+        return this.owner != null && owner != null && this.owner.equals(owner);
     }
 
     public boolean isLocked(User user) {
