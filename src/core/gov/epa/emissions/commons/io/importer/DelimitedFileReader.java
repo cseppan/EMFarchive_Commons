@@ -38,9 +38,9 @@ public class DelimitedFileReader implements Reader {
         try {
             fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found.");
+            throw new FileNotFoundException("File not found: " + e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            throw new FileNotFoundException("Unsupported char set encoding.");
+            throw new FileNotFoundException("Unsupported char set encoding: " + e.getMessage());
         }
 
         comments = new ArrayList<String>();

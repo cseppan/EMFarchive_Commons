@@ -8,13 +8,14 @@ public class Reference extends LockableImpl implements Serializable {
 
     private String description;
 
-    private boolean updatedReference;
+    private boolean updated;
 
     public Reference() {
-        // no-op
     }
 
     public Reference(int id, String description) {
+
+        this();
 
         this.id = id;
         this.description = description;
@@ -36,12 +37,12 @@ public class Reference extends LockableImpl implements Serializable {
         this.description = description;
     }
 
-    public boolean isUpdatedReference() {
-        return updatedReference;
+    public boolean isUpdated() {
+        return updated;
     }
 
-    public void setUpdatedReference(boolean updatedReference) {
-        this.updatedReference = updatedReference;
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
     }
 
     @Override
