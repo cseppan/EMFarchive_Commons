@@ -51,7 +51,7 @@ public class Record {
 
     public void setTokens(String[] tokensList) {
         tokens.clear();
-        tokens.addAll(Arrays.asList(tokensList));
+        if (tokensList != null) tokens.addAll(Arrays.asList(tokensList));
     }
 
     /**
