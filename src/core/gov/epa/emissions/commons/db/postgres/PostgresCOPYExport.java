@@ -97,7 +97,7 @@ public class PostgresCOPYExport {
             ResultSetMetaData md = rs.getMetaData();
             for (int i = 1; i <= md.getColumnCount(); i++)
                 if (md.getColumnTypeName(i).toUpperCase().startsWith("VARCHAR") || md.getColumnTypeName(i).toUpperCase().startsWith("TEXT"))
-                    colNames += md.getColumnLabel(i) + ",";
+                    colNames += "\"" + md.getColumnLabel(i) + "\",";
         } catch (SQLException e) {
             //
         } finally {
