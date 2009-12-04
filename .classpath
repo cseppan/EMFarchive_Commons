@@ -35,7 +35,7 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.9.jar"/>
 	<classpathentry kind="lib" path="lib/dev/junitperf-1.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/analysis-engine.jar"/>
-	<classpathentry kind="lib" path="lib/postgresql-8.2-508.jdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-8.3-603.jdbc4.jar"/>
 	<classpathentry kind="output" path="build/eclipse"/>
 </classpath>
