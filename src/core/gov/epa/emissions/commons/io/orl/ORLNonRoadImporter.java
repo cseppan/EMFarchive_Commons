@@ -41,6 +41,8 @@ public class ORLNonRoadImporter implements Importer {
 
     public void run() throws ImporterException {
         delegate.run();
-    }
+        
+        delegate.postRun();
+   }
 
 }

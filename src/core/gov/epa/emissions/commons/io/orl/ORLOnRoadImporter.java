@@ -41,6 +41,8 @@ public class ORLOnRoadImporter implements Importer {
 
     public void run() throws ImporterException {
         delegate.run();
+        
+        delegate.postRun();
     }
 
 }
