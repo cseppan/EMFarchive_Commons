@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
 import gov.epa.emissions.commons.io.IntegerFormatter;
+import gov.epa.emissions.commons.io.NullFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
 import gov.epa.emissions.commons.io.SmallIntegerFormatter;
 import gov.epa.emissions.commons.io.StringFormatter;
@@ -86,9 +87,10 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
         cols.add(new Column("CEFF", types.realType(), new RealFormatter()));
         cols.add(new Column("REFF", types.realType(), new RealFormatter()));
         cols.add(new Column("RPEN", types.realType(), new RealFormatter()));
-//        cols.add(new Column("CPRI", types.intType(), new IntegerFormatter()));
+        cols.add(new Column("CPRI", types.intType(), new IntegerFormatter()));
 //        cols.add(new Column("CSEC", types.intType(), new IntegerFormatter()));
         // extended orl columns
+        cols.add(new Column("PRIMARY_DEVICE_TYPE_CODE", types.stringType(4), 4, new StringFormatter(4)));
 //        cols.add(new Column("NEI_UNIQUE_ID", types.stringType(20), 20, new StringFormatter(20)));
 //        cols.add(new Column("ORIS_FACILITY_CODE", types.stringType(6), 6, new StringFormatter(6)));
 //        cols.add(new Column("ORIS_BOILER_ID", types.stringType(6), 6, new StringFormatter(6)));
@@ -120,7 +122,7 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
 //        cols.add(new Column("ANNUAL_AVG_DAYS_PER_WEEK", types.realType(), new RealFormatter()));
 //        cols.add(new Column("ANNUAL_AVG_WEEKS_PER_YEAR", types.realType(), new RealFormatter()));
 //        cols.add(new Column("ANNUAL_AVG_HOURS_PER_DAY", types.realType(), new RealFormatter()));
-//        cols.add(new Column("ANNUAL_AVG_HOURS_PER_YEAR", types.realType(), new RealFormatter()));
+        cols.add(new Column("ANNUAL_AVG_HOURS_PER_YEAR", types.realType(), new RealFormatter()));
 //        cols.add(new Column("PERIOD_DAYS_PER_WEEK", types.realType(), new RealFormatter()));
 //        cols.add(new Column("PERIOD_WEEKS_PER_PERIOD", types.realType(), new RealFormatter()));
 //        cols.add(new Column("PERIOD_HOURS_PER_DAY", types.realType(), new RealFormatter()));
@@ -130,10 +132,10 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
         cols.add(new Column("DESIGN_CAPACITY", types.realType(), new RealFormatter()));
         cols.add(new Column("DESIGN_CAPACITY_UNIT_NUMERATOR", types.stringType(10), 10, new StringFormatter(10)));
         cols.add(new Column("DESIGN_CAPACITY_UNIT_DENOMINATOR", types.stringType(10), 10, new StringFormatter(10)));
-//        cols.add(new Column("CONTROL_MEASURES", types.text(), new NullFormatter()));
-//        cols.add(new Column("PCT_REDUCTION", types.text(), new NullFormatter()));
-//        cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
-//        cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
+        cols.add(new Column("CONTROL_MEASURES", types.text(), new NullFormatter()));
+        cols.add(new Column("PCT_REDUCTION", types.text(), new NullFormatter()));
+        cols.add(new Column("CURRENT_COST", types.realType(), new RealFormatter()));
+        cols.add(new Column("CUMULATIVE_COST", types.realType(), new RealFormatter()));
         cols.add(new Column("SECTOR", types.stringType(64), 64, new StringFormatter(255)));
         //Added month to store month the source record is good for
         //0 - Annual
