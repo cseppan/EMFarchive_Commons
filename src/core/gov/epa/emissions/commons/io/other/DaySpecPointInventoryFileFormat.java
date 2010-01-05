@@ -27,10 +27,10 @@ public class DaySpecPointInventoryFileFormat implements FileFormat, FixedWidthFi
     }
     
     private Column[] createCols(SqlDataTypes types) {
-        List columns = new ArrayList();
+        List<Column> columns = new ArrayList<Column>();
         //FIXME: String type uses 32 as the number of characters assuming it is big enough to 
         //hold the relevant fields
-        columns.add(new Column("SATE", types.intType(), 2, new IntegerFormatter()));
+        columns.add(new Column("STATE", types.intType(), 2, new IntegerFormatter()));
         columns.add(new Column("COUNTY", types.intType(), 3, new IntegerFormatter()));
         columns.add(new Column("PLANTID", types.stringType(15), 15, new StringFormatter(15)));
         columns.add(new Column("POINTID", types.stringType(12), 12, new StringFormatter(12)));
@@ -45,6 +45,6 @@ public class DaySpecPointInventoryFileFormat implements FileFormat, FixedWidthFi
         //FIXME: SCC code is a 10 digit code
         columns.add(new Column("SCC", types.stringType(9), 9, new StringFormatter(9)));
         
-        return (Column[]) columns.toArray(new Column[0]);
+        return columns.toArray(new Column[0]);
     }
 }
