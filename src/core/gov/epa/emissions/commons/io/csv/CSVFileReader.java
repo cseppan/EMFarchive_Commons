@@ -105,7 +105,30 @@ public class CSVFileReader implements Reader {
 
     private Record doRead(String line) throws ImporterException {
         Record record = new Record();
-        String[] tokens = tokenizer.tokens(line);
+        String[] tokens = null;
+        
+        try {
+            tokens = tokenizer.tokens(line);
+        } catch (Exception e) {
+            System.out.println("Reading Error: " + line);
+            String err = e.getMessage();
+            
+            if (err != null && err.toLowerCase().contains("no match available"))
+                throw new ImporterException("Line " + lineNumber + " has unmatched quotes.");
+            
+            throw new ImporterException("Line " + lineNumber + " has format errors." );
+        }
+        
+        if (tokens.length < cols.length) {
+            System.out.println("Reading Error: " + line);
+            throw new ImporterException("Line " + lineNumber + " has too few tokens or unbalanced quotes.");
+        }
+        
+        if (tokens.length > cols.length) {
+            System.out.println("Reading Error: " + line);
+            throw new ImporterException("Line " + lineNumber + " has too many tokens.");
+        }
+        
         for (int i = 0; i < tokens.length; i++) {
             // if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
             tokens[i] = checkBackSlash(tokens[i]);
@@ -168,6 +191,8 @@ public class CSVFileReader implements Reader {
             String lineRead = fileReader.readLine();
             
             for (; lineRead != null; lineRead = fileReader.readLine()) {
+                lineNumber++;
+                
                 if (isExportInfo(lineRead))
                     continue;
                 else if (isComment(lineRead)) {
