@@ -361,6 +361,7 @@ public class ORLImporter {
                             + " or strpos(substr(segment, 1, 1) || substr(segment, length(segment), 1), ' ') > 0" 
                             + " or strpos(substr(design_capacity_unit_numerator, 1, 1) || substr(design_capacity_unit_numerator, length(design_capacity_unit_numerator), 1), ' ') > 0" 
                             + " or strpos(substr(design_capacity_unit_denominator, 1, 1) || substr(design_capacity_unit_denominator, length(design_capacity_unit_denominator), 1), ' ') > 0" 
+                            + " or design_capacity = -9.0" 
                             + " or stkflow = -9.0" 
                             + " or ANNUAL_AVG_HOURS_PER_YEAR = -9.0" 
                             : " ")
@@ -399,7 +400,8 @@ public class ORLImporter {
                             + " ,segment = case when strpos(substr(segment, 1, 1) || substr(segment, length(segment), 1), ' ') > 0 then trim(segment) else segment end " 
                             + " ,design_capacity_unit_numerator = case when strpos(substr(design_capacity_unit_numerator, 1, 1) || substr(design_capacity_unit_numerator, length(design_capacity_unit_numerator), 1), ' ') > 0 then trim(design_capacity_unit_numerator) else design_capacity_unit_numerator end " 
                             + " ,design_capacity_unit_denominator = case when strpos(substr(design_capacity_unit_denominator, 1, 1) || substr(design_capacity_unit_denominator, length(design_capacity_unit_denominator), 1), ' ') > 0 then trim(design_capacity_unit_denominator) else design_capacity_unit_denominator end " 
-                            + " ,stkflow = case when stkflow = -9.0 then null::double precision else stkflow end "                             
+                            + " ,design_capacity = case when design_capacity = -9.0 then null::double precision else design_capacity end "
+                            + " ,stkflow = case when stkflow = -9.0 then null::double precision else stkflow end "
                             + " ,ANNUAL_AVG_HOURS_PER_YEAR = case when stkflow = -9.0 then null::double precision else ANNUAL_AVG_HOURS_PER_YEAR end "
                             : " ")
                     + (hasRpenColumn ? "     ,rpen = case when rpen = -9.0 then null::double precision else rpen end " : " ")
@@ -425,6 +427,7 @@ public class ORLImporter {
                             + " or strpos(substr(segment, 1, 1) || substr(segment, length(segment), 1), ' ') > 0" 
                             + " or strpos(substr(design_capacity_unit_numerator, 1, 1) || substr(design_capacity_unit_numerator, length(design_capacity_unit_numerator), 1), ' ') > 0" 
                             + " or strpos(substr(design_capacity_unit_denominator, 1, 1) || substr(design_capacity_unit_denominator, length(design_capacity_unit_denominator), 1), ' ') > 0" 
+                            + " or design_capacity = -9.0" 
                             + " or stkflow = -9.0" 
                             + " or ANNUAL_AVG_HOURS_PER_YEAR = -9.0" 
                             : " ")
