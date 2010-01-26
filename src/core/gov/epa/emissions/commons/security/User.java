@@ -34,6 +34,10 @@ public class User implements Serializable, Lockable {
     private boolean isLoggedIn;
 
     private boolean isAccountDisabled;
+    
+    private boolean wantEmails;
+    
+    private Date lastLoginDate;
 
     private PasswordGenerator passwordGen;
 
@@ -42,6 +46,7 @@ public class User implements Serializable, Lockable {
     public User() {// needed for serialization
         this.passwordGen = new PasswordGenerator();
         lock = new Mutex();
+        this.wantEmails = true;
     }
 
     public User(String name, String affiliation, String phone, String email, String username, String password,
@@ -54,7 +59,8 @@ public class User implements Serializable, Lockable {
         setEmail(email);
         setUsername(username);
         setPassword(password);
-
+        setWantEmails(true);
+        setLastLoginDate(new Date());
         this.isAdmin = beAdmin;
         this.isAccountDisabled = disabled;
     }
@@ -137,6 +143,22 @@ public class User implements Serializable, Lockable {
 
     public void setLoggedIn(boolean loggedIn) {
         this.isLoggedIn = loggedIn;
+    }
+    
+    public boolean isWantEmails() {
+        return wantEmails;
+    }
+
+    public void setWantEmails(boolean wantEamils) {
+        this.wantEmails = wantEamils;
+    }
+    
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
     public void setPassword(String password) throws UserException {
