@@ -35,8 +35,12 @@ public class TemporalReferenceExporter extends GenericExporter {
                 int index = lasttoken.indexOf("/POINT DEFN/");
                 if (index < 0)
                     writer.print("#" + lasttoken);
-                else
-                    lastHeaderLine = lasttoken;
+                else {
+                    if (index > 0)
+                        writer.print("#" + lasttoken.substring(0, index));
+                        
+                    lastHeaderLine = lasttoken.substring(index);
+                }
             }
 
             printExportInfo(writer);
