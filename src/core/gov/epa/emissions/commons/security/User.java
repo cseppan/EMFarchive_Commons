@@ -145,7 +145,7 @@ public class User implements Serializable, Lockable {
         this.isLoggedIn = loggedIn;
     }
     
-    public boolean isWantEmails() {
+    public boolean getWantEmails() {
         return wantEmails;
     }
 
