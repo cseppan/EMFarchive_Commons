@@ -130,10 +130,12 @@ public class CSVFileReader implements Reader {
         }
         
         for (int i = 0; i < tokens.length; i++) {
-            // if (tokens[i].indexOf(":\\") >= 0) {//add escape characters => insertable into postgres
+            if (!isDoubleQuotesBalanced(tokens[i]))
+                throw new ImporterException("Line " + lineNumber + " has unbalanced quotes.");
+            
             tokens[i] = checkBackSlash(tokens[i]);
-            // }
         }
+        
         record.add(Arrays.asList(tokens));
 
         return record;
@@ -260,6 +262,30 @@ public class CSVFileReader implements Reader {
 
     private String checkBackSlash(String col) {
         return col.replaceAll("\\\\", "\\\\\\\\");
+    }
+    
+    private boolean isDoubleQuotesBalanced(String token) {
+        int count = 0;
+        int len = token.length();
+        int i = token.indexOf('"');
+        
+        if (i < 0)
+            return true;
+        
+        for (; i < len;) {
+            count++;
+            i++;
+            
+            if (i == len)
+                break;
+            
+            i = token.indexOf('"', i);
+            
+            if (i < 0)
+                break;
+        }
+        
+        return count % 2 == 0;
     }
 
 }
