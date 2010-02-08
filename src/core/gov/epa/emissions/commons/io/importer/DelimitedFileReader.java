@@ -2,7 +2,7 @@ package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
-import gov.epa.emissions.commons.util.CustomStringTools;
+import gov.epa.emissions.commons.util.StringTools;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,7 +70,7 @@ public class DelimitedFileReader implements Reader {
             if (isData(line))
                 return doRead(line);
             if (isComment(line))
-                comments.add(CustomStringTools.escapeBackSlash(line));
+                comments.add(StringTools.escapeBackSlash(line));
 
             line = fileReader.readLine();
         }
@@ -148,7 +148,7 @@ public class DelimitedFileReader implements Reader {
         if (comment.length() > 127)
             comment = comment.substring(0, 127);
         
-        comment = CustomStringTools.escapeBackSlash4jdbc(comment);
+        comment = StringTools.escapeBackSlash4jdbc(comment);
         
         return comment.startsWith("!") ? comment : "!" + comment;
     }
@@ -181,7 +181,7 @@ public class DelimitedFileReader implements Reader {
     public String[] readHeader(int numLines) throws IOException {
         List<String> header = new ArrayList<String>();
         for (int i = 0; i < numLines; i++) {
-            header.add(CustomStringTools.escapeBackSlash(fileReader.readLine()));
+            header.add(StringTools.escapeBackSlash(fileReader.readLine()));
         }
 
         return header.toArray(new String[0]);
@@ -216,7 +216,7 @@ public class DelimitedFileReader implements Reader {
     private String readHeaderLines(List<String> header, String line, Pattern pattern) throws IOException {
         while (pattern.split(line).length < 3) {
             if (!isExportInfo(line))
-                header.add(CustomStringTools.escapeBackSlash(line));
+                header.add(StringTools.escapeBackSlash(line));
             
             line = fileReader.readLine();
         }

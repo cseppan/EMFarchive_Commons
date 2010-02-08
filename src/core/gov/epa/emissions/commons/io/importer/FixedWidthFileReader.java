@@ -3,7 +3,7 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.FileFormat;
-import gov.epa.emissions.commons.util.CustomStringTools;
+import gov.epa.emissions.commons.util.StringTools;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -55,7 +55,7 @@ public class FixedWidthFileReader implements Reader {
             if (isData(line))
                 return fixedWidthParser.parse(line);
             if (isComment(line))
-                comments.add(CustomStringTools.escapeBackSlash(line));
+                comments.add(StringTools.escapeBackSlash(line));
 
             line = fileReader.readLine();
         }

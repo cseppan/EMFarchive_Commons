@@ -1,7 +1,7 @@
 package gov.epa.emissions.commons.io.importer;
 
 import gov.epa.emissions.commons.Record;
-import gov.epa.emissions.commons.util.CustomStringTools;
+import gov.epa.emissions.commons.util.StringTools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class DataReader implements Reader {
                 if (isExportInfo(currentLine))
                     continue; // rip off the export info lines
                 
-                comments.add(CustomStringTools.escapeBackSlash(currentLine));
+                comments.add(StringTools.escapeBackSlash(currentLine));
                 continue;
             }
             

@@ -11,7 +11,7 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.io.importer.PacketReader;
 import gov.epa.emissions.commons.io.importer.Parser;
 import gov.epa.emissions.commons.io.importer.TerminatorRecord;
-import gov.epa.emissions.commons.util.CustomStringTools;
+import gov.epa.emissions.commons.util.StringTools;
 
 public class CountryStateCountyFileReader implements PacketReader {
     private BufferedReader fileReader;
@@ -60,7 +60,7 @@ public class CountryStateCountyFileReader implements PacketReader {
                 return parser.parse(line);
             }
             if (isComment(line))
-                comments.add(CustomStringTools.escapeBackSlash(line));
+                comments.add(StringTools.escapeBackSlash(line));
         }
 
         return new TerminatorRecord();

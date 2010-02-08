@@ -1,6 +1,9 @@
 package gov.epa.emissions.commons.util;
 
-public class CustomStringTools {
+public class StringTools {
+    public final static String EMF_DOUBLE_QUOTE = "%%EmfDoubleQuote%%";
+    public final static String EMF_SINGLE_QUOTE = "%%EmfSingleQuote%%";
+    public final static String EMF_NEW_LINE = "%%EmfNewLine%%";
 
     public static String replaceNoneLetterDigit(String string, char substitute) {
         for (int i = 0; i < string.length(); i++) {
