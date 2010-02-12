@@ -38,6 +38,8 @@ public class User implements Serializable, Lockable {
     private boolean wantEmails;
     
     private Date lastLoginDate;
+    
+    private Date passwordResetDate;
 
     private PasswordGenerator passwordGen;
 
@@ -61,6 +63,7 @@ public class User implements Serializable, Lockable {
         setPassword(password);
         setWantEmails(true);
         setLastLoginDate(new Date());
+        setPasswordResetDate(new Date());
         this.isAdmin = beAdmin;
         this.isAccountDisabled = disabled;
     }
@@ -159,6 +162,14 @@ public class User implements Serializable, Lockable {
 
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+    
+    public Date getPasswordResetDate() {
+        return passwordResetDate;
+    }
+
+    public void setPasswordResetDate(Date passwordResetDate) {
+        this.passwordResetDate = passwordResetDate;
     }
 
     public void setPassword(String password) throws UserException {
