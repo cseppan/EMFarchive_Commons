@@ -4,6 +4,7 @@ public class StringTools {
     public final static String EMF_DOUBLE_QUOTE = "%%EmfDoubleQuote%%";
     public final static String EMF_SINGLE_QUOTE = "%%EmfSingleQuote%%";
     public final static String EMF_NEW_LINE = "%%EmfNewLine%%";
+    public final static String SYS_NEW_LINE = System.getProperty("line.separator");
 
     public static String replaceNoneLetterDigit(String string, char substitute) {
         for (int i = 0; i < string.length(); i++) {
