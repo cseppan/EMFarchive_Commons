@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.data;
 
+import gov.epa.emissions.commons.io.XFileFormat;
 import gov.epa.emissions.commons.security.User;
 
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class DatasetType implements Serializable, Lockable, Comparable {
+public class DatasetType implements Serializable, Lockable, Comparable<DatasetType> {
 
     private int id;
 
@@ -31,10 +32,18 @@ public class DatasetType implements Serializable, Lockable, Comparable {
     private String exporterClassName;
 
     private Mutex lock;
+    
+    private XFileFormat fileFormat;
 
     private KeyVal[] keyValsList = new KeyVal[]{};
 
     private QAStepTemplate[] qaStepTemplates = new QAStepTemplate[]{};
+    
+    private Date creationDate;
+    
+    private Date lastModifiedDate;
+    
+    private User creator;
 
     public static final String orlMergedInventory = "ORL Merged Inventory";
 
@@ -208,8 +217,8 @@ public class DatasetType implements Serializable, Lockable, Comparable {
         this.defaultSortOrder = defaultSortOrder;
     }
 
-    public int compareTo(Object o) {
-        return name.compareTo(((DatasetType) o).getName());
+    public int compareTo(DatasetType o) {
+        return name.compareTo(o.getName());
     }
 
     public KeyVal[] getKeyVals() {
@@ -259,6 +268,38 @@ public class DatasetType implements Serializable, Lockable, Comparable {
 
     public void setTablePerDataset(int tablePerDataset) {
         this.tablePerDataset = tablePerDataset;
+    }
+
+    public XFileFormat getFileFormat() {
+        return fileFormat;
+    }
+
+    public void setFileFormat(XFileFormat fileFormat) {
+        this.fileFormat = fileFormat;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 
 }
