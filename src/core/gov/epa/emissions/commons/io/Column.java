@@ -35,6 +35,22 @@ public class Column implements DbColumn, Serializable, Comparable<Column> {
     public Column() {
         //To satisfy serialization requirement
     }
+    
+    public Column(String name, String sqlType, String defaultValue, String desc, String formmater,
+            String constraints, String mandatory, String width, String spaces, String fixedStart,
+            String fixedEnd) {
+        this.name = name;
+        this.description = desc;
+        this.sqlType = sqlType;
+        this.defaultValue = defaultValue;
+        this.formatterClass = formmater;
+        this.constraints = constraints;
+        this.mandatory = mandatory.equalsIgnoreCase("true");
+        this.width = Integer.parseInt(width);
+        this.spaces = Integer.parseInt(spaces);
+        this.fixFormatStart = Integer.parseInt(fixedStart);
+        this.fixFormatEnd = Integer.parseInt(fixedEnd);
+    }
 
     public Column(String name, String sqlType, int width, ColumnFormatter formatter, String constraints) {
         this.name = name;
