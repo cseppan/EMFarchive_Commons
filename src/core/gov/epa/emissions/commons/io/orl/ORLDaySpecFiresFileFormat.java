@@ -1,6 +1,10 @@
 package gov.epa.emissions.commons.io.orl;
 
+import java.io.File;
+import java.io.PrintWriter;
+
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.postgres.PostgresSqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormat;
@@ -31,5 +35,25 @@ public class ORLDaySpecFiresFileFormat implements FileFormat, DelimitedFileForma
         Column endHr = new Column("ENDHOUR", types.intType(), new IntegerFormatter());
 
         return new Column[] { fips, fireId, locId, scc, dat, date, datVal, beginHr, endHr };
+    }
+    
+    public static void main(String[] args) {
+        ORLDaySpecFiresFileFormat format = new ORLDaySpecFiresFileFormat(new PostgresSqlDataTypes());
+        PrintWriter writer = null;
+        Column[] cols = format.cols();
+        
+        try {
+            writer = new PrintWriter(new File("D:\\emf\\orl_daylyfires_format.csv"));
+            writer.println("name,type,default value,description,formatter,constraints,mandatory,width,spaces,fixformat start,fixformat end");
+            
+            for (Column col : cols)
+                writer.println(col.getName()+","+col.getSqlType()+","+","+","+col.getFormatterClass()+","+","+"true,"
+                        +col.getWidth()+","+col.getSpaces()+","+"0,"+"0");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null)
+                writer.close();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.orl;
 
 import gov.epa.emissions.commons.db.SqlDataTypes;
+import gov.epa.emissions.commons.db.postgres.PostgresSqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DelimitedFileFormat;
 import gov.epa.emissions.commons.io.FileFormatWithOptionalCols;
@@ -10,6 +11,8 @@ import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.importer.FillDefaultValues;
 import gov.epa.emissions.commons.io.importer.FillRecordWithBlankValues;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,5 +119,30 @@ public class ORLNonPointFileFormat implements FileFormatWithOptionalCols, Delimi
 
     public void fillDefaults(List<Column> data, long datasetId) {
         filler.fill(this, data, datasetId);
+    }
+    
+    public static void main(String[] args) {
+        ORLNonPointFileFormat format = new ORLNonPointFileFormat(new PostgresSqlDataTypes());
+        PrintWriter writer = null;
+        Column[] mincols = format.minCols();
+        Column[] optcols = format.optionalCols();
+        
+        try {
+            writer = new PrintWriter(new File("D:\\emf\\orl_nonpoint_format.csv"));
+            writer.println("name,type,default value,description,formatter,constraints,mandatory,width,spaces,fixformat start,fixformat end");
+            
+            for (Column col : mincols)
+                writer.println(col.getName()+","+col.getSqlType()+","+","+","+col.getFormatterClass()+","+","+"true,"
+                        +col.getWidth()+","+col.getSpaces()+","+"0,"+"0");
+            
+            for (Column col : optcols)
+                writer.println(col.getName()+","+col.getSqlType()+","+","+","+col.getFormatterClass()+","+","+"false,"
+                        +col.getWidth()+","+col.getSpaces()+","+"0,"+"0");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null)
+                writer.close();
+        }
     }
 }

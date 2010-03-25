@@ -201,7 +201,7 @@ public class NewORLExporter extends GenericExporter {
         String[] cmd = null;
 
         if (windowsOS) {
-            //System.out.println("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
+            System.out.println("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
             cmd = getCommands("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
         } else {
             String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
