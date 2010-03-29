@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -38,7 +39,7 @@ public class NewORLExporter extends GenericExporter {
 
     private boolean windowsOS = false;
 
-    public NewORLExporter(Dataset dataset, DbServer dbServer, DataFormatFactory dataFormatFactory,
+    public NewORLExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
         super(dataset, dbServer, dataset.getDatasetType().getFileFormat(), dataFormatFactory, optimizedBatchSize);
         this.dataset = dataset;
@@ -49,8 +50,8 @@ public class NewORLExporter extends GenericExporter {
         setDelimiter(",");
     }
 
-    public NewORLExporter(Dataset dataset, DbServer dbServer, Integer optimizeBatchSize) {
-        this(dataset, dbServer, new NonVersionedDataFormatFactory(), optimizeBatchSize);
+    public NewORLExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizeBatchSize) {
+        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizeBatchSize);
     }
 
     public void export(File file) throws ExporterException {
@@ -65,6 +66,9 @@ public class NewORLExporter extends GenericExporter {
         if (!(tempDirFile.exists() && tempDirFile.isDirectory() && tempDirFile.canWrite() && tempDirFile.canRead()))
             throw new ExporterException("Import-export temporary folder does not exist or lacks write permissions: "
                     + tempDir + "");
+        
+        if (fileFormat==null || fileFormat.cols()== null || fileFormat.cols().length == 0)
+            throw new ExporterException("Flexible file format is not defined for dataset: "+dataset.getName());
 
         Random rando = new Random();
         long id = Math.abs(rando.nextInt());
