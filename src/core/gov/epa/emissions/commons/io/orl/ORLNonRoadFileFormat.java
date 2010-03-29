@@ -107,16 +107,14 @@ public class ORLNonRoadFileFormat implements FileFormatWithOptionalCols, Delimit
         Column[] optcols = format.optionalCols();
         
         try {
-            writer = new PrintWriter(new File("D:\\emf\\orl_nonroad_format.csv"));
-            writer.println("name,type,default value,description,formatter,constraints,mandatory,width,spaces,fixformat start,fixformat end");
+            writer = new PrintWriter(new File(System.getProperty("user.home"), "orl_nonroad_format.csv"));
+            writer.println("name,type,default_value,mandatory,description,formatter,constraints,width,spaces,fix_format_start,fix_format_end");
             
             for (Column col : mincols)
-                writer.println(col.getName()+","+col.getSqlType()+","+","+","+col.getFormatterClass()+","+","+"true,"
-                        +col.getWidth()+","+col.getSpaces()+","+"0,"+"0");
+                writer.println(col.getName()+","+col.getSqlType()+",,true,,,,,,,");
             
             for (Column col : optcols)
-                writer.println(col.getName()+","+col.getSqlType()+","+","+","+col.getFormatterClass()+","+","+"false,"
-                        +col.getWidth()+","+col.getSpaces()+","+"0,"+"0");
+                writer.println(col.getName()+","+col.getSqlType()+",,false,,,,,,,");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

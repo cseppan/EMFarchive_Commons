@@ -15,7 +15,12 @@ public class Comments {
      * Do not specify '#'. Implicit.
      */
     public String content(String tag) {
-        tag = "#" + tag;
+        return content("#", tag);
+    }
+    
+    public String content(String symbol, String tag) {
+        tag = symbol + tag;
+        
         for (Iterator iter = comments.iterator(); iter.hasNext();) {
             String comment = (String) iter.next();
             if (comment.startsWith(tag)) {
@@ -56,8 +61,8 @@ public class Comments {
      * 
      */
 
-    public boolean hasRightTagFormat(String tag) {
-        tag = "#" + tag;
+    public boolean hasRightTagFormat(String symbol, String tag) {
+        tag = symbol + tag;
         String comment = null;
         
         for (Iterator<?> iter = comments.iterator(); iter.hasNext();) {
@@ -74,5 +79,9 @@ public class Comments {
             return false;
         
         return true;
+    }
+    
+    public boolean hasRightTagFormat(String tag) {
+        return hasRightTagFormat("#" + tag);
     }
 }

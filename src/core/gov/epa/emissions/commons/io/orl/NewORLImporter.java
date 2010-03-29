@@ -77,6 +77,11 @@ public class NewORLImporter implements Importer {
 
     private void init(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filePatterns);
+        String delimiter = dataset.getDatasetType().getFileFormat().getDelimiter();
+        
+        if (delimiter == null || !delimiter.trim().equals(","))
+            throw new ImporterException("ORL files not delimited by comma are not supported currently.");
+        
         this.file = new File(folder, filePatterns[0]);
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
@@ -89,8 +94,8 @@ public class NewORLImporter implements Importer {
     }
 
     public void run() throws ImporterException {
-        if (keywordYesValueFound("REQUIRED_HEADER"))
-            importAttributes(file, dataset);
+        KeyVal[] keys = keyValFound("REQUIRED_HEADER");
+        importAttributes(file, dataset, keys);
         
         dataTable.create(tableFormat, dataset.getId());
         try {
@@ -102,16 +107,15 @@ public class NewORLImporter implements Importer {
         }
     }
 
-    private boolean keywordYesValueFound(String keyword) {
+    private  KeyVal[] keyValFound(String keyword) {
         KeyVal[] keys = dataset.getDatasetType().getKeyVals();
+        List<KeyVal> list = new ArrayList<KeyVal>();
         
         for (KeyVal key : keys)
-            if (key.getName().equalsIgnoreCase(keyword) 
-                    || key.getValue().equalsIgnoreCase("true")
-                    || key.getValue().equalsIgnoreCase("yes"))
-                return true;
+            if (key.getName().equalsIgnoreCase(keyword)) 
+                list.add(key);
         
-        return false;
+        return list.toArray(new KeyVal[0]);
     }
 
     /*
@@ -289,7 +293,7 @@ public class NewORLImporter implements Importer {
         dataset.setDescription(new Comments(comments).all());
     }
 
-    private void importAttributes(File file, Dataset dataset) throws ImporterException {
+    private void importAttributes(File file, Dataset dataset, KeyVal[] keys) throws ImporterException {
         DelimiterIdentifyingFileReader reader = null;
         try {
             int mincols = 0;
@@ -314,32 +318,33 @@ public class NewORLImporter implements Importer {
             }
         }
 
-        addAttributes(reader.comments(), dataset);
+        addAttributes(reader.comments(), dataset, keys);
     }
 
-    private void addAttributes(List<String> commentsList, Dataset dataset) throws ImporterException {
+    private void addAttributes(List<String> commentsList, Dataset dataset, KeyVal[] keys) throws ImporterException {
         Comments comments = new Comments(commentsList);
-        if (!comments.hasRightTagFormat("ORL"))
-            throw new ImporterException("The first line of ORL files must start with #ORL.");
-
-        if (!comments.hasContent("COUNTRY"))
-            throw new ImporterException("The tag - 'COUNTRY' is mandatory.");
-        // BUG: Country should not be created, but looked up
-        // String country = comments.content("COUNTRY");
-        // dataset.setCountry(new Country(country));
-
-        if (!comments.hasContent("YEAR"))
-            throw new ImporterException("The tag - 'YEAR' is mandatory.");
         
-        int year = Integer.parseInt(comments.content("YEAR"));
+        if (comments.hasContent("YEAR")) {
+            int year = Integer.parseInt(comments.content("YEAR"));
         
-        if (year >= 2200)
-            throw new ImporterException("Invalid ORL Year: " + year + " ( >= 2200 ).");
+            if (year >= 2200)
+                throw new ImporterException("Invalid ORL Year: " + year + " ( >= 2200 ).");
             
-        dataset.setYear(year);
-
-        if (!comments.hasContent("EMF_START_DATE") && !comments.hasContent("EMF_END_DATE"))
-            setStartStopDateTimes(dataset, year);
+            dataset.setYear(year);
+            
+            if (!comments.hasContent("EMF_START_DATE") && !comments.hasContent("EMF_END_DATE"))
+                setStartStopDateTimes(dataset, year);
+        }
+        
+        if (keys == null || keys.length == 0)
+            return;
+        
+        for (KeyVal key : keys) {
+            String value = key.getValue();
+            
+            if (value != null && !comments.hasRightTagFormat(value.trim().charAt(0)+"", value.trim().substring(1)))
+                throw new ImporterException("The tag - '" + value.trim() + "' is mandatory.");
+        }
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {

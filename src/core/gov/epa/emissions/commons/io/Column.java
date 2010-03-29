@@ -36,9 +36,8 @@ public class Column implements DbColumn, Serializable, Comparable<Column> {
         //To satisfy serialization requirement
     }
     
-    public Column(String name, String sqlType, String defaultValue, String desc, String formmater,
-            String constraints, String mandatory, String width, String spaces, String fixedStart,
-            String fixedEnd) {
+    public Column(String name, String sqlType, String defaultValue, String mandatory, String desc, String formmater,
+            String constraints, String width, String spaces, String fixedStart, String fixedEnd) {
         this.name = name;
         this.description = desc;
         this.sqlType = sqlType;
@@ -46,10 +45,10 @@ public class Column implements DbColumn, Serializable, Comparable<Column> {
         this.formatterClass = formmater;
         this.constraints = constraints;
         this.mandatory = mandatory.equalsIgnoreCase("true");
-        this.width = Integer.parseInt(width);
-        this.spaces = Integer.parseInt(spaces);
-        this.fixFormatStart = Integer.parseInt(fixedStart);
-        this.fixFormatEnd = Integer.parseInt(fixedEnd);
+        this.width = (width == null || width.isEmpty() ? 0 : Integer.parseInt(width));
+        this.spaces = (spaces == null || spaces.isEmpty() ? 0 : Integer.parseInt(spaces));
+        this.fixFormatStart = (fixedStart == null || fixedStart.isEmpty() ? 0 : Integer.parseInt(fixedStart));
+        this.fixFormatEnd = (fixedEnd == null || fixedEnd.isEmpty() ? 0 : Integer.parseInt(fixedEnd));
     }
 
     public Column(String name, String sqlType, int width, ColumnFormatter formatter, String constraints) {

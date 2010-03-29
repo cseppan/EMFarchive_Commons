@@ -43,12 +43,11 @@ public class ORLDaySpecFiresFileFormat implements FileFormat, DelimitedFileForma
         Column[] cols = format.cols();
         
         try {
-            writer = new PrintWriter(new File("D:\\emf\\orl_daylyfires_format.csv"));
-            writer.println("name,type,default value,description,formatter,constraints,mandatory,width,spaces,fixformat start,fixformat end");
+            writer = new PrintWriter(new File(System.getProperty("user.home"), "orl_daylyfires_format.csv"));
+            writer.println("name,type,default_value,mandatory,description,formatter,constraints,width,spaces,fix_format_start,fix_format_end");
             
             for (Column col : cols)
-                writer.println(col.getName()+","+col.getSqlType()+","+","+","+col.getFormatterClass()+","+","+"true,"
-                        +col.getWidth()+","+col.getSpaces()+","+"0,"+"0");
+                writer.println(col.getName()+","+col.getSqlType()+",,true,,,,,,,");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
