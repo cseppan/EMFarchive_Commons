@@ -29,7 +29,7 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class NewORLExporter extends GenericExporter {
+public class FlexibleDBExporter extends GenericExporter {
 
     Log log = LogFactory.getLog(ORLExporter.class);
 
@@ -39,7 +39,7 @@ public class NewORLExporter extends GenericExporter {
 
     private boolean windowsOS = false;
 
-    public NewORLExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory,
+    public FlexibleDBExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
         super(dataset, dbServer, dataset.getDatasetType().getFileFormat(), dataFormatFactory, optimizedBatchSize);
         this.dataset = dataset;
@@ -50,7 +50,7 @@ public class NewORLExporter extends GenericExporter {
         setDelimiter(",");
     }
 
-    public NewORLExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizeBatchSize) {
+    public FlexibleDBExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizeBatchSize) {
         this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizeBatchSize);
     }
 

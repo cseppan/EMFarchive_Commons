@@ -41,7 +41,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
-public class NewORLImporter implements Importer {
+public class FlexibleDBImporter implements Importer {
 
     private Dataset dataset;
 
@@ -61,14 +61,14 @@ public class NewORLImporter implements Importer {
 
     private boolean windowsOS = false;
     
-    public NewORLImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
+    public FlexibleDBImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         this.fileFormat = dataset.getDatasetType().getFileFormat();
         this.tableFormat = new NonVersionedTableFormat(fileFormat, sqlDataTypes);
         init(folder, filenames, dataset, dbServer);
     }
 
-    public NewORLImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
+    public FlexibleDBImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
         this.fileFormat = dataset.getDatasetType().getFileFormat();
         this.tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
