@@ -82,6 +82,6 @@ public class Comments {
     }
     
     public boolean hasRightTagFormat(String tag) {
-        return hasRightTagFormat("#" + tag);
+        return hasRightTagFormat("#", tag);
     }
 }
