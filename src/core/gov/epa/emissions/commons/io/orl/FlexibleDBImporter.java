@@ -267,7 +267,7 @@ public class FlexibleDBImporter implements Importer {
             for (int i = 0; i < record.size(); i++)
                 colsString += cols[i].name() + ",";
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ImporterException("Data doesn't match file format on number of columns " + "(expected:"
+            throw new ImporterException("Number of columns in the data doesn't match the file format " + "(expected:"
                     + cols.length + " but was:" + record.size() + ").");
         }
 
