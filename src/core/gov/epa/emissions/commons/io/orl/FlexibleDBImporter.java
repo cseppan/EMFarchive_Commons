@@ -343,7 +343,7 @@ public class FlexibleDBImporter implements Importer {
             String value = key.getValue();
             
             if (value != null && !comments.hasRightTagFormat(value.trim().charAt(0)+"", value.trim().substring(1)))
-                throw new ImporterException("The tag - '" + value.trim() + "' is mandatory.");
+                throw new ImporterException("The file was supposed to have '" + value.trim() + "' on the first line, but it did not.");
         }
     }
 
