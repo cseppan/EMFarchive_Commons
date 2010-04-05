@@ -80,7 +80,7 @@ public class FlexibleDBImporter implements Importer {
         String delimiter = dataset.getDatasetType().getFileFormat().getDelimiter();
         
         if (delimiter == null || !delimiter.trim().equals(","))
-            throw new ImporterException("ORL files not delimited by comma are not supported currently.");
+            throw new ImporterException("Dataset types derived from a flexible file format currently only support comma delimited data.");
         
         this.file = new File(folder, filePatterns[0]);
         this.dataset = dataset;
@@ -328,7 +328,7 @@ public class FlexibleDBImporter implements Importer {
             int year = Integer.parseInt(comments.content("YEAR"));
         
             if (year >= 2200)
-                throw new ImporterException("Invalid ORL Year: " + year + " ( >= 2200 ).");
+                throw new ImporterException("Invalid Year: " + year + " ( >= 2200 ).");
             
             dataset.setYear(year);
             
@@ -343,7 +343,7 @@ public class FlexibleDBImporter implements Importer {
             String value = key.getValue();
             
             if (value != null && !comments.hasRightTagFormat(value.trim().charAt(0)+"", value.trim().substring(1)))
-                throw new ImporterException("The file was supposed to have '" + value.trim() + "' on the first line, but it did not.");
+                throw new ImporterException("The imported file was supposed to have - '" + value.trim() + "' in the header, but it was missing.");
         }
     }
 
