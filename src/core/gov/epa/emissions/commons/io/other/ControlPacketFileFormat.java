@@ -70,7 +70,7 @@ public class ControlPacketFileFormat implements FileFormatWithOptionalCols, Deli
         cols.add(new Column("STACKID", types.stringType(15), 15, new StringFormatter(15)));
         cols.add(new Column("SEGMENT", types.stringType(15), 15, new StringFormatter(15)));
         cols.add(new Column("COMPLIANCE_DATE", types.timestamp()));
-        cols.add(new Column("CHAR_5", types.stringType(32), 32, new StringFormatter(32)));
+        cols.add(new Column("NAICS", types.stringType(6), 6, new StringFormatter(6)));
         
         return cols.toArray(new Column[0]);
     }

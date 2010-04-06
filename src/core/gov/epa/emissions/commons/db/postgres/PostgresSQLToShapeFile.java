@@ -161,7 +161,7 @@ public class PostgresSQLToShapeFile {
             cmds[0] = "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"";
         } else {
             cmds = new String[9];
-            cmds[0] = postgresBinDir + "pgsql2shp";
+            cmds[0] = postgresBinDir + "/pgsql2shp";
             cmds[1] = "-f";
             cmds[2] = putEscape(filePath);
             cmds[3] = "-P";
@@ -224,7 +224,7 @@ public class PostgresSQLToShapeFile {
             }
             Writer output = new BufferedWriter(new FileWriter(prjFile));
             try {
-                output.write( projectionShapeFile.getPrjText() );
+                output.write( projectionShapeFile != null ? projectionShapeFile.getPrjText() : "");
             }
             finally {
                 output.close();
