@@ -87,6 +87,36 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String chemicalSpeciationProfilesGSPRO = "Chemical Speciation Profiles (GSPRO)";
     
+    //For new dataset type   
+    public static final String EXTERNAL = "External File";
+    
+    public static final String CSV = "CSV File";
+    
+    public static final String LINE_BASED = "Line-based";
+    
+    public static final String SMOKE = "SMOKE Report File";
+    
+    public static final String FLEXIBLE = "Flexible File Format";
+    
+    public static final String EXTERNAL_IMPORTER = "gov.epa.emissions.commons.io.external.ExternalFilesImporter";
+    
+    public static final String CSV_IMPORTER = "gov.epa.emissions.commons.io.csv.CSVImporter";
+    
+    public static final String LINE_IMPORTER = "gov.epa.emissions.commons.io.generic.LineImporter";
+    
+    public static final String SMOKE_IMPORTER = "gov.epa.emissions.commons.io.other.SMKReportImporter";
+    
+    public static final String FLEXIBLE_IMPORTER = "gov.epa.emissions.commons.io.orl.FlexibleDBImporter";
+    
+    public static final String EXTERNAL_EXPORTER = "gov.epa.emissions.commons.io.external.ExternalFilesExporter";
+    
+    public static final String CSV_EXPORTER = "gov.epa.emissions.commons.io.csv.CSVExporter";
+    
+    public static final String LINE_EXPORTER = "gov.epa.emissions.commons.io.generic.LineExporter";
+    
+    public static final String SMOKE_EXPORTER = "gov.epa.emissions.commons.io.other.SMKReportExporter";
+    
+    public static final String FLEXIBLE_EXPORTER = "gov.epa.emissions.commons.io.orl.FlexibleDBExporter";
     
     public DatasetType() {
 //        keyValsList = new ArrayList();
