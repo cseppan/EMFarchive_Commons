@@ -51,6 +51,26 @@ public class ORLExportersTest extends PersistenceTestCase {
          DbUpdate dbUpdate = dbSetup.dbUpdate(datasource);
          dbUpdate.dropTable(datasource.getName(), dataset.getInternalSources()[0].getTable());
     }
+    
+    public void testShouldExportFlexibleDBExporter() throws Exception {
+        File folder = new File("test/data/orl/nc");
+        Importer importer = new FlexibleDBImporter(folder, new String[] { "small-nonroad-comma.txt" }, dataset,
+                dbServer, sqlDataTypes);
+        importer.run();
+
+        Exporter exporter = new FlexibleDBExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        File file = doExport(exporter);
+
+        // assert headers
+        assertComments(file);
+
+        // assert data
+        List data = readData(file);
+        assertEquals(16, data.size());
+        assertEquals("\"37001\",\"2260001010\",\"100414\",0.56000000000000005,-9,-9,-9,-9,,,,,,,,,,,,,,,,,,,,,,", (String) data.get(0));
+        assertEquals("\"37001\",\"2260001010\",\"100425\",0.029999999999999999,-9,-9,-9,-9,,,,,,,,,,,,,,,,,,,,,,", (String) data.get(1));
+        // assertEquals(16, exporter.getExportedLinesCount());
+    }
 
     public void testShouldExportOnRoad() throws Exception {
         File folder = new File("test/data/orl/nc");
