@@ -61,6 +61,8 @@ public class FlexibleDBImporter implements Importer {
 
     private boolean windowsOS = false;
     
+    private boolean withColNames = true; 
+    
     public FlexibleDBImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
         this.fileFormat = dataset.getDatasetType().getFileFormat();
@@ -91,10 +93,11 @@ public class FlexibleDBImporter implements Importer {
         dataTable = new DataTable(dataset, datasource);
         loader = new DatasetLoader(dataset);
         loader.internalSource(file, dataTable.name(), tableFormat);
+        this.withColNames = getColumnLabel();
     }
 
     public void run() throws ImporterException {
-        KeyVal[] keys = keyValFound("REQUIRED_HEADER");
+        KeyVal[] keys = keyValFound(Dataset.head_required);
         importAttributes(file, dataset, keys);
         
         dataTable.create(tableFormat, dataset.getId());
@@ -157,7 +160,7 @@ public class FlexibleDBImporter implements Importer {
             splitFile(file, headerFile, dataFile);
             loadDataset(getComments(headerFile), dataset);
 
-            String copyString = "COPY " + getFullTableName(table) + " (" + getColNames(fileFormat) + ") FROM '"
+            String copyString = "COPY " + getFullTableName(table) + " (" + getColNames() + ") FROM '"
                     + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
 
             connection = datasource.getConnection();
@@ -185,6 +188,10 @@ public class FlexibleDBImporter implements Importer {
     }
 
     private void splitFile(File file, File headerFile, File dataFile) throws Exception {
+        if (withColNames){
+            compareCols(); 
+         }
+        
         if (windowsOS) {
             splitOnWindows(file, headerFile, dataFile);
             return;
@@ -194,6 +201,10 @@ public class FlexibleDBImporter implements Importer {
                 + headerFile.getAbsolutePath();
         String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > "
                 + dataFile.getAbsolutePath();
+        if (withColNames){
+            dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" "
+            + "| sed 1d "+ "> " + dataFile.getAbsolutePath();
+        }
         String[] cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd };
 
         Process p = Runtime.getRuntime().exec(cmd);
@@ -211,6 +222,7 @@ public class FlexibleDBImporter implements Importer {
         String line = null;
         boolean firstHeadLine = true;
         boolean firstDataLine = true;
+        boolean secondDataLine = false;
         headerFile.createNewFile();
         dataFile.createNewFile();
 
@@ -230,10 +242,22 @@ public class FlexibleDBImporter implements Importer {
                 headWriter.write(line);
                 firstHeadLine = false;
             } else if (!line.startsWith("#") && !line.isEmpty()) {
-                if (!firstDataLine)
+                if (firstDataLine){
+                    if (withColNames)
+                        secondDataLine = true; 
+                    else 
+                        dataWriter.write(line);
+                    firstDataLine = false;
+                }
+                else if (secondDataLine){
+                    dataWriter.write(line);
+                    secondDataLine = false ;
+                    firstDataLine = false;
+                }
+                else if (!firstDataLine){
                     dataWriter.println();
-                dataWriter.write(line);
-                firstDataLine = false;
+                    dataWriter.write(line);
+                }                
             }
         }
 
@@ -259,7 +283,7 @@ public class FlexibleDBImporter implements Importer {
         return this.datasource.getName() + "." + table;
     }
 
-    private String getColNames(FileFormat fileFormat) throws ImporterException {
+    private String getColNames() throws ImporterException {
         Column[] cols = fileFormat.cols();
         String colsString = "";
 
@@ -506,6 +530,28 @@ public class FlexibleDBImporter implements Importer {
             }
         }
     }
-
+    
+    private boolean  getColumnLabel(){
+        KeyVal[] keys = keyValFound(Dataset.csv_header_line);
+        if (keys !=null && keys.length >0){
+            String value = keys[0].getValue().toLowerCase();
+            if ( value !=null && (value.contains("n") || value.contains("f"))) 
+                return false;              //first line of data file is data 
+        }
+        return true; 
+    }
+     private void compareCols() throws ImporterException{
+        String[] cols = getColNames().split(",");
+        String[] tokens = record.getTokens();
+        System.out.println("cols from file format: " + getColNames());
+        System.out.println("cols from data file  : " + tokens.toString());
+        
+        for (int i = 0; i < cols.length; i++) {
+            if (!cols[i].equalsIgnoreCase(tokens[i].trim()))
+                throw new ImporterException("columns in the data doesn't match columns in the file format " + "(expected:"
+                        + cols[i] + " but was:" + tokens[i] + ").");
+        }
+    } 
+          
 }
 

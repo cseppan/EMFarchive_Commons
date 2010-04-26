@@ -15,6 +15,8 @@ public interface Dataset extends Serializable {
     
     public static final String csv_header_line = "EXPORT_COLUMN_LABEL";
     
+    public static final String head_required = "REQUIRED_HEADER";
+    
     public static final String csv_header_line_value = "ALL_CAPS";
     
     public static final int upper_case = 2;
