@@ -89,7 +89,6 @@ public class FlexibleDBExporter extends GenericExporter {
         System.out.println("File name: "+ colsFileName);
         String headerFileName = tempDir + separator + file.getName() + id + ".hed";
         File dataFile = new File(dataFileName);
-        File colsFile = new File(colsFileName);
         File headerFile = new File(headerFileName);
 
         // use one statement and connection object for all operations, this we can easily clean them up....
@@ -98,7 +97,6 @@ public class FlexibleDBExporter extends GenericExporter {
 
         try {
             createNewFile(dataFile);
-            writeCols (colsFile);
             writeHeader(headerFile);
 
             String originalQuery = getQueryString(dataset, datasource);
@@ -112,7 +110,7 @@ public class FlexibleDBExporter extends GenericExporter {
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
             executeQuery(statement, writeQuery);
-            concatFiles(file, headerFileName, colsFileName, dataFileName);
+            concatFiles(file, headerFileName, dataFileName);
             setExportedLines(originalQuery, statement);
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,8 +134,6 @@ public class FlexibleDBExporter extends GenericExporter {
             }
             if (dataFile.exists())
                 dataFile.delete();
-            if (colsFile.exists())
-                colsFile.delete();
             if (headerFile.exists())
                 headerFile.delete();
         }
@@ -201,19 +197,6 @@ public class FlexibleDBExporter extends GenericExporter {
             writer.close();
         }
     }
-    
-    protected void writeCols(File file) throws Exception {
-        PrintWriter writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
-
-        try { 
-            String colsNames = getCols();
-            System.out.println("cols names: " + colsNames);
-            writer.print(colsNames);
-            writer.println();
-        } finally {
-            writer.close();
-        }
-    }
 
     private void executeQuery(Statement statement, String writeQuery) throws SQLException {
         // Statement statement = null;
@@ -230,23 +213,14 @@ public class FlexibleDBExporter extends GenericExporter {
         }
     }
 
-    private void concatFiles(File file, String headerFile, String colsFile, String dataFile) throws Exception {
+    private void concatFiles(File file, String headerFile, String dataFile) throws Exception {
         String[] cmd = null;
 
-        if (windowsOS) {
-            if (withColNames)
-                cmd = getCommands("copy " + headerFile + " + " + colsFile+ "+" +dataFile + " " + file.getAbsolutePath() + " /Y");
-            else 
-                cmd = getCommands("copy " + headerFile + " + " +dataFile + " " + file.getAbsolutePath() + " /Y");
-        } else {
-            if (withColNames){
-                String cmdString = "cat " + headerFile + " " + colsFile+ " " +dataFile + " > " + file.getAbsolutePath();
-                cmd = new String[] { "sh", "-c", cmdString };
-            }
-            else {
-                String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
-                cmd = new String[] { "sh", "-c", cmdString };
-            }
+        if (windowsOS)
+            cmd = getCommands("copy " + headerFile + " + " +dataFile + " " + file.getAbsolutePath() + " /Y");
+        else {
+            String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
+            cmd = new String[] { "sh", "-c", cmdString };
         }
         
         System.out.println(cmd);
@@ -294,6 +268,8 @@ public class FlexibleDBExporter extends GenericExporter {
 
     private String getWriteQueryString(String dataFile, String query) {
         String withClause = " WITH NULL '' CSV FORCE QUOTE " + getNeedQuotesCols();
+        if (withColNames)
+            withClause = " WITH NULL '' CSV HEADER FORCE QUOTE " + getNeedQuotesCols();
         System.out.println("COPY (" + query + ") to '" + putEscape(dataFile) + "'" + withClause);
         return "COPY (" + query + ") to '" + putEscape(dataFile) + "'" + withClause;
     }
@@ -365,16 +341,16 @@ public class FlexibleDBExporter extends GenericExporter {
         return list.toArray(new KeyVal[0]);
     }
     
-    private String getCols() {
-        String colNames = "";
-        Column[] cols = fileFormat.cols();
-        int numCols = cols.length;
-
-        for (int i = 0; i < numCols; i++) {
-            colNames += cols[i].name() + delimiter;
-        }
-
-        return (colNames.length() > 0) ? colNames.substring(0, colNames.length() - 1) : colNames;
-    }
+//    private String getCols() {
+//        String colNames = "";
+//        Column[] cols = fileFormat.cols();
+//        int numCols = cols.length;
+//
+//        for (int i = 0; i < numCols; i++) {
+//            colNames += cols[i].name() + delimiter;
+//        }
+//
+//        return (colNames.length() > 0) ? colNames.substring(0, colNames.length() - 1) : colNames;
+//    }
     
 }

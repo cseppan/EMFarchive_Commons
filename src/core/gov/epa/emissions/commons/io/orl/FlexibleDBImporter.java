@@ -58,6 +58,8 @@ public class FlexibleDBImporter implements Importer {
     private DatasetLoader loader;
 
     private Record record;
+    
+    //private Record secondRecord;
 
     private boolean windowsOS = false;
     
@@ -159,10 +161,14 @@ public class FlexibleDBImporter implements Importer {
 
             splitFile(file, headerFile, dataFile);
             loadDataset(getComments(headerFile), dataset);
-
+            //checkFirstDataLine(dataFile);
             String copyString = "COPY " + getFullTableName(table) + " (" + getColNames() + ") FROM '"
-                    + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
-
+            + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
+            if (withColNames){
+                copyString = "COPY " + getFullTableName(table) + " (" + getColNames() + ") FROM '"
+                + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV HEADER QUOTE AS '\"'";    
+            } 
+            System.out.println(copyString);  
             connection = datasource.getConnection();
             Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.execute(copyString);
@@ -201,10 +207,7 @@ public class FlexibleDBImporter implements Importer {
                 + headerFile.getAbsolutePath();
         String dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" > "
                 + dataFile.getAbsolutePath();
-        if (withColNames){
-            dataCmd = "grep -v \"^#\" " + file.getAbsolutePath() + " | grep -v \"^[[:space:]]*$\" "
-            + "| sed 1d "+ "> " + dataFile.getAbsolutePath();
-        }
+        
         String[] cmd = new String[] { "sh", "-c", headerCmd + ";" + dataCmd };
 
         Process p = Runtime.getRuntime().exec(cmd);
@@ -222,7 +225,7 @@ public class FlexibleDBImporter implements Importer {
         String line = null;
         boolean firstHeadLine = true;
         boolean firstDataLine = true;
-        boolean secondDataLine = false;
+        
         headerFile.createNewFile();
         dataFile.createNewFile();
 
@@ -242,28 +245,17 @@ public class FlexibleDBImporter implements Importer {
                 headWriter.write(line);
                 firstHeadLine = false;
             } else if (!line.startsWith("#") && !line.isEmpty()) {
-                if (firstDataLine){
-                    if (withColNames)
-                        secondDataLine = true; 
-                    else 
-                        dataWriter.write(line);
-                    firstDataLine = false;
-                }
-                else if (secondDataLine){
-                    dataWriter.write(line);
-                    secondDataLine = false ;
-                    firstDataLine = false;
-                }
-                else if (!firstDataLine){
+                if (!firstDataLine)
                     dataWriter.println();
-                    dataWriter.write(line);
-                }                
+                dataWriter.write(line);
+                firstDataLine = false;
+
             }
         }
-
         fileReader.close();
         headWriter.close();
         dataWriter.close();
+
     }
 
     private List<String> getComments(File file) throws Exception {
@@ -286,7 +278,8 @@ public class FlexibleDBImporter implements Importer {
     private String getColNames() throws ImporterException {
         Column[] cols = fileFormat.cols();
         String colsString = "";
-
+        //System.out.println("Cols from file format: " + cols.toString());
+        //System.out.println("Cols from data file  : " + record.toString());
         try {
             for (int i = 0; i < record.size(); i++)
                 colsString += cols[i].name() + ",";
@@ -329,6 +322,7 @@ public class FlexibleDBImporter implements Importer {
             
             reader = new DelimiterIdentifyingFileReader(file, mincols);
             record = reader.read();
+            //secondRecord = reader.read();
 
             if (reader.delimiter() == null || !reader.delimiter().equals(","))
                 throw new ImporterException("Data file is not delimited by comma.");
@@ -540,18 +534,48 @@ public class FlexibleDBImporter implements Importer {
         }
         return true; 
     }
+    
      private void compareCols() throws ImporterException{
         String[] cols = getColNames().split(",");
         String[] tokens = record.getTokens();
-        System.out.println("cols from file format: " + getColNames());
-        System.out.println("cols from data file  : " + tokens.toString());
         
         for (int i = 0; i < cols.length; i++) {
             if (!cols[i].equalsIgnoreCase(tokens[i].trim()))
                 throw new ImporterException("columns in the data doesn't match columns in the file format " + "(expected:"
-                        + cols[i] + " but was:" + tokens[i] + ").");
+                        + cols[i] + " but was:" + tokens[i] + "). Hint: set keyword EXPORT_COLUMN_LABEL to false");
         }
     } 
-          
+     
+//     private void checkFirstDataLine(File dataFile) throws ImporterException, IOException{
+//         BufferedReader fileReader = null;
+//         String line = null;
+//         try {
+//             fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(dataFile)));
+//             line = fileReader.readLine();          //read first line
+//             if (withColNames)
+//                 line = fileReader.readLine();      // read second line
+//             compareFormat(line);
+//         } catch (UnsupportedEncodingException e) {
+//             throw new ImporterException("Encoding char set not supported.");
+//         } finally {
+//             try {
+//                 fileReader.close();
+//             } catch (IOException e) {
+//                 throw new IOException(e.getMessage());
+//             }
+//         }
+//     }
+     
+//     private void compareFormat(String line){
+//         Column[] cols = fileFormat.cols();
+//         String[] tokens = secondRecord.getTokens();
+//         for (int i = 0; i < cols.length; i++) {
+//             if (cols[i].isMandatory()){
+//                if ( tokens[i]!=null || !tokens[i].trim().isEmpty()){
+//                    cols[i].sqlType();
+//                }
+//             }
+//         }
+//     }
 }
 
