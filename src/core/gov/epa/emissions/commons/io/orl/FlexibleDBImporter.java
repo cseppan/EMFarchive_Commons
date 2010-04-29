@@ -59,7 +59,7 @@ public class FlexibleDBImporter implements Importer {
 
     private Record record;
     
-    //private Record secondRecord;
+    private Record firstDataRecord;
 
     private boolean windowsOS = false;
     
@@ -161,7 +161,7 @@ public class FlexibleDBImporter implements Importer {
 
             splitFile(file, headerFile, dataFile);
             loadDataset(getComments(headerFile), dataset);
-            //checkFirstDataLine(dataFile);
+            checkDataLine();
             String copyString = "COPY " + getFullTableName(table) + " (" + getColNames() + ") FROM '"
             + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV QUOTE AS '\"'";
             if (withColNames){
@@ -281,11 +281,11 @@ public class FlexibleDBImporter implements Importer {
         //System.out.println("Cols from file format: " + cols.toString());
         //System.out.println("Cols from data file  : " + record.toString());
         try {
-            for (int i = 0; i < record.size(); i++)
+            for (int i = 0; i < firstDataRecord.size(); i++)
                 colsString += cols[i].name() + ",";
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ImporterException("Number of columns in the data doesn't match the file format " + "(expected:"
-                    + cols.length + " but was:" + record.size() + ").");
+                    + cols.length + " but was:" + firstDataRecord.size() + ").");
         }
 
         return colsString.substring(0, colsString.length() - 1);
@@ -322,8 +322,14 @@ public class FlexibleDBImporter implements Importer {
             
             reader = new DelimiterIdentifyingFileReader(file, mincols);
             record = reader.read();
-            //secondRecord = reader.read();
-
+             
+            if (withColNames)
+                this.firstDataRecord = reader.read();
+            else
+                firstDataRecord = record; 
+            
+            if (record.size()==0 || firstDataRecord.size()==0 )
+                throw new ImporterException("Data file is empty.");
             if (reader.delimiter() == null || !reader.delimiter().equals(","))
                 throw new ImporterException("Data file is not delimited by comma.");
         } catch (Exception e) {
@@ -546,36 +552,41 @@ public class FlexibleDBImporter implements Importer {
         }
     } 
      
-//     private void checkFirstDataLine(File dataFile) throws ImporterException, IOException{
-//         BufferedReader fileReader = null;
-//         String line = null;
-//         try {
-//             fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(dataFile)));
-//             line = fileReader.readLine();          //read first line
-//             if (withColNames)
-//                 line = fileReader.readLine();      // read second line
-//             compareFormat(line);
-//         } catch (UnsupportedEncodingException e) {
-//             throw new ImporterException("Encoding char set not supported.");
-//         } finally {
-//             try {
-//                 fileReader.close();
-//             } catch (IOException e) {
-//                 throw new IOException(e.getMessage());
-//             }
-//         }
-//     }
-     
-//     private void compareFormat(String line){
-//         Column[] cols = fileFormat.cols();
-//         String[] tokens = secondRecord.getTokens();
-//         for (int i = 0; i < cols.length; i++) {
-//             if (cols[i].isMandatory()){
-//                if ( tokens[i]!=null || !tokens[i].trim().isEmpty()){
-//                    cols[i].sqlType();
-//                }
-//             }
-//         }
-//     }
+     private void checkDataLine() throws ImporterException{
+      
+         Column[] cols = fileFormat.cols();
+         String[] tokens = firstDataRecord.getTokens();
+         System.out.println(tokens[0]);
+         
+         for (int i = 0; i < cols.length; i++) {
+             if (cols[i].isMandatory()){
+                if ( tokens[i]!=null || !tokens[i].trim().isEmpty()){
+                    String type = cols[i].sqlType();
+                    if (type.startsWith("VARCHAR")){
+                        int end =  type.lastIndexOf(")");
+                        //Here startIndex is inclusive while endIndex is exclusive.
+                        int length = Integer.parseInt(type.substring(8, end));
+                        if (tokens[i].length() > length)
+                            throw new ImporterException("Error format for column[" + i +"], expected: " 
+                                    + type +", but was: " + tokens[i]);
+                    }
+                    try {
+                        if (type.startsWith("double") || type.startsWith("float")){
+                            double value = Double.parseDouble(tokens[i]);
+                            System.out.println("value of column " +cols[i]+" is "+ value);
+                        }
+                        if (type.startsWith("INT")){
+                            Integer value = Integer.parseInt(tokens[i]);
+                            System.out.println("value of column " +cols[i]+" is "+ value);
+                        }
+                    }catch (NumberFormatException nfe) {
+                        throw new ImporterException("Error format for column[" + i +"], expected: " 
+                                + type +", but was: " + tokens[i]);
+                    }
+
+                }
+             }
+         }
+     }
 }
 

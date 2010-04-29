@@ -85,8 +85,7 @@ public class FlexibleDBExporter extends GenericExporter {
 
         String separator = System.getProperty("file.separator");
         String dataFileName = tempDir + separator + file.getName() + id + ".dat";
-        String colsFileName = tempDir + separator + file.getName() + id + ".col";
-        System.out.println("File name: "+ colsFileName);
+        
         String headerFileName = tempDir + separator + file.getName() + id + ".hed";
         File dataFile = new File(dataFileName);
         File headerFile = new File(headerFileName);
