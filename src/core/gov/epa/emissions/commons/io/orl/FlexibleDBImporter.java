@@ -542,13 +542,16 @@ public class FlexibleDBImporter implements Importer {
     }
     
      private void compareCols() throws ImporterException{
-        String[] cols = getColNames().split(",");
+        String[] cols = getAllColNames().split(",");
         String[] tokens = record.getTokens();
         
+        if (cols.length != tokens.length)
+            throw new ImporterException("Number of columns in the data doesn't match the file format " + "(expected:"
+                    + cols.length + " but was:" + tokens.length + "). Hint: correct typos or set keyword EXPORT_COLUMN_LABEL to false");
         for (int i = 0; i < cols.length; i++) {
             if (!cols[i].equalsIgnoreCase(tokens[i].trim()))
                 throw new ImporterException("columns in the data doesn't match columns in the file format " + "(expected:"
-                        + cols[i] + " but was:" + tokens[i] + "). Hint: set keyword EXPORT_COLUMN_LABEL to false");
+                        + cols[i] + " but was:" + tokens[i] + "). Hint: correct typos or set keyword EXPORT_COLUMN_LABEL to false");
         }
     } 
      
@@ -587,6 +590,14 @@ public class FlexibleDBImporter implements Importer {
                 }
              }
          }
+     }
+     
+     public String getAllColNames(){
+         Column[] columns = fileFormat.cols();
+         String colsString="";
+         for (int i = 0; i < columns.length; i++)
+             colsString += columns[i].name() + ",";
+         return colsString.substring(0, colsString.length() - 1);
      }
 }
 
