@@ -10,9 +10,9 @@ import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.NonVersionedTableFormat;
 import gov.epa.emissions.commons.io.TableFormat;
+import gov.epa.emissions.commons.io.XFileFormat;
 import gov.epa.emissions.commons.io.importer.Comments;
 import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
@@ -49,7 +49,7 @@ public class FlexibleDBImporter implements Importer {
 
     private File file;
 
-    private FileFormat fileFormat;
+    private XFileFormat fileFormat;
     
     private TableFormat tableFormat;
 
@@ -67,27 +67,28 @@ public class FlexibleDBImporter implements Importer {
     
     public FlexibleDBImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes) throws ImporterException {
+        this.dataset = dataset;
         this.fileFormat = dataset.getDatasetType().getFileFormat();
         this.tableFormat = new NonVersionedTableFormat(fileFormat, sqlDataTypes);
-        init(folder, filenames, dataset, dbServer);
+        init(folder, filenames,dbServer);
     }
 
     public FlexibleDBImporter(File folder, String[] filenames, Dataset dataset, DbServer dbServer,
             SqlDataTypes sqlDataTypes, DataFormatFactory factory) throws ImporterException {
+        this.dataset = dataset;
         this.fileFormat = dataset.getDatasetType().getFileFormat();
         this.tableFormat = factory.tableFormat(fileFormat, sqlDataTypes);
-        init(folder, filenames, dataset, dbServer);
+        init(folder, filenames, dbServer);
     }
 
-    private void init(File folder, String[] filePatterns, Dataset dataset, DbServer dbServer) throws ImporterException {
+    private void init(File folder, String[] filePatterns, DbServer dbServer) throws ImporterException {
         new FileVerifier().shouldHaveOneFile(filePatterns);
-        String delimiter = dataset.getDatasetType().getFileFormat().getDelimiter();
+        String delimiter = fileFormat.getDelimiter();
         
         if (delimiter == null || !delimiter.trim().equals(","))
             throw new ImporterException("Dataset types derived from a flexible file format currently only support comma delimited data.");
         
         this.file = new File(folder, filePatterns[0]);
-        this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
             windowsOS = true;
@@ -100,11 +101,11 @@ public class FlexibleDBImporter implements Importer {
 
     public void run() throws ImporterException {
         KeyVal[] keys = keyValFound(Dataset.head_required);
-        importAttributes(file, dataset, keys);
+        importAttributes(file, keys);
         
         dataTable.create(tableFormat, dataset.getId());
         try {
-            doImport(file, dataset, dataTable.name(), fileFormat);
+            doImport(file, dataset, dataTable.name());
         } catch (Exception e) {
             dataTable.drop();
             e.printStackTrace();
@@ -136,7 +137,7 @@ public class FlexibleDBImporter implements Importer {
         return fileName;
     }
 
-    private void doImport(File file, Dataset dataset, String table, FileFormat fileFormat)
+    private void doImport(File file, Dataset dataset, String table)
             throws Exception {
         File headerFile = null;
         File dataFile = null;
@@ -278,8 +279,7 @@ public class FlexibleDBImporter implements Importer {
     private String getColNames() throws ImporterException {
         Column[] cols = fileFormat.cols();
         String colsString = "";
-        //System.out.println("Cols from file format: " + cols.toString());
-        //System.out.println("Cols from data file  : " + record.toString());
+        
         try {
             for (int i = 0; i < firstDataRecord.size(); i++)
                 colsString += cols[i].name() + ",";
@@ -291,7 +291,7 @@ public class FlexibleDBImporter implements Importer {
         return colsString.substring(0, colsString.length() - 1);
     }
 
-    private boolean hasColName(String colName, FileFormat fileFormat) {
+    private boolean hasColName(String colName) {
         Column[] cols = fileFormat.cols();
         boolean hasIt = false;
         for (int i = 0; i < cols.length; i++)
@@ -310,7 +310,7 @@ public class FlexibleDBImporter implements Importer {
         dataset.setDescription(new Comments(comments).all());
     }
 
-    private void importAttributes(File file, Dataset dataset, KeyVal[] keys) throws ImporterException {
+    private void importAttributes(File file, KeyVal[] keys) throws ImporterException {
         DelimiterIdentifyingFileReader reader = null;
         try {
             int mincols = 0;
@@ -342,10 +342,10 @@ public class FlexibleDBImporter implements Importer {
             }
         }
 
-        addAttributes(reader.comments(), dataset, keys);
+        addAttributes(reader.comments(), keys);
     }
 
-    private void addAttributes(List<String> commentsList, Dataset dataset, KeyVal[] keys) throws ImporterException {
+    private void addAttributes(List<String> commentsList, KeyVal[] keys) throws ImporterException {
         Comments comments = new Comments(commentsList);
         
         if (comments.hasContent("YEAR")) {
@@ -391,12 +391,12 @@ public class FlexibleDBImporter implements Importer {
         ResultSet rs = null;
         Connection connection = null;
         Statement statement = null;
-        boolean hasRpenColumn = hasColName("rpen", fileFormat);
-        boolean hasMactColumn = hasColName("mact", fileFormat);
-        boolean hasSicColumn = hasColName("sic", fileFormat);
-        boolean hasCpriColumn = hasColName("cpri", fileFormat);
-        boolean hasPrimaryDeviceTypeCodeColumn = hasColName("primary_device_type_code", fileFormat);
-        boolean hasPointColumns = hasColName("pointid", fileFormat);
+        boolean hasRpenColumn = hasColName("rpen");
+        boolean hasMactColumn = hasColName("mact");
+        boolean hasSicColumn = hasColName("sic");
+        boolean hasCpriColumn = hasColName("cpri");
+        boolean hasPrimaryDeviceTypeCodeColumn = hasColName("primary_device_type_code");
+        boolean hasPointColumns = hasColName("pointid");
         try {
 //            first lets clean up -9 values and convert them to null values...
 //            ann_emis
@@ -559,13 +559,13 @@ public class FlexibleDBImporter implements Importer {
       
          Column[] cols = fileFormat.cols();
          String[] tokens = firstDataRecord.getTokens();
-         System.out.println(tokens[0]);
+         //System.out.println(tokens[0]);
          
          for (int i = 0; i < cols.length; i++) {
              if (cols[i].isMandatory()){
                 if ( tokens[i]!=null || !tokens[i].trim().isEmpty()){
                     String type = cols[i].sqlType();
-                    if (type.startsWith("VARCHAR")){
+                    if (type.toUpperCase().startsWith("VARCHAR")){
                         int end =  type.lastIndexOf(")");
                         //Here startIndex is inclusive while endIndex is exclusive.
                         int length = Integer.parseInt(type.substring(8, end));
@@ -574,13 +574,13 @@ public class FlexibleDBImporter implements Importer {
                                     + type +", but was: " + tokens[i]);
                     }
                     try {
-                        if (type.startsWith("double") || type.startsWith("float")){
-                            double value = Double.parseDouble(tokens[i]);
-                            System.out.println("value of column " +cols[i]+" is "+ value);
+                        if (type.toUpperCase().startsWith("DOUBLE") || type.toUpperCase().startsWith("FLOAT")){
+                            Double.parseDouble(tokens[i]);
+                            //System.out.println("value of column " +cols[i]+" is "+ value);
                         }
-                        if (type.startsWith("INT")){
-                            Integer value = Integer.parseInt(tokens[i]);
-                            System.out.println("value of column " +cols[i]+" is "+ value);
+                        if (type.toUpperCase().startsWith("INT")){
+                            Integer.parseInt(tokens[i]);
+                            //System.out.println("value of column " +cols[i]+" is "+ value);
                         }
                     }catch (NumberFormatException nfe) {
                         throw new ImporterException("Error format for column[" + i +"], expected: " 
@@ -596,7 +596,7 @@ public class FlexibleDBImporter implements Importer {
          Column[] columns = fileFormat.cols();
          String colsString="";
          for (int i = 0; i < columns.length; i++)
-             colsString += columns[i].name() + ",";
+             colsString += columns[i].name().trim() + ",";
          return colsString.substring(0, colsString.length() - 1);
      }
 }
