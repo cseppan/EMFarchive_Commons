@@ -87,6 +87,20 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String chemicalSpeciationProfilesGSPRO = "Chemical Speciation Profiles (GSPRO)";
     
+    public static final String fastCancerRisk = "FAST Cancer Risk";
+    
+    public static final String fastSpeciesMapping = "FAST Species Mapping";
+    
+    public static final String fastGriddedSummaryEmissionAirQuality = "FAST Gridded Summary Emission and Air Quality";
+    
+    public static final String fastGriddedDetailedEmissionAirQuality = "FAST Gridded Detailed Emission and Air Quality";
+    
+    public static final String fastGriddedSectorCMAQInventoryPollutantEmission = "FAST Gridded Sector-CMAQ-Inventory-Pollutant Emission";
+    
+    public static final String SECTOR_MAPPING = "Sector Mapping";
+    
+    public static final String EECS_MAPPING = "EECS Mapping";
+    
     //For new dataset type   
     public static final String EXTERNAL = "External File";
     
