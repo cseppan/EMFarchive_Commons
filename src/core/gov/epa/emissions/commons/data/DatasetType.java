@@ -97,9 +97,15 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String fastGriddedSectorCMAQInventoryPollutantEmission = "FAST Gridded Sector-CMAQ-Inventory-Pollutant Emission";
     
+    public static final String SECTOR_DETAILED_MAPPING_RESULT = "Sector Detailed Mapping Result";
+    
+    public static final String EECS_DETAILED_MAPPING_RESULT = "EECS Detailed Mapping Result";
+    
     public static final String SECTOR_MAPPING = "Sector Mapping";
     
     public static final String EECS_MAPPING = "EECS Mapping";
+    
+    public static final String ORL_POINT_NATA = "ORL Point NATA";
     
     //For new dataset type   
     public static final String EXTERNAL = "External File";

@@ -18,6 +18,11 @@ public class CustomDateFormat {
         return date == null ? "" : dateFormatter.format(date);
     }
 
+    public static String format_YYYYMMDDHHMM(Date date) {
+        dateFormatter.applyPattern("yyyyMMddHHmm");
+        return date == null ? "" : dateFormatter.format(date);
+    }
+
     public static String format_MM_DD_YYYY(Date date) {
         dateFormatter.applyPattern("MM/dd/yyyy");
         return date == null ? "" : dateFormatter.format(date);
