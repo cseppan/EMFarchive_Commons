@@ -8,6 +8,8 @@ public class Keyword implements Serializable {
 
     private String name;
 
+    public static final String INDICES = "INDICES";
+
     public Keyword() {// dummy: needed by Hibernate
     }
 

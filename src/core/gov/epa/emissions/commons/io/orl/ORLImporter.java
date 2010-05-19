@@ -14,7 +14,9 @@ import gov.epa.emissions.commons.io.importer.DataTable;
 import gov.epa.emissions.commons.io.importer.DatasetLoader;
 import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
+import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.ImporterPostProcess;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.BufferedReader;
@@ -36,7 +38,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
-public class ORLImporter {
+public class ORLImporter implements Importer, ImporterPostProcess  {
 
     private Dataset dataset;
 
@@ -74,6 +76,8 @@ public class ORLImporter {
         dataTable.create(formatUnit.tableFormat(), dataset.getId());
         try {
             doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat());
+            
+            postRun();
         } catch (Exception e) {
             dataTable.drop();
             e.printStackTrace();
@@ -466,6 +470,9 @@ public class ORLImporter {
                 statement.execute("vacuum " + getFullTableName(dataTable.name()));
                 statement.close();
             }
+            
+            //create indexes....
+            makeSureInventoryDatasetHasIndexes();
         } catch (Exception exc) {
             // NOTE: this closes the db server for other importers
             // try
@@ -496,4 +503,16 @@ public class ORLImporter {
         }
     }
 
+    private void makeSureInventoryDatasetHasIndexes() {
+        String table = dataTable.name().toLowerCase();
+        String query = "SELECT public.create_orl_table_indexes('" + table + "');analyze " + getFullTableName(table).toLowerCase() + ";";
+        try {
+            datasource.query().execute(query);
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            //supress all errors, the indexes might already be on the table...
+        } finally {
+            //
+        }
+    }
 }

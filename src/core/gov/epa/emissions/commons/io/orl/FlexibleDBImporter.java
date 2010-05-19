@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.orl;
 import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.KeyVal;
+import gov.epa.emissions.commons.data.Keyword;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.SqlDataTypes;
@@ -20,6 +21,7 @@ import gov.epa.emissions.commons.io.importer.DelimiterIdentifyingFileReader;
 import gov.epa.emissions.commons.io.importer.FileVerifier;
 import gov.epa.emissions.commons.io.importer.Importer;
 import gov.epa.emissions.commons.io.importer.ImporterException;
+import gov.epa.emissions.commons.io.importer.ImporterPostProcess;
 import gov.epa.emissions.commons.io.importer.TemporalResolution;
 
 import java.io.BufferedReader;
@@ -40,8 +42,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
-public class FlexibleDBImporter implements Importer {
+public class FlexibleDBImporter implements Importer, ImporterPostProcess {
 
     private Dataset dataset;
 
@@ -106,6 +109,8 @@ public class FlexibleDBImporter implements Importer {
         dataTable.create(tableFormat, dataset.getId());
         try {
             doImport(file, dataset, dataTable.name());
+            
+            postRun();
         } catch (Exception e) {
             dataTable.drop();
             e.printStackTrace();
@@ -291,14 +296,14 @@ public class FlexibleDBImporter implements Importer {
         return colsString.substring(0, colsString.length() - 1);
     }
 
-    private boolean hasColName(String colName) {
-        Column[] cols = fileFormat.cols();
-        boolean hasIt = false;
-        for (int i = 0; i < cols.length; i++)
-            if (colName.equalsIgnoreCase(cols[i].name())) hasIt = true;
-
-        return hasIt;
-    }
+//    private boolean hasColName(String colName) {
+//        Column[] cols = fileFormat.cols();
+//        boolean hasIt = false;
+//        for (int i = 0; i < cols.length; i++)
+//            if (colName.equalsIgnoreCase(cols[i].name())) hasIt = true;
+//
+//        return hasIt;
+//    }
 
     private void loadDataset(List<String> comments, Dataset dataset) {
         String tempResltn = dataset.getTemporalResolution();
@@ -388,146 +393,15 @@ public class FlexibleDBImporter implements Importer {
     }
 
     public void postRun() throws ImporterException {
-        ResultSet rs = null;
-        Connection connection = null;
-        Statement statement = null;
-        boolean hasRpenColumn = hasColName("rpen");
-        boolean hasMactColumn = hasColName("mact");
-        boolean hasSicColumn = hasColName("sic");
-        boolean hasCpriColumn = hasColName("cpri");
-        boolean hasPrimaryDeviceTypeCodeColumn = hasColName("primary_device_type_code");
-        boolean hasPointColumns = hasColName("pointid");
+
         try {
-//            first lets clean up -9 values and convert them to null values...
-//            ann_emis
-//            avd_emis
-//            ceff
-//            reff
-//            rpen
-//            mact
-//            
 
-            //check to see if -9 even shows for any of the columns in the inventory
-            String sql = "select 1 " 
-                    + " from " + getFullTableName(dataTable.name()) 
-                    + " where dataset_id = " + dataset.getId()
-                    + " and (" 
-                    + " ann_emis = -9.0 " 
-                    + " or avd_emis = -9.0" 
-                    + " or ceff = -9.0" 
-                    + " or reff = -9.0" 
-                    + " or strpos(substr(fips, 1, 1) || substr(fips, length(fips), 1), ' ') > 0" 
-                    + " or strpos(substr(scc, 1, 1) || substr(scc, length(scc), 1), ' ') > 0" 
-                    + " or strpos(substr(poll, 1, 1) || substr(poll, length(poll), 1), ' ') > 0" 
-                    + " or strpos(substr(control_measures, 1, 1) || substr(control_measures, length(control_measures), 1), ' ') > 0" 
-                    + " or strpos(substr(pct_reduction, 1, 1) || substr(pct_reduction, length(pct_reduction), 1), ' ') > 0" 
-                    + (hasPointColumns ? 
-                            " or strpos(substr(plantid, 1, 1) || substr(plantid, length(plantid), 1), ' ') > 0" 
-                            + " or strpos(substr(pointid, 1, 1) || substr(pointid, length(pointid), 1), ' ') > 0" 
-                            + " or strpos(substr(stackid, 1, 1) || substr(stackid, length(stackid), 1), ' ') > 0" 
-                            + " or strpos(substr(segment, 1, 1) || substr(segment, length(segment), 1), ' ') > 0" 
-                            + " or strpos(substr(design_capacity_unit_numerator, 1, 1) || substr(design_capacity_unit_numerator, length(design_capacity_unit_numerator), 1), ' ') > 0" 
-                            + " or strpos(substr(design_capacity_unit_denominator, 1, 1) || substr(design_capacity_unit_denominator, length(design_capacity_unit_denominator), 1), ' ') > 0" 
-                            + " or design_capacity = -9.0" 
-                            + " or stkflow = -9.0" 
-                            + " or ANNUAL_AVG_HOURS_PER_YEAR = -9.0" 
-                            : " ")
-                    + (hasRpenColumn ? " or rpen = -9.0" : " ")
-                    + (hasMactColumn ? " or trim(mact) = '-9' or strpos(substr(mact, 1, 1) || substr(mact, length(mact), 1), ' ') > 0" : " ")
-                    + (hasSicColumn ? " or trim(sic) = '-9' or strpos(substr(sic, 1, 1) || substr(sic, length(sic), 1), ' ') > 0" : " ")
-                    + (hasCpriColumn ? " or cpri = -9.0" : " ")
-                    + (hasPrimaryDeviceTypeCodeColumn ? " or trim(primary_device_type_code) = '-9' or strpos(substr(primary_device_type_code, 1, 1) || substr(primary_device_type_code, length(primary_device_type_code), 1), ' ') > 0" : " ")
-                    +  ") limit 1;";
-            
-            connection = datasource.getConnection();
-            statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            System.out.println("start fix check query " + System.currentTimeMillis());
-            rs = statement.executeQuery(sql);
-            System.out.println("end fix check query " + System.currentTimeMillis());
-            boolean foundNegative9 = false;
-            while (rs.next()) {
-                foundNegative9 = true;
-            }
+            createIndexes();
 
-            if (foundNegative9) {
-                sql = "update " + getFullTableName(dataTable.name()) 
-                    + " set ann_emis = case when ann_emis = -9.0 then null::double precision else ann_emis end " 
-                    + "     ,avd_emis = case when avd_emis = -9.0 then null::double precision else avd_emis end " 
-                    + "     ,ceff = case when ceff = -9.0 then null::double precision else ceff end " 
-                    + "     ,reff = case when reff = -9.0 then null::double precision else reff end " 
-                    + " ,fips = case when strpos(substr(fips, 1, 1) || substr(fips, length(fips), 1), ' ') > 0 then trim(fips) else fips end " 
-                    + " ,scc = case when strpos(substr(scc, 1, 1) || substr(scc, length(scc), 1), ' ') > 0 then trim(scc) else scc end " 
-                    + " ,poll = case when strpos(substr(poll, 1, 1) || substr(poll, length(poll), 1), ' ') > 0 then trim(poll) else poll end " 
-                    + " ,control_measures = case when strpos(substr(control_measures, 1, 1) || substr(control_measures, length(control_measures), 1), ' ') > 0 then trim(control_measures) else control_measures end " 
-                    + " ,pct_reduction = case when strpos(substr(pct_reduction, 1, 1) || substr(pct_reduction, length(pct_reduction), 1), ' ') > 0 then trim(pct_reduction) else pct_reduction end " 
-                    + (hasPointColumns ? 
-                            " ,plantid = case when strpos(substr(plantid, 1, 1) || substr(plantid, length(plantid), 1), ' ') > 0 then trim(plantid) else plantid end " 
-                            + " ,pointid = case when strpos(substr(pointid, 1, 1) || substr(pointid, length(pointid), 1), ' ') > 0 then trim(pointid) else pointid end " 
-                            + " ,stackid = case when strpos(substr(stackid, 1, 1) || substr(stackid, length(stackid), 1), ' ') > 0 then trim(stackid) else stackid end " 
-                            + " ,segment = case when strpos(substr(segment, 1, 1) || substr(segment, length(segment), 1), ' ') > 0 then trim(segment) else segment end " 
-                            + " ,design_capacity_unit_numerator = case when strpos(substr(design_capacity_unit_numerator, 1, 1) || substr(design_capacity_unit_numerator, length(design_capacity_unit_numerator), 1), ' ') > 0 then trim(design_capacity_unit_numerator) else design_capacity_unit_numerator end " 
-                            + " ,design_capacity_unit_denominator = case when strpos(substr(design_capacity_unit_denominator, 1, 1) || substr(design_capacity_unit_denominator, length(design_capacity_unit_denominator), 1), ' ') > 0 then trim(design_capacity_unit_denominator) else design_capacity_unit_denominator end " 
-                            + " ,design_capacity = case when design_capacity = -9.0 then null::double precision else design_capacity end "
-                            + " ,stkflow = case when stkflow = -9.0 then null::double precision else stkflow end "
-                            + " ,ANNUAL_AVG_HOURS_PER_YEAR = case when stkflow = -9.0 then null::double precision else ANNUAL_AVG_HOURS_PER_YEAR end "
-                            : " ")
-                    + (hasRpenColumn ? "     ,rpen = case when rpen = -9.0 then null::double precision else rpen end " : " ")
-                    + (hasMactColumn ? "     ,mact = case when trim(mact) = '-9' then null::character varying(4) when strpos(substr(mact, 1, 1) || substr(mact, length(mact), 1), ' ') > 0 then trim(mact) else mact end " : " ")
-                    + (hasSicColumn ? "     ,sic = case when trim(sic) = '-9' then null::character varying(4) when strpos(substr(sic, 1, 1) || substr(sic, length(sic), 1), ' ') > 0 then trim(sic) else sic end " : " ") 
-                    + (hasCpriColumn ? "     ,cpri = case when cpri = -9.0 then null::integer else cpri end " : " ") 
-                    + (hasPrimaryDeviceTypeCodeColumn ? "     ,primary_device_type_code = case when trim(primary_device_type_code) = '-9' then null::character varying(4) when strpos(substr(primary_device_type_code, 1, 1) || substr(primary_device_type_code, length(primary_device_type_code), 1), ' ') > 0 then trim(primary_device_type_code) else primary_device_type_code end " : " ") 
-                    + " where dataset_id = " + dataset.getId()
-                    + " and (" 
-                    + " ann_emis = -9.0 " 
-                    + " or avd_emis = -9.0" 
-                    + " or ceff = -9.0" 
-                    + " or reff = -9.0" 
-                    + " or strpos(substr(fips, 1, 1) || substr(fips, length(fips), 1), ' ') > 0" 
-                    + " or strpos(substr(scc, 1, 1) || substr(scc, length(scc), 1), ' ') > 0" 
-                    + " or strpos(substr(poll, 1, 1) || substr(poll, length(poll), 1), ' ') > 0" 
-                    + " or strpos(substr(control_measures, 1, 1) || substr(control_measures, length(control_measures), 1), ' ') > 0" 
-                    + " or strpos(substr(pct_reduction, 1, 1) || substr(pct_reduction, length(pct_reduction), 1), ' ') > 0" 
-                    + (hasPointColumns ? 
-                            " or strpos(substr(plantid, 1, 1) || substr(plantid, length(plantid), 1), ' ') > 0" 
-                            + " or strpos(substr(pointid, 1, 1) || substr(pointid, length(pointid), 1), ' ') > 0" 
-                            + " or strpos(substr(stackid, 1, 1) || substr(stackid, length(stackid), 1), ' ') > 0" 
-                            + " or strpos(substr(segment, 1, 1) || substr(segment, length(segment), 1), ' ') > 0" 
-                            + " or strpos(substr(design_capacity_unit_numerator, 1, 1) || substr(design_capacity_unit_numerator, length(design_capacity_unit_numerator), 1), ' ') > 0" 
-                            + " or strpos(substr(design_capacity_unit_denominator, 1, 1) || substr(design_capacity_unit_denominator, length(design_capacity_unit_denominator), 1), ' ') > 0" 
-                            + " or design_capacity = -9.0" 
-                            + " or stkflow = -9.0" 
-                            + " or ANNUAL_AVG_HOURS_PER_YEAR = -9.0" 
-                            : " ")
-                    + (hasRpenColumn ? " or rpen = -9.0" : " ")
-                    + (hasMactColumn ? " or trim(mact) = '-9' or strpos(substr(mact, 1, 1) || substr(mact, length(mact), 1), ' ') > 0" : " ")
-                    + (hasSicColumn ? " or trim(sic) = '-9' or strpos(substr(sic, 1, 1) || substr(sic, length(sic), 1), ' ') > 0" : " ")
-                    + (hasCpriColumn ? " or cpri = -9.0" : " ")
-                    + (hasPrimaryDeviceTypeCodeColumn ? " or trim(primary_device_type_code) = '-9' or strpos(substr(primary_device_type_code, 1, 1) || substr(primary_device_type_code, length(primary_device_type_code), 1), ' ') > 0" : " ")
-                    +  ");";
-                
-                System.out.println("start fix query " + System.currentTimeMillis());
-                statement.execute(sql);
-                System.out.println("end fix query " + System.currentTimeMillis());
-                statement.execute("vacuum " + getFullTableName(dataTable.name()));
-                statement.close();
-            }
         } catch (Exception exc) {
             throw new ImporterException(exc.getMessage());
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) { /**/
-                }
-                rs = null;
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) { /**/
-                }
-                statement = null;
-            }
+            //
         }
     }
     
@@ -598,6 +472,60 @@ public class FlexibleDBImporter implements Importer {
          for (int i = 0; i < columns.length; i++)
              colsString += columns[i].name().trim() + ",";
          return colsString.substring(0, colsString.length() - 1);
+     }
+
+     private void createIndexes() {
+         createIndex("record_id", true);
+         createIndex("dataset_id", false);
+         createIndex("version", false);
+         createIndex("delete_versions", false);
+         KeyVal[] keyVal = keyValFound(Keyword.INDICES);
+         if (keyVal != null && keyVal.length > 0) {
+             //first validate columns to index actually exist! 
+//             for (String columnList : keyVal[0].getValue().split("|")) {
+//                 for (String columnName : columnList.split(",")) {
+//                     if (hasColName(colName))
+//                 }
+//             }
+             //now index the columns specified 
+             for (String columnList : keyVal[0].getValue().split("\\|")) {
+                 createIndex(columnList, false);
+             }
+         }
+
+         try {
+             datasource.query().execute("analyze " + getFullTableName(dataTable.name().toLowerCase()) + ";");
+         } catch (SQLException e) {
+             //e.printStackTrace();
+             //supress all errors, the indexes might already be on the table...
+         } finally {
+             //
+         }
+     }
+
+     private void createIndex(String columnList, boolean clustered) {
+         String table = dataTable.name().toLowerCase();
+         String guid = (UUID.randomUUID()).toString().replaceAll("-", "");
+         String accessMethod = "btree";
+         String indexName = ("idx_" + guid);
+
+         String query = "CREATE INDEX " + indexName + " ON " + getFullTableName(table) + " USING " + accessMethod + " (" + columnList + ");";
+         if (clustered) {
+             query += "ALTER TABLE " + getFullTableName(table) + " CLUSTER ON " + indexName + ";";
+         }
+     
+         try {
+             datasource.query().execute(query);
+         } catch (SQLException e) {
+             //e.printStackTrace();
+             //supress all errors, the indexes might already be on the table...
+         } finally {
+             //
+         }
+     }
+
+     public static void main(String[] args) {
+         System.out.println( "pointid,asdsasad,adsasa,ad".split("\\,").length );
      }
 }
 
