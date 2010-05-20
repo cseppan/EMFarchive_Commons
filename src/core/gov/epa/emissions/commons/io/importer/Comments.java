@@ -23,7 +23,7 @@ public class Comments {
         
         for (Iterator iter = comments.iterator(); iter.hasNext();) {
             String comment = (String) iter.next();
-            if (comment.startsWith(tag)) {
+            if (comment != null && comment.toLowerCase().startsWith(tag.toLowerCase())) {
                 return comment.substring(tag.length()).trim();
             }
         }
@@ -51,7 +51,14 @@ public class Comments {
      * Do not specify '#'. Implicit.
      */
     public boolean hasContent(String tag) {
-        String comment = content(tag);
+        return hasContent("#", tag);
+    }
+    
+    /**
+     * Exmplicit tag.
+     */
+    public boolean hasContent(String symbol, String tag) {
+        String comment = content(symbol, tag);
         return comment != null && comment.length() > 0;
     }
     
@@ -68,7 +75,7 @@ public class Comments {
         for (Iterator<?> iter = comments.iterator(); iter.hasNext();) {
             String temp = (String) iter.next();
             
-            if (temp != null && temp.trim().startsWith(tag)) 
+            if (temp != null && temp.trim().toLowerCase().startsWith(tag.toLowerCase())) 
                 comment = temp.trim().substring(tag.length());
         }
         

@@ -354,7 +354,11 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
         Comments comments = new Comments(commentsList);
         
         if (comments.hasContent("YEAR")) {
-            int year = Integer.parseInt(comments.content("YEAR"));
+            String yearValueStr = comments.content("YEAR");
+            int year = getYear(yearValueStr);
+            
+            if (year == -1)
+                throw new ImporterException("Invalid Year: " + yearValueStr + ".");
         
             if (year >= 2200)
                 throw new ImporterException("Invalid Year: " + year + " ( >= 2200 ).");
@@ -371,9 +375,30 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
         for (KeyVal key : keys) {
             String value = key.getValue();
             
-            if (value != null && !comments.hasRightTagFormat(value.trim().charAt(0)+"", value.trim().substring(1)))
+            if (value != null && !comments.hasContent(value.trim().charAt(0)+"", value.trim().substring(1)))
                 throw new ImporterException("The imported file was supposed to have - '" + value.trim() + "' in the header, but it was missing.");
         }
+    }
+
+    private int getYear(String yearStr) {
+        int len = yearStr == null ? 0 : yearStr.length();
+        String year = "";
+        int mark = -1;
+        
+        for (int i = 0; i < len; i++) {
+            if (!year.isEmpty() && i == mark + 1)
+                break;
+            
+            if (Character.isDigit(yearStr.charAt(i))) {
+                year += yearStr.charAt(i);
+            } else
+                mark = i;
+        }
+        
+        if (year.isEmpty())
+            return -1;
+        
+        return Integer.parseInt(year);
     }
 
     private void setStartStopDateTimes(Dataset dataset, int year) {
