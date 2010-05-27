@@ -201,7 +201,7 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
 
     private void splitFile(File file, File headerFile, File dataFile) throws Exception {
         if (withColNames){
-            compareCols(); 
+            compareCols();   //compare number of columns and column names 
          }
         
         if (windowsOS) {
@@ -375,7 +375,7 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
         for (KeyVal key : keys) {
             String value = key.getValue();
             
-            if (value != null && !comments.hasContent(value.trim().charAt(0)+"", value.trim().substring(1)))
+            if (value != null && !comments.hasRightTagFormat(value.trim().charAt(0)+"", value.trim().substring(1)))
                 throw new ImporterException("The imported file was supposed to have - '" + value.trim() + "' in the header, but it was missing.");
         }
     }
@@ -437,7 +437,7 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
             if ( value !=null && (value.contains("n") || value.contains("f"))) 
                 return false;              //first line of data file is data 
         }
-        return true; 
+        return true;   // first line is column names
     }
     
      private void compareCols() throws ImporterException{
