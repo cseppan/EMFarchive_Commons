@@ -51,6 +51,8 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
 
     public static final String orlPointInventory = "ORL Point Inventory (PTINV)";
 
+    public static final String ORL_FIRE_INVENTORY = "ORL Fire Inventory (PTINV)";
+
     public static final String orlNonroadInventory = "ORL Nonroad Inventory (ARINV)";
 
     public static final String orlOnroadInventory = "ORL Onroad Inventory (MBINV)";
