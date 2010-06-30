@@ -89,9 +89,13 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String chemicalSpeciationProfilesGSPRO = "Chemical Speciation Profiles (GSPRO)";
     
-    public static final String fastCancerRisk = "FAST Cancer Risk";
+    public static final String FAST_TRANSFER_COEFFICIENTS = "FAST Transfer Coefficients";
+
+    public static final String FAST_DOMAIN_POPULATION = "FAST Domain Population";
+
+    public static final String FAST_CANCER_RISK = "FAST Cancer Risk";
     
-    public static final String fastSpeciesMapping = "FAST Species Mapping";
+    public static final String FAST_SPECIES_MAPPING = "FAST Species Mapping";
     
     public static final String fastGriddedSummaryEmissionAirQuality = "FAST Gridded Summary Emission and Air Quality";
     
@@ -125,6 +129,8 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     public static final String LINE_BASED = "Line-based";
     
     public static final String SMOKE = "SMOKE Report File";
+
+    public static final String SMOKE_REPORT = "SMOKE Report";
     
     public static final String FLEXIBLE = "Flexible File Format";
     
