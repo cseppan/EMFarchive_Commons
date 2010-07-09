@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.UUID;
 
 public class PostgresTableDefinition implements TableDefinition {
 
@@ -58,6 +59,36 @@ public class PostgresTableDefinition implements TableDefinition {
         execute(query.toString());
     }
 
+    public void addIndex(String table, String colNameList, boolean clustered) {
+        String guid = (UUID.randomUUID()).toString().replaceAll("-", "");
+        String indexName = ("idx_" + guid);
+
+        //create_table_index(table_name character varying, table_col_list character varying, index_name_prefix character varying, clustered boolean);
+        String query = "SELECT public.create_table_index('" + table + "','" + colNameList + "','" + indexName + "'," + clustered + "::boolean);";
+        System.out.println(query);
+        try {
+            execute(query);
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            //supress all errors, the indexes might already be on the table...
+        } finally {
+            //
+        }
+    }
+
+    public void analyzeTable(String table) {
+        
+        String query = "analyze " + qualified(table) + ";";
+        try {
+            execute(query);
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            //supress all errors...
+        } finally {
+            //
+        }
+    }
+    
     public void addColumn(String table, String columnName, String columnType, String afterColumnName) throws Exception {
         String statement = "ALTER TABLE " + qualified(table) + " ADD " + columnName + " " + columnType;
         execute(statement);

@@ -30,6 +30,10 @@ public interface TableDefinition {
      */
     void addIndex(String table, String indexName, String[] indexColumnNames) throws SQLException;
 
+    void addIndex(String table, String colNameList, boolean clustered) throws SQLException;
+
+    void analyzeTable(String table) throws SQLException;
+
     /**
      * Alter the table by adding a new column of the specified type in the specified location.
      * 

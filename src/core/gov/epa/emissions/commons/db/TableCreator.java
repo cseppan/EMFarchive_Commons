@@ -83,4 +83,21 @@ public class TableCreator {
         datasource.tableDefinition().updateConsolidationTable(datasetTypeId, table);
     }
 
+    public void addIndex(String table, String colNameList, boolean clustered)  {
+        try {
+            datasource.tableDefinition().addIndex(table, colNameList, clustered);
+        } catch (Exception e) {
+            //suppress exceptions
+//            throw new Exception("could not add table index, table = " + table + ", column list = " + colNameList + ", " + e.getMessage());
+        }
+    }
+
+    public void analyzeTable(String table) throws Exception {
+        try {
+            datasource.tableDefinition().analyzeTable(table);
+        } catch (Exception e) {
+            throw new Exception("could not analyze table, table = " + table + ", " + e.getMessage());
+        }
+    }
+
 }

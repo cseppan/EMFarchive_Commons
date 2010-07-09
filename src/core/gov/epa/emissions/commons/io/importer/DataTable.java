@@ -119,6 +119,23 @@ public class DataTable {
         return delegate.exists(table);
     }
 
+    public void addIndex(String table, String colList, boolean clustered)  {
+        try {
+            delegate.addIndex(table, colList, clustered);
+        } catch (Exception e) {
+            //suppress exceptions
+//            throw new Exception("could not rename table " + name + ", " + e.getMessage());
+        }
+    }
+
+    public void analyzeTable(String table) {
+        try {
+            delegate.analyzeTable(table);
+        } catch (Exception e) {
+//            throw new Exception("could not analyze table " + name + ", " + e.getMessage());
+        }
+    }
+
     public String createConsolidatedTable(TableFormat tableFormat) throws ImporterException {
         getTableColInfo(tableFormat);
 

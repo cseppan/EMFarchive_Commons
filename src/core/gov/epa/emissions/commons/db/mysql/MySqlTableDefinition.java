@@ -130,4 +130,14 @@ public class MySqlTableDefinition implements TableDefinition {
         
     }
 
+    public void addIndex(String table, String colList, boolean clustered) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void analyzeTable(String table) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
