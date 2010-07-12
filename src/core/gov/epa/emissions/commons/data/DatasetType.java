@@ -97,6 +97,10 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String FAST_SPECIES_MAPPING = "FAST Species Mapping";
     
+    public static final String FAST_ANALYSIS_DOMAIN_DIFFERENCE_RESULT = "FAST Analysis Domain Difference Result";
+    
+    public static final String FAST_ANALYSIS_GRIDDED_DIFFERENCE_RESULT = "FAST Analysis Gridded Difference Result";
+    
     public static final String fastGriddedSummaryEmissionAirQuality = "FAST Gridded Summary Emission and Air Quality";
     
     public static final String fastGriddedDetailedEmissionAirQuality = "FAST Gridded Detailed Emission and Air Quality";
