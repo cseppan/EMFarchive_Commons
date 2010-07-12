@@ -34,7 +34,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,7 +41,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 public class FlexibleDBImporter implements Importer, ImporterPostProcess {
 
@@ -500,57 +498,25 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
      }
 
      private void createIndexes() {
-         createIndex("record_id", true);
-         createIndex("dataset_id", false);
-         createIndex("version", false);
-         createIndex("delete_versions", false);
+         String table = dataTable.name().toLowerCase();
+
+         //ALWAYS create indexes for these core columns...
+         dataTable.addIndex(table, "record_id", true);
+         dataTable.addIndex(table, "dataset_id", false);
+         dataTable.addIndex(table, "version", false);
+         dataTable.addIndex(table, "delete_versions", false);
+
+         //now index the columns specified in the Keyword INDICES values
          KeyVal[] keyVal = keyValFound(Keyword.INDICES);
          if (keyVal != null && keyVal.length > 0) {
-             //first validate columns to index actually exist! 
-//             for (String columnList : keyVal[0].getValue().split("|")) {
-//                 for (String columnName : columnList.split(",")) {
-//                     if (hasColName(colName))
-//                 }
-//             }
-             //now index the columns specified 
              for (String columnList : keyVal[0].getValue().split("\\|")) {
-                 createIndex(columnList, false);
+                 dataTable.addIndex(table, columnList, false);
              }
          }
 
-         try {
-             datasource.query().execute("analyze " + getFullTableName(dataTable.name().toLowerCase()) + ";");
-         } catch (SQLException e) {
-             //e.printStackTrace();
-             //supress all errors, the indexes might already be on the table...
-         } finally {
-             //
-         }
-     }
-
-     private void createIndex(String columnList, boolean clustered) {
-         String table = dataTable.name().toLowerCase();
-         String guid = (UUID.randomUUID()).toString().replaceAll("-", "");
-         String accessMethod = "btree";
-         String indexName = ("idx_" + guid);
-
-         String query = "CREATE INDEX " + indexName + " ON " + getFullTableName(table) + " USING " + accessMethod + " (" + columnList + ");";
-         if (clustered) {
-             query += "ALTER TABLE " + getFullTableName(table) + " CLUSTER ON " + indexName + ";";
-         }
-     
-         try {
-             datasource.query().execute(query);
-         } catch (SQLException e) {
-             //e.printStackTrace();
-             //supress all errors, the indexes might already be on the table...
-         } finally {
-             //
-         }
-     }
-
-     public static void main(String[] args) {
-         System.out.println( "pointid,asdsasad,adsasa,ad".split("\\,").length );
+         //finally analyze the table, so the indexes take affect immediately, 
+         //NOT when the SQL engine gets around to analyzing eventually
+         dataTable.analyzeTable(table);
      }
 }
 

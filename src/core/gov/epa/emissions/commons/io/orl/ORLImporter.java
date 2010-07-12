@@ -4,6 +4,8 @@ import gov.epa.emissions.commons.Record;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.DatasetTypeUnit;
+import gov.epa.emissions.commons.data.KeyVal;
+import gov.epa.emissions.commons.data.Keyword;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetInputStreamReader;
@@ -78,7 +80,6 @@ public class ORLImporter implements Importer, ImporterPostProcess  {
         try {
             doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) formatUnit.fileFormat());
             
-            postRun();
         } catch (Exception e) {
             dataTable.drop();
             e.printStackTrace();
@@ -382,9 +383,7 @@ public class ORLImporter implements Importer, ImporterPostProcess  {
             
             connection = datasource.getConnection();
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            System.out.println("start fix check query " + System.currentTimeMillis());
             rs = statement.executeQuery(sql);
-            System.out.println("end fix check query " + System.currentTimeMillis());
             boolean foundNegative9 = false;
             while (rs.next()) {
                 foundNegative9 = true;
@@ -468,15 +467,13 @@ public class ORLImporter implements Importer, ImporterPostProcess  {
 //                or trim(poll) in (''0'',''-9'','''')
 //--                  or trim(mact) in (''0'',''-9'','''')
 //                or trim(sic) in (''0'',''-9'','''');'
-                System.out.println("start fix query " + System.currentTimeMillis());
                 statement.execute(sql);
-                System.out.println("end fix query " + System.currentTimeMillis());
                 statement.execute("vacuum " + getFullTableName(dataTable.name()));
                 statement.close();
             }
             
             //create indexes....
-            makeSureInventoryDatasetHasIndexes();
+            createIndexes();
         } catch (Exception exc) {
             // NOTE: this closes the db server for other importers
             // try
@@ -507,16 +504,60 @@ public class ORLImporter implements Importer, ImporterPostProcess  {
         }
     }
 
-    private void makeSureInventoryDatasetHasIndexes() {
+//    private void makeSureInventoryDatasetHasIndexes() {
+//        String table = dataTable.name().toLowerCase();
+//        String query = "SELECT public.create_orl_table_indexes('" + table + "');analyze " + getFullTableName(table).toLowerCase() + ";";
+//        try {
+//            datasource.query().execute(query);
+//        } catch (SQLException e) {
+//            //e.printStackTrace();
+//            //supress all errors, the indexes might already be on the table...
+//        } finally {
+//            //
+//        }
+//    }
+    
+
+    private void createIndexes() {
         String table = dataTable.name().toLowerCase();
-        String query = "SELECT public.create_orl_table_indexes('" + table + "');analyze " + getFullTableName(table).toLowerCase() + ";";
-        try {
-            datasource.query().execute(query);
-        } catch (SQLException e) {
-            //e.printStackTrace();
-            //supress all errors, the indexes might already be on the table...
-        } finally {
-            //
+
+        //ALWAYS create indexes for these core columns...
+        dataTable.addIndex(table, "record_id", true);
+        dataTable.addIndex(table, "dataset_id", false);
+        dataTable.addIndex(table, "version", false);
+        dataTable.addIndex(table, "delete_versions", false);
+
+        dataTable.addIndex(table, "fips", false);
+        dataTable.addIndex(table, "poll", false);
+        dataTable.addIndex(table, "scc", false);
+        dataTable.addIndex(table, "plantid", false);
+        dataTable.addIndex(table, "pointid", false);
+        dataTable.addIndex(table, "stackid", false);
+        dataTable.addIndex(table, "segment", false);
+        dataTable.addIndex(table, "mact", false);
+        dataTable.addIndex(table, "sic", false);
+
+        //now index the columns specified in the Keyword INDICES values
+        KeyVal[] keyVal = keyValFound(Keyword.INDICES);
+        if (keyVal != null && keyVal.length > 0) {
+            for (String columnList : keyVal[0].getValue().split("\\|")) {
+                dataTable.addIndex(table, columnList, false);
+            }
         }
+
+        //finally analyze the table, so the indexes take affect immediately, 
+        //NOT when the SQL engine gets around to analyzing eventually
+        dataTable.analyzeTable(table);
+    }
+
+    private  KeyVal[] keyValFound(String keyword) {
+        KeyVal[] keys = dataset.getDatasetType().getKeyVals();
+        List<KeyVal> list = new ArrayList<KeyVal>();
+        
+        for (KeyVal key : keys)
+            if (key.getName().equalsIgnoreCase(keyword)) 
+                list.add(key);
+        
+        return list.toArray(new KeyVal[0]);
     }
 }
