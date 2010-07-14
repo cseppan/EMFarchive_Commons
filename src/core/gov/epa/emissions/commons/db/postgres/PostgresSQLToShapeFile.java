@@ -5,13 +5,10 @@ import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.ExporterException;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -215,20 +212,30 @@ public class PostgresSQLToShapeFile {
                 shxFile.delete();
             }
             File prjFile = new File(filePath + ".prj");
-            if (prjFile.exists()) prjFile.delete();
-            prjFile.createNewFile();
-            if (windowsOS) {
-                Runtime.getRuntime().exec("CACLS " + prjFile.getAbsolutePath() + " /E /G \"Users\":W");
-                prjFile.setWritable(true, false);
-                Thread.sleep(1000); // for the system to refresh the file access permissions
+            if (!prjFile.exists()) {
+                if (windowsOS) {
+                    prjFile.createNewFile();
+                    Runtime.getRuntime().exec("CACLS " + prjFile.getAbsolutePath() + " /E /G \"Users\":W");
+                    prjFile.setWritable(true, false);
+                    Thread.sleep(1000); // for the system to refresh the file access permissions
+                }
+            } else {
+                prjFile.delete();
             }
-            Writer output = new BufferedWriter(new FileWriter(prjFile));
-            try {
-                output.write( projectionShapeFile != null ? projectionShapeFile.getPrjText() : "");
-            }
-            finally {
-                output.close();
-            }
+//            if (prjFile.exists()) prjFile.delete();
+//            prjFile.createNewFile();
+//            if (windowsOS) {
+//                Runtime.getRuntime().exec("CACLS " + prjFile.getAbsolutePath() + " /E /G \"Users\":W");
+//                prjFile.setWritable(true, false);
+//                Thread.sleep(1000); // for the system to refresh the file access permissions
+//            }
+//            Writer output = new BufferedWriter(new FileWriter(prjFile));
+//            try {
+//                output.write( projectionShapeFile != null ? projectionShapeFile.getPrjText() : "");
+//            }
+//            finally {
+//                output.close();
+//            }
             // for now, do nothing from Linux
         } catch (IOException e) {
             e.printStackTrace();
