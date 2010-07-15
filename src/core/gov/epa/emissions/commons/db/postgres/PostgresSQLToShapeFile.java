@@ -58,6 +58,46 @@ public class PostgresSQLToShapeFile {
 
 
             process = Runtime.getRuntime().exec(exportCommand);
+
+            
+            final InputStream stdout = process.getInputStream();
+            new Thread(new Runnable() {
+     
+            public void run() {
+                BufferedReader rdr = new BufferedReader(
+                    new InputStreamReader(stdout));
+//                String line;
+                try {
+                while (rdr.readLine() != null) {
+//                while ((line = rdr.readLine()) != null) {
+                    //System.out.println("lame stdout: " + line);
+                }
+                } catch (IOException e) {
+                e.printStackTrace();
+                }
+            }
+            }).start();
+            final InputStream stderr = process.getErrorStream();
+            new Thread(new Runnable() {
+     
+            public void run() {
+                BufferedReader rdr = new BufferedReader(
+                    new InputStreamReader(stderr));
+                String line;
+                try {
+                while ((line = rdr.readLine()) != null) {
+                    System.err.println("lame stderr: " + line);
+                }
+                } catch (IOException e) {
+                e.printStackTrace();
+                }
+            }
+            }).start();
+//            encode.waitFor();
+     
+            
+            
+            
             //lets wait for the process to end, otherwise the process will run asynchronously,
             //and we swon't know when its finished...
             process.waitFor();
@@ -76,6 +116,7 @@ public class PostgresSQLToShapeFile {
             throw new ExporterException(e.getMessage());
         } finally {
             //
+            System.out.println("");
         }
     }
 
@@ -151,7 +192,7 @@ public class PostgresSQLToShapeFile {
 //        cmds[1] = "-c";
 //        cmds[2] = "";
 
-        System.out.println("csh -c \"" + postgresBinDir + "pgsql2shp -f " + putEscape(filePath) + " -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"\"");
+//        System.out.println("csh -c \"" + postgresBinDir + "pgsql2shp -f " + putEscape(filePath) + " -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"\"");
 
         if (windowsOS) {
             cmds = new String[1];
