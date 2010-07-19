@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons;
 
+@SuppressWarnings("serial")
 public class CommonsException extends Exception {
 
     String details;
