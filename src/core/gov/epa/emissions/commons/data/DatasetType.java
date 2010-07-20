@@ -101,11 +101,11 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String FAST_ANALYSIS_GRIDDED_DIFFERENCE_RESULT = "FAST Analysis Gridded Difference Result";
     
-    public static final String fastGriddedSummaryEmissionAirQuality = "FAST Gridded Summary Emission and Air Quality";
+    public static final String FAST_RUN_INTERMEDIATE_AIR_QUALITY = "FAST Run Intermediate Air Quality";
     
-    public static final String fastGriddedDetailedEmissionAirQuality = "FAST Gridded Detailed Emission and Air Quality";
+    public static final String FAST_RUN_GRIDDED_OUTPUT = "FAST Run Gridded Output";
     
-    public static final String fastGriddedSectorCMAQInventoryPollutantEmission = "FAST Gridded Sector-CMAQ-Inventory-Pollutant Emission";
+    public static final String FAST_RUN_INTERMEDIATE_INVENTORY = "FAST Run Intermediate Inventory";
     
     public static final String FAST_SMOKE_GRIDDED_SCC_REPORT = "FAST SMOKE Gridded SCC Report";
     
