@@ -105,6 +105,8 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String FAST_RUN_GRIDDED_OUTPUT = "FAST Run Gridded Output";
     
+    public static final String FAST_RUN_DOMAIN_OUTPUT = "FAST Run Domain Output";
+    
     public static final String FAST_RUN_INTERMEDIATE_INVENTORY = "FAST Run Intermediate Inventory";
     
     public static final String FAST_SMOKE_GRIDDED_SCC_REPORT = "FAST SMOKE Gridded SCC Report";
