@@ -127,9 +127,9 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
 //    
 //    public static final String ORL_NONPOINT_NATA_SECTOR_ANNOTATED = "ORL Nonpoint NATA Sector Annotated";
     
-    public static final String ORL_POINT_NOF = "ORL Point NOF";
+    public static final String NOF_POINT = "NOF Point";
     
-    public static final String ORL_NONPOINT_NOF = "ORL Nonpoint NOF";
+    public static final String NOF_NONPOINT = "NOF Nonpoint";
     
     //For new dataset type   
     public static final String EXTERNAL = "External File";
