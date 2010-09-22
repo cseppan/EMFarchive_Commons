@@ -54,7 +54,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         importer.run();
 
         File exportfile = File.createTempFile("CEMpthourExported", ".txt");
-        CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -78,7 +78,7 @@ public class CEMHourSpecInventoryImExporterTest extends PersistenceTestCase {
         importerv.run();
 
         File exportfile = File.createTempFile("CEMpthourExported", ".txt");
-        CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, dbServer, sqlDataTypes,
+        CEMHourSpecInventoryExporter exporter = new CEMHourSpecInventoryExporter(dataset, "", dbServer, 
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         exporter.export(exportfile);
 

@@ -58,7 +58,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 dbServer, sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new FlexibleDBExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new FlexibleDBExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -78,7 +78,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new ORLOnRoadExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -102,7 +102,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();
 
-        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory, optimizedBatchSize);
+        Exporter exporter = new ORLOnRoadExporter(dataset, "", dbServer, formatFactory, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -121,7 +121,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 dbServer, sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLNonRoadExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new ORLNonRoadExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -141,7 +141,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 dbServer, sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLNonPointExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new ORLNonPointExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -164,7 +164,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLPointExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new ORLPointExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -186,7 +186,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLFiresInvExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new ORLFiresInvExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers
@@ -208,7 +208,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 new String[] { "ptday_firedata_hap2002nei_26jul2006.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        Exporter exporter = new ORLDaySpecFiresExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new ORLDaySpecFiresExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
 
         // assert headers

@@ -88,8 +88,8 @@ public class SpeciationComboProfileExImTest extends PersistenceTestCase {
         importerv.run();
 
         File exportfile = File.createTempFile("SpeciatiationComboProfileExported", ".txt");
-        SpeciationComboProfileExporter exporter = new SpeciationComboProfileExporter(dataset, dbServer,
-                sqlDataTypes, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        SpeciationComboProfileExporter exporter = new SpeciationComboProfileExporter(dataset, "", dbServer,
+                new NonVersionedDataFormatFactory(), optimizedBatchSize);
         exporter.setDelimiter(",");
         exporter.export(exportfile);
 
@@ -102,8 +102,8 @@ public class SpeciationComboProfileExImTest extends PersistenceTestCase {
     }
 
     private void exportFile(Dataset dataset, File exportfile) throws ExporterException {
-        SpeciationComboProfileExporter exporter = new SpeciationComboProfileExporter(dataset, dbServer,
-                sqlDataTypes, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        SpeciationComboProfileExporter exporter = new SpeciationComboProfileExporter(dataset, "", dbServer,
+                new NonVersionedDataFormatFactory(), optimizedBatchSize);
 
         exporter.export(exportfile);
     }

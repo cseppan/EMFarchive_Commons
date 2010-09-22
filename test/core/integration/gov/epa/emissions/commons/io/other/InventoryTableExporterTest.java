@@ -52,7 +52,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
                 new String[] { "CAPandHAP_INVTABLE31aug2006.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        InventoryTableExporter exporter = new InventoryTableExporter(dataset, dbServer, sqlDataTypes,
+        InventoryTableExporter exporter = new InventoryTableExporter(dataset, "", dbServer, 
                 optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
@@ -80,7 +80,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
                 "CAPandHAP_INVTABLE31aug2006.txt"));
         importerv.run();
 
-        InventoryTableExporter exporter = new InventoryTableExporter(dataset, dbServer, sqlDataTypes,
+        InventoryTableExporter exporter = new InventoryTableExporter(dataset, "", dbServer, 
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);

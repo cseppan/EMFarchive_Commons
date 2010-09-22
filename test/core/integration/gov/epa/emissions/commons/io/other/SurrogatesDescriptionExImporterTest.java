@@ -52,7 +52,7 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         importer.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
-        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
+        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -80,8 +80,8 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
         importerv.run();
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
-        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+        SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, "", dbServer, 
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

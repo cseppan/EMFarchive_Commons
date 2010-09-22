@@ -52,7 +52,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, "", dbServer, optimizedBatchSize);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);
@@ -72,8 +72,8 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"pstk.m3.txt"));
         importerv.run();
 
-        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, dbServer, 
-                sqlDataTypes, new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+        PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, "", dbServer, 
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);

@@ -79,7 +79,7 @@ public class GSCNVImporterExporterTest extends PersistenceTestCase {
         if (src != null && src.length > 0)
             assertEquals(1231, countRecords(dbServer, src[0].getTable()));
 
-        Exporter exporter = new GSCNVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        Exporter exporter = new GSCNVExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = doExport(exporter);
         List records = readData(file);
         assertEquals(1231, records.size());

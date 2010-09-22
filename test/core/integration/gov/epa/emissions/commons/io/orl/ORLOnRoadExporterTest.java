@@ -46,7 +46,7 @@ public class ORLOnRoadExporterTest extends PersistenceTestCase {
 
         doImport();
 
-        exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        exporter = new ORLOnRoadExporter(dataset, "", dbServer, optimizedBatchSize);
     }
 
     private void doImport() throws Exception {

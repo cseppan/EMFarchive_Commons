@@ -66,7 +66,7 @@ public class TemporalReferenceImporterTest extends PersistenceTestCase {
         int rows = countRecords();
         assertEquals(34, rows);
 
-        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, dbServer, sqlDataTypes,
+        TemporalReferenceExporter exporter = new TemporalReferenceExporter(dataset, "", dbServer, 
                 optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedCrossRefExported", ".txt");
         exporter.export(exportfile);

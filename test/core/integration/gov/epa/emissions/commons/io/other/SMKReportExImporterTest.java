@@ -55,7 +55,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         assertEquals(34, countRecords());
 
         File exportfile = File.createTempFile("SMKreportSemicolonExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(exportfile);
 
         List data = readData(exportfile);
@@ -77,7 +77,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         assertEquals(44, countRecords());
 
         File exportfile = File.createTempFile("SMKreportPipeExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));
@@ -100,7 +100,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         importer.run();
 
         File exportfile = File.createTempFile("SMKreportQuotesExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Annual total data basis in report", data.get(8));
@@ -126,7 +126,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
         assertEquals(67, countRecords());
 
         File exportfile = File.createTempFile("SMKreportCommaExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, "", dbServer,optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));
@@ -144,7 +144,7 @@ public class SMKReportExImporterTest extends PersistenceTestCase {
 
 //        File exportfile = new File("D:\\emf_output\\smkrpt.txt");
         File exportfile = File.createTempFile("SMKreportCommaExported", ".txt");
-        SMKReportExporter exporter = new SMKReportExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        SMKReportExporter exporter = new SMKReportExporter(dataset, "", dbServer,optimizedBatchSize);
         exporter.export(exportfile);
         List data = readData(exportfile);
         assertEquals("Stationary area", data.get(0));

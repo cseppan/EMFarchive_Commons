@@ -65,7 +65,7 @@ public class LineExporterTest extends PersistenceTestCase {
                     sqlDataTypes);
             importer.run();
 
-            LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+            LineExporter exporter = new LineExporter(dataset, "", dbServer, optimizedBatchSize);
             File file = File.createTempFile("lineexporter", ".txt");
             exporter.export(file);
             assertEquals(22, countRecords());
@@ -105,7 +105,7 @@ public class LineExporterTest extends PersistenceTestCase {
                 "small-point.txt"));
         importer2.run();
 
-        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+        LineExporter exporter = new LineExporter(dataset, "", dbServer, new VersionedDataFormatFactory(
                 version, dataset), optimizedBatchSize);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
@@ -135,7 +135,7 @@ public class LineExporterTest extends PersistenceTestCase {
         "small-point.txt"));
         importer2.run();
         
-        LineExporter exporter = new LineExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+        LineExporter exporter = new LineExporter(dataset, "", dbServer, new VersionedDataFormatFactory(
                 version, dataset), optimizedBatchSize);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
@@ -162,7 +162,7 @@ public class LineExporterTest extends PersistenceTestCase {
         "small-point.txt"));
         importer2.run();
         
-        GenericExporterToString exporter = new GenericExporterToString(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(
+        GenericExporterToString exporter = new GenericExporterToString(dataset, "", dbServer, new VersionedDataFormatFactory(
                 version, dataset), optimizedBatchSize);
         exporter.export(null);
         String exportedLines = exporter.getOutputString();
@@ -188,7 +188,7 @@ public class LineExporterTest extends PersistenceTestCase {
                 sqlDataTypes);
         importer.run();
         
-        GenericExporterToString exporter = new GenericExporterToString(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        GenericExporterToString exporter = new GenericExporterToString(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(null);
         String exportedLines = exporter.getOutputString();
         

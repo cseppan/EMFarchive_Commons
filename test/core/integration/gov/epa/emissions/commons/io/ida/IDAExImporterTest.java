@@ -80,7 +80,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
-        IDANonPointNonRoadExporter exporter = new IDANonPointNonRoadExporter(dataset, dbServer, sqlDataTypes,
+        IDANonPointNonRoadExporter exporter = new IDANonPointNonRoadExporter(dataset, "", dbServer, 
                 optimizedBatchSize);
         File exportfile = File.createTempFile("IDAAreaExported", ".txt");
         exporter.export(exportfile);
@@ -116,7 +116,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
-        IDAPointExporter exporter = new IDAPointExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        IDAPointExporter exporter = new IDAPointExporter(dataset, "", dbServer, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAPointExported", ".txt");
         exporter.export(exportfile);
 
@@ -156,7 +156,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
         TableReader tableReader = tableReader(datasource);
         assertEquals(10, tableReader.count(datasource.getName(), dataset.getInternalSources()[0].getTable()));
 
-        IDAMobileExporter exporter = new IDAMobileExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        IDAMobileExporter exporter = new IDAMobileExporter(dataset, "", dbServer, optimizedBatchSize);
         File exportfile = File.createTempFile("IDAMobileExported", ".txt");
         exporter.export(exportfile);
 
@@ -187,7 +187,7 @@ public class IDAExImporterTest extends PersistenceTestCase {
             } catch (IOException e1) {
                 throw new ImporterException("Can't create temp file IDAActivity.txt");
             }
-            IDAActivityExporter exporter = new IDAActivityExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+            IDAActivityExporter exporter = new IDAActivityExporter(dataset, "", dbServer, optimizedBatchSize);
             exporter.export(exportfile);
             String data1 = "37 1 0 2201001150 40.0 41.42";
             String data10 = "37 1 0 2201020150 40.0 16.77";

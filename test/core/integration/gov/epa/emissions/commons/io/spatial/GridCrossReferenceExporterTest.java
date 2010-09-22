@@ -51,7 +51,7 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
                 dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, dbServer, sqlDataTypes,optimizedBatchSize);
+        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = File.createTempFile("GridCrossRefExported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.
@@ -70,7 +70,7 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"amgref.txt"));
         importerv.run();
         
-        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, dbServer, sqlDataTypes,
+        GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, "", dbServer, 
                 new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
         File file = File.createTempFile("GridCrossRefExported", ".txt");
         exporter.export(file);

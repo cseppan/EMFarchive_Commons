@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.SimpleDataset;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.importer.VersionedDataFormatFactory;
@@ -15,8 +14,7 @@ import java.io.File;
 import java.util.Random;
 
 public abstract class ExportPerformanceTest extends PerformanceTestCase {
-    private SqlDataTypes sqlDataTypes;
-
+    
     private Dataset dataset;
 
     private DbServer dbServer;
@@ -33,7 +31,7 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
         super.setUp();
 
         dbServer = dbSetup.getDbServer();
-        sqlDataTypes = dbServer.getSqlDataTypes();
+        //dbServer.getSqlDataTypes();
 
         dataset = new SimpleDataset();
         dataset.setId(Math.abs(new Random().nextInt()));
@@ -50,7 +48,7 @@ public abstract class ExportPerformanceTest extends PerformanceTestCase {
         table.setTable(datasetName);
         dataset.addInternalSource(table);
         Integer optimizedBatchSize = new Integer(10000);
-        Exporter exporter = new ORLOnRoadExporter(dataset, dbServer, sqlDataTypes, formatFactory, optimizedBatchSize);
+        Exporter exporter = new ORLOnRoadExporter(dataset, "", dbServer, formatFactory, optimizedBatchSize);
         File file = File.createTempFile("exported", ".orl");
         file.deleteOnExit();
 

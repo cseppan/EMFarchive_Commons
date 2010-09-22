@@ -75,7 +75,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         assertEquals(8, rows);
 
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        CSVExporter exporter = new CSVExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(file);
 
         List<String> data = readData(file);
@@ -105,7 +105,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         assertEquals(8, rows);
 
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        CSVExporter exporter = new CSVExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(file);
 
         List<String> data = readData(file);
@@ -130,7 +130,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         assertEquals(8, rows);
 
         File file = File.createTempFile("ExportedSmallAndSimplePointFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version,
+        CSVExporter exporter = new CSVExporter(dataset, "", dbServer, new VersionedDataFormatFactory(version,
                 dataset), optimizedBatchSize);
         exporter.export(file);
 
@@ -149,7 +149,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         assertEquals(14, rows);
 
         File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        CSVExporter exporter = new CSVExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(file);
 
         List<String> data = readData(file);
@@ -191,7 +191,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
     }
 
     private void exportFile(File file, Dataset dataset) throws ExporterException {
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        CSVExporter exporter = new CSVExporter(dataset, "", dbServer, optimizedBatchSize);
         exporter.export(file);
     }
 
@@ -217,7 +217,7 @@ public class CSVFileExImporterTest extends PersistenceTestCase {
         assertEquals(41, rows);
 
         File file = File.createTempFile("ExportedCommaDelimitedFile", ".txt");
-        CSVExporter exporter = new CSVExporter(dataset, dbServer, sqlDataTypes, new VersionedDataFormatFactory(version,
+        CSVExporter exporter = new CSVExporter(dataset, "", dbServer, new VersionedDataFormatFactory(version,
                 dataset), optimizedBatchSize);
         exporter.export(file);
 
