@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.temporal;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
@@ -13,13 +12,13 @@ import java.util.StringTokenizer;
 
 public class TemporalReferenceExporter extends GenericExporter {
 
-    public TemporalReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
-        this(dataset, dbServer, types, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+    public TemporalReferenceExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        this(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public TemporalReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+    public TemporalReferenceExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, new TemporalReferenceFileFormat(types, dataFormatFactory.defaultValuesFiller()),
+        super(dataset, rowFilters, dbServer, new TemporalReferenceFileFormat(dbServer.getSqlDataTypes(), dataFormatFactory.defaultValuesFiller()),
                 dataFormatFactory, optimizedBatchSize);
     }
 

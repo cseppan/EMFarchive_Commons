@@ -5,7 +5,6 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.ExportStatement;
 import gov.epa.emissions.commons.io.Exporter;
@@ -45,21 +44,24 @@ public class GenericExporterToString implements Exporter {
     protected StringBuffer header;
 
     protected String lineFeeder = System.getProperty("line.separator");
+    
+    protected String rowFilters; 
 
-    public GenericExporterToString(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public GenericExporterToString(Dataset dataset, String rowFilters, DbServer dbServer, 
             Integer optimizedBatchSize) {
-        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        this(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public GenericExporterToString(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public GenericExporterToString(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory formatFactory, Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.dataFormatFactory = formatFactory;
-        this.fileFormat = new LineFileFormat(sqlDataTypes);
+        this.fileFormat = new LineFileFormat(dbServer.getSqlDataTypes());
         this.batchSize = (optimizedBatchSize == null) ? 100000 : optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
         this.output = new StringBuffer();
+        this.rowFilters = rowFilters;
     }
 
     public void export(File file) throws ExporterException {
@@ -125,7 +127,7 @@ public class GenericExporterToString implements Exporter {
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable);
+        return export.generate(qualifiedTable, rowFilters);
     }
 
     protected void writeBatchOfData(ResultSet data, String[] cols, boolean comments) throws SQLException {

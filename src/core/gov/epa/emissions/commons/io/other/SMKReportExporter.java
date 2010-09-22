@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -19,7 +18,6 @@ import gov.epa.emissions.commons.util.CustomDateFormat;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -40,6 +38,8 @@ public class SMKReportExporter implements Exporter {
     private String delimiter;
 
     private String tableframe;
+    
+    private String rowFilters;
 
     private DataFormatFactory dataFormatFactory;
 
@@ -55,16 +55,16 @@ public class SMKReportExporter implements Exporter {
 
     protected List<String> colNames = new ArrayList<String>();
 
-    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
-        setup(dataset, dbServer, types, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+    public SMKReportExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        setup(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public SMKReportExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory,
+    public SMKReportExporter(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory factory,
             Integer optimizedBatchSize) {
-        setup(dataset, dbServer, types, factory, optimizedBatchSize);
+        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize);
     }
 
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory,
+    private void setup(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
@@ -72,6 +72,7 @@ public class SMKReportExporter implements Exporter {
         this.dataFormatFactory = dataFormatFactory;
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
+        this.rowFilters = rowFilters;
         setDelimiter(";");
     }
 
@@ -81,11 +82,8 @@ public class SMKReportExporter implements Exporter {
             // writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
             writer = new PrintWriter(new CustomCharSetOutputStreamWriter(new FileOutputStream(file)));
             write(file, writer);
-        } catch (IOException e) {
-            throw new ExporterException("could not open file - " + file + " for writing");
-        } catch (Exception e2) {
-            e2.printStackTrace();
-            throw new ExporterException(e2.getMessage());
+        } catch (Exception e) {
+            throw new ExporterException(e.getMessage());
         }
     }
 
@@ -177,8 +175,8 @@ public class SMKReportExporter implements Exporter {
                 writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
                         + data.getString(4) + ".    What: " + replaceLineSeparator(data.getString(2)) + "    Why: "
                         + replaceLineSeparator(data.getString(3)));
-        } catch (Exception e) {
-            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();        
         } finally {
             if (data != null)
                 data.close();
@@ -293,7 +291,7 @@ public class SMKReportExporter implements Exporter {
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable);
+        return export.generate(qualifiedTable, rowFilters);
     }
 
     protected String formatValue(String[] cols, int colType, int index, String value) {

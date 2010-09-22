@@ -5,7 +5,6 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.KeyVal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -40,16 +39,16 @@ public class FlexibleDBExporter extends GenericExporter {
     private Dataset dataset;
     
     private XFileFormat fileFormat;
-
+    
     private Datasource datasource;
 
     private boolean windowsOS = false;
     
     private boolean withColNames = true;   //true: first data line is column names
     
-    public FlexibleDBExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory dataFormatFactory,
+    public FlexibleDBExporter(Dataset dataset, String rowFilters, DbServer dbServer,DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
-        super(dataset, dbServer, dataset.getDatasetType().getFileFormat(), dataFormatFactory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, dataset.getDatasetType().getFileFormat(), dataFormatFactory, optimizedBatchSize);
         this.dataset = dataset;
         this.fileFormat = dataset.getDatasetType().getFileFormat();
         this.datasource = dbServer.getEmissionsDatasource();
@@ -60,8 +59,8 @@ public class FlexibleDBExporter extends GenericExporter {
         setDelimiter(",");
     }
 
-    public FlexibleDBExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizeBatchSize) {
-        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizeBatchSize);
+    public FlexibleDBExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizeBatchSize) {
+        this(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizeBatchSize);
     }
 
     public void export(File file) throws ExporterException {
@@ -98,8 +97,9 @@ public class FlexibleDBExporter extends GenericExporter {
             createNewFile(dataFile);
             writeHeader(headerFile);
 
-            String originalQuery = getQueryString(dataset, datasource);
+            String originalQuery = getQueryString(dataset, rowFilters, datasource);
             String query = getColsSpecdQueryString(dataset, originalQuery);
+         
             String writeQuery = getWriteQueryString(dataFileName, query);
 
             // log.warn(writeQuery);
@@ -201,7 +201,6 @@ public class FlexibleDBExporter extends GenericExporter {
         // Statement statement = null;
 
         try {
-            // statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.execute(writeQuery);
         } catch (Exception e) {
             log.error("Error executing query: " + writeQuery + ".", e);
@@ -247,12 +246,12 @@ public class FlexibleDBExporter extends GenericExporter {
         return cmd;
     }
 
-    private String getColsSpecdQueryString(Dataset dataset, String originalQuery) {
-        String selectColsString = "SELECT ";
+    private String getColsSpecdQueryString(Dataset dataset, String originalQuery ) throws Exception{
+        String selectColsString = "SELECT ";     
         Column[] cols = fileFormat.cols();
         Map<String, String> tableColsMap = getTableCols(dataset);
         int numCols = cols.length;
-
+        
         for (int i = 0; i < numCols; i++) {
             String colName = cols[i].name().toLowerCase();
             // make sure you only include columns that exist in the table, new columns could have been
@@ -264,6 +263,7 @@ public class FlexibleDBExporter extends GenericExporter {
 
         return selectColsString + " " + getSubString(originalQuery, "FROM", false);
     }
+    
 
     private String getWriteQueryString(String dataFile, String query) {
         String withClause = " WITH NULL '' CSV FORCE QUOTE " + getNeedQuotesCols();

@@ -331,7 +331,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         String qualifiedTable = datasource.getName() + "." + table;
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable);
+        return export.generate(qualifiedTable, "");
     }
 
     protected String[] getCols(ResultSet data) throws SQLException {

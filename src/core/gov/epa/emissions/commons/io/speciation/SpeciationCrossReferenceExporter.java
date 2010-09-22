@@ -2,7 +2,6 @@ package gov.epa.emissions.commons.io.speciation;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
@@ -12,14 +11,14 @@ import java.util.StringTokenizer;
 
 public class SpeciationCrossReferenceExporter extends GenericExporter {
 
-    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+    public SpeciationCrossReferenceExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             Integer optimizedBatchSize) {
-        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, new SpeciationCrossRefFileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public SpeciationCrossReferenceExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+    public SpeciationCrossReferenceExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             DataFormatFactory factory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, new SpeciationCrossRefFileFormat(types), factory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, new SpeciationCrossRefFileFormat(dbServer.getSqlDataTypes()), factory, optimizedBatchSize);
     }
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {

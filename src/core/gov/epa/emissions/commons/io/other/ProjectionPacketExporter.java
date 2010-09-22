@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.other;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
@@ -13,13 +12,13 @@ import java.util.StringTokenizer;
 
 public class ProjectionPacketExporter extends GenericExporter {
 
-    public ProjectionPacketExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
-        super(dataset, dbServer, new ProjectionPacketFileFormat(types), optimizedBatchSize);
+    public ProjectionPacketExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        super(dataset, rowFilters, dbServer, new ProjectionPacketFileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public ProjectionPacketExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory factory,
+    public ProjectionPacketExporter(Dataset dataset, String rowFilters, DbServer dbServer,DataFormatFactory factory,
             Integer optimizedBatchSize) {
-        super(dataset, dbServer, new ProjectionPacketFileFormat(types), factory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, new ProjectionPacketFileFormat(dbServer.getSqlDataTypes()), factory, optimizedBatchSize);
     }
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {

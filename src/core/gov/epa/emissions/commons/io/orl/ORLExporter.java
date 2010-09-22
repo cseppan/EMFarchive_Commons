@@ -39,9 +39,9 @@ public class ORLExporter extends GenericExporter {
 
     private boolean windowsOS = false;
 
-    public ORLExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, DataFormatFactory dataFormatFactory,
+    public ORLExporter(Dataset dataset, String rowFilters, DbServer dbServer, FileFormat fileFormat, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
 
@@ -50,8 +50,8 @@ public class ORLExporter extends GenericExporter {
         setDelimiter(",");
     }
 
-    public ORLExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizeBatchSize) {
-        this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizeBatchSize);
+    public ORLExporter(Dataset dataset,String rowFilters, DbServer dbServer, FileFormat fileFormat, Integer optimizeBatchSize) {
+        this(dataset, rowFilters, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizeBatchSize);
     }
 
     public void export(File file) throws ExporterException {
@@ -84,7 +84,7 @@ public class ORLExporter extends GenericExporter {
             createNewFile(dataFile);
             writeHeader(headerFile);
 
-            String originalQuery = getQueryString(dataset, datasource);
+            String originalQuery = getQueryString(dataset, rowFilters, datasource);
             String query = getColsSpecdQueryString(dataset, originalQuery);
             String writeQuery = getWriteQueryString(dataFileName, query);
 

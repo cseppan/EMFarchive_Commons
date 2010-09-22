@@ -14,14 +14,14 @@ public class IDANonPointNonRoadExporter implements Exporter {
 
     private IDAExporter delegate;
 
-    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public IDANonPointNonRoadExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             Integer optimizedBatchSize) throws ImporterException {
-        delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
+        delegate = new IDAExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public IDANonPointNonRoadExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public IDANonPointNonRoadExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) throws ImporterException {
-        delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), dataFormatFactory, optimizedBatchSize);
+        delegate = new IDAExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), dataFormatFactory, optimizedBatchSize);
     }
 
     private IDAFileFormat fileFormat(SqlDataTypes sqlDataTypes) {

@@ -14,8 +14,11 @@ public class VersionedDatasetQuery implements ExportStatement {
         this.datasetType = dataset.getDatasetType();
         versionedQuery = new VersionedQuery(version);
     }
+    
+    public String generate(String table, String rowFilters) {
+        if (rowFilters.trim().length()>0)
+            return "SELECT * FROM " + table + " WHERE " + versionedQuery.query() + " AND " + rowFilters+ orderByClause();
 
-    public String generate(String table) {
         return "SELECT * FROM " + table + " WHERE " + versionedQuery.query() + orderByClause();
     }
     

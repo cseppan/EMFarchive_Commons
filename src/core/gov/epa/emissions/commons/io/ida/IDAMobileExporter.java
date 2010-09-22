@@ -14,13 +14,13 @@ public class IDAMobileExporter implements Exporter {
 
     private IDAExporter delegate;
 
-    public IDAMobileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) throws ImporterException {
-        this.delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
+    public IDAMobileExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) throws ImporterException {
+        this.delegate = new IDAExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public IDAMobileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public IDAMobileExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) throws ImporterException {
-        this.delegate = new IDAExporter(dataset, dbServer, fileFormat(sqlDataTypes), dataFormatFactory,
+        this.delegate = new IDAExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), dataFormatFactory,
                 optimizedBatchSize);
     }
 

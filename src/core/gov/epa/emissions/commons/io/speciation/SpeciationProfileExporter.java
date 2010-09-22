@@ -8,12 +8,12 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 
 public class SpeciationProfileExporter extends GenericExporter {
     public SpeciationProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types, Integer optimizedBatchSize) {
-        super(dataset, dbServer, new SpeciationProfileFileFormat(types), optimizedBatchSize);
+        super(dataset, "", dbServer, new SpeciationProfileFileFormat(types), optimizedBatchSize);
     }
     
     public SpeciationProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
             DataFormatFactory factory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, new SpeciationProfileFileFormat(types), factory, optimizedBatchSize);
+        super(dataset, "", dbServer, new SpeciationProfileFileFormat(types), factory, optimizedBatchSize);
     }
 
 }

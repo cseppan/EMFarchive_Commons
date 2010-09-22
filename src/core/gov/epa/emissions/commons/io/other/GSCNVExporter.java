@@ -9,13 +9,13 @@ import gov.epa.emissions.commons.io.generic.GenericExporter;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 public class GSCNVExporter extends GenericExporter {
-    public GSCNVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat(sqlDataTypes), new NonVersionedDataFormatFactory(), optimizedBatchSize);
+    public GSCNVExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        super(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public GSCNVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public GSCNVExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, fileFormat(sqlDataTypes), dataFormatFactory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), dataFormatFactory, optimizedBatchSize);
     }
 
     private static FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

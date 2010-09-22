@@ -1,25 +1,24 @@
 package gov.epa.emissions.commons.io.speciation;
 
+import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.io.DataFormatFactory;
+import gov.epa.emissions.commons.io.generic.GenericExporter;
+
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import gov.epa.emissions.commons.data.Dataset;
-import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
-import gov.epa.emissions.commons.io.DataFormatFactory;
-import gov.epa.emissions.commons.io.generic.GenericExporter;
-
 public class SpeciationComboProfileExporter extends GenericExporter {
 
-    public SpeciationComboProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+    public SpeciationComboProfileExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             Integer optimizedBatchSize) {
-        super(dataset, dbServer, new SpeciationComboProfileFileFormat(types), optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, new SpeciationComboProfileFileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public SpeciationComboProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+    public SpeciationComboProfileExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory factory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, new SpeciationComboProfileFileFormat(types), factory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, new SpeciationComboProfileFileFormat(dbServer.getSqlDataTypes()), factory, optimizedBatchSize);
     }
 
     // NOTE: overwrite so that trailing blank columns are truncated

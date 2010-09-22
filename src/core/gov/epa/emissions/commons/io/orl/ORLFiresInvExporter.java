@@ -14,13 +14,13 @@ public class ORLFiresInvExporter implements Exporter {
 
     private ORLExporter delegate;
 
-    public ORLFiresInvExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
+    public ORLFiresInvExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        delegate = new ORLExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public ORLFiresInvExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public ORLFiresInvExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory formatFactory, Integer optimizedBatchSize) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory, optimizedBatchSize);
+        delegate = new ORLExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), formatFactory, optimizedBatchSize);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

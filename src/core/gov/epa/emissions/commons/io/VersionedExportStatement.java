@@ -11,7 +11,7 @@ public class VersionedExportStatement implements ExportStatement {
         this.query = new VersionedDatasetQuery(version, dataset);
     }
 
-    public String generate(String table) {
-        return query.generate(table);
+    public String generate(String table, String rowFilters) {
+        return query.generate(table, rowFilters);
     }
 }

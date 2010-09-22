@@ -14,13 +14,13 @@ public class ORLPointExporter implements Exporter {
 
     private ORLExporter delegate;
 
-    public ORLPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), optimizedBatchSize);
+    public ORLPointExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        delegate = new ORLExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), optimizedBatchSize);
     }
 
-    public ORLPointExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public ORLPointExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory formatFactory, Integer optimizedBatchSize) {
-        delegate = new ORLExporter(dataset, dbServer, fileFormat(sqlDataTypes), formatFactory, optimizedBatchSize);
+        delegate = new ORLExporter(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes()), formatFactory, optimizedBatchSize);
     }
 
     private FileFormat fileFormat(SqlDataTypes sqlDataTypes) {

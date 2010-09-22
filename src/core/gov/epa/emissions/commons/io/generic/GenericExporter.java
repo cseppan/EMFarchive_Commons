@@ -51,12 +51,14 @@ public class GenericExporter implements Exporter {
     protected int startColNumber = 2; // shifted by "obj_id","record_id" when write data
 
     protected long exportedLinesCount = 0;
+    
+    protected String rowFilters; 
 
-    public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
-        this(dataset, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+    public GenericExporter(Dataset dataset, String rowFilters, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
+        this(dataset, rowFilters, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public GenericExporter(Dataset dataset, DbServer dbServer, FileFormat fileFormat,
+    public GenericExporter(Dataset dataset, String rowFilters, DbServer dbServer, FileFormat fileFormat,
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
@@ -65,7 +67,7 @@ public class GenericExporter implements Exporter {
         this.fileFormat = fileFormat;
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
-
+        this.rowFilters = rowFilters;
         setDelimiter(";");
     }
 
@@ -195,7 +197,7 @@ public class GenericExporter implements Exporter {
 
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws Exception {
-        String query = getQueryString(dataset, datasource);
+        String query = getQueryString(dataset, rowFilters, datasource);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
         boolean firstbatch = true;
         String[] cols = null;
@@ -221,12 +223,12 @@ public class GenericExporter implements Exporter {
         runner.close();
     }
 
-    protected String getQueryString(Dataset dataset, Datasource datasource) throws ExporterException {
+    protected String getQueryString(Dataset dataset, String rowFilters, Datasource datasource) throws ExporterException {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable);
+        return export.generate(qualifiedTable, rowFilters);
     }
 
     protected void writeBatchOfData(PrintWriter writer, ResultSet data, String[] cols, boolean comments)

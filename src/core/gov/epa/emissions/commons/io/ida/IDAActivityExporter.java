@@ -10,15 +10,15 @@ import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
 
 public class IDAActivityExporter extends GenericExporter {
 
-    public IDAActivityExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDatatypes, Integer optimizedBatchSize)
+    public IDAActivityExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize)
             throws ImporterException {
-        super(dataset, dbServer, fileFormat(sqlDatatypes, new NonVersionedDataFormatFactory()), optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes(), new NonVersionedDataFormatFactory()), optimizedBatchSize);
         setup(dataset);
     }
 
-    public IDAActivityExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public IDAActivityExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) throws ImporterException {
-        super(dataset, dbServer, fileFormat(sqlDataTypes, dataFormatFactory), dataFormatFactory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, fileFormat(dbServer.getSqlDataTypes(), dataFormatFactory), dataFormatFactory, optimizedBatchSize);
         setup(dataset);
     }
 

@@ -14,14 +14,14 @@ public class IDAExporter extends GenericExporter {
 
     private IDAFileFormat fileFormat;
 
-    public IDAExporter(Dataset dataset, DbServer dbServer, IDAFileFormat fileFormat, Integer optimizedBatchSize) throws ImporterException {
-        super(dataset, dbServer, fileFormat, optimizedBatchSize);
+    public IDAExporter(Dataset dataset, String rowFilters, DbServer dbServer, IDAFileFormat fileFormat, Integer optimizedBatchSize) throws ImporterException {
+        super(dataset, rowFilters, dbServer, fileFormat, optimizedBatchSize);
         setup(fileFormat,dataset, "");
     }
 
-    public IDAExporter(Dataset dataset, DbServer dbServer, IDAFileFormat fileFormat, DataFormatFactory dataFormatFactory,
+    public IDAExporter(Dataset dataset, String rowFilters, DbServer dbServer, IDAFileFormat fileFormat, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) throws ImporterException {
-        super(dataset, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
+        super(dataset, rowFilters, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
         setup(fileFormat,dataset, "");
     }
 

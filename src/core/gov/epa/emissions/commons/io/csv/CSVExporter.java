@@ -1,23 +1,22 @@
 package gov.epa.emissions.commons.io.csv;
 
-import java.sql.Types;
-
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.other.SMKReportExporter;
 
+import java.sql.Types;
+
 public class CSVExporter extends SMKReportExporter {
 
-    public CSVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
-        super(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+    public CSVExporter(Dataset dataset, String rowFilter,  DbServer dbServer, Integer optimizedBatchSize) {
+        super(dataset, rowFilter, dbServer, optimizedBatchSize);
         setup();
     }
 
-    public CSVExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, DataFormatFactory formatFactory,
+    public CSVExporter(Dataset dataset, String rowFilter, DbServer dbServer, DataFormatFactory formatFactory,
             Integer optimizedBatchSize) {
-        super(dataset, dbServer, sqlDataTypes, formatFactory, optimizedBatchSize);
+        super(dataset, rowFilter, dbServer, formatFactory, optimizedBatchSize);
         setup();
     }
 
