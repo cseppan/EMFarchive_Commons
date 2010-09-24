@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -93,10 +92,9 @@ public class ORLExporter extends GenericExporter {
             connection = datasource.getConnection();
 
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-
+            setExportedLines(originalQuery, statement);
             executeQuery(statement, writeQuery);
             concatFiles(file, headerFileName, dataFileName);
-            setExportedLines(originalQuery, statement);
         } catch (Exception e) {
             e.printStackTrace();
             // NOTE: this closes the db server for other exporters
@@ -193,8 +191,8 @@ public class ORLExporter extends GenericExporter {
             log.error("Error executing query: " + writeQuery + ".", e);
             throw new SQLException(e.getMessage());
         } finally {
-            // if (statement != null)
-            // statement.close();
+             if (statement != null)
+             statement.close();
         }
     }
 
@@ -269,37 +267,6 @@ public class ORLExporter extends GenericExporter {
         }
 
         return (colNames.length() > 0) ? colNames.substring(0, colNames.length() - 1) : colNames;
-    }
-
-    public void setExportedLines(String originalQuery, Statement statement) throws SQLException {
-        Date start = new Date();
-
-        // Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-        // ResultSet.CONCUR_READ_ONLY);
-        String fromClause = getSubString(originalQuery, "FROM", false);
-        String queryCount = "SELECT COUNT(\"dataset_id\") " + getSubString(fromClause, "ORDER BY", true);
-        ResultSet rs = statement.executeQuery(queryCount);
-        rs.next();
-        this.exportedLinesCount = rs.getLong(1);
-        statement.close();
-
-        Date ended = new Date();
-        double lapsed = (ended.getTime() - start.getTime()) / 1000.00;
-
-        if (lapsed > 5.0)
-            log.warn("Time used to count exported data lines(second): " + lapsed);
-    }
-
-    private String getSubString(String origionalString, String mark, boolean beforeMark) {
-        int markIndex = origionalString.indexOf(mark);
-
-        if (markIndex < 0)
-            return origionalString;
-
-        if (beforeMark)
-            return origionalString.substring(0, markIndex);
-
-        return origionalString.substring(markIndex);
     }
 
 }

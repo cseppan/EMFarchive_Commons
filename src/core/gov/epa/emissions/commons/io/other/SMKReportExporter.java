@@ -110,7 +110,7 @@ public class SMKReportExporter implements Exporter {
                 writeDataWithoutComments(writer, dataset, datasource);
             }
         } catch (SQLException e) {
-            throw new ExporterException("could not export file - " + file, e);
+            throw new ExporterException(e.getMessage());
         } finally {
             writer.close();
         }

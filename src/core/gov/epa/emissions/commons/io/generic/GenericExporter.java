@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -332,6 +333,38 @@ public class GenericExporter implements Exporter {
         return 2; // shifted by "Obj_Id", "Record_Id"
     }
 
+    protected void setExportedLines(String originalQuery, Statement statement) throws SQLException {
+        //Date start = new Date();
+
+        // Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+        // ResultSet.CONCUR_READ_ONLY);
+        String fromClause = getSubString(originalQuery, "FROM", false);
+        String queryCount = "SELECT COUNT(\"dataset_id\") " + getSubString(fromClause, "ORDER BY", true);
+        ResultSet rs = statement.executeQuery(queryCount);
+        rs.next();
+        this.exportedLinesCount = rs.getLong(1);
+        if ( exportedLinesCount==0 ){
+            //log.error("Export failure: "+exportedLinesCount+ " lines are filtered" );
+            throw new SQLException("ERROR: Lines exported: " +exportedLinesCount);
+        }         
+        //Date ended = new Date();
+        //double lapsed = (ended.getTime() - start.getTime()) / 1000.00;
+
+        //if (lapsed > 5.0)
+            //log.warn("Time used to count exported data lines(second): " + lapsed);
+    }
+    
+    protected String getSubString(String origionalString, String mark, boolean beforeMark) {
+        int markIndex = origionalString.indexOf(mark);
+
+        if (markIndex < 0)
+            return origionalString;
+
+        if (beforeMark)
+            return origionalString.substring(0, markIndex);
+
+        return origionalString.substring(markIndex);
+    }
     final protected boolean isTableVersioned(String[] cols) {
         return cols[2].equalsIgnoreCase("version") && cols[3].equalsIgnoreCase("delete_versions");
     }

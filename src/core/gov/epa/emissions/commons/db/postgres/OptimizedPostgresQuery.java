@@ -38,7 +38,7 @@ public class OptimizedPostgresQuery implements OptimizedQuery {
             count += rows;
             return resultSet.isBeforeFirst();
         } catch (SQLException e) {
-            throw new SQLException("Error in executing the query -" + query+"; "+e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 
