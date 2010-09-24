@@ -51,7 +51,7 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         importer.run();
         ExternalSource[] srcs = importer.getExternalSources();
 
-        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", dbServer, optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         exporter.setExternalSources(srcs);
         exporter.export(exportfile);
@@ -74,7 +74,7 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         importerv.run();
         ExternalSource[] srcs = importer.getExternalSources();
 
-        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", localDbServer, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         exporter.setExternalSources(srcs);
         exporter.export(exportfile);
@@ -98,7 +98,7 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
         assertTrue(srcs[3].getDatasource().endsWith("does not exist"));
         
-        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", dbServer, optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         
         try {
@@ -128,7 +128,7 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
         assertTrue(srcs[3].getDatasource().endsWith("does not exist"));
         
-        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, localDbServer, sqlDataTypes, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", localDbServer, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         
         try {

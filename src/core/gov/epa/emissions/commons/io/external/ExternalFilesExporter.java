@@ -3,7 +3,6 @@ package gov.epa.emissions.commons.io.external;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.ExternalSource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.Exporter;
 import gov.epa.emissions.commons.io.ExporterException;
@@ -17,11 +16,11 @@ public class ExternalFilesExporter implements Exporter {
     
     private int count = 0;
 
-    public ExternalFilesExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
-        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+    public ExternalFilesExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        this(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public ExternalFilesExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public ExternalFilesExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory formatFactory, Integer optimizedBatchSize) {
         //no-op
     }
