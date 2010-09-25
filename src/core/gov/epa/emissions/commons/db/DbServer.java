@@ -10,6 +10,10 @@ public interface DbServer {
     Datasource getReferenceDatasource();
     
     Datasource getEmfDatasource();
+    
+    Datasource getSmsDatasource();
+    
+    Datasource getFastDatasource();
 
     Connection getConnection();
 

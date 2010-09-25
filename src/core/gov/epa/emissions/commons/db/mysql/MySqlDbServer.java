@@ -122,4 +122,14 @@ public class MySqlDbServer implements DbServer {
         return null;
     }
 
+    public Datasource getSmsDatasource() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Datasource getFastDatasource() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

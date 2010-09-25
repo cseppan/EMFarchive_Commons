@@ -16,8 +16,16 @@ public class PostgresDbServer implements DbServer {
     private Datasource referenceDatasource;
 
     private Datasource emfDatasource;
+    
+    private Datasource smsDatasource;
+    
+    private Datasource fastDatasource;
 
     private Connection connection;
+    
+    private final String EMF_FAST_RUN_SCHEMA = "fast";
+    
+    private final String EMF_SECTOR_SCENARIO_SCHEMA = "sms";
 
     public PostgresDbServer(Connection connection, String referenceDatasourceName, String emissionsDatasourceName,
             String emfDatasourceName) {
@@ -27,6 +35,8 @@ public class PostgresDbServer implements DbServer {
         referenceDatasource = createDatasource(referenceDatasourceName, connection);
         emissionsDatasource = createDatasource(emissionsDatasourceName, connection);
         emfDatasource = createDatasource(emfDatasourceName, connection);
+        smsDatasource = createDatasource(EMF_SECTOR_SCENARIO_SCHEMA, connection);
+        fastDatasource = createDatasource(EMF_FAST_RUN_SCHEMA, connection);
     }
 
     public Datasource getEmissionsDatasource() {
@@ -39,6 +49,14 @@ public class PostgresDbServer implements DbServer {
 
     public Datasource getEmfDatasource() {
         return emfDatasource;
+    }
+    
+    public Datasource getSmsDatasource() {
+        return smsDatasource;
+    }
+    
+    public Datasource getFastDatasource() {
+        return fastDatasource;
     }
 
     private Datasource createDatasource(String datasourceName, Connection connection) {
