@@ -302,13 +302,13 @@ public class TemporalProfileTest extends PersistenceTestCase {
         runVersionProfileImporter("weekly.txt", dataset, version);
         assertEquals(13, countRecords("WEEKLY"));
 
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, "", dbServer,
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         assertEquals(13, exporter.getExportedLinesCount());
 
-        TemporalProfileExporter exporter2 = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+        TemporalProfileExporter exporter2 = new TemporalProfileExporter(dataset, "", dbServer,
                 optimizedBatchSize);
         File exportfile2 = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter2.export(exportfile2);
@@ -329,7 +329,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     private File runProfileExporter() throws IOException, ExporterException {
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, "", dbServer,
                 optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
@@ -348,7 +348,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
     }
 
     private File runVersionProfileExporter(Version version) throws IOException, ExporterException {
-        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, dbServer, typeMapper,
+        TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, "", dbServer,
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);

@@ -42,7 +42,7 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     protected FileFormat fileFormat;
 
-    private SqlDataTypes types;
+    protected SqlDataTypes types;
 
     private int batchSize;
 
@@ -53,26 +53,29 @@ public class CountryStateCountyDataExporter implements Exporter {
     protected int startColNumber;
 
     private Datasource emfDatasource;
+    
+    protected String rowFilters;
 
-    public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public CountryStateCountyDataExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             Integer optimizedBatchSize) {
-        setup(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        setup(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
     }
 
-    public CountryStateCountyDataExporter(Dataset dataset, DbServer dbServer, SqlDataTypes types,
+    public CountryStateCountyDataExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             DataFormatFactory factory, Integer optimizedBatchSize) {
-        setup(dataset, dbServer, types, factory, optimizedBatchSize);
+        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize);
     }
 
-    private void setup(Dataset dataset, DbServer dbServer, SqlDataTypes types, DataFormatFactory dataFormatFactory,
+    private void setup(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory dataFormatFactory,
             Integer optimizedBatchSize) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.emfDatasource = dbServer.getEmfDatasource();
         this.dataFormatFactory = dataFormatFactory;
-        this.types = types;
+        this.types = dbServer.getSqlDataTypes();
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
+        this.rowFilters = rowFilters; 
         setDelimiter("");
     }
 
@@ -331,7 +334,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         String qualifiedTable = datasource.getName() + "." + table;
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable, "");
+        return export.generate(qualifiedTable, rowFilters);
     }
 
     protected String[] getCols(ResultSet data) throws SQLException {

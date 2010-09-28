@@ -4,7 +4,6 @@ import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.SqlDataTypes;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
@@ -14,17 +13,14 @@ import java.io.PrintWriter;
 
 public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     
-    private SqlDataTypes sqlDataTypes;
     
-    public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes, Integer optimizedBatchSize) {
-        this(dataset, dbServer, sqlDataTypes, new NonVersionedDataFormatFactory(),optimizedBatchSize);
-        this.sqlDataTypes = sqlDataTypes;
+    public TemporalProfileExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
+        this(dataset, rowFilters, dbServer,new NonVersionedDataFormatFactory(),optimizedBatchSize);
     }
 
-    public TemporalProfileExporter(Dataset dataset, DbServer dbServer, SqlDataTypes sqlDataTypes,
+    public TemporalProfileExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
             DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
-        super(dataset, dbServer, sqlDataTypes, dataFormatFactory, optimizedBatchSize);
-        this.sqlDataTypes = sqlDataTypes;
+        super(dataset, rowFilters, dbServer, dataFormatFactory, optimizedBatchSize);
     }
     
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws Exception {
@@ -40,7 +36,7 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     }
     
     protected FileFormat getFileFormat(String fileFormatName) {
-        TemporalFileFormatFactory factory = new TemporalFileFormatFactory(sqlDataTypes);
+        TemporalFileFormatFactory factory = new TemporalFileFormatFactory(types);
 
         return factory.get(fileFormatName);
     }

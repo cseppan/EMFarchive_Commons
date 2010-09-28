@@ -55,7 +55,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
                     new String[] { "gspro-speciation.txt" }, dataset, dbServer, sqlDataTypes);
             importer.run();
 
-            SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
+            SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, "", dbServer, 
                     optimizedBatchSize);
             File file = File.createTempFile("speciatiationprofileexported", ".txt");
             exporter.export(file);
@@ -67,8 +67,8 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
             repeatImporter.run();
 
             File repeatFile = File.createTempFile("repeatSpeciatiationprofileexported", ".txt");
-            SpeciationProfileExporter repeatExporter = new SpeciationProfileExporter(repeatDataset, dbServer,
-                    sqlDataTypes, optimizedBatchSize);
+            SpeciationProfileExporter repeatExporter = new SpeciationProfileExporter(repeatDataset, "", 
+                    dbServer,optimizedBatchSize);
             repeatExporter.export(repeatFile);
             List repeatData = readData(repeatFile);
 
@@ -96,7 +96,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
     }
 
     private void exportFile(Dataset dataset, Version version, File file) throws ExporterException {
-        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, dbServer, sqlDataTypes,
+        SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, "", dbServer, 
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         exporter.export(file);
     }

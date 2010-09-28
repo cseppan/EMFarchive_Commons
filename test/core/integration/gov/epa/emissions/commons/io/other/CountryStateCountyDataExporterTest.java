@@ -61,7 +61,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
                 new String[] { "costcy.txt" }, dataset, dbServer, sqlDataTypes);
         importer.run();
 
-        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes, optimizedBatchSize);
+        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, "", dbServer, optimizedBatchSize);
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
 
@@ -89,7 +89,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         VersionedImporter importerv = new VersionedImporter(importer, dataset, localDbServer, lastModifiedDate(folder,"costcy.txt"));
         importerv.run();
 
-        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, dbServer, sqlDataTypes,
+        CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, "", dbServer,
                 new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
