@@ -148,7 +148,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         VersionedQuery versionQuery = new VersionedQuery(version);
         DataQuery query = datasource.query();
         String revisionsTable = emfDatasource.getName() + ".revisions";
-        String[] revisionsTableCols = { "date_time", "what", "why" };
+        String[] revisionsTableCols = { "version", "date_time", "what", "why" };
         String usersTable = emfDatasource.getName() + ".users";
         String[] userCols = { "name" };
         String revisionsHistoryQuery = versionQuery.revisionHistoryQuery(revisionsTableCols, revisionsTable, userCols,
@@ -163,9 +163,12 @@ public class CountryStateCountyDataExporter implements Exporter {
             data = query.executeQuery(revisionsHistoryQuery);
 
             while (data.next())
-                writer.println("#REV_HISTORY " + CustomDateFormat.format_MM_DD_YYYY(data.getDate(1)) + " "
-                        + data.getString(4) + ".    What: " + replaceLineSeparator(data.getString(2)) + "    Why: "
-                        + replaceLineSeparator(data.getString(3)));
+                writer.println("#REV_HISTORY v" + data.getInt(1) + "("
+                      + CustomDateFormat.format_MM_DD_YYYY(data.getDate(2)) + ") "
+                      + replaceLineSeparator(data.getString(5)) + ".  "
+                      + replaceLineSeparator(data.getString(3)) + " "
+                      + replaceLineSeparator(data.getString(4)));
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
