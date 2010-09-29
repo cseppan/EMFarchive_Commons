@@ -347,9 +347,8 @@ public class GenericExporter implements Exporter {
         this.exportedLinesCount = rs.getLong(1);
         if ( exportedLinesCount==0 ){
             //log.error("Export failure: "+exportedLinesCount+ " lines are filtered" );
-            throw new SQLException("ERROR: " + dataset.getName()+
-                    " will not be exported because no records satisfied the filter \n" 
-                    +"Criteria: "+rowFilters);
+            throw new SQLException("ERROR: <" + dataset.getName()+
+                    "> will not be exported because no records satisfied the filter. " );
             
         }         
         //Date ended = new Date();
