@@ -112,13 +112,12 @@ public class FlexibleDBExporter extends GenericExporter {
             concatFiles(file, headerFileName, dataFileName);
             //setExportedLines(originalQuery, statement);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             // NOTE: this closes the db server for other exporters
             // try {
             // if ((connection != null) && !connection.isClosed())
             // connection.close();
             // } catch (Exception ex) {
-            // ex.printStackTrace();
             // throw new ExporterException(ex.getMessage());
             // }
             throw new ExporterException(e.getMessage());
