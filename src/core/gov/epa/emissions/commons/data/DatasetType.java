@@ -131,6 +131,8 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String NOF_NONPOINT = "NOF Nonpoint";
     
+    public static final String LIST_OF_COUNTIES = "List of Counties (CSV)";
+    
     //For new dataset type   
     public static final String EXTERNAL = "External File";
     
