@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.db.DatabaseRecord;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class VersionedRecord extends DatabaseRecord {
 
@@ -34,7 +35,26 @@ public class VersionedRecord extends DatabaseRecord {
      *            The deleteVersions to set.
      */
     public void setDeleteVersions(String deleteVersions) {
-        this.deleteVersions = deleteVersions;
+        if (deleteVersions == null || deleteVersions.trim().isEmpty()) {
+            this.deleteVersions = deleteVersions;
+            return;
+        }
+        
+        //assuming the deleteVersions is delimited by comma
+        String[] tokens = deleteVersions.split(",");
+        List<String> versions = new ArrayList<String>();
+        
+        for (int i = 0; i < tokens.length; i++)
+            if (tokens[i] != null && !tokens[i].trim().isEmpty()) versions.add(tokens[i].trim());
+
+        TreeSet<String> set = new TreeSet<String>(versions);
+        List<String> unikVersions = new ArrayList<String>(set);
+        String delVerStr = "";
+        
+        for (String ver : unikVersions)
+            delVerStr += ver + ",";
+        
+        this.deleteVersions = delVerStr.substring(0, delVerStr.lastIndexOf(","));
     }
 
     public int getVersion() {
@@ -62,7 +82,7 @@ public class VersionedRecord extends DatabaseRecord {
     }
 
     public String[] dataForInsertion(Version version) {
-        List data = new ArrayList();
+        List<String> data = new ArrayList<String>();
 
         data.add(0, "");// record id
         data.add(1, datasetId + "");
@@ -71,11 +91,11 @@ public class VersionedRecord extends DatabaseRecord {
 
         data.addAll(numVersionCols(), tokensStrings(tokens()));// add all specified data
 
-        return (String[]) data.toArray(new String[0]);
+        return data.toArray(new String[0]);
     }
 
-    private List tokensStrings(List tokens) {
-        List stringTokens = new ArrayList();
+    private List<String> tokensStrings(List tokens) {
+        List<String> stringTokens = new ArrayList<String>();
         for (int i = 0; i < tokens.size(); i++) {
             Object object = tokens.get(i);
             String stringValue = (object == null) ? "" : "" + object;
