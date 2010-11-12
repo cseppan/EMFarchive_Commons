@@ -307,5 +307,9 @@ public class User implements Serializable, Lockable {
     public void setLockOwner(String username) {
         lock.setLockOwner(username);
     }
+    
+    public String toString() {
+        return getName()+"("+getUsername()+")";
+    }
 
 }
