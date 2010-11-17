@@ -309,7 +309,7 @@ public class User implements Serializable, Lockable {
     }
     
     public String toString() {
-        return getName()+"("+getUsername()+")";
+        return getName()+" ("+getUsername()+")";
     }
 
 }
