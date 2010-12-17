@@ -31,9 +31,14 @@ public class FixedColumnsDataLoader implements DataLoader {
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             e.printStackTrace();
-            dropData(table, dataset, dataModifier);
-            throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName()
-                    + "' into table - " + table);
+            try {
+                dropData(table, dataset, dataModifier);
+            } catch ( Exception e1) {
+                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
+            }
+            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
+            //throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName()
+            //        + "' into table - " + table);
         } finally {
             close(dataModifier);
         }
@@ -79,10 +84,17 @@ public class FixedColumnsDataLoader implements DataLoader {
                 dataModifier.insert(data(dataset, record));
                 record = reader.read();
             }
+            dataModifier.finish();
         } catch (ImporterException e) {
+            dataModifier.finish();
+            dataModifier.dropData("dataset_id", dataset.getId());
+            throw new ImporterException(e.getMessage());
+        } catch (Exception e) {
+            dataModifier.finish();
+            dataModifier.dropData("dataset_id", dataset.getId());
             throw new ImporterException(e.getMessage());
         } finally {
-            dataModifier.finish();
+            //dataModifier.finish();
         }
     }
 

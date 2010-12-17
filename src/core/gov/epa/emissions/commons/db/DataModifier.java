@@ -333,5 +333,19 @@ public class DataModifier {
     public void dropAllData(String table) throws SQLException {
         execute("DELETE FROM " + qualified(table));
     }
+    
+//    private void cleanIfTableIsEmpty() throws SQLException {
+//        if ( this.tableDef.totalRows(tableName)<1) {
+//            try {
+//                this.tableDef.dropTable(tableName);
+//                // clean table_consolidation
+//                execute("DELETE FROM emf.table_consolidations WHERE output_table = " + tableName);
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//                throw new SQLException( e.getMessage());
+//            }
+//        }        
+//    }
 
 }

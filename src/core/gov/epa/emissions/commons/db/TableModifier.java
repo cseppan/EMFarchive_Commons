@@ -17,10 +17,13 @@ public class TableModifier {
     protected Statement statement;
 
     protected String tableName;
+    
+    protected TableDefinition tableDef;
 
     public TableModifier(Datasource datasource, String tableName) throws SQLException {
         this.connection = datasource.getConnection();
         this.schema = datasource.getName();
+        this.tableDef = datasource.tableDefinition();
         this.tableName = tableName;
         this.columns = new TableMetaData(datasource).getColumns(tableName);
         this.statement = connection.createStatement();
@@ -137,10 +140,28 @@ public class TableModifier {
 
     public void dropData(String key, long value) throws SQLException {
         execute("DELETE FROM " + qualified(tableName) + " WHERE " + key + " = " + value);
+        
+        cleanIfTableIsEmpty();
     }
 
     public void dropAllData() throws SQLException {
         execute("DELETE FROM " + qualified(tableName));
+        
+        cleanIfTableIsEmpty();
+    }
+    
+    private void cleanIfTableIsEmpty() throws SQLException {
+        if ( this.tableDef.totalRows(tableName)<1) {
+            try {
+                this.tableDef.dropTable(tableName);
+                // clean table_consolidation
+                execute("DELETE FROM emf.table_consolidations WHERE output_table = \'" + tableName + "\'");
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                throw new SQLException( e.getMessage());
+            }
+        }        
     }
 
 }

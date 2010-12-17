@@ -29,7 +29,13 @@ public class LineLoader implements DataLoader {
             dataModifier = dataModifier(datasource, table);
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
-            dropData(table, dataset, dataModifier);
+            e.printStackTrace();
+            try {
+                dropData(table, dataset, dataModifier);
+            } catch ( Exception e1) {
+                //
+                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
+            }
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         } finally {
             close(dataModifier);
@@ -70,8 +76,17 @@ public class LineLoader implements DataLoader {
                 String[] data = data(dataset, record);
                 dataModifier.insert(data);
             }
-        } finally {
             dataModifier.finish();
+        } catch (ImporterException e) {
+            dataModifier.finish();
+            dataModifier.dropData("dataset_id", dataset.getId());
+            throw new ImporterException(e.getMessage());
+        } catch (Exception e) {
+            dataModifier.finish();
+            dataModifier.dropData("dataset_id", dataset.getId());
+            throw new ImporterException(e.getMessage());
+        } finally {
+            //dataModifier.finish();
         }
     }
 

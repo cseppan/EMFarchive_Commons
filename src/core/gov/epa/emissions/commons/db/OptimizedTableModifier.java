@@ -65,6 +65,8 @@ public class OptimizedTableModifier extends TableModifier {
         } finally {
             connection.commit();
             connection.setAutoCommit(true);
+            counter = 0;
+            batchCount = 0;
         }
     }
 
