@@ -7,7 +7,9 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TableMetaData {
 
@@ -47,4 +49,13 @@ public class TableMetaData {
         return (Column[]) cols.toArray(new Column[0]);
     }
 
+    public Map<String,Column> getColumnMap(String table) throws SQLException {
+        Column[] columns = getColumns(table);
+        Map<String,Column> map = new HashMap<String,Column>();
+        for (Column column : columns) {
+            map.put(column.getName(), column);
+        }
+        return map;
+    }
+    
 }
