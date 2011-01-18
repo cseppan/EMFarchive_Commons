@@ -104,7 +104,7 @@ public class VersionedRecord extends DatabaseRecord {
         return stringTokens;
     }
 
-    private int numVersionCols() {
+    public int numVersionCols() {
         return 4;
     }
 

@@ -310,7 +310,7 @@ public class DataModifier {
 
     private boolean isTypeString(DbColumn column) {
         String sqlType = column.sqlType();
-        return sqlType.startsWith("VARCHAR") || sqlType.equalsIgnoreCase("TEXT");
+        return sqlType.startsWith("VARCHAR") || sqlType.equalsIgnoreCase("TEXT") || sqlType.startsWith("TIMESTAMP");
     }
 
     private String escapeString(String val) {

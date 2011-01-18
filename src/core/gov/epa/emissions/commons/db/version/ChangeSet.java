@@ -108,5 +108,22 @@ public class ChangeSet {
     public int netIncrease() {
         return newRecords.size() - deletedRecords.size();
     }
-
+    
+    public void print() {
+        System.out.print("\n\n=== New records: ===\n\n");
+        for ( Object obj : this.newRecords) {
+            VersionedRecord vr = (VersionedRecord) obj;
+            vr.print();
+        }
+        System.out.print("\n\n=== Updated records: ===\n\n");
+        for ( Object obj : this.updatedRecords) {
+            VersionedRecord vr = (VersionedRecord) obj;
+            vr.print();
+        }
+        System.out.print("\n\n=== Deleted records: ===\n\n");
+        for ( Object obj : this.deletedRecords) {
+            VersionedRecord vr = (VersionedRecord) obj;
+            vr.print();
+        }
+    }
 }

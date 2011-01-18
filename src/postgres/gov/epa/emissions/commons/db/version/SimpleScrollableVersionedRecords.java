@@ -1,5 +1,6 @@
 package gov.epa.emissions.commons.db.version;
 
+import gov.epa.emissions.commons.CommonDebugLevel;
 import gov.epa.emissions.commons.db.Datasource;
 
 import java.sql.Connection;
@@ -78,8 +79,21 @@ public class SimpleScrollableVersionedRecords implements ScrollableVersionedReco
         record.setVersion(resultSet.getInt("version"));
         record.setDeleteVersions(resultSet.getString("delete_versions"));
 
+        if ( CommonDebugLevel.DEBUG_PAGE) {
+            System.out.println("---------\nSimpleScrollableVersionedRecords.next()\n-------");
+        }
+        
         for (int i = 5; i <= columnCount(); i++) {
-            record.add(resultSet.getObject(i));
+            Object obj = resultSet.getObject(i);
+            
+            if ( CommonDebugLevel.DEBUG_PAGE) {
+                if ( obj !=null)
+                    System.out.println(i+"> class: " + obj.getClass() + ", value: " + obj);
+                else
+                    System.out.println(i+"> null");
+            }
+            
+            record.add(obj);
         }
         return record;
     }

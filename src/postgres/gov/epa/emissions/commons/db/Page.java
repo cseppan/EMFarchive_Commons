@@ -73,5 +73,20 @@ public class Page {
     public boolean contains(int record) {
         return (getMin() <= record) && (record <= getMax());
     }
+    
+    public void print() {
+        for ( Object o : records) {
+            VersionedRecord vr = (VersionedRecord) o;
+            Object[] objArray = vr.getTokens();
+            System.out.println("--------");
+            if ( objArray != null)
+            for ( int i=0; i<objArray.length; i++){
+                if ( objArray[i] == null) 
+                    System.out.println(i+ " > null");
+                else
+                    System.out.println(i+ "> class: " + objArray[i].getClass() + ", value: " + objArray[i]);
+            }
+        }
+    }
 
 }

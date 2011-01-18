@@ -44,5 +44,15 @@ public class DatabaseRecord {
         tokens.add(position, newToken);
         tokens.remove(position + 1);
     }
+    
+    public void print() {
+        for (int i=0; i<size(); i++) {
+            Object obj = token(i);
+            if ( obj == null)
+                System.out.println( i + "> null");
+            else
+                System.out.println( i + "> class: " + obj.getClass() + ", value: " + obj);
+        }
+    }
 
 }
