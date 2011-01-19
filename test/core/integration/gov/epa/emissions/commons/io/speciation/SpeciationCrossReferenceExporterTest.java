@@ -91,7 +91,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
 
         File exportfile = File.createTempFile("SpeciatiationCrossRefExported", ".txt");
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, "", dbServer,
-                new NonVersionedDataFormatFactory(), optimizedBatchSize);
+                new NonVersionedDataFormatFactory(), optimizedBatchSize, null, null, null);
 
         exporter.export(exportfile);
 
@@ -102,7 +102,7 @@ public class SpeciationCrossReferenceExporterTest extends PersistenceTestCase {
 
     private void exportFile(Dataset dataset, File exportfile) throws ExporterException {
         SpeciationCrossReferenceExporter exporter = new SpeciationCrossReferenceExporter(dataset, "", dbServer, 
-                new NonVersionedDataFormatFactory(), optimizedBatchSize);
+                new NonVersionedDataFormatFactory(), optimizedBatchSize, null, null, null);
 
         exporter.export(exportfile);
     }

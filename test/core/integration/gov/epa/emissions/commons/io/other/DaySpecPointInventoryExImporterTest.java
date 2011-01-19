@@ -82,7 +82,7 @@ public class DaySpecPointInventoryExImporterTest extends PersistenceTestCase {
         File exportfile = File.createTempFile("ptdayExported", ".txt");
         exportfile.deleteOnExit();
         DaySpecPointInventoryExporter exporter = new DaySpecPointInventoryExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, null);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

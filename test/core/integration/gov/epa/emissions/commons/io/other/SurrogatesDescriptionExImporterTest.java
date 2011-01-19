@@ -81,7 +81,7 @@ public class SurrogatesDescriptionExImporterTest extends PersistenceTestCase {
 
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
         SurrogatesDescriptionExporter exporter = new SurrogatesDescriptionExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize, null, null, null);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

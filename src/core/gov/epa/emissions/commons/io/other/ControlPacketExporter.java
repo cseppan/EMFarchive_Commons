@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.io.other;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
 
@@ -17,8 +18,8 @@ public class ControlPacketExporter extends GenericExporter {
     }
 
     public ControlPacketExporter(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory factory,
-            Integer optimizedBatchSize) {
-        super(dataset, rowFilters, dbServer, new ControlPacketFileFormat(dbServer.getSqlDataTypes()), factory, optimizedBatchSize);
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilters, dbServer, new ControlPacketFileFormat(dbServer.getSqlDataTypes()), factory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
     }
 
     protected void writeHeaders(PrintWriter writer, Dataset dataset) throws SQLException {

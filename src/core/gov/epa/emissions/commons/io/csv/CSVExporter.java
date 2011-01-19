@@ -15,8 +15,8 @@ public class CSVExporter extends SMKReportExporter {
     }
 
     public CSVExporter(Dataset dataset, String rowFilter, DbServer dbServer, DataFormatFactory formatFactory,
-            Integer optimizedBatchSize) {
-        super(dataset, rowFilter, dbServer, formatFactory, optimizedBatchSize);
+            Integer optimizedBatchSize, Integer filterDatasetId, Integer filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilter, dbServer, formatFactory, optimizedBatchSize, filterDatasetId, filterDatasetVersion, filterDatasetJoinCondition);
         setup();
     }
 

@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.ida;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.generic.GenericExporter;
@@ -20,8 +21,8 @@ public class IDAExporter extends GenericExporter {
     }
 
     public IDAExporter(Dataset dataset, String rowFilters, DbServer dbServer, IDAFileFormat fileFormat, DataFormatFactory dataFormatFactory,
-            Integer optimizedBatchSize) throws ImporterException {
-        super(dataset, rowFilters, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) throws ImporterException {
+        super(dataset, rowFilters, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
         setup(fileFormat,dataset, "");
     }
 

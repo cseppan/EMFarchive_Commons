@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.generic;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 
 import java.io.PrintWriter;
@@ -15,8 +16,8 @@ public class LineExporter extends GenericExporter {
     }
 
     public LineExporter(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory formatFactory,
-            Integer optimizedBatchSize) {
-        super(dataset, rowFilters, dbServer, new LineFileFormat(dbServer.getSqlDataTypes()), formatFactory, optimizedBatchSize);
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilters, dbServer, new LineFileFormat(dbServer.getSqlDataTypes()), formatFactory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
     }
 
     protected void writeDataCols(String[] cols, ResultSet data, PrintWriter writer) throws SQLException {

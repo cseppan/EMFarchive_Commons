@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -39,8 +40,8 @@ public class ORLExporter extends GenericExporter {
     private boolean windowsOS = false;
 
     public ORLExporter(Dataset dataset, String rowFilters, DbServer dbServer, FileFormat fileFormat, DataFormatFactory dataFormatFactory,
-            Integer optimizedBatchSize) {
-        super(dataset, rowFilters, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize);
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilters, dbServer, fileFormat, dataFormatFactory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
 
@@ -50,7 +51,7 @@ public class ORLExporter extends GenericExporter {
     }
 
     public ORLExporter(Dataset dataset,String rowFilters, DbServer dbServer, FileFormat fileFormat, Integer optimizeBatchSize) {
-        this(dataset, rowFilters, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizeBatchSize);
+        this(dataset, rowFilters, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizeBatchSize, null, null, null);
     }
 
     public void export(File file) throws ExporterException {
@@ -83,7 +84,7 @@ public class ORLExporter extends GenericExporter {
             createNewFile(dataFile);
             writeHeader(headerFile);
 
-            String originalQuery = getQueryString(dataset, rowFilters, datasource);
+            String originalQuery = getQueryString(dataset, rowFilters, datasource, this.filterDataset, this.filterDatasetVersion, this.filterDatasetJoinCondition);
             String query = getColsSpecdQueryString(dataset, originalQuery);
             String writeQuery = getWriteQueryString(dataFileName, query);
 

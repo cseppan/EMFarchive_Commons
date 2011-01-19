@@ -73,7 +73,7 @@ public class PointStackReplacementsImporterExporterTest extends PersistenceTestC
         importerv.run();
 
         PointStackReplacementsExporter exporter = new PointStackReplacementsExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize, null, null, null);
         File exportfile = File.createTempFile("StackReplacementsExported", ".txt");
         exporter.setDelimiter(",");
         exporter.export(exportfile);

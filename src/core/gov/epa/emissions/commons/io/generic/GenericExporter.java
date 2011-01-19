@@ -6,6 +6,7 @@ import gov.epa.emissions.commons.db.DataQuery;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.OptimizedQuery;
+import gov.epa.emissions.commons.db.TableMetaData;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
@@ -29,6 +30,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class GenericExporter implements Exporter {
@@ -55,12 +57,18 @@ public class GenericExporter implements Exporter {
     
     protected String rowFilters; 
 
+    protected Dataset filterDataset;
+
+    protected Version filterDatasetVersion;
+
+    protected String filterDatasetJoinCondition;
+    
     public GenericExporter(Dataset dataset, String rowFilters, DbServer dbServer, FileFormat fileFormat, Integer optimizedBatchSize) {
-        this(dataset, rowFilters, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        this(dataset, rowFilters, dbServer, fileFormat, new NonVersionedDataFormatFactory(), optimizedBatchSize, null, null, null);
     }
 
     public GenericExporter(Dataset dataset, String rowFilters, DbServer dbServer, FileFormat fileFormat,
-            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.emfDatasource = dbServer.getEmfDatasource();
@@ -69,6 +77,9 @@ public class GenericExporter implements Exporter {
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
         this.rowFilters = rowFilters;
+        this.filterDataset = filterDataset;
+        this.filterDatasetVersion = filterDatasetVersion;
+        this.filterDatasetJoinCondition = filterDatasetJoinCondition;
         setDelimiter(";");
     }
 
@@ -234,6 +245,19 @@ public class GenericExporter implements Exporter {
         return export.generate(qualifiedTable, rowFilters);
     }
 
+    protected String getQueryString(Dataset dataset, String rowFilters, Datasource datasource, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) throws ExporterException {
+        InternalSource source = dataset.getInternalSources()[0];
+        String qualifiedTable = datasource.getName() + "." + source.getTable();
+        ExportStatement export = dataFormatFactory.exportStatement();
+
+        try {
+            return export.generate(datasource, qualifiedTable, rowFilters, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ExporterException(e.getMessage(), e);
+        }
+    }
+
     protected void writeBatchOfData(PrintWriter writer, ResultSet data, String[] cols, boolean comments)
             throws SQLException {
         if (comments)
@@ -385,4 +409,8 @@ public class GenericExporter implements Exporter {
         return this.exportedLinesCount;
     }
 
+    protected Map<String,Column> getColumnMap(Dataset dataset) throws SQLException {
+        return new TableMetaData(datasource).getColumnMap(dataset.getInternalSources()[0].getTable());
+    }
+    
 }

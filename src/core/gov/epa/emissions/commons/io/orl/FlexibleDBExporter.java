@@ -5,6 +5,7 @@ import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.data.KeyVal;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.Column;
 import gov.epa.emissions.commons.io.CustomCharSetOutputStreamWriter;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -45,9 +46,9 @@ public class FlexibleDBExporter extends GenericExporter {
     
     private boolean withColNames = true;   //true: first data line is column names
     
-    public FlexibleDBExporter(Dataset dataset, String rowFilters, DbServer dbServer,DataFormatFactory dataFormatFactory,
-            Integer optimizedBatchSize) {
-        super(dataset, rowFilters, dbServer, dataset.getDatasetType().getFileFormat(), dataFormatFactory, optimizedBatchSize);
+    public FlexibleDBExporter(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory dataFormatFactory,
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilters, dbServer, dataset.getDatasetType().getFileFormat(), dataFormatFactory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
         this.dataset = dataset;
         this.fileFormat = dataset.getDatasetType().getFileFormat();
         this.datasource = dbServer.getEmissionsDatasource();
@@ -59,7 +60,7 @@ public class FlexibleDBExporter extends GenericExporter {
     }
 
     public FlexibleDBExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizeBatchSize) {
-        this(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizeBatchSize);
+        this(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizeBatchSize, null, null, null);
     }
 
     public void export(File file) throws ExporterException {
@@ -96,7 +97,7 @@ public class FlexibleDBExporter extends GenericExporter {
             createNewFile(dataFile);
             writeHeader(headerFile);
 
-            String originalQuery = getQueryString(dataset, rowFilters, datasource);
+            String originalQuery = getQueryString(dataset, rowFilters, datasource, this.filterDataset, this.filterDatasetVersion, this.filterDatasetJoinCondition);
             String query = getColsSpecdQueryString(dataset, originalQuery);
          
             String writeQuery = getWriteQueryString(dataFileName, query);

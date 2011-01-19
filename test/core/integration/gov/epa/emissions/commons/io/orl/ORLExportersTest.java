@@ -102,7 +102,7 @@ public class ORLExportersTest extends PersistenceTestCase {
                 dataset, dbServer, sqlDataTypes, formatFactory);
         importer.run();
 
-        Exporter exporter = new ORLOnRoadExporter(dataset, "", dbServer, formatFactory, optimizedBatchSize);
+        Exporter exporter = new ORLOnRoadExporter(dataset, "", dbServer, formatFactory, optimizedBatchSize, null, null, null);
         File file = doExport(exporter);
 
         // assert headers

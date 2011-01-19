@@ -70,7 +70,7 @@ public class SpatialSurrogatesExporterTest extends PersistenceTestCase {
         importerv.run();
 
         SpatialSurrogatesExporter exporter = new SpatialSurrogatesExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize, null, null, null);
         File exportfile = File.createTempFile("SpetialSurrogatesExported", ".txt");
         exporter.export(exportfile);
         // FIXME: compare the original file and the exported file.

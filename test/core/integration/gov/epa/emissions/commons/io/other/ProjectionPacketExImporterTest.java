@@ -81,7 +81,7 @@ public class ProjectionPacketExImporterTest extends PersistenceTestCase {
         
         File exportfile = File.createTempFile("SRGDescExported", ".txt");
         ProjectionPacketExporter exporter = new ProjectionPacketExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize, null, null, null);
         exporter.export(exportfile);
 
         List data = readData(exportfile);

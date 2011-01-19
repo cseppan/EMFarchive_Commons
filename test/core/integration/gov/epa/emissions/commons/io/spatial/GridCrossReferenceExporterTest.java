@@ -71,7 +71,7 @@ public class GridCrossReferenceExporterTest extends PersistenceTestCase {
         importerv.run();
         
         GridCrossReferenceExporter exporter = new GridCrossReferenceExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset),optimizedBatchSize, null, null, null);
         File file = File.createTempFile("GridCrossRefExported", ".txt");
         exporter.export(file);
         // FIXME: compare the original file and the exported file.

@@ -81,7 +81,7 @@ public class InventoryTableExporterTest extends PersistenceTestCase {
         importerv.run();
 
         InventoryTableExporter exporter = new InventoryTableExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, null);
         File file = File.createTempFile("inventorytableexported", ".txt");
         exporter.export(file);
         

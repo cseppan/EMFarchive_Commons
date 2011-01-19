@@ -97,7 +97,7 @@ public class SpeciationProfileExporterTest extends PersistenceTestCase {
 
     private void exportFile(Dataset dataset, Version version, File file) throws ExporterException {
         SpeciationProfileExporter exporter = new SpeciationProfileExporter(dataset, "", dbServer, 
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, null);
         exporter.export(file);
     }
 

@@ -106,7 +106,7 @@ public class LineExporterTest extends PersistenceTestCase {
         importer2.run();
 
         LineExporter exporter = new LineExporter(dataset, "", dbServer, new VersionedDataFormatFactory(
-                version, dataset), optimizedBatchSize);
+                version, dataset), optimizedBatchSize, null, null, null);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(22, countRecords());
@@ -136,7 +136,7 @@ public class LineExporterTest extends PersistenceTestCase {
         importer2.run();
         
         LineExporter exporter = new LineExporter(dataset, "", dbServer, new VersionedDataFormatFactory(
-                version, dataset), optimizedBatchSize);
+                version, dataset), optimizedBatchSize, null, null, null);
         File file = File.createTempFile("lineexporter", ".txt");
         exporter.export(file);
         assertEquals(29, countRecords());

@@ -55,17 +55,23 @@ public class SMKReportExporter implements Exporter {
 
     protected List<String> colNames = new ArrayList<String>();
 
+    protected Integer filterDatasetId;
+
+    protected Integer filterDatasetVersion;
+
+    protected String filterDatasetJoinCondition;
+    
     public SMKReportExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
-        setup(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        setup(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize, null, null, null);
     }
 
     public SMKReportExporter(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory factory,
-            Integer optimizedBatchSize) {
-        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize);
+            Integer optimizedBatchSize, Integer filterDatasetId, Integer filterDatasetVersion, String filterDatasetJoinCondition) {
+        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize, filterDatasetId, filterDatasetVersion, filterDatasetJoinCondition);
     }
 
     private void setup(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory dataFormatFactory,
-            Integer optimizedBatchSize) {
+            Integer optimizedBatchSize, Integer filterDatasetId, Integer filterDatasetVersion, String filterDatasetJoinCondition) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.emfDatasource = dbServer.getEmfDatasource();
@@ -73,6 +79,9 @@ public class SMKReportExporter implements Exporter {
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
         this.rowFilters = rowFilters;
+        this.filterDatasetId = filterDatasetId;
+        this.filterDatasetVersion = filterDatasetVersion;
+        this.filterDatasetJoinCondition = filterDatasetJoinCondition;
         setDelimiter(";");
     }
 
