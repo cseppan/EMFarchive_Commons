@@ -83,6 +83,11 @@ public class CustomDateFormat {
         return date == null ? "" : dateFormatter.format(date);
     }
     
+    public static String format_yyyy_MM_dd_HHmmssSSS(Date date) {
+        dateFormatter.applyPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        return date == null ? "" : dateFormatter.format(date);
+    }
+    
     public static String format_yyyy_MM_dd_HHmmss(Date date) {
         dateFormatter.applyPattern("yyyy-MM-dd HH:mm:ss");
         return date == null ? "" : dateFormatter.format(date);
