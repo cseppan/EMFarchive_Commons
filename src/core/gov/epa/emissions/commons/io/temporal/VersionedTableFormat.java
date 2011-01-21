@@ -6,7 +6,6 @@ import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.LongFormatter;
 import gov.epa.emissions.commons.io.NullFormatter;
 import gov.epa.emissions.commons.io.RealFormatter;
-import gov.epa.emissions.commons.io.StringFormatter;
 import gov.epa.emissions.commons.io.TableFormat;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class VersionedTableFormat implements TableFormat {
         cols.addAll(Arrays.asList(versionCols(types)));
         cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
 
-        Column inlineComments = new Column("Comments", types.stringType(256), new StringFormatter(256));
+        Column inlineComments = new Column("Comments", types.text(), new NullFormatter());
         cols.add(inlineComments);
 
         return cols.toArray(new Column[0]);
@@ -56,7 +55,7 @@ public class VersionedTableFormat implements TableFormat {
         cols.addAll(Arrays.asList(versionCols(types)));
         cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
         cols.addAll(Arrays.asList(base.cols()));// sandwich data b/w version cols and Comments
-        Column inlineComments = new Column("Comments", types.stringType(256), new StringFormatter(256));
+        Column inlineComments = new Column("Comments", types.text(), new NullFormatter());
         cols.add(inlineComments);
         
         return cols.toArray(new Column[0]);

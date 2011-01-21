@@ -100,7 +100,7 @@ public class DelimitedFileReader implements Reader {
         record.add(Arrays.asList(tokens));
 
         if (inlineCommentPosition < line.length())
-            record.add(trimInlineComment(line.substring(inlineCommentPosition)));
+            record.add(processInlineComment(line.substring(inlineCommentPosition)));
 
         return record;
 
@@ -142,12 +142,7 @@ public class DelimitedFileReader implements Reader {
         return count;
     }
 
-    private String trimInlineComment(String comment) {
-        // max inline comment width is 128 db column constraint
-        // 127= 128-1=> for inline comment char '!'
-        if (comment.length() > 127)
-            comment = comment.substring(0, 127);
-        
+    private String processInlineComment(String comment) {
         comment = StringTools.escapeBackSlash4jdbc(comment);
         
         return comment.startsWith("!") ? comment : "!" + comment;

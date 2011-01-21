@@ -41,7 +41,7 @@ public class NonVersionedTableFormat implements TableFormat {
     }
 
     private Column[] createCols() {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
         //offset=0;   //NOTE: WRONG! Since you add datasetId column to the base file format
         offset = 1;
         cols.addAll(Arrays.asList(base.cols()));
@@ -49,14 +49,14 @@ public class NonVersionedTableFormat implements TableFormat {
         Column datasetId = new Column(key(), types.longType(), new LongFormatter());
         cols.add(0, datasetId);
 
-        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
+        Column inlineComments = new Column("Comments", types.text(), new NullFormatter());
         cols.add(inlineComments);
 
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
 
     private Column[] createCols(String lineNum) {
-        List cols = new ArrayList();
+        List<Column> cols = new ArrayList<Column>();
         //offset =1;   //NOTE: WRONG! Since you add "lineNum" and "datasetId" columns before the base columns
         offset = 2;
         cols.add(new Column(lineNum, types.realType(), new RealFormatter())); //add line number column
@@ -65,10 +65,10 @@ public class NonVersionedTableFormat implements TableFormat {
         Column datasetId = new Column(key(), types.longType(), new LongFormatter());
         cols.add(0, datasetId);
         
-        Column inlineComments = new Column("Comments", types.stringType(128), new StringFormatter(128));
+        Column inlineComments = new Column("Comments", types.text(), new NullFormatter());
         cols.add(inlineComments);
         
-        return (Column[]) cols.toArray(new Column[0]);
+        return cols.toArray(new Column[0]);
     }
     
     public int getOffset(){
