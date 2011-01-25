@@ -55,9 +55,9 @@ public class SMKReportExporter implements Exporter {
 
     protected List<String> colNames = new ArrayList<String>();
 
-    protected Integer filterDatasetId;
+    protected Dataset filterDataset;
 
-    protected Integer filterDatasetVersion;
+    protected Version filterDatasetVersion;
 
     protected String filterDatasetJoinCondition;
     
@@ -66,12 +66,12 @@ public class SMKReportExporter implements Exporter {
     }
 
     public SMKReportExporter(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory factory,
-            Integer optimizedBatchSize, Integer filterDatasetId, Integer filterDatasetVersion, String filterDatasetJoinCondition) {
-        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize, filterDatasetId, filterDatasetVersion, filterDatasetJoinCondition);
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
     }
 
     private void setup(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory dataFormatFactory,
-            Integer optimizedBatchSize, Integer filterDatasetId, Integer filterDatasetVersion, String filterDatasetJoinCondition) {
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.emfDatasource = dbServer.getEmfDatasource();
@@ -79,7 +79,7 @@ public class SMKReportExporter implements Exporter {
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
         this.rowFilters = rowFilters;
-        this.filterDatasetId = filterDatasetId;
+        this.filterDataset = filterDataset;
         this.filterDatasetVersion = filterDatasetVersion;
         this.filterDatasetJoinCondition = filterDatasetJoinCondition;
         setDelimiter(";");
@@ -295,12 +295,13 @@ public class SMKReportExporter implements Exporter {
         }
     }
 
-    private String getQueryString(Dataset dataset, Datasource datasource) throws ExporterException {
+    private String getQueryString(Dataset dataset, Datasource datasource) throws Exception {
         InternalSource source = dataset.getInternalSources()[0];
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable, rowFilters);
+        return export.generate(datasource, qualifiedTable, rowFilters, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
+//        return export.generate(qualifiedTable, rowFilters);
     }
 
     protected String formatValue(String[] cols, int colType, int index, String value) {

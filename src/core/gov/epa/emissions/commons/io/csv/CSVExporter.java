@@ -2,6 +2,7 @@ package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.other.SMKReportExporter;
 
@@ -15,8 +16,8 @@ public class CSVExporter extends SMKReportExporter {
     }
 
     public CSVExporter(Dataset dataset, String rowFilter, DbServer dbServer, DataFormatFactory formatFactory,
-            Integer optimizedBatchSize, Integer filterDatasetId, Integer filterDatasetVersion, String filterDatasetJoinCondition) {
-        super(dataset, rowFilter, dbServer, formatFactory, optimizedBatchSize, filterDatasetId, filterDatasetVersion, filterDatasetJoinCondition);
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilter, dbServer, formatFactory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
         setup();
     }
 
