@@ -36,7 +36,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
             } catch ( Exception e1) {
                 throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
             }
-            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
+            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table+": "+ e.getMessage());
             //throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         } finally {
             close(dataModifier);
