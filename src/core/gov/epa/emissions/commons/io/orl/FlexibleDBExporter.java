@@ -101,6 +101,7 @@ public class FlexibleDBExporter extends GenericExporter {
             String query = getColsSpecdQueryString(dataset, originalQuery);
          
             String writeQuery = getWriteQueryString(dataFileName, query);
+            //System.out.print(writeQuery);
 
             // log.warn(writeQuery);
 

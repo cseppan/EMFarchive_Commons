@@ -82,18 +82,31 @@ public class VersionedDatasetQuery implements ExportStatement {
     public String generate(Datasource datasource, String table, String rowFilters, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) throws Exception {
         String sqlFilterDatasetJoinCondition = "";
         StringTokenizer tokenizer = new StringTokenizer(filterDatasetJoinCondition, "\n");
-        String filterTable = datasource.getName() + "." + filterDataset.getInternalSources()[0].getTable();
+        
+        String filterTable = "";
+        if ( datasource != null && 
+             filterDataset != null && 
+             filterDataset.getInternalSources() != null && 
+             filterDataset.getInternalSources()[0] != null) {
+
+            filterTable = datasource.getName() + "." + filterDataset.getInternalSources()[0].getTable();
+        }
+        
 
         Map<String, Column> datasetColumns;
-        Map<String, Column> filterDatasetColumns;
+        Map<String, Column> filterDatasetColumns = null;
 
         //get columns that represent both the dataset to be exported and the filter dataset
         datasetColumns = getDatasetColumnMap(datasource, table.split("\\.")[1]);
-        filterDatasetColumns = getDatasetColumnMap(datasource, filterTable.split("\\.")[1]);
+        if ( filterTable.length() > 0){
+            filterDatasetColumns = getDatasetColumnMap(datasource, filterTable.split("\\.")[1]);
+        }
 
         while (tokenizer.hasMoreTokens()) {
             String[] filterDatasetJoinConditionToken = tokenizer.nextToken().trim().split("\\=");
-            sqlFilterDatasetJoinCondition += " AND " + aliasExpression(dataset, filterDatasetJoinConditionToken[0], datasetColumns, "t") + "= " + aliasExpression(filterDataset, filterDatasetJoinConditionToken[1], filterDatasetColumns, "f");
+            if ( filterDatasetColumns != null){
+                sqlFilterDatasetJoinCondition += " AND " + aliasExpression(dataset, filterDatasetJoinConditionToken[0], datasetColumns, "t") + "= " + aliasExpression(filterDataset, filterDatasetJoinConditionToken[1], filterDatasetColumns, "f");
+            } 
         }
 
         VersionedQuery filterDatasetVersionedQuery = new VersionedQuery(filterDatasetVersion, "f");
@@ -105,6 +118,7 @@ public class VersionedDatasetQuery implements ExportStatement {
     }
 
     private String aliasExpression(Dataset dataset, String expression, Map<String,Column> baseColumns, String tableAlias) throws Exception {
+        
         int matchedColumnsCount = 0;
         String aliasedExpression = expression;
         Set<String> columnsKeySet = baseColumns.keySet();
