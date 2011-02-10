@@ -11,7 +11,7 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
     private Tokenizer tokenizer;
 
     private boolean initialized = false;
-
+    
     public DelimiterIdentifyingTokenizer(int minTokens) {
         this.minTokens = minTokens;
     }
@@ -51,7 +51,9 @@ public class DelimiterIdentifyingTokenizer implements Tokenizer {
             return;
         }
 
-        throw new ImporterException("Could not identify the delimiter");
+        throw new ImporterException(" Could not identify the delimiter. " +
+        		"The number of columns should be more than: " + minTokens  );
+//        		"\nInput line: " + (input.length()>20? input.substring(0, 20)+"...":input) );
 
     }
 

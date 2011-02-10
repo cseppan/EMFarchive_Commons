@@ -460,7 +460,7 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
          
          for (int i = 0; i < cols.length; i++) {
              if (cols[i].isMandatory()){
-                if ( tokens[i]!=null || !tokens[i].trim().isEmpty()){
+                if ( tokens[i]!=null && !tokens[i].trim().isEmpty()){
                     String type = cols[i].sqlType();
                     if (type.toUpperCase().startsWith("VARCHAR")){
                         int end =  type.lastIndexOf(")");
@@ -483,7 +483,10 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
                         throw new ImporterException("Error format for column[" + i +"], expected: " 
                                 + type +", but was: " + tokens[i]);
                     }
-
+                }
+                else {
+                    throw new ImporterException("Data in column[" + i +"], \"" 
+                            + cols[i].getName()+ "\", is mandatory, but value is ''.");
                 }
              }
          }
