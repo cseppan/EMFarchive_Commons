@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class VersionedDatasetQuery implements ExportStatement {
 
@@ -81,55 +83,87 @@ public class VersionedDatasetQuery implements ExportStatement {
 
     public String generate(Datasource datasource, String table, String rowFilters, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) throws Exception {
         String sqlFilterDatasetJoinCondition = "";
-        StringTokenizer tokenizer = new StringTokenizer(filterDatasetJoinCondition, "\n");
-        
         String filterTable = "";
         if ( datasource != null && 
              filterDataset != null && 
+             filterDatasetVersion != null && 
+             filterDatasetJoinCondition != null && 
              filterDataset.getInternalSources() != null && 
              filterDataset.getInternalSources()[0] != null) {
+            if (filterDataset != null && filterDatasetVersion != null && filterDatasetJoinCondition != null) {
+                StringTokenizer tokenizer = new StringTokenizer(filterDatasetJoinCondition, "\n");
+                filterTable = datasource.getName() + "." + filterDataset.getInternalSources()[0].getTable();
 
-            filterTable = datasource.getName() + "." + filterDataset.getInternalSources()[0].getTable();
-        }
+                Map<String, Column> datasetColumns;
+                Map<String, Column> filterDatasetColumns = null;
         
+                //get columns that represent both the dataset to be exported and the filter dataset
+                datasetColumns = getDatasetColumnMap(datasource, table.split("\\.")[1]);
+                if ( filterTable.length() > 0){
+                    filterDatasetColumns = getDatasetColumnMap(datasource, filterTable.split("\\.")[1]);
+                    while (tokenizer.hasMoreTokens()) {
+                        String[] filterDatasetJoinConditionToken = tokenizer.nextToken().trim().split("\\=");
+                        sqlFilterDatasetJoinCondition += " AND " + aliasExpression(dataset, filterDatasetJoinConditionToken[0], datasetColumns, "t") + "= " + aliasExpression(filterDataset, filterDatasetJoinConditionToken[1], filterDatasetColumns, "f");
+                    }
+                }
+                    
 
-        Map<String, Column> datasetColumns;
-        Map<String, Column> filterDatasetColumns = null;
-
-        //get columns that represent both the dataset to be exported and the filter dataset
-        datasetColumns = getDatasetColumnMap(datasource, table.split("\\.")[1]);
-        if ( filterTable.length() > 0){
-            filterDatasetColumns = getDatasetColumnMap(datasource, filterTable.split("\\.")[1]);
+            }
         }
-
-        while (tokenizer.hasMoreTokens()) {
-            String[] filterDatasetJoinConditionToken = tokenizer.nextToken().trim().split("\\=");
-            if ( filterDatasetColumns != null){
-                sqlFilterDatasetJoinCondition += " AND " + aliasExpression(dataset, filterDatasetJoinConditionToken[0], datasetColumns, "t") + "= " + aliasExpression(filterDataset, filterDatasetJoinConditionToken[1], filterDatasetColumns, "f");
-            } 
-        }
-
-        VersionedQuery filterDatasetVersionedQuery = new VersionedQuery(filterDatasetVersion, "f");
+        VersionedQuery filterDatasetVersionedQuery = (filterDataset != null && filterDatasetVersion != null ? new VersionedQuery(filterDatasetVersion, "f") : null);
         VersionedQuery datasetVersionedQuery = new VersionedQuery(this.version, "t");
-
         if (rowFilters.trim().length()>0)
             return "SELECT t.* FROM " + table + " t WHERE " + datasetVersionedQuery.query() + " AND " + rowFilters + (filterTable.length() > 0 ? " AND EXISTS (SELECT 1 FROM " + filterTable + " f WHERE " + filterDatasetVersionedQuery.query() + sqlFilterDatasetJoinCondition + ")" : "") + orderByClause();
         return "SELECT * FROM " + table + " t WHERE " + datasetVersionedQuery.query() + (filterTable.length() > 0 ? " AND EXISTS (SELECT 1 FROM " + filterTable + " f WHERE " + filterDatasetVersionedQuery.query() + sqlFilterDatasetJoinCondition + ")" : "") + orderByClause();
     }
 
     private String aliasExpression(Dataset dataset, String expression, Map<String,Column> baseColumns, String tableAlias) throws Exception {
-        
         int matchedColumnsCount = 0;
         String aliasedExpression = expression;
         Set<String> columnsKeySet = baseColumns.keySet();
         Iterator<String> iterator = columnsKeySet.iterator();
         while (iterator.hasNext()) {
             String columnName = iterator.next();
-            if (expression.toLowerCase().contains(columnName.toLowerCase())) {
+            Pattern pattern = Pattern.compile("\\b(?i)" + columnName + "\\b");
+            Matcher matcher = pattern.matcher(aliasedExpression);
+
+            //find all column names in the expression and alias each one
+            //check to see if anything is found...
+            if (matcher.find()) {
+                
+                aliasedExpression = matcher.replaceAll(tableAlias + "." + columnName);
                 ++matchedColumnsCount;
-                aliasedExpression = aliasedExpression.replaceAll("(?i)" + columnName, tableAlias + "." + columnName);
+                
+//                boolean go = true;
+//                int startIndexOfColumn = aliasedExpression.toLowerCase().indexOf(columnName.toLowerCase());
+//                int expressionLength = aliasedExpression.length();
+//                int columnNameLength = columnName.length();
+//                int endIndexOfColumn = startIndexOfColumn + columnNameLength;
+//                aliasedExpression = expression;
+//                while (go) {
+//                    if ((startIndexOfColumn == 0 || !Character.isLetter(aliasedExpression.charAt(startIndexOfColumn - 1)))
+//                            && (endIndexOfColumn + 1 == expressionLength || !Character.isLetter(aliasedExpression.charAt(endIndexOfColumn + 1)))
+//                            ) {
+//                        ++matchedColumnsCount;
+////                        aliasedExpression = aliasedExpression.replaceAll("(?i)" + columnName, tableAlias + "." + columnName);
+//                        aliasedExpression = (startIndexOfColumn == 0 ? "" : aliasedExpression.substring(0, startIndexOfColumn - 1))
+//                            + tableAlias + "." + columnName 
+//                            + (endIndexOfColumn + 1 == expressionLength ? "" : aliasedExpression.substring(startIndexOfColumn + columnNameLength));
+//                        expressionLength = aliasedExpression.length();
+//                        endIndexOfColumn += 1 + tableAlias.length();
+//                    }
+//                    if (endIndexOfColumn + 1 == expressionLength) {
+//                        go = false;    
+//                    } else if (aliasedExpression.toLowerCase().substring(endIndexOfColumn + 1).contains(columnName.toLowerCase())) {
+//                        go = true;
+//                        startIndexOfColumn = endIndexOfColumn + 1;
+//                        endIndexOfColumn = startIndexOfColumn + columnNameLength;
+//                    } else {
+//                        go = false;    
+//                    }
+//                }
             }
-        }
+            }
         if (matchedColumnsCount == 0)
             throw new Exception("Invalid join expression, " + expression + ", for dataset, " + dataset.getName() + ".");
         return aliasedExpression;
@@ -166,4 +200,15 @@ public class VersionedDatasetQuery implements ExportStatement {
 //        
 //    }
 
+    public static void main(String args[]) {
+//        Pattern pattern = Pattern.compile("\\b(?i)plant\\b");
+//        String aliasedExpression = "PLanT||plantid||plant||scc";
+//        Matcher matcher = pattern.matcher(aliasedExpression);
+////        aliasedExpression.replaceAll("[^A-Za-z0-9]plant[^A-Za-z0-9]", "a" + "." + "plant");
+//        System.out.println(matcher.find());
+//        System.out.println(matcher.replaceAll("a" + "." + "plant"));
+//        aliasedExpression.replaceAll("\\b(?i)plant\\b", "a" + "." + "plant");
+        
+    }
+    
 }

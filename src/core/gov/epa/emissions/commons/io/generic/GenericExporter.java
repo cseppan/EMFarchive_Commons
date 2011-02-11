@@ -211,7 +211,7 @@ public class GenericExporter implements Exporter {
 
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments)
             throws Exception {
-        String query = getQueryString(dataset, rowFilters, datasource);
+        String query = getQueryString(dataset, rowFilters, datasource, this.filterDataset, this.filterDatasetVersion, this.filterDatasetJoinCondition);
         OptimizedQuery runner = datasource.optimizedQuery(query, batchSize);
         boolean firstbatch = true;
         String[] cols = null;

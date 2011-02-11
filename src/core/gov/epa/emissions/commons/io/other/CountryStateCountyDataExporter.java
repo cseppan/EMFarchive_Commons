@@ -56,18 +56,24 @@ public class CountryStateCountyDataExporter implements Exporter {
     
     protected String rowFilters;
 
+    protected Dataset filterDataset;
+
+    protected Version filterDatasetVersion;
+
+    protected String filterDatasetJoinCondition;
+    
     public CountryStateCountyDataExporter(Dataset dataset, String rowFilters, DbServer dbServer,
             Integer optimizedBatchSize) {
-        setup(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize);
+        setup(dataset, rowFilters, dbServer, new NonVersionedDataFormatFactory(), optimizedBatchSize, null, null, null);
     }
 
     public CountryStateCountyDataExporter(Dataset dataset, String rowFilters, DbServer dbServer,
-            DataFormatFactory factory, Integer optimizedBatchSize) {
-        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize);
+            DataFormatFactory factory, Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        setup(dataset, rowFilters, dbServer, factory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
     }
 
     private void setup(Dataset dataset, String rowFilters, DbServer dbServer, DataFormatFactory dataFormatFactory,
-            Integer optimizedBatchSize) {
+            Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
         this.dataset = dataset;
         this.datasource = dbServer.getEmissionsDatasource();
         this.emfDatasource = dbServer.getEmfDatasource();
@@ -76,6 +82,9 @@ public class CountryStateCountyDataExporter implements Exporter {
         this.batchSize = optimizedBatchSize.intValue();
         this.inlineCommentChar = dataset.getInlineCommentChar();
         this.rowFilters = rowFilters; 
+        this.filterDataset = filterDataset;
+        this.filterDatasetVersion = filterDatasetVersion;
+        this.filterDatasetJoinCondition = filterDatasetJoinCondition;
         setDelimiter("");
     }
 
@@ -337,7 +346,12 @@ public class CountryStateCountyDataExporter implements Exporter {
         String qualifiedTable = datasource.getName() + "." + table;
         ExportStatement export = dataFormatFactory.exportStatement();
 
-        return export.generate(qualifiedTable, rowFilters);
+        try {
+            return export.generate(datasource, qualifiedTable, rowFilters, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ExporterException(e.getMessage(), e);
+        }
     }
 
     protected String[] getCols(ResultSet data) throws SQLException {

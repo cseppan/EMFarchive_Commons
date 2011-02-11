@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.data.InternalSource;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
+import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
 import gov.epa.emissions.commons.io.FileFormat;
 import gov.epa.emissions.commons.io.importer.NonVersionedDataFormatFactory;
@@ -15,12 +16,12 @@ public class TemporalProfileExporter extends CountryStateCountyDataExporter {
     
     
     public TemporalProfileExporter(Dataset dataset, String rowFilters, DbServer dbServer, Integer optimizedBatchSize) {
-        this(dataset, rowFilters, dbServer,new NonVersionedDataFormatFactory(),optimizedBatchSize);
+        this(dataset, rowFilters, dbServer,new NonVersionedDataFormatFactory(),optimizedBatchSize, null, null, null);
     }
 
     public TemporalProfileExporter(Dataset dataset, String rowFilters, DbServer dbServer, 
-            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize) {
-        super(dataset, rowFilters, dbServer, dataFormatFactory, optimizedBatchSize);
+            DataFormatFactory dataFormatFactory, Integer optimizedBatchSize, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) {
+        super(dataset, rowFilters, dbServer, dataFormatFactory, optimizedBatchSize, filterDataset, filterDatasetVersion, filterDatasetJoinCondition);
     }
     
     protected void writeData(PrintWriter writer, Dataset dataset, Datasource datasource, boolean comments) throws Exception {
