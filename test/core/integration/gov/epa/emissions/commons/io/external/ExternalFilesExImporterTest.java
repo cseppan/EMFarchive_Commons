@@ -74,7 +74,7 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         importerv.run();
         ExternalSource[] srcs = importer.getExternalSources();
 
-        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", localDbServer, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", localDbServer, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, "");
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         exporter.setExternalSources(srcs);
         exporter.export(exportfile);
@@ -128,7 +128,7 @@ public class ExternalFilesExImporterTest extends PersistenceTestCase {
         assertTrue(srcs[2].getDatasource().endsWith("costcy2.txt"));
         assertTrue(srcs[3].getDatasource().endsWith("does not exist"));
         
-        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", localDbServer, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+        ExternalFilesExporter exporter = new ExternalFilesExporter(dataset, "", localDbServer, new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, "");
         File exportfile = File.createTempFile("ExternalExported", ".txt");
         
         try {

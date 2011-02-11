@@ -90,7 +90,7 @@ public class CountryStateCountyDataExporterTest extends PersistenceTestCase {
         importerv.run();
 
         CountryStateCountyDataExporter exporter = new CountryStateCountyDataExporter(dataset, "", dbServer,
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, "");
         File file = File.createTempFile("CSCexported", ".txt");
         exporter.export(file);
 

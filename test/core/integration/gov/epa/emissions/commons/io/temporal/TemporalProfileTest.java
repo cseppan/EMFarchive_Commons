@@ -303,7 +303,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
         assertEquals(13, countRecords("WEEKLY"));
 
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, "", dbServer,
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, "");
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         assertEquals(13, exporter.getExportedLinesCount());
@@ -349,7 +349,7 @@ public class TemporalProfileTest extends PersistenceTestCase {
 
     private File runVersionProfileExporter(Version version) throws IOException, ExporterException {
         TemporalProfileExporter exporter = new TemporalProfileExporter(dataset, "", dbServer,
-                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize);
+                new VersionedDataFormatFactory(version, dataset), optimizedBatchSize, null, null, "");
         File exportfile = File.createTempFile("VersionedTemporalProfileExported", ".txt");
         exporter.export(exportfile);
         return exportfile;
