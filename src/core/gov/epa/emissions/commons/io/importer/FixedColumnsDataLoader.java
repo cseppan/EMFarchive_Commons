@@ -36,7 +36,7 @@ public class FixedColumnsDataLoader implements DataLoader {
             } catch ( Exception e1) {
                 throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
             }
-            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
+            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table +": "+ e.getMessage());
             //throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName()
             //        + "' into table - " + table);
         } finally {
@@ -106,7 +106,7 @@ public class FixedColumnsDataLoader implements DataLoader {
 
         for (int c = firstCol; c < firstCol + tableFormat.getBaseLength(); c++) {
             Column col = columns[c];
-            // System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
+            System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
             if (col.sqlType().toLowerCase().startsWith("varchar")) {
                 if (c - offSet > record.size() - 1)
                     break;

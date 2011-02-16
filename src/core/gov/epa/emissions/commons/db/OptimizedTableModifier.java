@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.db;
 
 import gov.epa.emissions.commons.io.Column;
+import gov.epa.emissions.commons.io.importer.ImporterException;
 
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -27,9 +28,36 @@ public class OptimizedTableModifier extends TableModifier {
 
     public void insert(String[] data) throws Exception {
         if (data.length > columns.length)
-            throw new Exception("Invalid number of data tokens - " + data.length + ". Number of columns in the table: "
-                    + columns.length);
-
+            throw new Exception("Invalid number of data tokens - " + data.length + " on line "+counter+
+                    ". Number of columns in the table: " + columns.length);
+        
+        // Check data types
+        for (int i = 0; i < data.length; i++) {
+            String dataValue= data[i].trim();
+            //System.out.println("value of data: " +data[i] + ", name: "+ columns[i].getName()+", type: "+columns[i].sqlType());
+            if ( dataValue!=null && !dataValue.isEmpty()){
+                String type = columns[i].sqlType();
+                if (type.toUpperCase().startsWith("VARCHAR")){         
+                    int length = columns[i].width();
+                    if (dataValue.length() > length)
+                        throw new ImporterException("Error format for column[" + i +"], expected: " 
+                                + type +"("+length+"), but was: " + dataValue+", line "+counter);
+                }
+                try {
+                    if (type.toUpperCase().startsWith("DOUBLE") || type.toUpperCase().startsWith("FLOAT")){
+                        Double.parseDouble(dataValue);
+                        //System.out.println("value of column " +columns[i]+" is "+ dataValue);
+                    }
+                    if (type.toUpperCase().startsWith("INT")){
+                        Integer.parseInt(dataValue);
+                        //System.out.println("value of column " +cols[i]+" is "+ value);
+                    }
+                }catch (NumberFormatException nfe) {
+                    throw new ImporterException("Error format for column[" + i +"],"+ type + ", expected: " 
+                            + type +", but was:" + dataValue + ", line "+ counter++ );
+                }
+            }
+        }
         insertRow(tableName, data, columns);
     }
 
@@ -84,6 +112,8 @@ public class OptimizedTableModifier extends TableModifier {
     private void execute(String query) throws SQLException {
         if (counter < BATCH_SIZE) {
             statement.addBatch(query);
+//            System.out.println("counter= "+counter+" column= "+ columns[1].getName());
+//            System.out.println("\nquery: "+query);
             counter++;
         } else {
             statement.addBatch(query);

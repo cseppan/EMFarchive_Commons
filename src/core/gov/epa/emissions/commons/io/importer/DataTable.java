@@ -98,6 +98,7 @@ public class DataTable {
         try {
             delegate.drop(table);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ImporterException(
                     "could not drop table " + table + " after encountering error importing dataset", e);
         }

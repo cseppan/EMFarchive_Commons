@@ -16,12 +16,9 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private FileFormatWithOptionalCols fileFormat;
 
-    private String key;
-
     public OptionalColumnsDataLoader(Datasource datasource, FileFormatWithOptionalCols format, String key) {
         this.datasource = datasource;
         this.fileFormat = format;
-        this.key = key;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -31,12 +28,12 @@ public class OptionalColumnsDataLoader implements DataLoader {
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                dropData(table, dataset, dataModifier);
-            } catch ( Exception e1) {
-                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
-            }
-            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table+": "+ e.getMessage());
+//            try {
+//                dropData(table, dataset, dataModifier);
+//            } catch ( Exception e1) {
+//                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
+//            }
+//            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table+": "+ e.getMessage());
             //throw new ImporterException(e.getMessage() + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         } finally {
             close(dataModifier);
@@ -60,23 +57,23 @@ public class OptionalColumnsDataLoader implements DataLoader {
         }
     }
 
-    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
-        try {
-            long value = dataset.getId();
-            dataModifier.dropData(key, value);
-        } catch (SQLException e) {
-            throw new ImporterException("could not drop data from table " + table + "\n" + e.getMessage(), e);
-        }
-    }
+//    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
+//        try {
+//            long value = dataset.getId();
+//            dataModifier.dropData(key, value);
+//        } catch (SQLException e) {
+//            throw new ImporterException("could not drop data from table " + table + "\n" + e.getMessage());
+//        }
+//    }
 
     private void insertRecords(Dataset dataset, Reader reader, OptimizedTableModifier dataModifier) throws Exception {
         dataModifier.start();
         try {
+            int minColsSize = fileFormat.minCols().length;
             for (Record record = reader.read(); !record.isEnd(); record = reader.read()) {
-                int minColsSize = fileFormat.minCols().length;
                 if (record.size() < minColsSize)
                     throw new ImporterException("The number of tokens in the line are " + record.size()
-                            + ", It's less than minimum number of columns expected(" + minColsSize + ")");
+                            + ", it's less than minimum number of columns expected(" + minColsSize + ")");
                 String[] data = data(dataset, record, fileFormat);
 
                 dataModifier.insert(data);

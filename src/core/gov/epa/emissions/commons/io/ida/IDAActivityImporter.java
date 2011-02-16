@@ -118,7 +118,11 @@ public class IDAActivityImporter implements Importer {
             doImport(file, dataset, dataTable.name(), (FileFormatWithOptionalCols) unit.fileFormat(), unit
                     .tableFormat());
         } catch (Exception e) {
-            dataTable.drop();
+            try{
+                dataTable.drop();
+            } catch ( ImporterException e1) {
+                //throw new ImporterException(e.getMessage() + "; " + e1.getMessage());
+            }
             throw new ImporterException("Filename: " + file.getAbsolutePath() + ", " + e.getMessage());
         }
     }

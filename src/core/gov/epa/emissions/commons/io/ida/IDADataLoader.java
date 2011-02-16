@@ -71,12 +71,12 @@ public class IDADataLoader implements DataLoader {
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                dropData(table, dataset, dataModifier);
-            } catch ( Exception e1) {
-                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
-            }
-            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage());
+//            try {
+//                dropData(table, dataset, dataModifier);
+//            } catch ( Exception e1) {
+//                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
+//            }
+//            throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage());
             //throw new ImporterException(e.getMessage()
             //        + "\nCould not load dataset - '" + dataset.getName() + "' into table - " + table);
         } finally {
@@ -101,15 +101,15 @@ public class IDADataLoader implements DataLoader {
         }
     }
 
-    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
-        try {
-            String key = tableFormat.key();
-            long value = dataset.getId();
-            dataModifier.dropData(key, value);
-        } catch (SQLException e) {
-            throw new ImporterException("could not drop data from table " + table, e);
-        }
-    }
+//    private void dropData(String table, Dataset dataset, OptimizedTableModifier dataModifier) throws ImporterException {
+//        try {
+//            String key = tableFormat.key();
+//            long value = dataset.getId();
+//            dataModifier.dropData(key, value);
+//        } catch (SQLException e) {
+//            throw new ImporterException("could not drop data from table " + table, e);
+//        }
+//    }
 
     private void insertRecords(Dataset dataset, Reader reader, OptimizedTableModifier dataModifier) throws Exception {
         dataModifier.start();

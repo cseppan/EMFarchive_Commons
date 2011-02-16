@@ -175,6 +175,26 @@ public class CSVFileReader implements Reader {
         return cols;
     }
     
+    public String colsToString(){
+        String lineFeeder = ",";
+        String output = "";
+        if (cols != null){
+            for (int i=0; i<cols.length; i++)
+                output += cols[i] + lineFeeder;
+        }
+        return  output;  
+    }
+    
+    public String colTypesToString(){
+        String lineFeeder = ",";
+        String output = "";
+        if (colTypes != null){
+            for (int i=0; i<colTypes.length; i++)
+                output += colTypes[i] + lineFeeder;
+        }
+        return  output;  
+    }
+    
     public String[] getColTypes() {
         return colTypes;
     }

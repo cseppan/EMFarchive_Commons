@@ -106,6 +106,7 @@ public class TableModifier {
                     data[i] = escapeString(data[i]) + "::" + cols[i].sqlType();
                 }
             }
+            
 
             insert.append(data[i]);
             if (i < (data.length - 1))
@@ -139,8 +140,7 @@ public class TableModifier {
     }
 
     public void dropData(String key, long value) throws SQLException {
-        execute("DELETE FROM " + qualified(tableName) + " WHERE " + key + " = " + value);
-        
+        execute("DELETE FROM " + qualified(tableName) + " WHERE " + key + " = " + value);       
         cleanIfTableIsEmpty();
     }
 
