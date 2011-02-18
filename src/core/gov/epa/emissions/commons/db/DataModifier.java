@@ -107,7 +107,7 @@ public class DataModifier {
         Statement statement = connection.createStatement();
         
         try {
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(query + " LIMIT 1");
 
             return rs.next();
         } catch (SQLException e) {
