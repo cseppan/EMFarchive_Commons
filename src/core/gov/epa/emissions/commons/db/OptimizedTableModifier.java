@@ -53,8 +53,8 @@ public class OptimizedTableModifier extends TableModifier {
                         //System.out.println("value of column " +cols[i]+" is "+ value);
                     }
                 }catch (NumberFormatException nfe) {
-                    throw new ImporterException("Error format for column[" + i +"],"+ type + ", expected: " 
-                            + type +", but was:" + dataValue + ", line "+ counter++ );
+                    throw new ImporterException("Error format for column[" + i +"], expected: " 
+                            + type +", but was:" + dataValue + ", line "+ (++counter) );
                 }
             }
         }
