@@ -106,7 +106,7 @@ public class FixedColumnsDataLoader implements DataLoader {
 
         for (int c = firstCol; c < firstCol + tableFormat.getBaseLength(); c++) {
             Column col = columns[c];
-            System.out.println("c="+c+", column name = "+col.name()+", type="+col.sqlType());
+            
             if (col.sqlType().toLowerCase().startsWith("varchar")) {
                 if (c - offSet > record.size() - 1)
                     break;
