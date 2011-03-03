@@ -112,8 +112,6 @@ public class OptimizedTableModifier extends TableModifier {
     private void execute(String query) throws SQLException {
         if (counter < BATCH_SIZE) {
             statement.addBatch(query);
-//            System.out.println("counter= "+counter+" column= "+ columns[1].getName());
-//            System.out.println("\nquery: "+query);
             counter++;
         } else {
             statement.addBatch(query);

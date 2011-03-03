@@ -27,12 +27,12 @@ public class LineLoader implements DataLoader {
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             e.printStackTrace();
-//            try {
-//                dropData(table, dataset, dataModifier);
-//            } catch ( Exception e1) {
-//                //
-//                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
-//            }
+            //            try {
+            //                dropData(table, dataset, dataModifier);
+            //            } catch ( Exception e1) {
+            //                //
+            //                throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table + ": " + e.getMessage() + "; " + e1.getMessage());
+            //            }
             throw new ImporterException("could not load dataset - '" + dataset.getName() + "' into table - " + table, e);
         } finally {
             close(dataModifier);
