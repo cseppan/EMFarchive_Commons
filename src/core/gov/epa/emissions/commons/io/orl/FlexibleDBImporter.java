@@ -172,7 +172,6 @@ public class FlexibleDBImporter implements Importer, ImporterPostProcess {
                 copyString = "COPY " + getFullTableName(table) + " (" + getColNames() + ") FROM '"
                 + putEscape(dataFile.getAbsolutePath()) + "' WITH CSV HEADER QUOTE AS '\"'";    
             } 
-            System.out.println(copyString);  
             connection = datasource.getConnection();
             Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.execute(copyString);

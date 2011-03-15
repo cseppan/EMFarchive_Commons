@@ -65,7 +65,6 @@ public class PostgresTableDefinition implements TableDefinition {
 
         //create_table_index(table_name character varying, table_col_list character varying, index_name_prefix character varying, clustered boolean);
         String query = "SELECT public.create_table_index('" + table + "','" + colNameList + "','" + indexName + "'," + clustered + "::boolean);";
-        System.out.println(query);
         try {
             execute(query);
         } catch (SQLException e) {

@@ -61,7 +61,6 @@ public class PostgresCOPYExport {
     }
 
     private void executeQuery(Connection connection, String writeQuery) throws SQLException {
-        System.out.println(writeQuery);
         Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         statement.execute(writeQuery);
         statement.close();

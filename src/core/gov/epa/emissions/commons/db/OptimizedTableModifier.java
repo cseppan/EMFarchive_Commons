@@ -87,7 +87,6 @@ public class OptimizedTableModifier extends TableModifier {
                 if (sqle.getNextException() != null)
                     exmsg = exmsg +"; "+sqle.getMessage();
                     sqle.printStackTrace();
-                System.out.println("SQL Exception ERROR: "+exmsg);
             }
             throw new SQLException("Data line (" + (batchCount * BATCH_SIZE + line + 1) + ") has errors: " + exmsg);
         } finally {

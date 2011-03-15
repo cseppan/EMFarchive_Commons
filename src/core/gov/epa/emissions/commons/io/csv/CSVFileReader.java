@@ -110,7 +110,6 @@ public class CSVFileReader implements Reader {
         try {
             tokens = tokenizer.tokens(line);
         } catch (Exception e) {
-            System.out.println("Reading Error: " + line);
             String err = e.getMessage();
             
             if (err != null && err.toLowerCase().contains("no match available"))
@@ -120,12 +119,10 @@ public class CSVFileReader implements Reader {
         }
         
         if (tokens.length < cols.length) {
-            System.out.println("Reading Error: " + line);
             throw new ImporterException("Line " + lineNumber + " has too few tokens or unbalanced quotes.");
         }
         
         if (tokens.length > cols.length) {
-            System.out.println("Reading Error: " + line);
             throw new ImporterException("Line " + lineNumber + " has too many tokens.");
         }
         

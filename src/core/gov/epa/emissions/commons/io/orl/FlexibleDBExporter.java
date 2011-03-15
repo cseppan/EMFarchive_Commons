@@ -222,8 +222,6 @@ public class FlexibleDBExporter extends GenericExporter {
             cmd = new String[] { "sh", "-c", cmdString };
         }
         
-        System.out.println(cmd);
-
         Process p = Runtime.getRuntime().exec(cmd);
         int errorLevel = p.waitFor();
 
@@ -270,7 +268,6 @@ public class FlexibleDBExporter extends GenericExporter {
         String withClause = " WITH NULL '' CSV FORCE QUOTE " + getNeedQuotesCols();
         if (withColNames)
             withClause = " WITH NULL '' CSV HEADER FORCE QUOTE " + getNeedQuotesCols();
-        System.out.println("COPY (" + query + ") to '" + putEscape(dataFile) + "'" + withClause);
         return "COPY (" + query + ") to '" + putEscape(dataFile) + "'" + withClause;
     }
 
