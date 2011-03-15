@@ -148,7 +148,7 @@ public class FlexibleDBExporter extends GenericExporter {
             rs = datasource.query().executeQuery("select * from " + qualifiedTable + " where 1 = 0");
             ResultSetMetaData md = rs.getMetaData();
             for (int i = 1; i <= md.getColumnCount(); i++)
-                cols.put(md.getColumnName(i).toLowerCase(), md.getColumnName(i).toLowerCase());
+                cols.put(md.getColumnName(i).toLowerCase(), md.getColumnName(i));
         } catch (SQLException e) {
             //
         } finally {
@@ -252,10 +252,10 @@ public class FlexibleDBExporter extends GenericExporter {
         int numCols = cols.length;
         
         for (int i = 0; i < numCols; i++) {
-            String colName = cols[i].name().toLowerCase();
+            String colName = cols[i].name();
             // make sure you only include columns that exist in the table, new columns could have been
             // added to the ORL file format...
-            selectColsString += (tableColsMap.containsKey(colName) ? colName : "null as " + colName) + ",";
+            selectColsString += (tableColsMap.containsKey(colName.toLowerCase()) ? "\"" + tableColsMap.get(colName.toLowerCase()) + "\"" : "null as \"" + colName + "\"") + ",";
         }
 
         selectColsString = selectColsString.substring(0, selectColsString.length() - 1);
