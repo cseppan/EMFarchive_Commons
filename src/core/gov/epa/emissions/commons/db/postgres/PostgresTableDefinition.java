@@ -32,7 +32,7 @@ public class PostgresTableDefinition implements TableDefinition {
 
     public void dropTable(String table) throws Exception {
         try {
-            execute("DROP TABLE " + qualified(table));
+            execute("DROP TABLE IF EXISTS " + qualified(table));
         } catch (SQLException e) {
             throw new Exception("Table " + qualified(table) + " could not be dropped" + "\n" + e.getMessage());
         }
