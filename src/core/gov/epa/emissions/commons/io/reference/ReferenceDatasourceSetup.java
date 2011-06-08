@@ -25,6 +25,10 @@ public class ReferenceDatasourceSetup {
 
     private ReferenceDatasourceTablesCreator creator;
 
+    public ReferenceDatasourceTablesCreator getCreator() {
+        return creator;
+    }
+
     public ReferenceDatasourceSetup(String configFile, File base) throws Exception {
         Properties properties = new Properties();
         properties.load(new FileInputStream(new File(configFile)));
