@@ -66,10 +66,10 @@ public class ORLMergedFileFormat implements FileFormatWithOptionalCols, Delimite
 //        cols.add(new Column("ERPTYPE", types.stringType(2), 2, new StringFormatter(2)));
 //        cols.add(new Column("SRCTYPE", types.stringType(2), 2, new StringFormatter(2)));
 //        cols.add(new Column("STKHGT", types.realType(), new RealFormatter()));
-//        cols.add(new Column("STKDIAM", types.realType(), new RealFormatter()));
+        cols.add(new Column("STKDIAM", types.realType(), new RealFormatter()));
         cols.add(new Column("STKTEMP", types.realType(), new RealFormatter()));
         cols.add(new Column("STKFLOW", types.realType(), new RealFormatter()));
-//        cols.add(new Column("STKVEL", types.realType(), new RealFormatter()));
+        cols.add(new Column("STKVEL", types.realType(), new RealFormatter()));
         cols.add(new Column("SIC", types.stringType(4), 4, new StringFormatter(4)));
 //        cols.add(new Column("MACT", types.stringType(6), 6, new StringFormatter(6)));
         cols.add(new Column("NAICS", types.stringType(6), 6, new StringFormatter(6)));
