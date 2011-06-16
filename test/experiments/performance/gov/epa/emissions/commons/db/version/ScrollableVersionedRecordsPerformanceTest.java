@@ -51,7 +51,7 @@ public abstract class ScrollableVersionedRecordsPerformanceTest extends Performa
     }
 
     protected OptimizedScrollableVersionedRecords executeOptimizedQuery() throws SQLException {
-        return new OptimizedScrollableVersionedRecords(emissions(), query, table(), whereClause);
+        return new OptimizedScrollableVersionedRecords(emissions(), 10300, query, table(), whereClause);
     }
 
     protected TableFormat tableFormat(final SqlDataTypes types) {

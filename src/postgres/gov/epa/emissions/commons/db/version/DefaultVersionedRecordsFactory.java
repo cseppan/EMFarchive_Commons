@@ -33,7 +33,7 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
         String fullyQualifiedTable = fullyQualifiedTable(table);
         String whereClause = whereClause(version, rowFilter, versions);
 
-        return new OptimizedScrollableVersionedRecords(datasource, query, fullyQualifiedTable, whereClause);
+        return new OptimizedScrollableVersionedRecords(datasource, batchSize, query,  fullyQualifiedTable, whereClause);
     }
 
     public ScrollableVersionedRecords fetch(Version version, String table, String columnFilter, String rowFilter,

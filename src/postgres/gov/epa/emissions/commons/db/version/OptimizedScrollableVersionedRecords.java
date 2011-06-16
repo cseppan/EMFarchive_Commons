@@ -26,12 +26,15 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
     private Statement statement;
 
     private ScrollableResultSetIndex resultSetIndex;
+    
+    private int batchSize;
 
-    public OptimizedScrollableVersionedRecords(Datasource datasource, String query, String table, String whereClause)
+    public OptimizedScrollableVersionedRecords(Datasource datasource, int batchSize, String query, String table, String whereClause)
             throws SQLException {
         this.datasource = datasource;
         this.query = query;
         resultSetIndex = new ScrollableResultSetIndex();
+        this.batchSize=batchSize;
 
         obtainTotalCount(table, whereClause);
         executeQuery(resultSetIndex.start());
@@ -80,14 +83,14 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
     private void createStatement() throws SQLException {
         Connection connection = datasource.getConnection();
         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        statement.setFetchSize(ScrollableResultSetIndex.FETCH_SIZE);
-        statement.setMaxRows(ScrollableResultSetIndex.FETCH_SIZE);
+        statement.setFetchSize(batchSize);
+        statement.setMaxRows(batchSize);
     }
 
     private void executeQuery(int offset) throws SQLException {
         createStatement();
 
-        String currentQuery = query + " LIMIT " + ScrollableResultSetIndex.FETCH_SIZE + " OFFSET " + offset;
+        String currentQuery = query + " LIMIT " + batchSize + " OFFSET " + offset;
         resultSet = statement.executeQuery(currentQuery);
         metadata = resultSet.getMetaData();
     }

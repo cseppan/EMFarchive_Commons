@@ -16,7 +16,7 @@ public class ScrollableResultSetIndex {
     }
 
     public int end() {
-        return (start + FETCH_SIZE);
+        return (start + FETCH_SIZE +300);  // batch size is 10300, emf.properties
     }
 
     public boolean inRange(int index) {
