@@ -3,8 +3,13 @@ package gov.epa.emissions.commons.db.version;
 public class ScrollableResultSetIndex {
     private int start = 0;
 
-    static final int FETCH_SIZE = 10000;
+    private int FETCH_SIZE;
+    private int PAGE_SIZE;
 
+    public ScrollableResultSetIndex(int batchSize, int pageSize){
+        this.FETCH_SIZE= batchSize; 
+        this.PAGE_SIZE=pageSize;
+    }
     public int start() {
         return start;
     }
@@ -16,7 +21,7 @@ public class ScrollableResultSetIndex {
     }
 
     public int end() {
-        return (start + FETCH_SIZE +300);  // batch size is 10300, emf.properties
+        return (start + FETCH_SIZE + PAGE_SIZE);  // batch size is 10300 from N*, emf.properties
     }
 
     public boolean inRange(int index) {

@@ -8,11 +8,11 @@ public interface VersionedRecordsFactory {
 
     ScrollableVersionedRecords fetch(Version version, String table, Session session) throws SQLException;
 
-    ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, Session session) throws SQLException;
+    ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, int pageSize, Session session) throws SQLException;
 
     ScrollableVersionedRecords fetch(Version version, String table, String columnFilter, String rowFilter,
             String sortOrder, Session session) throws SQLException;
 
-    ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, String columnFilter,
+    ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize,int pageSize, String columnFilter,
             String rowFilter, String sortOrder, Session session) throws SQLException;
 }

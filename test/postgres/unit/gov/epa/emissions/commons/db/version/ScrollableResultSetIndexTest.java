@@ -7,12 +7,12 @@ public class ScrollableResultSetIndexTest extends TestCase {
     private ScrollableResultSetIndex index;
 
     protected void setUp() {
-        index = new ScrollableResultSetIndex();
+        index = new ScrollableResultSetIndex(10000,300);
     }
 
     public void testStartShouldBeZeroAndEndShouldBeFetchSizeOnInit() {
         assertEquals(0, index.start());
-        assertEquals(ScrollableResultSetIndex.FETCH_SIZE, index.end());
+        assertEquals(10000, index.end());
     }
 
     public void testIndexShouldBeInRangeIfGreaterOrEqualToStartAndLessThanEqualToEnd() {

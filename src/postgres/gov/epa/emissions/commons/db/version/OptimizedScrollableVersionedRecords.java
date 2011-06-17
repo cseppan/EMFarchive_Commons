@@ -29,12 +29,12 @@ public class OptimizedScrollableVersionedRecords implements ScrollableVersionedR
     
     private int batchSize;
 
-    public OptimizedScrollableVersionedRecords(Datasource datasource, int batchSize, String query, String table, String whereClause)
+    public OptimizedScrollableVersionedRecords(Datasource datasource, int batchSize, int pageSize, String query, String table, String whereClause)
             throws SQLException {
         this.datasource = datasource;
         this.query = query;
-        resultSetIndex = new ScrollableResultSetIndex();
-        this.batchSize=batchSize;
+        resultSetIndex = new ScrollableResultSetIndex(batchSize, pageSize);
+        this.batchSize=batchSize+pageSize;
 
         obtainTotalCount(table, whereClause);
         executeQuery(resultSetIndex.start());

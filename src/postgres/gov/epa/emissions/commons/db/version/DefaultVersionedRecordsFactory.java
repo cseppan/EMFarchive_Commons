@@ -21,19 +21,20 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
         return fetch(version, table, null, null, null, session);
     }
 
-    public ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, Session session)
-            throws SQLException {
-        return optimizedFetch(version, table, batchSize, null, null, null, session);
+    public ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, 
+            int pageSize, Session session) throws SQLException {
+        return optimizedFetch(version, table, batchSize, pageSize, null, null, null, session);
     }
 
-    public ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, String columnFilter,
-            String rowFilter, String sortOrder, Session session) throws SQLException {
+    public ScrollableVersionedRecords optimizedFetch(Version version, String table, int batchSize, 
+            int pageSize, String columnFilter,
+           String rowFilter, String sortOrder, Session session) throws SQLException {
         String query = createQuery(version, table, columnFilter, rowFilter, sortOrder, session);
         String versions = versionsList(version, session);
         String fullyQualifiedTable = fullyQualifiedTable(table);
         String whereClause = whereClause(version, rowFilter, versions);
 
-        return new OptimizedScrollableVersionedRecords(datasource, batchSize, query,  fullyQualifiedTable, whereClause);
+        return new OptimizedScrollableVersionedRecords(datasource, batchSize, pageSize, query,  fullyQualifiedTable, whereClause);
     }
 
     public ScrollableVersionedRecords fetch(Version version, String table, String columnFilter, String rowFilter,
