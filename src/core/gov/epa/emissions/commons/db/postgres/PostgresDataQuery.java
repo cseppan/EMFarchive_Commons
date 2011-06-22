@@ -49,9 +49,20 @@ public class PostgresDataQuery implements DataQuery {
         } catch (SQLException e) {
             //            e.printStackTrace();
             throw e;
-        } finally {
+        } catch ( Exception e) {
+            throw new SQLException( e);
+        }
+        finally {
             if (statement != null) {
-                try { statement.close(); } catch (SQLException e) {  }
+                try { 
+                    statement.close(); 
+                } catch (SQLException e) {  
+                    statement = null;
+                    throw e;
+                } catch ( Exception e) {
+                    statement = null;
+                    throw new SQLException( e);
+                }
                 statement = null;
             }
         }
