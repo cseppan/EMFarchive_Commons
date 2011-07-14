@@ -235,13 +235,14 @@ public class SMKReportExporter implements Exporter {
                 getCols(rs);
                 cols = this.colNames.toArray(new String[0]);
                 this.startColNumber = startCol(cols);
+                writeCols(writer, cols, pad, csvHeaderLine);
                 firstbatch = false;
             }
 
-            writeCols(writer, cols, pad, csvHeaderLine);
+            //writeCols(writer, cols, pad, csvHeaderLine);
 
             writeBatchOfData(writer, rs, cols, comments);
-            pad = 2;
+            //pad = 2;
             rs.close();
         }
         runner.close();

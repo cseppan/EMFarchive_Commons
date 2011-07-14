@@ -73,10 +73,10 @@ public class VersionedDatasetQuery implements ExportStatement {
         if (defaultSortOrder != null) {
             defaultSortOrder = defaultSortOrder.trim();
             if (defaultSortOrder.length() > 0)
-                return " ORDER BY " + defaultSortOrder;
+                return " ORDER BY " + defaultSortOrder + ", record_id";
         }
 
-        return "";
+        return "ORDER BY record_id"; // TODO: check if the record_id exists in every dataset
     }
 
 
