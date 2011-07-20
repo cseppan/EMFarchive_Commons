@@ -146,6 +146,8 @@ public class DatasetType implements Serializable, Lockable, Comparable<DatasetTy
     
     public static final String FLEXIBLE = "Flexible File Format";
     
+    public static final String FLAT_FILE_2010_POINT = "Flat File 2010 Point";
+    
     public static final String EXTERNAL_IMPORTER = "gov.epa.emissions.commons.io.external.ExternalFilesImporter";
     
     public static final String CSV_IMPORTER = "gov.epa.emissions.commons.io.csv.CSVImporter";

@@ -51,6 +51,7 @@ public class ReferenceDatasourceTablesCreator {
         importRefFile("rsm_inv_sectors.csv", "rsm_inv_sectors");
         importRefFile("Impact_per_ton_estimates.csv", "impact_estimates");
         importRefFile("Facility_Source_Type_Code.csv", "Facility_Source_Type_Codes");
+        importRefFile("regulatory_codes.csv", "regulatory_codes");
 
         System.out.println("Reference Datasource setup completed.");
     }
@@ -64,7 +65,7 @@ public class ReferenceDatasourceTablesCreator {
     
     public static void main(String[] args) {
         try {
-            new ReferenceDatasourceSetup("config/db/postgres-reference-schema.conf", new File("C:\\cep\\EMF\\config\\ref\\delimited")).getCreator().importRefFile("Facility_Source_Type_Code.csv", "Facility_Source_Type_Codes");
+            new ReferenceDatasourceSetup("config/db/postgres-reference-schema.conf", new File("C:\\cep\\EMF\\config\\ref\\delimited")).getCreator().importRefFile("regulatory_codes.csv", "regulatory_codes");
         } catch (ImporterException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
