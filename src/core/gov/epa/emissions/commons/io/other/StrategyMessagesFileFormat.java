@@ -37,8 +37,13 @@ public class StrategyMessagesFileFormat implements FileFormat, DelimitedFileForm
         cols.add(new Column("Status", types.stringType(11), 11, new StringFormatter(11)));
         cols.add(new Column("Control_Program", types.stringType(255), 255, new StringFormatter(255)));
         cols.add(new Column("Message_Type", types.stringType(255), 255, new StringFormatter(255)));
-        cols.add(new Column("Message", types.stringType(255), 255, new StringFormatter(255)));
+        cols.add(new Column("Message", types.stringType(2056), 255, new StringFormatter(255)));
         cols.add(new Column("Inventory", types.stringType(255), 255, new StringFormatter(255)));
+        cols.add(new Column("SIC", types.stringType(4), 4, new StringFormatter(4)));
+        cols.add(new Column("MACT", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("NAICS", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("REPLACEMENT", types.stringType(1), 1, new StringFormatter(1)));
+        cols.add(new Column("COMPLIANCE_DATE", types.timestamp()));
         return cols.toArray(new Column[0]);
     }
 
