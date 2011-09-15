@@ -76,7 +76,7 @@ public class VersionedDatasetQuery implements ExportStatement {
                 return " ORDER BY " + defaultSortOrder + ", record_id";
         }
 
-        return "ORDER BY record_id"; // TODO: check if the record_id exists in every dataset
+        return " ORDER BY record_id"; // TODO: check if the record_id exists in every dataset
     }
 
 
@@ -113,8 +113,8 @@ public class VersionedDatasetQuery implements ExportStatement {
         VersionedQuery filterDatasetVersionedQuery = (filterDataset != null && filterDatasetVersion != null ? new VersionedQuery(filterDatasetVersion, "f") : null);
         VersionedQuery datasetVersionedQuery = new VersionedQuery(this.version, "t");
         if (rowFilters.trim().length()>0)
-            return "SELECT t.* FROM " + table + " t WHERE " + datasetVersionedQuery.query() + " AND " + rowFilters + (filterTable.length() > 0 ? " AND EXISTS (SELECT 1 FROM " + filterTable + " f WHERE " + filterDatasetVersionedQuery.query() + sqlFilterDatasetJoinCondition + ")" : "") + orderByClause();
-        return "SELECT * FROM " + table + " t WHERE " + datasetVersionedQuery.query() + (filterTable.length() > 0 ? " AND EXISTS (SELECT 1 FROM " + filterTable + " f WHERE " + filterDatasetVersionedQuery.query() + sqlFilterDatasetJoinCondition + ")" : "") + orderByClause();
+            return "SELECT t.* FROM " + table + " t WHERE " + datasetVersionedQuery.query() + " AND " + rowFilters + (filterTable.length() > 0 ? " AND EXISTS (SELECT 1 FROM " + filterTable + " f WHERE " + filterDatasetVersionedQuery.query() + sqlFilterDatasetJoinCondition + ")" : "") + " " + orderByClause();
+        return "SELECT * FROM " + table + " t WHERE " + datasetVersionedQuery.query() + (filterTable.length() > 0 ? " AND EXISTS (SELECT 1 FROM " + filterTable + " f WHERE " + filterDatasetVersionedQuery.query() + sqlFilterDatasetJoinCondition + ")" : "") + " " + orderByClause();
     }
 
     private String aliasExpression(Dataset dataset, String expression, Map<String,Column> baseColumns, String tableAlias) throws Exception {

@@ -234,7 +234,7 @@ public class CountryStateCountyDataExporter implements Exporter {
         else if (section.toUpperCase().equals("COUNTY"))
             orderby = " ORDER BY countrycode, statecode, countycode";
 
-        OptimizedQuery runner = datasource.optimizedQuery(query + orderby, batchSize);
+        OptimizedQuery runner = datasource.optimizedQuery(query.substring(0, query.indexOf(" ORDER BY ")) + orderby + ", record_id", batchSize);
         boolean firstbatch = true;
         String[] cols = null;
 
