@@ -37,13 +37,20 @@ public class StrategyMessagesFileFormat implements FileFormat, DelimitedFileForm
         cols.add(new Column("Status", types.stringType(11), 11, new StringFormatter(11)));
         cols.add(new Column("Control_Program", types.stringType(255), 255, new StringFormatter(255)));
         cols.add(new Column("Message_Type", types.stringType(255), 255, new StringFormatter(255)));
-        cols.add(new Column("Message", types.stringType(2056), 255, new StringFormatter(255)));
+        cols.add(new Column("Message", types.text()));
         cols.add(new Column("Inventory", types.stringType(255), 255, new StringFormatter(255)));
-        cols.add(new Column("SIC", types.stringType(4), 4, new StringFormatter(4)));
-        cols.add(new Column("MACT", types.stringType(6), 6, new StringFormatter(6)));
-        cols.add(new Column("NAICS", types.stringType(6), 6, new StringFormatter(6)));
-        cols.add(new Column("REPLACEMENT", types.stringType(1), 1, new StringFormatter(1)));
-        cols.add(new Column("COMPLIANCE_DATE", types.timestamp()));
+        cols.add(new Column("Packet_FIPS", types.stringType(6), new StringFormatter(6)));
+        cols.add(new Column("Packet_SCC", types.stringType(10), new StringFormatter(10)));
+        cols.add(new Column("Packet_PLANTID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("Packet_POINTID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("Packet_STACKID", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("Packet_SEGMENT", types.stringType(15), 15, new StringFormatter(15)));
+        cols.add(new Column("Packet_POLL", types.stringType(16), 16, new StringFormatter(16)));
+        cols.add(new Column("Packet_SIC", types.stringType(4), 4, new StringFormatter(4)));
+        cols.add(new Column("Packet_MACT", types.stringType(6), 6, new StringFormatter(6)));
+        cols.add(new Column("Packet_NAICS", types.stringType(6), 6, new StringFormatter(6)));
+//        cols.add(new Column("Packet_REPLACEMENT", types.stringType(1), 1, new StringFormatter(1)));
+        cols.add(new Column("Packet_COMPLIANCE_DATE", types.timestamp()));
         return cols.toArray(new Column[0]);
     }
 
