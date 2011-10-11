@@ -236,7 +236,6 @@ public class CountryStateCountyDataExporter implements Exporter {
         else
             orderby = " ORDER BY record_id";
 
-//        OptimizedQuery runner = datasource.optimizedQuery(query + orderby, batchSize);
         OptimizedQuery runner = datasource.optimizedQuery(query.substring(0, query.indexOf(" ORDER BY ")) + orderby, batchSize);
         boolean firstbatch = true;
         String[] cols = null;
