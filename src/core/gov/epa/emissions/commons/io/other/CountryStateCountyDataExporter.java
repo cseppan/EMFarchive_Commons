@@ -228,13 +228,16 @@ public class CountryStateCountyDataExporter implements Exporter {
         String orderby = "";
 
         if (section.toUpperCase().equals("COUNTRY"))
-            orderby = " ORDER BY code";
+            orderby = " ORDER BY code, record_id";
         else if (section.toUpperCase().equals("STATE"))
-            orderby = " ORDER BY countrycode, statecode";
+            orderby = " ORDER BY countrycode, statecode, record_id";
         else if (section.toUpperCase().equals("COUNTY"))
-            orderby = " ORDER BY countrycode, statecode, countycode";
+            orderby = " ORDER BY countrycode, statecode, countycode, record_id";
+        else
+            orderby = " ORDER BY record_id";
 
-        OptimizedQuery runner = datasource.optimizedQuery(query.substring(0, query.indexOf(" ORDER BY ")) + orderby + ", record_id", batchSize);
+//        OptimizedQuery runner = datasource.optimizedQuery(query + orderby, batchSize);
+        OptimizedQuery runner = datasource.optimizedQuery(query.substring(0, query.indexOf(" ORDER BY ")) + orderby, batchSize);
         boolean firstbatch = true;
         String[] cols = null;
 
