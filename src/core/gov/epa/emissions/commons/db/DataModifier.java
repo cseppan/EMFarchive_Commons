@@ -248,9 +248,16 @@ public class DataModifier {
         insert.append("INSERT INTO " + qualified(table) + " VALUES(");
 
         for (int i = 0; i < data.length; i++) {
-            if ((data[i] == null || (data[i].trim().length() == 0)) && (!isTypeString(cols[i])))
-                data[i] = "DEFAULT";
-            if (isTypeString(cols[i])) {
+            if ( data[i] == null || (data[i].trim().length() == 0)) {
+                if (cols[i].sqlType().startsWith("TIMESTAMP")) {
+                    data[i]="NULL";
+                }
+                if (!isTypeString(cols[i])) { 
+                    data[i] = "DEFAULT";
+                }
+            }
+            
+            if (!data[i].equalsIgnoreCase("NULL") && !data[i].equalsIgnoreCase("DEFAULT") && isTypeString(cols[i]) ) {
                 data[i] = escapeString(data[i]);
             }
 
