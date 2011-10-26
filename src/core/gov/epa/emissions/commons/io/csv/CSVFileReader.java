@@ -37,7 +37,7 @@ public class CSVFileReader implements Reader {
 
     private String currentLine;
 
-    private String[] cols;
+    private String[] cols = new String[] {};
     
     private String[] colTypes;
 
