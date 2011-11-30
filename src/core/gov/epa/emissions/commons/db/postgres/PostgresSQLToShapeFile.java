@@ -35,19 +35,18 @@ public class PostgresSQLToShapeFile {
             String postgresUser, 
             String postgresPassword, 
             String filePath, 
-            String selectQuery,
-            ProjectionShapeFile projectionShapeFile) throws ExporterException {
+            boolean overide,
+            String selectQuery, ProjectionShapeFile projectionShapeFile) throws ExporterException {
         Process process = null;
         try {
             //Validation
             //1st see if there is data for the shape file, if not throw an exception
             //dbServer
             //2nd make sure there is the_geom column so the shape file can be created
-          validateSelectQuery(selectQuery);
-         
-            
+            validateSelectQuery(selectQuery);
+
             createNewFile(filePath,
-                    projectionShapeFile);
+                    projectionShapeFile, overide);
 
             String[] exportCommand = getWriteQueryString(postgresBinDir, 
                     postgresDB, 
@@ -215,7 +214,7 @@ public class PostgresSQLToShapeFile {
     }
 
     private void createNewFile(String filePath,
-            ProjectionShapeFile projectionShapeFile) throws Exception {
+            ProjectionShapeFile projectionShapeFile, boolean overide) throws Exception {
         try {
             System.out.println(filePath);
             // AME: Updates for EPA's system
@@ -228,6 +227,8 @@ public class PostgresSQLToShapeFile {
                     Thread.sleep(1000); // for the system to refresh the file access permissions
                 }
             } else {
+                if ( !overide) 
+                    throw new Exception("The file " + dbfFile.getAbsolutePath() + " already exists.");
                 dbfFile.delete();
             }
             File shpFile = new File(filePath + ".shp");
@@ -239,6 +240,8 @@ public class PostgresSQLToShapeFile {
                     Thread.sleep(1000); // for the system to refresh the file access permissions
                 }
             } else {
+                if ( !overide) 
+                    throw new Exception("The file " + shpFile.getAbsolutePath() + " already exists.");
                 shpFile.delete();
             }
             File shxFile = new File(filePath + ".shx");
@@ -250,6 +253,8 @@ public class PostgresSQLToShapeFile {
                     Thread.sleep(1000); // for the system to refresh the file access permissions
                 }
             } else {
+                if ( !overide) 
+                    throw new Exception("The file " + shxFile.getAbsolutePath() + " already exists.");
                 shxFile.delete();
             }
             File prjFile = new File(filePath + ".prj");
@@ -261,6 +266,8 @@ public class PostgresSQLToShapeFile {
                     Thread.sleep(1000); // for the system to refresh the file access permissions
                 }
             } else {
+                if ( !overide) 
+                    throw new Exception("The file " + prjFile.getAbsolutePath() + " already exists.");
                 prjFile.delete();
             }
 //            if (prjFile.exists()) prjFile.delete();
@@ -280,7 +287,7 @@ public class PostgresSQLToShapeFile {
             // for now, do nothing from Linux
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ExporterException("Could not create shape files: " + filePath);
+            throw new ExporterException("Could not create shape files: " + filePath + ": " + e.getMessage());
         }
     }
 }
