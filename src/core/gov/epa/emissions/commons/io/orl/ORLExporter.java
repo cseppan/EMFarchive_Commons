@@ -202,7 +202,7 @@ public class ORLExporter extends GenericExporter {
 
         if (windowsOS) {
             // System.out.println("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
-            cmd = getCommands("copy " + headerFile + " + " + dataFile + " " + file.getAbsolutePath() + " /Y");
+            cmd = getCommands("copy \"" + headerFile + "\" + \"" + dataFile + "\" \"" + file.getAbsolutePath() + "\" /Y");
         } else {
             String cmdString = "cat " + headerFile + " " + dataFile + " > " + file.getAbsolutePath();
             cmd = new String[] { "sh", "-c", cmdString };
