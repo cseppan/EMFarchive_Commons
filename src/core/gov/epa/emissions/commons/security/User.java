@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.security;
 
 import gov.epa.emissions.commons.CommonsException;
+import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.Lockable;
 import gov.epa.emissions.commons.data.Mutex;
 
@@ -45,6 +46,8 @@ public class User implements Serializable, Lockable {
 
     private Mutex lock;
 
+    private DatasetType[] excludedDatasetTypes = new DatasetType[] {};
+
     public User() {// needed for serialization
         this.passwordGen = new PasswordGenerator();
         lock = new Mutex();
@@ -71,6 +74,14 @@ public class User implements Serializable, Lockable {
     public User(String name) throws UserException {
         this();
         this.name = name;
+    }
+
+    public DatasetType[] getExcludedDatasetTypes() {
+        return excludedDatasetTypes;
+    }
+
+    public void setExcludedDatasetTypes(DatasetType[] datasetTypes) {
+        this.excludedDatasetTypes = datasetTypes;
     }
 
     public boolean equals(Object other) {
