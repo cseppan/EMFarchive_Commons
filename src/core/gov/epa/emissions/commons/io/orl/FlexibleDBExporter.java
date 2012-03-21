@@ -265,9 +265,10 @@ public class FlexibleDBExporter extends GenericExporter {
     
 
     private String getWriteQueryString(String dataFile, String query) {
-        String withClause = " WITH NULL '' CSV FORCE QUOTE " + getNeedQuotesCols();
+        String columnsThatNeedQuotes = getNeedQuotesCols();
+        String withClause = " WITH NULL '' CSV" + (!columnsThatNeedQuotes.isEmpty() ? " FORCE QUOTE " + columnsThatNeedQuotes : "");
         if (withColNames)
-            withClause = " WITH NULL '' CSV HEADER FORCE QUOTE " + getNeedQuotesCols();
+            withClause = " WITH NULL '' CSV HEADER" + (!columnsThatNeedQuotes.isEmpty() ? " FORCE QUOTE " + columnsThatNeedQuotes : "");
         return "COPY (" + query + ") to '" + putEscape(dataFile) + "'" + withClause;
     }
 
