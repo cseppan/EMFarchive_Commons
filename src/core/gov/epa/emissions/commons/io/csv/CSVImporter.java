@@ -55,12 +55,27 @@ public class CSVImporter implements Importer {
         this.datasource = dbServer.getEmissionsDatasource();
         this.sqlDataTypes = sqlDataTypes;
 
-        reader = new CSVFileReader(file);
+        reader = new CSVFileReader(file, findInlineCommentDelimiter(), findSystemDefinedColNamesDelimiter());
         // TODO: get header from the reader
         // pass header to fileFormat
         FileFormat fileFormat = fileFormat(reader);
         TableFormat tableFormat = dataFormatFactory.tableFormat(fileFormat, sqlDataTypes);
         formatUnit = new DatasetTypeUnit(tableFormat, fileFormat);
+    }
+
+    private String[] findSystemDefinedColNamesDelimiter() {
+        DatasetType datasetType = dataset.getDatasetType();
+        KeyVal[] keyvalues = datasetType.getKeyVals();
+        String[] names = null;
+        KeyVal keyVal = findColNames(keyvalues);
+        // if the column types keyword is set for the dataset type, then override file format 
+        if (keyVal != null){
+            //System.out.println("Find KeyVal:  " + keyVal.getName() + "  "+ keyVal.getValue());   
+            // here types specified from the dataset itself will be overridden by the types in
+            // the dataset type
+            names = getColNames(keyVal.getValue());
+        }
+        return names;
     }
 
     public void run() throws ImporterException {
@@ -114,7 +129,8 @@ public class CSVImporter implements Importer {
     }
 
     private CSVFileFormat fileFormat(CSVFileReader reader) throws ImporterException {
-        String[] types =reader.getColTypes();
+        String[] types = reader.getColTypes();
+        String[] names = null;
         
         DatasetType datasetType = dataset.getDatasetType();
         KeyVal[] keyvalues = datasetType.getKeyVals();
@@ -126,14 +142,22 @@ public class CSVImporter implements Importer {
             // the dataset type
             types = getColTypes(keyVal.getValue());
         }
+        keyVal = findColNames(keyvalues);
+        // if the column types keyword is set for the dataset type, then override file format 
+        if (keyVal != null){
+            //System.out.println("Find KeyVal:  " + keyVal.getName() + "  "+ keyVal.getValue());   
+            // here types specified from the dataset itself will be overridden by the types in
+            // the dataset type
+            names = getColNames(keyVal.getValue());
+        }
         if (types!=null && types.length>0){
             //System.out.println("There are " + reader.getCols().length + " the third column is "+types[2].toString() );
             if(reader.getCols().length != types.length)
                 throw new ImporterException("There are " + reader.getCols().length + " column names, but "+types.length + " column types. (Use | between the types, or export file using EXPORT_INLINE_COMMENT as false)");
            
-            return new CSVFileFormat(sqlDataTypes, reader.getCols(), types);
+            return new CSVFileFormat(sqlDataTypes, (names != null ? names : reader.getCols()), types);
         }
-        return new CSVFileFormat(sqlDataTypes, reader.getCols());
+        return new CSVFileFormat(sqlDataTypes, (names != null ? names : reader.getCols()));
     }
     
     
@@ -142,6 +166,24 @@ public class CSVImporter implements Importer {
         for (KeyVal keyVal : keyValues){
             if (keyVal.getName().equals("COLUMN_TYPES"))
                 return keyVal; 
+        }
+        return null; 
+    }
+
+    private KeyVal findColNames(KeyVal[] keyValues){
+        for (KeyVal keyVal : keyValues){
+            if (keyVal.getName().equals("COLUMN_LABELS"))
+                return keyVal; 
+        }
+        return null; 
+    }
+
+    private String findInlineCommentDelimiter(){
+        if (dataset.getDatasetType() != null && dataset.getDatasetType().getKeyVals() != null) {
+            for (KeyVal keyVal : dataset.getDatasetType().getKeyVals()){
+                if (keyVal.getName().equals(Dataset.inline_comment_char))
+                    return (keyVal.getValue() == null || keyVal.getValue().trim().isEmpty() ? null : keyVal.getValue()); 
+            }
         }
         return null; 
     }
@@ -155,6 +197,17 @@ public class CSVImporter implements Importer {
             columnTypes.add(st.nextToken());
 
         return columnTypes.toArray(new String[0]);
+    }
+
+    private String[] getColNames(String lineRead){
+        List<String> columnNames = new ArrayList<String>();
+
+        StringTokenizer st = new StringTokenizer(lineRead, "|");
+
+        while (st.hasMoreTokens())
+            columnNames.add(st.nextToken());
+
+        return columnNames.toArray(new String[0]);
     }
 
 }

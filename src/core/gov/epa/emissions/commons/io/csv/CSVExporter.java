@@ -1,6 +1,7 @@
 package gov.epa.emissions.commons.io.csv;
 
 import gov.epa.emissions.commons.data.Dataset;
+import gov.epa.emissions.commons.data.KeyVal;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.db.version.Version;
 import gov.epa.emissions.commons.io.DataFormatFactory;
@@ -23,6 +24,17 @@ public class CSVExporter extends SMKReportExporter {
 
     private void setup() {
         super.setDelimiter(",");
+        super.setInlineCommentChar(findInlineCommentDelimiter());
+    }
+
+    private String findInlineCommentDelimiter() {
+        if (dataset.getDatasetType() != null && dataset.getDatasetType().getKeyVals() != null) {
+            for (KeyVal keyVal : dataset.getDatasetType().getKeyVals()){
+                if (keyVal.getName().equals(Dataset.inline_comment_char))
+                    return (keyVal.getValue() == null || keyVal.getValue().trim().isEmpty() ? null : keyVal.getValue()); 
+            }
+        }
+        return null; 
     }
 
     protected String formatValue(String[] cols, int colType, int index, String value) {

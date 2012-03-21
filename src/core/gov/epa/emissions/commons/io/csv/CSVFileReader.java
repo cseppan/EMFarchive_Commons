@@ -47,13 +47,25 @@ public class CSVFileReader implements Reader {
 
     private String[] existedCols = { "Record_Id", "Dataset_Id", "Version", "Delete_Versions", "Comments", "DESC" };
 
+    private String inlineCommentDelimiter = null;
+
+    private String[] systemDefinedColNames = null;
+    
     public CSVFileReader(File file) throws ImporterException {
+        this(file, null, null);
+    }
+
+    public CSVFileReader(File file, String inlineCommentDelimiter, String[] systemDefinedColNames) throws ImporterException {
         try {
             fileReader = new BufferedReader(new CustomCharSetInputStreamReader(new FileInputStream(file)));
             comments = new ArrayList<String>();
             header = new ArrayList<String>();
             this.file = file;
             this.lineNumber = 0;
+            this.inlineCommentDelimiter = inlineCommentDelimiter;
+            this.systemDefinedColNames  = systemDefinedColNames;
+            //override this setting with system defined col names
+            this.cols = systemDefinedColNames;
             detectDelimiter();
         } catch (FileNotFoundException e) {
             log.error("Importer failure: File not found" + "\n" + e);
@@ -63,7 +75,7 @@ public class CSVFileReader implements Reader {
             throw new ImporterException("Importer failure: character set encoding not supported");
         }
     }
-
+    
     public void close() throws IOException {
         fileReader.close();
     }
@@ -103,12 +115,61 @@ public class CSVFileReader implements Reader {
         return line == null ? false : (line.trim().startsWith("#COLUMN_TYPES"));
     }
 
+    private int getInlineCommentPosition(String commentChar, String line) {
+        int position = 0, index = 0, theEnd = line.length();
+        
+        //don't look if there is no commentDelimiter specified
+        if (commentChar == null || commentChar.isEmpty())
+            return theEnd;
+        
+        String temp = line;
+
+        while ((index = temp.indexOf(commentChar)) != -1) {
+            position += index;
+
+            if (!hasEvenNumOfQuotes(line.substring(0, position))) {
+                temp = temp.substring(++index);
+                position++;
+            } else
+                return position;
+        }
+
+        return theEnd;
+    }
+
+    private boolean hasEvenNumOfQuotes(String token) {
+        int doubleQuotesCount = getQuotesCount("\"", token);
+
+        return (doubleQuotesCount % 2 == 0); // && (singleQuotesCount % 2 == 0);
+    }
+
+    private int getQuotesCount(String quote, String token) {
+        int index;
+        int count = 0;
+        String temp = token;
+
+        while ((index = temp.indexOf(quote)) != -1) {
+            ++count;
+            temp = temp.substring(++index);
+        }
+
+        return count;
+    }
+
     private Record doRead(String line) throws ImporterException {
         Record record = new Record();
         String[] tokens = null;
+        String inlineComment = null;
         
         try {
-            tokens = tokenizer.tokens(line);
+            //look for comment, if exists lets strip it off
+            int inlineCommentPosition = getInlineCommentPosition(inlineCommentDelimiter, line);
+            if (inlineCommentPosition < line.length()) {
+                inlineComment = line.substring(inlineCommentPosition + 1);
+                tokens = tokenizer.tokens(line.substring(0, inlineCommentPosition));
+            } else {
+                tokens = tokenizer.tokens(line);
+            }
         } catch (Exception e) {
             String err = e.getMessage();
             
@@ -135,6 +196,8 @@ public class CSVFileReader implements Reader {
         
         record.add(Arrays.asList(tokens));
 
+        if (inlineComment != null)
+            record.add(inlineComment);
         return record;
     }
 
@@ -205,6 +268,19 @@ public class CSVFileReader implements Reader {
     }
 
     private boolean getTokenizer() throws ImporterException {
+        //for system defined column names, assume a CommaDelimitedTokenizer for the file!
+        //don't parse first line or it will be lost when parsing the data when there are no
+        //column labels
+        if (systemDefinedColNames != null && systemDefinedColNames.length > 0) {
+            if (systemDefinedColNames.length < 2)
+                throw new ImporterException("At least 2 columns are required.");
+
+            tokenizer = new CommaDelimitedTokenizer();
+            return true;
+        }
+        
+        //At this point try and parse the delimiter and assume first normal file 
+        //line is the column names.
         try {
             
             String lineRead = fileReader.readLine();

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class SMKReportExporter implements Exporter {
-    private Dataset dataset;
+    protected Dataset dataset;
 
     private Datasource datasource;
 
@@ -83,6 +83,10 @@ public class SMKReportExporter implements Exporter {
         this.filterDatasetVersion = filterDatasetVersion;
         this.filterDatasetJoinCondition = filterDatasetJoinCondition;
         setDelimiter(";");
+    }
+
+    public void setInlineCommentChar(String inlineCommentChar) {
+        this.inlineCommentChar = inlineCommentChar;
     }
 
     public void export(File file) throws ExporterException {
@@ -223,10 +227,10 @@ public class SMKReportExporter implements Exporter {
         boolean firstbatch = true;
         String[] cols = null;
 
-        int pad = 0;
-        if (!comments) {
-            pad = 1; // Add a comment column to header line
-        }
+        int pad = 1;
+//        if (!comments) {
+//            pad = 1; // Add a comment column to header line
+//        }
 
         while (runner.execute()) {
             ResultSet rs = runner.getResultSet();
@@ -329,7 +333,7 @@ public class SMKReportExporter implements Exporter {
         if (value.equals(""))
             return value;
 
-        if (!value.startsWith(inlineCommentChar))
+        if (inlineCommentChar != null && !value.startsWith(inlineCommentChar))
             value = inlineCommentChar + value;
 
         return " " + value;
