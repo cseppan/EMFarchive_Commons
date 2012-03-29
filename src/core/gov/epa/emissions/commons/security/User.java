@@ -4,6 +4,7 @@ import gov.epa.emissions.commons.CommonsException;
 import gov.epa.emissions.commons.data.DatasetType;
 import gov.epa.emissions.commons.data.Lockable;
 import gov.epa.emissions.commons.data.Mutex;
+import gov.epa.emissions.commons.data.UserFeature;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -47,6 +48,7 @@ public class User implements Serializable, Lockable {
     private Mutex lock;
 
     private DatasetType[] excludedDatasetTypes = new DatasetType[] {};
+    private UserFeature[] excludedUserFeatures = new UserFeature[] {};
 
     public User() {// needed for serialization
         this.passwordGen = new PasswordGenerator();
@@ -82,6 +84,14 @@ public class User implements Serializable, Lockable {
 
     public void setExcludedDatasetTypes(DatasetType[] datasetTypes) {
         this.excludedDatasetTypes = datasetTypes;
+    }
+    
+    public UserFeature[] getExcludedUserFeatures() {
+        return excludedUserFeatures;
+    }
+
+    public void setExcludedUserFeatures(UserFeature[] userFeatures) {
+        this.excludedUserFeatures = userFeatures;
     }
 
     public boolean equals(Object other) {
