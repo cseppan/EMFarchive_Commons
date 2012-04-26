@@ -20,6 +20,12 @@ public class QAProgram implements Serializable, Comparable {
     public QAProgram(String name) {
         this.name = name;
     }
+    
+    public QAProgram(QAProgram program) {
+        this.id = program.id;
+        this.name = program.name;
+        this.runClassName = program.runClassName;
+    }
 
     public int getId() {
         return id;
