@@ -49,8 +49,9 @@ public class StrategyMessagesFileFormat implements FileFormat, DelimitedFileForm
         cols.add(new Column("Packet_SIC", types.stringType(4), 4, new StringFormatter(4)));
         cols.add(new Column("Packet_MACT", types.stringType(6), 6, new StringFormatter(6)));
         cols.add(new Column("Packet_NAICS", types.stringType(6), 6, new StringFormatter(6)));
-//        cols.add(new Column("Packet_REPLACEMENT", types.stringType(1), 1, new StringFormatter(1)));
-        cols.add(new Column("Packet_COMPLIANCE_DATE", types.timestamp()));
+        cols.add(new Column("Packet_COMPLIANCE_EFFECTIVE_DATE", types.timestamp()));
+        cols.add(new Column("Packet_REPLACEMENT", types.stringType(1), 1, new StringFormatter(1)));
+        cols.add(new Column("Packet_ANNUAL_MONTHLY", types.stringType(1), 1, new StringFormatter(1)));
         return cols.toArray(new Column[0]);
     }
 
