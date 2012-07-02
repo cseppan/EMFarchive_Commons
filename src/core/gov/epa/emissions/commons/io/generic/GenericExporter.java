@@ -239,6 +239,9 @@ public class GenericExporter implements Exporter {
 
     protected String getQueryString(Dataset dataset, String rowFilters, Datasource datasource) throws ExporterException {
         InternalSource source = dataset.getInternalSources()[0];
+        if ("versions".equalsIgnoreCase(source.getTable().toLowerCase()) && "emissions".equalsIgnoreCase(datasource.getName().toLowerCase())) {
+            System.err.println("Versions table moved to EMF. Error in " + this.getClass().getName());
+        }
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 
@@ -247,6 +250,16 @@ public class GenericExporter implements Exporter {
 
     protected String getQueryString(Dataset dataset, String rowFilters, Datasource datasource, Dataset filterDataset, Version filterDatasetVersion, String filterDatasetJoinCondition) throws ExporterException {
         InternalSource source = dataset.getInternalSources()[0];
+        
+        // VERSIONS TABLE - Completed - throws exception if the following case is true
+        if ("emissions".equalsIgnoreCase(datasource.getName()) && "versions".equalsIgnoreCase(source.getTable().toLowerCase())) {
+            throw new ExporterException("Table versions moved to schema emf."); // VERSIONS TABLE
+        }
+        
+        if ("versions".equalsIgnoreCase(source.getTable().toLowerCase()) && "emissions".equalsIgnoreCase(datasource.getName().toLowerCase())) {
+            System.err.println("Versions table moved to EMF. Error in " + this.getClass().getName());
+        }
+        
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 

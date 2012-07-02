@@ -297,6 +297,12 @@ public class DataModifier {
     }
 
     public Column[] getColumns(String table) throws SQLException {
+        
+        // VERSIONS TABLE - Completed - throws exception if the following case is true
+        if ("emissions".equalsIgnoreCase(schema) && "versions".equalsIgnoreCase(table.toLowerCase())) {
+            throw new SQLException("Table versions moved to schema emf."); // VERSIONS TABLE
+        }
+        
         DatabaseMetaData meta = connection.getMetaData();
         // postgres driver creates table with lower case lettes and case sensitive
         ResultSet rs = meta.getColumns(null, schema, table.toLowerCase(), null);
@@ -333,7 +339,11 @@ public class DataModifier {
         execute("DELETE FROM " + qualified(table) + " WHERE " + key + " = " + value);
     }
 
-    private String qualified(String table) {
+    private String qualified(String table) throws SQLException {
+        // VERSIONS TABLE - Completed - throws exception if the following case is true
+        if ("emissions".equalsIgnoreCase(schema) && "versions".equalsIgnoreCase(table.toLowerCase())) {
+            throw new SQLException("Table versions moved to schema emf."); // VERSIONS TABLE
+        }
         return schema + "." + table;
     }
 

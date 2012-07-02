@@ -15,7 +15,8 @@ public class OptimizedTableModifier extends TableModifier {
     
     private int batchCount;
 
-    public OptimizedTableModifier(Datasource datasource, String tableName) throws SQLException {
+    // VERSIONS TABLE - completed. it should throw exception if datasource is emissions and table is versions
+    public OptimizedTableModifier(Datasource datasource, String tableName) throws SQLException { 
         super(datasource, tableName);
         counter = 0;
         batchCount = 0;

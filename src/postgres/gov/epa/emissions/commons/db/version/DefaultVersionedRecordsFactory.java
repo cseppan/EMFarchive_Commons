@@ -70,6 +70,9 @@ public class DefaultVersionedRecordsFactory implements VersionedRecordsFactory {
     }
 
     private String fullyQualifiedTable(String table) {
+        if ("versions".equalsIgnoreCase(table.toLowerCase()) && "emissions".equalsIgnoreCase(datasource.getName().toLowerCase())) {
+            System.err.println("Versions table moved to EMF. Error in " + this.getClass().getName());
+        }
         return datasource.getName() + "." + table;
     }
 

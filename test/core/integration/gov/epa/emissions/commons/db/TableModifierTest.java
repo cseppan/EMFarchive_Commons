@@ -100,5 +100,7 @@ public class TableModifierTest extends PersistenceTestCase {
         assertEquals("", rs.getString(7)); // in line comments
 
         rs.close();
+        
+        //gov.epa.emissions.framework.utils.Utils.addVersionEntryToVersionsTable(this.sessionFactory, this.user,dataset.getId(), 0, "Initial Version", "", true, "");
     }
 }

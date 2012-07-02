@@ -3,10 +3,12 @@ package gov.epa.emissions.commons.io.importer;
 import gov.epa.emissions.commons.data.Dataset;
 import gov.epa.emissions.commons.db.Datasource;
 import gov.epa.emissions.commons.db.DbServer;
-import gov.epa.emissions.commons.db.TableModifier;
+import gov.epa.emissions.commons.db.version.Version;
+import gov.epa.emissions.commons.util.utils;
 
-import java.sql.Timestamp;
 import java.util.Date;
+
+import org.hibernate.Session;
 
 public class VersionedImporter implements Importer {
     private Importer delegate;
@@ -20,7 +22,8 @@ public class VersionedImporter implements Importer {
     public VersionedImporter(Importer delegate, Dataset dataset, DbServer dbServer, Date lastModifiedDate) {
         this.delegate = delegate;
         this.dataset = dataset;
-        this.datasource = dbServer.getEmissionsDatasource();
+        this.datasource = dbServer.getEmissionsDatasource(); 
+// completed: datasource is not used anywhere else except addVersionZeroEntryToVersionsTable
         this.lastModifiedDate = lastModifiedDate;
     }
     
@@ -47,8 +50,28 @@ public class VersionedImporter implements Importer {
     }
     
     private void addVersionZeroEntryToVersionsTable(Datasource datasource, Dataset dataset) throws Exception {
-        TableModifier modifier = new TableModifier(datasource,"versions");
-        String[] data = { null, dataset.getId() + "", "0", "Initial Version", "", "true", new Timestamp(lastModifiedDate.getTime())+""};
-        modifier.insertOneRow(data);
+
+//      TableModifier modifier = new TableModifier(datasource,"versions"); 
+//      String[] data = { null, dataset.getId() + "", "0", "Initial Version", "", "true", new Timestamp(lastModifiedDate.getTime())+""};
+//        modifier.insertOneRow(data);
+        
+        
+        Session session = utils.getHibernateSession();
+
+        Version defaultZeroVersion = new Version(0);
+        defaultZeroVersion.setName("Initial Version");
+        defaultZeroVersion.setPath("");
+        defaultZeroVersion.setDatasetId(dataset.getId());
+        defaultZeroVersion.setLastModifiedDate(lastModifiedDate);
+        defaultZeroVersion.setFinalVersion(true);
+        defaultZeroVersion.setDescription("");
+        
+        try {
+            utils.add(defaultZeroVersion, session);
+        } catch (Exception e) {
+            throw new Exception("Could not add version 0 entry for dataset " + dataset.getName() + " into versions table: " + e.getMessage());
+        } finally {
+            session.close();
+        }
     }
 }

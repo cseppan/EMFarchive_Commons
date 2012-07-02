@@ -345,6 +345,9 @@ public class CountryStateCountyDataExporter implements Exporter {
 
     private String getQueryString(InternalSource source, Datasource datasource) throws ExporterException {
         String table = source.getTable();
+        if ("versions".equalsIgnoreCase(source.getTable().toLowerCase()) && "emissions".equalsIgnoreCase(datasource.getName().toLowerCase())) {
+            System.err.println("Versions table moved to EMF. Error in " + this.getClass().getName());
+        }
         String qualifiedTable = datasource.getName() + "." + table;
         ExportStatement export = dataFormatFactory.exportStatement();
 

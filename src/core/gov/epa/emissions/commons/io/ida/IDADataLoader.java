@@ -67,7 +67,7 @@ public class IDADataLoader implements DataLoader {
         OptimizedTableModifier dataModifier = null;
 
         try {
-            dataModifier = dataModifier(emissionDatasource, table);
+            dataModifier = dataModifier(emissionDatasource, table); // VERSIONS TABLE - completed - should throw exception
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +86,8 @@ public class IDADataLoader implements DataLoader {
 
     private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            return new OptimizedTableModifier(datasource, table);
+            return new OptimizedTableModifier(datasource, table); 
+            
         } catch (SQLException e) {
             throw new ImporterException(e.getMessage());
         }

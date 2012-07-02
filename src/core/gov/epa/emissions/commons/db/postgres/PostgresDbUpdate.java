@@ -66,6 +66,9 @@ public class PostgresDbUpdate extends DbOperation implements DbUpdate {
     }
 
     private String qualifiedTable(String schema, String table) {
+        if ("versions".equalsIgnoreCase(table.toLowerCase()) && "emissions".equalsIgnoreCase(schema.toLowerCase())) {
+            System.err.println("Versions table moved to EMF- 001.");
+        }
         String qualifiedTable = schema + "." + table;
         return qualifiedTable;
     }

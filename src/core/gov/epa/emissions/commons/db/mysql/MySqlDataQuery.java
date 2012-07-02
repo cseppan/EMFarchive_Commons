@@ -34,7 +34,12 @@ public class MySqlDataQuery implements DataQuery {
         for (int i = 1; i < columnNames.length; i++) {
             sb.append("," + columnNames[i]);
         }
-        final String fromSuffix = " FROM " + qualified(table);
+        String fromSuffix = " FROM ";
+        try {
+            fromSuffix += qualified(table);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         sb.append(fromSuffix);
 
         Statement statement = connection.createStatement();
@@ -44,7 +49,10 @@ public class MySqlDataQuery implements DataQuery {
         return results;
     }
 
-    private String qualified(String table) {
+    private String qualified(String table) throws Exception {
+        if ("versions".equalsIgnoreCase(table.toLowerCase()) && "emissions".equalsIgnoreCase(schema.toLowerCase())) {
+            throw new Exception("Versions table moved to EMF.");
+        }
         return schema + "." + table;
     }
 

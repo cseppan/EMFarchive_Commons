@@ -60,7 +60,8 @@ public class ReferenceCSVFileImporter implements Importer {
 
     private OptimizedTableModifier tableModifier() throws ImporterException {
         try {
-            return new OptimizedTableModifier(datasource, tableName);
+            return new OptimizedTableModifier(datasource, tableName); 
+            // VERSIONS TABLE: completed - only used locally
         } catch (SQLException e) {
             throw new ImporterException(e.getMessage());
         }

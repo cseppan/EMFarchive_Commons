@@ -39,6 +39,9 @@ public class PostgresTableDefinition implements TableDefinition {
     }
 
     private String qualified(String table) {
+        if ("versions".equalsIgnoreCase(table.toLowerCase()) && "emissions".equalsIgnoreCase(schema.toLowerCase())) {
+            System.err.println("Versions table moved to EMF- 001.");
+        }
         return schema + "." + table;
     }
 

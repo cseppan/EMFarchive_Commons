@@ -21,8 +21,14 @@ public class TableModifier {
     protected TableDefinition tableDef;
 
     public TableModifier(Datasource datasource, String tableName) throws SQLException {
+        
+        if ("emissions".equalsIgnoreCase(datasource.getName()) && "versions".equalsIgnoreCase(tableName)) {
+            throw new SQLException("Table versions moved to schema emf."); // VERSIONS TABLE
+        }
+        
         this.connection = datasource.getConnection();
-        this.schema = datasource.getName();
+        this.schema = datasource.getName(); 
+        // VERSIONS TABLE - completed: schema only used locally
         this.tableDef = datasource.tableDefinition();
         this.tableName = tableName;
         this.columns = new TableMetaData(datasource).getColumns(tableName);
@@ -54,7 +60,10 @@ public class TableModifier {
         }
     }
 
-    private String qualified(String table) {
+    private String qualified(String table) throws SQLException {
+        if ("emissions".equalsIgnoreCase(schema) && "versions".equalsIgnoreCase(tableName)) {
+            throw new SQLException("Table versions moved to schema emf."); // VERSIONS TABLE
+        }
         return schema + "." + table;
     }
 

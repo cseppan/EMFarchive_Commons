@@ -39,15 +39,17 @@ public class PostgresDbServer implements DbServer {
         fastDatasource = createDatasource(EMF_FAST_RUN_SCHEMA, connection);
     }
 
-    public Datasource getEmissionsDatasource() {
-        return emissionsDatasource;
+    public Datasource getEmissionsDatasource() { 
+        
+        return emissionsDatasource; // VERSIONS TABLE its name is emissions
     }
 
     public Datasource getReferenceDatasource() {
         return referenceDatasource;
     }
 
-    public Datasource getEmfDatasource() {
+    public Datasource getEmfDatasource() { 
+        
         return emfDatasource;
     }
     

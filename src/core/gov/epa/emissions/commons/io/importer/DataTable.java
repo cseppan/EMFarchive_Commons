@@ -24,7 +24,7 @@ public class DataTable {
     private Dataset dataset;
 
     public DataTable(Dataset dataset, Datasource datasource) {
-        this.name = createName(dataset.getName());
+        this.name = createName(dataset.getName()); // VERSIONS TABLE: this will not be a problem, the name never will be versions
         this.delegate = new TableCreator(datasource);
         this.dataset = dataset;
     }

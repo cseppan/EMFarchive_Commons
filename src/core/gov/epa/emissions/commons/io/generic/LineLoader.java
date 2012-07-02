@@ -20,6 +20,7 @@ public class LineLoader implements DataLoader {
         this.datasource = datasource;
     }
 
+    // completed: if datasource is emissions and table is versions, it will trhow an exception
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
         OptimizedTableModifier dataModifier = null;
         try {
@@ -41,7 +42,8 @@ public class LineLoader implements DataLoader {
 
     private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            return new OptimizedTableModifier(datasource, table);
+            return new OptimizedTableModifier(datasource, table); 
+// VERSIONS TABLE - completed
         } catch (SQLException e) {
             throw new ImporterException(e.getMessage());
         }

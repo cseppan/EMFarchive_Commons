@@ -62,6 +62,9 @@ public class PostgresTableReader extends DbOperation implements TableReader {
     }
 
     private String qualified(String schema, String table) {
+        if ("versions".equalsIgnoreCase(table.toLowerCase()) && "emissions".equalsIgnoreCase(schema.toLowerCase())) {
+            System.err.println("Versions table moved to EMF- 001.");
+        }
         return schema + "." + table;
     }
 

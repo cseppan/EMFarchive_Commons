@@ -94,6 +94,12 @@ public class NIFImporter {
 
     private void doImport(InternalSource internalSource, FormatUnit unit, Dataset dataset) throws ImporterException {
         String tableName = internalSource.getTable();
+        
+        // VERSIONS TABLE - Completed - throws exception if the following case is true
+        if ("emissions".equalsIgnoreCase(this.datasource.getName()) && "versions".equalsIgnoreCase(tableName.toLowerCase())) {
+            throw new ImporterException("Table versions moved to schema emf."); // VERSIONS TABLE
+        }
+        
         String source = internalSource.getSource();
         DataTable dataTable = new DataTable(dataset, datasource);
         dataTable.create(tableName, unit.tableFormat());

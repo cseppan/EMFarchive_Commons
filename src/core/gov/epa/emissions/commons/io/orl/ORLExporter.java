@@ -127,6 +127,9 @@ public class ORLExporter extends GenericExporter {
         ResultSet rs = null;
         Map<String, String> cols = new HashMap<String, String>();
         InternalSource source = dataset.getInternalSources()[0];
+        if ("versions".equalsIgnoreCase(source.getTable().toLowerCase()) && "emissions".equalsIgnoreCase(datasource.getName().toLowerCase())) {
+            System.err.println("Versions table moved to EMF. Error in " + this.getClass().getName());
+        }
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         try {
             rs = datasource.query().executeQuery("select * from " + qualifiedTable + " where 1 = 0");

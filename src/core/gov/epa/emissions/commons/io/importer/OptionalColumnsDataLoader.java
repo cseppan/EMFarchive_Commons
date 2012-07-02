@@ -24,7 +24,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
         OptimizedTableModifier dataModifier = null;
         try {
-            dataModifier = dataModifier(datasource, table);
+            dataModifier = dataModifier(datasource, table); // VERSIONS TABLE - completed 
             insertRecords(dataset, reader, dataModifier);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,7 +42,8 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            return new OptimizedTableModifier(datasource, table);
+            return new OptimizedTableModifier(datasource, table); // VERSIONS TABLE - completed
+            
         } catch (SQLException e) {
             throw new ImporterException(e.getMessage());
         }

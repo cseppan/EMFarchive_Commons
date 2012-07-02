@@ -16,15 +16,16 @@ public class PostgresDatasource implements Datasource {
 
     private DataModifier dataAcceptor;
 
-    private String name;
+    private String name; // schema??
 
     private SqlDataTypes sqlDataTypes;
 
-    public PostgresDatasource(String name, Connection connection, SqlDataTypes types) {
+    public PostgresDatasource(String name, Connection connection, SqlDataTypes types) { 
         this.connection = connection;
         this.name = name;
         this.sqlDataTypes = types;
-        this.dataAcceptor = new DataModifier(name, connection, types);
+        this.dataAcceptor = new DataModifier(name, connection, types); 
+        
     }
 
     public String getName() {

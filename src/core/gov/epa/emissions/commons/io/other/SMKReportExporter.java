@@ -302,6 +302,9 @@ public class SMKReportExporter implements Exporter {
 
     private String getQueryString(Dataset dataset, Datasource datasource) throws Exception {
         InternalSource source = dataset.getInternalSources()[0];
+        if ("versions".equalsIgnoreCase(source.getTable().toLowerCase()) && "emissions".equalsIgnoreCase(datasource.getName().toLowerCase())) {
+            System.err.println("Versions table moved to EMF. Error in " + this.getClass().getName());
+        }
         String qualifiedTable = datasource.getName() + "." + source.getTable();
         ExportStatement export = dataFormatFactory.exportStatement();
 
