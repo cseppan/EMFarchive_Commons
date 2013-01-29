@@ -63,7 +63,7 @@ public class GSCNVFileFormat implements FileFormatWithOptionalCols, DelimitedFil
 
         cols.add(new Column("Pollutant_1", types.stringType(16), 16, new StringFormatter(16)));
         cols.add(new Column("Pollutant_2", types.stringType(16), 16, new StringFormatter(16)));
-        cols.add(new Column("Speciation_Code", types.stringType(5), 5, new StringFormatter(5)));
+        cols.add(new Column("Speciation_Code", types.stringType(10), 10, new StringFormatter(10)));
         cols.add(new Column("Factor", types.realType(), new RealFormatter()));
 
         return (Column[]) cols.toArray(new Column[0]);
