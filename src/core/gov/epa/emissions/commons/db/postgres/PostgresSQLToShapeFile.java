@@ -3,6 +3,7 @@ package gov.epa.emissions.commons.db.postgres;
 import gov.epa.emissions.commons.data.ProjectionShapeFile;
 import gov.epa.emissions.commons.db.DbServer;
 import gov.epa.emissions.commons.io.ExporterException;
+import gov.epa.emissions.commons.util.CustomDateFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,20 +47,24 @@ public class PostgresSQLToShapeFile {
             //2nd make sure there is the_geom column so the shape file can be created
             validateSelectQuery(selectQuery);
 
-            createNewFile(filePath,
-                    projectionShapeFile, overide);
+//            createNewFile(filePath,
+//                    projectionShapeFile, overide);
 
+            //found bug where when query lenght exceeds 32k, then it wont work correctly
+            //so i'll first create a semi-temporary table (we'll clean it up later)
+            //then psql2shp on temp table
+            String tempTable = createTempTable(selectQuery);
+            
             String[] exportCommand = getWriteQueryString(postgresBinDir, 
                     postgresDB, 
                     postgresUser, 
                     postgresPassword,
                     filePath, 
-                    selectQuery);
+                    "public." + tempTable);
 
 
             process = Runtime.getRuntime().exec(exportCommand);
 
-            
             final InputStream stdout = process.getInputStream();
             new Thread(new Runnable() {
      
@@ -103,6 +109,8 @@ public class PostgresSQLToShapeFile {
 //            logStdout("process.getErrorStream", process.getErrorStream());
 //            logStdout("process.getErrorStream", process.getInputStream());
 
+            //remove temp table
+            deleteTempTable("public." + tempTable);
         } catch (Exception e) {
             if (process != null)
                 try {
@@ -119,6 +127,16 @@ public class PostgresSQLToShapeFile {
         }
     }
 
+    private String createTempTable(String selectQuery) throws Exception {
+        String nowTimestamp = CustomDateFormat.format_YYYYMMDDHHMMSSSS(new Date());
+        dbServer.getEmissionsDatasource().query().execute("create table public.tmp_shp_" + nowTimestamp + " as " + selectQuery);
+        return "tmp_shp_" + nowTimestamp;
+    }
+    
+    private void deleteTempTable(String tableName) throws Exception {
+        dbServer.getEmissionsDatasource().query().execute("drop table " + tableName);
+    }
+    
     private void validateSelectQuery(String selectQuery) throws ExporterException {
         try {
             ResultSet rs = dbServer.getEmissionsDatasource().query().executeQuery(selectQuery + " limit 1");
@@ -195,7 +213,7 @@ public class PostgresSQLToShapeFile {
 
         if (windowsOS) {
             cmds = new String[1];
-            cmds[0] = "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"";
+            cmds[0] = "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery.replaceAll("\n", " ").replaceAll("\"", "\\\\\"") + "\"";
         } else {
             cmds = new String[9];
             cmds[0] = postgresBinDir + "/pgsql2shp";
@@ -213,7 +231,7 @@ public class PostgresSQLToShapeFile {
 //        return "\"" + postgresBinDir + "pgsql2shp\" -f \"" + putEscape(filePath) + "\" -P " + postgresPassword + " -u " + postgresUser + " " + postgresDB + " \"" + selectQuery + "\"";
     }
 
-    private void createNewFile(String filePath,
+    protected void createNewFile(String filePath,
             ProjectionShapeFile projectionShapeFile, boolean overide) throws Exception {
         try {
             System.out.println(filePath);

@@ -312,8 +312,9 @@ public class DataModifier {
             while (rs.next()) {
                 String name = rs.getString("COLUMN_NAME");
                 int jdbcType = rs.getInt("DATA_TYPE");
+                int width = rs.getInt("COLUMN_SIZE");
                 String type = typeMap.get(jdbcType);
-                cols.add(new Column(name, type));
+                cols.add(new Column(name, type, width));
             }
         } finally {
             rs.close();

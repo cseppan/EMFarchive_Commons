@@ -8,6 +8,8 @@ public class ProjectionShapeFile implements Serializable {
 
     private String name;
 
+    private String description;
+
     private String tableSchema;
 
     private String tableName;
@@ -82,7 +84,7 @@ public class ProjectionShapeFile implements Serializable {
     }
 
     public String toString() {
-        return name;
+        return name + (description != null && !description.isEmpty() ? " [" + description + "]" : "");
     }
 
     public boolean equals(Object obj) {
@@ -95,5 +97,13 @@ public class ProjectionShapeFile implements Serializable {
             return true;
 
         return false;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

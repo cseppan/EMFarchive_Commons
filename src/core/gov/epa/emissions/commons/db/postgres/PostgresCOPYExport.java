@@ -39,7 +39,7 @@ public class PostgresCOPYExport {
 
             String exportQuery = getWriteQueryString(filePath, selectQuery);
 
-            //log.warn(writeQuery);
+            log.warn(exportQuery);
 
             connection = datasource.getConnection();
 
@@ -67,7 +67,8 @@ public class PostgresCOPYExport {
     }
 
     private String getWriteQueryString(String filePath, String query) {
-        String withClause = " WITH HEADER NULL '' CSV FORCE QUOTE " + getNeedQuotesCols(query);
+        String columnsNeedingQuotes = getNeedQuotesCols(query);
+        String withClause = " WITH HEADER NULL '' CSV" + (columnsNeedingQuotes.length() > 0 ? " FORCE QUOTE " + columnsNeedingQuotes : "");
 
         return "COPY (" + query + ") to '" + putEscape(filePath) + "'" + withClause;
     }
