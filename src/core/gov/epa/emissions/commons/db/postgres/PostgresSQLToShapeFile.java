@@ -60,7 +60,7 @@ public class PostgresSQLToShapeFile {
                     postgresUser, 
                     postgresPassword,
                     filePath, 
-                    "public." + tempTable);
+                    tempTable);
 
 
             process = Runtime.getRuntime().exec(exportCommand);
@@ -156,6 +156,13 @@ public class PostgresSQLToShapeFile {
             }
             if (!hasTheGeomColumn) 
                 throw new ExporterException("The SQL query does not have the required the_geom column.");
+ 
+            //make sure we only get one row per geometry setting, if more than one row has the same geometry, the shapefile 
+            //will not know which row has the correct information and most likely show a row randomly
+            rs = dbServer.getEmissionsDatasource().query().executeQuery("select 1 from (" + selectQuery + ") tbl group by the_geom having count(the_geom) > 1 limit 1");
+            if (rs.next())
+                throw new ExporterException("The SQL query can''t return more than one record per geometry definition.  For example, a specific county (fips code) has more than one row returned.  Try filtering by pollutant to limit to one record per geometry or try pivoting the result (moving pollutants from rows to columns).");
+            
         } catch (SQLException e) {
             throw new ExporterException(e.getMessage(), e);
         }
