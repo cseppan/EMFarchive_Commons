@@ -16,9 +16,16 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private FileFormatWithOptionalCols fileFormat;
 
+    protected boolean stripPMPollutantPrimarySuffix = true; //default to yes
+
     public OptionalColumnsDataLoader(Datasource datasource, FileFormatWithOptionalCols format, String key) {
         this.datasource = datasource;
         this.fileFormat = format;
+    }
+
+    public OptionalColumnsDataLoader(Datasource datasource, FileFormatWithOptionalCols format, String key, boolean stripPMPollutantPrimarySuffix) {
+        this(datasource, format, key);
+        this.stripPMPollutantPrimarySuffix = stripPMPollutantPrimarySuffix;
     }
 
     public void load(Reader reader, Dataset dataset, String table) throws ImporterException {
@@ -42,7 +49,7 @@ public class OptionalColumnsDataLoader implements DataLoader {
 
     private OptimizedTableModifier dataModifier(Datasource datasource, String table) throws ImporterException {
         try {
-            return new OptimizedTableModifier(datasource, table); // VERSIONS TABLE - completed
+            return new OptimizedTableModifier(datasource, table, stripPMPollutantPrimarySuffix); // VERSIONS TABLE - completed
             
         } catch (SQLException e) {
             throw new ImporterException(e.getMessage());

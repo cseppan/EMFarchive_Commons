@@ -22,6 +22,11 @@ public class OptimizedTableModifier extends TableModifier {
         batchCount = 0;
     }
 
+    public OptimizedTableModifier(Datasource datasource, String tableName, boolean stripPMPollutantPrimarySuffix) throws SQLException {
+        this(datasource, tableName);
+        this.stripPMPollutantPrimarySuffix = stripPMPollutantPrimarySuffix;
+    }
+
     public void start() throws SQLException {
         connection.setAutoCommit(false);
         //System.out.println("Batch size = "+BATCH_SIZE);

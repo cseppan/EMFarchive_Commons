@@ -19,6 +19,8 @@ public class TableModifier {
     protected String tableName;
     
     protected TableDefinition tableDef;
+    
+    protected boolean stripPMPollutantPrimarySuffix = true; //default to yes
 
     public TableModifier(Datasource datasource, String tableName) throws SQLException {
         
@@ -35,6 +37,10 @@ public class TableModifier {
         this.statement = connection.createStatement();
     }
 
+    public TableModifier(Datasource datasource, String tableName, boolean stripPMPollutantPrimarySuffix) throws SQLException {
+        this(datasource, tableName);
+        this.stripPMPollutantPrimarySuffix = stripPMPollutantPrimarySuffix;
+    }
     public void insert(String[] data) throws Exception {
         if (data.length > columns.length) {
             throw new Exception("Invalid number of data tokens - " + data.length + ". Number of columns in the table: "
@@ -83,12 +89,18 @@ public class TableModifier {
             String colName = cols[i].name();
 
             if (isTypeString(cols[i])) {
-                if (colName.equalsIgnoreCase("POLL")) {
+                
+                
+                //strip off PM pollutant primary designation if so desired
+                if (colName.equalsIgnoreCase("POLL") && this.stripPMPollutantPrimarySuffix) {
                     data[i] = data[i].toUpperCase();
                     if (data[i].equals("PM10-PRI"))
                         data[i] = "PM10";
                     else if (data[i].equals("PM25-PRI"))
                         data[i] = "PM2_5";
+                    
+                    
+                    
                 } else if (colName.equalsIgnoreCase("FIPS")) {
                     // add a leading zero if it is missing
                     if (data[i].trim().length() == 4)

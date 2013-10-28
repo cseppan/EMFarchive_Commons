@@ -76,7 +76,7 @@ public class ControlPacketImporter implements Importer {
             TableFormat tableFormat) throws Exception {
         Reader reader = null;
         try {
-            OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key());
+            OptionalColumnsDataLoader loader = new OptionalColumnsDataLoader(datasource, fileFormat, tableFormat.key(), false);
             reader = new DelimiterIdentifyingFileReader(file, new String[] { "#", "/CONTROL", "/END/" },
                     ((FileFormatWithOptionalCols) formatUnit.fileFormat()).minCols().length);
 
