@@ -144,8 +144,8 @@ public class LineExporterTest extends PersistenceTestCase {
         // assert records
         List records = readData(file);
         
-        String expectedPattern1 = "HYDRO-QUÉBEC;Centrale des Iles-de-la-Mad39999999";
-        String expectedPattern2 = "LES PAPIERS PERKINS LTÉE;Division Lachut10200501";
+        String expectedPattern1 = "HYDRO-QUï¿½BEC;Centrale des Iles-de-la-Mad39999999";
+        String expectedPattern2 = "LES PAPIERS PERKINS LTï¿½E;Division Lachut10200501";
         
         assertTrue(records.get(14).toString().indexOf(expectedPattern1) > 0);
         assertTrue(records.get(15).toString().indexOf(expectedPattern2) > 0);
