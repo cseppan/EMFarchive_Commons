@@ -92,16 +92,15 @@ public class TableModifier {
                 
                 
                 //strip off PM pollutant primary designation if so desired
-                if (colName.equalsIgnoreCase("POLL") && this.stripPMPollutantPrimarySuffix) {
-                    data[i] = data[i].toUpperCase();
-                    if (data[i].equals("PM10-PRI"))
-                        data[i] = "PM10";
-                    else if (data[i].equals("PM25-PRI"))
-                        data[i] = "PM2_5";
+//                if (colName.equalsIgnoreCase("POLL") && this.stripPMPollutantPrimarySuffix) {
+//                    data[i] = data[i].toUpperCase();
+//                    if (data[i].equals("PM10-PRI"))
+//                        data[i] = "PM10";
+//                    else if (data[i].equals("PM25-PRI"))
+//                        data[i] = "PM2_5";             
+//                    
                     
-                    
-                    
-                } else if (colName.equalsIgnoreCase("FIPS")) {
+                if (colName.equalsIgnoreCase("FIPS")) {
                     // add a leading zero if it is missing
                     if (data[i].trim().length() == 4)
                         data[i] = "0" + data[i];
